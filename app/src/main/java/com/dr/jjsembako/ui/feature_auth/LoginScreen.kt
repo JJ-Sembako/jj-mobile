@@ -82,7 +82,7 @@ fun LoginScreen(
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
             trailingIcon = {
                 IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                    Icon(painter = icon, contentDescription = "Visibility Password Icon")
+                    Icon(painter = icon, contentDescription = stringResource(R.string.visible_pass))
                 }
             },
             modifier = modifier
@@ -94,8 +94,6 @@ fun LoginScreen(
 
         Button(
             onClick = {
-                // Handle login action
-//                performLogin(context, username, password, onLoginSuccess)
                 onLoginSuccess()
             },
             modifier = modifier
@@ -112,75 +110,5 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     JJSembakoTheme {
         LoginScreen(navController = rememberNavController(), onLoginSuccess = {})
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Hello $name", modifier = Modifier.padding(16.dp))
-    }
-}
-
-@Composable
-private fun Screen(onLoginSuccess: () -> Unit, modifier: Modifier = Modifier) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text(stringResource(R.string.username)) },
-            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        )
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(stringResource(R.string.password)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = PasswordVisualTransformation(),
-//            keyboardOptions = KeyboardOptions(
-//                imeAction = ImeAction.Done,
-//                onDone = {
-//                    // Handle login action
-//                    performLogin(context, username, password, onLoginSuccess)
-//                }
-//            ),
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                // Handle login action
-//                performLogin(context, username, password, onLoginSuccess)
-                onLoginSuccess()
-            },
-            modifier = modifier
-                .fillMaxWidth()
-                .height(56.dp)
-        ) {
-            Text(stringResource(R.string.masuk))
-        }
     }
 }
