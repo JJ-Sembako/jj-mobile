@@ -7,6 +7,8 @@
     <string name="keluar">Keluar</string>
     <string name="lupa_pass">Lupa Password?</string>
     <string name="visible_pass">Visibilitas password</string>
+    <string name="err_username">Username minimal 5 karakter dengan dibolehkan memakai huruf, angka, dan tanda underscore saja!</string>
+    <string name="err_password">Password minimal 8 karakter!</string>
 
     <string name="home">Home</string>
 </resources>
