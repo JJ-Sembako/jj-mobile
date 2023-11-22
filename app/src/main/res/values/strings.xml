@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">JJ Sembako</string>
-    <string name="title_activity_splash">SplashActivity</string>
+    <string name="selamat_datang">Selamat Datang</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="masuk">Masuk</string>
+    <string name="keluar">Keluar</string>
+    <string name="lupa_pass">Lupa Password?</string>
+
+    <string name="home">Home</string>
 </resources>
