@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:bottom="0dp"
+        android:drawable="@color/orange"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp" />
+
+    <item
+        android:bottom="64dp"
+        android:drawable="@drawable/app_logo_white"
+        android:left="64dp"
+        android:right="64dp"
+        android:top="64dp" />
+</layer-list>
