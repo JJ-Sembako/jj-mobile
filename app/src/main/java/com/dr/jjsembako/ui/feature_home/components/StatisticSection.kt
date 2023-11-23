@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +32,7 @@ fun StatisticSection(totalPesanan: Int = 0, totalBarang: Int = 0) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         StatisticCard(totalPesanan, true)
-        StatisticCard(totalBarang, true)
+        StatisticCard(totalBarang, false)
     }
 }
 
@@ -40,7 +41,9 @@ private fun StatisticCard(total: Int, isPesanan: Boolean) {
     val text = if (isPesanan) {
         stringResource(R.string.pesanan_dibuat_bulan_ini)
     } else stringResource(R.string.barang_dijual_bulan_ini)
-    Card {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+    ) {
         Column(
             modifier = Modifier
                 .width(160.dp)
@@ -51,12 +54,13 @@ private fun StatisticCard(total: Int, isPesanan: Boolean) {
             Text(
                 text = text,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
+                fontSize = 14.sp
             )
             Text(
                 text = formatTotal(total),
                 fontWeight = FontWeight.Bold,
-                fontSize = 32.sp
+                fontSize = 24.sp
             )
         }
     }

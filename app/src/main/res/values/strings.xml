@@ -11,7 +11,6 @@
     <string name="err_username">Username minimal 5 karakter dengan dibolehkan memakai huruf, angka, dan tanda underscore saja!</string>
     <string name="err_password">Password minimal 8 karakter!</string>
 
-    <string name="home">Home</string>
     <string name="omset_bulan_ini">Omset Penjualan Bulan Ini</string>
     <string name="pesanan_dibuat_bulan_ini">Pesanan Dibuat\n Bulan Ini</string>
     <string name="barang_dijual_bulan_ini">Barang Dijual\n Bulan Ini</string>

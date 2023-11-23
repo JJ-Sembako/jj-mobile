@@ -18,9 +18,10 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warehouse
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,7 +40,8 @@ import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
 fun MenuSection() {
-    OutlinedCard(
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
@@ -47,7 +49,7 @@ fun MenuSection() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(8.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -80,8 +82,8 @@ private fun MenuItem(menuInfo: MenuInfo) {
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.primary)
-            .width(108.dp)
-            .padding(horizontal = 8.dp, vertical = 32.dp),
+            .width(96.dp)
+            .padding(horizontal = 4.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -96,7 +98,7 @@ private fun MenuItem(menuInfo: MenuInfo) {
         Text(
             text = menuInfo.title,
             color = Color.White,
-            fontSize = 12.sp,
+            fontSize = 10.sp,
             textAlign = TextAlign.Center
         )
     }
