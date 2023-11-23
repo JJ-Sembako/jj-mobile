@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">JJ Sembako</string>
+    <string name="app_logo">Logo aplikasi JJ Sembako</string>
     <string name="selamat_datang">Selamat Datang</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -11,4 +12,9 @@
     <string name="err_password">Password minimal 8 karakter!</string>
 
     <string name="home">Home</string>
+    <string name="omset_bulan_ini">Omset Penjualan Bulan Ini</string>
+    <string name="pesanan_dibuat_bulan_ini">Pesanan Dibuat\n Bulan Ini</string>
+    <string name="barang_dijual_bulan_ini">Barang Dijual\n Bulan Ini</string>
+    <string name="penjualan_terakhir">Penjualan Terakhir</string>
+    <string name="ikon_menu">Ikon dari menu %1$s</string>
 </resources>
