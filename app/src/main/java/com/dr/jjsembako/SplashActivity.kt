@@ -12,11 +12,14 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Handle the splash screen transition.
+        val splashScreen = installSplashScreen()
+
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val splashScreen = installSplashScreen()
-            splashScreen.setKeepOnScreenCondition { true }
-        }
+
+        // For routing purpose set true
+        splashScreen.setKeepOnScreenCondition { true }
+
         Handler(Looper.getMainLooper()).postDelayed({
             val intent = Intent(this@SplashActivity, MainActivity::class.java)
             startActivity(intent)

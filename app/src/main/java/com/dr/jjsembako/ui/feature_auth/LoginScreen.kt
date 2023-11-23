@@ -83,9 +83,10 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LottieAnimation(
-            modifier = Modifier.size(150.dp),
+            enableMergePaths = true,
             composition = composition,
             progress = { progress },
+            modifier = Modifier.size(150.dp)
         )
 
         Spacer(modifier = modifier.height(16.dp))
