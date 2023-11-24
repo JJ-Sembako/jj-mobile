@@ -65,7 +65,7 @@ fun HomeScreen(navController: NavController, onLogout: () -> Unit, modifier: Mod
         }
         Column {
             Spacer(modifier = Modifier.height(16.dp))
-            MenuSection()
+            MenuSection(navController)
             Spacer(modifier = Modifier.height(24.dp))
             HistorySection()
         }

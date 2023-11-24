@@ -1,6 +1,7 @@
 package com.dr.jjsembako.ui.feature_home.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,13 +34,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.model.MenuInfo
 import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun MenuSection() {
+fun MenuSection(navController: NavController) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         modifier = Modifier
@@ -57,7 +60,7 @@ fun MenuSection() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 menuList.take(3).forEachIndexed { index, menuInfo ->
-                    MenuItem(menuInfo)
+                    MenuItem(menuInfo, navController)
                     if (index < 2) {
                         Spacer(modifier = Modifier.width(8.dp))
                     }
@@ -66,7 +69,7 @@ fun MenuSection() {
             Spacer(modifier = Modifier.height(8.dp))
             Row {
                 menuList.takeLast(3).forEachIndexed { index, menuInfo ->
-                    MenuItem(menuInfo)
+                    MenuItem(menuInfo, navController)
                     if (index < 2) {
                         Spacer(modifier = Modifier.width(8.dp))
                     }
@@ -77,13 +80,16 @@ fun MenuSection() {
 }
 
 @Composable
-private fun MenuItem(menuInfo: MenuInfo) {
+private fun MenuItem(menuInfo: MenuInfo, navController: NavController) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.primary)
             .width(96.dp)
-            .padding(horizontal = 4.dp, vertical = 24.dp),
+            .padding(horizontal = 4.dp, vertical = 24.dp)
+            .clickable {
+                navController.navigate(menuInfo.route)
+            },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -117,7 +123,7 @@ private val menuList = listOf(
 @Preview(showBackground = true)
 fun MenuItemPreview() {
     JJSembakoTheme {
-        MenuItem(menuList[0])
+        MenuItem(menuList[0], navController = rememberNavController())
     }
 }
 
@@ -125,6 +131,6 @@ fun MenuItemPreview() {
 @Preview(showBackground = true)
 fun MenuSectionPreview() {
     JJSembakoTheme {
-        MenuSection()
+        MenuSection(navController = rememberNavController())
     }
 }
