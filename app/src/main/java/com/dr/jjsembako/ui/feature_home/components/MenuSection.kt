@@ -88,7 +88,9 @@ private fun MenuItem(menuInfo: MenuInfo, navController: NavController) {
             .width(96.dp)
             .padding(horizontal = 4.dp, vertical = 24.dp)
             .clickable {
-                navController.navigate(menuInfo.route)
+                navController.navigate(menuInfo.route) {
+                    launchSingleTop = true
+                }
             },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
