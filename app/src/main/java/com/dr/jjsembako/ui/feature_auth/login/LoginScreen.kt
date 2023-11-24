@@ -1,5 +1,6 @@
 package com.dr.jjsembako.ui.feature_auth.login
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +55,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.utils.isValidPassword
 import com.dr.jjsembako.core.utils.isValidUsername
+import com.dr.jjsembako.core.utils.rememberImeState
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -64,6 +67,15 @@ fun LoginScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val imeState = rememberImeState()
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(key1 = imeState.value) {
+        if (imeState.value) {
+            scrollState.animateScrollTo(scrollState.maxValue, tween(300))
+        }
+    }
+
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
@@ -84,7 +96,7 @@ fun LoginScreen(
 
     Column(
         modifier = modifier
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
             .fillMaxSize()
             .clickable(
                 indication = null,
