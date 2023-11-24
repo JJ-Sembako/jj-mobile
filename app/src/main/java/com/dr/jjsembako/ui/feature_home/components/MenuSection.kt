@@ -84,14 +84,14 @@ private fun MenuItem(menuInfo: MenuInfo, navController: NavController) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.primary)
-            .width(96.dp)
-            .padding(horizontal = 4.dp, vertical = 24.dp)
             .clickable {
                 navController.navigate(menuInfo.route) {
                     launchSingleTop = true
                 }
-            },
+            }
+            .background(MaterialTheme.colorScheme.primary)
+            .width(96.dp)
+            .padding(horizontal = 4.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
