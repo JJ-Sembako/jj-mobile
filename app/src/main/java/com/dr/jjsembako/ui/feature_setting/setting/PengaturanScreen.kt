@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_setting
+package com.dr.jjsembako.ui.feature_setting.setting
 
 import android.content.Context
 import android.content.pm.PackageManager

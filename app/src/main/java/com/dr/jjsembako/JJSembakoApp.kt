@@ -12,9 +12,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dr.jjsembako.navigation.Screen
-import com.dr.jjsembako.ui.feature_auth.LoginScreen
+import com.dr.jjsembako.ui.feature_auth.login.LoginScreen
 import com.dr.jjsembako.ui.feature_home.HomeScreen
-import com.dr.jjsembako.ui.feature_setting.PengaturanScreen
+import com.dr.jjsembako.ui.feature_setting.setting.PengaturanScreen
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable

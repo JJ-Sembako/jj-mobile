@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_auth
+package com.dr.jjsembako.ui.feature_auth.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
