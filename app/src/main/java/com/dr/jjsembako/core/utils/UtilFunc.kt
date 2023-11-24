@@ -15,15 +15,23 @@ fun isValidPassword(password: String): Boolean {
     return password.length >= 8
 }
 
+fun isValidNewPassword(newPassword: String, confNewPassword: String): Boolean {
+    return newPassword == confNewPassword
+}
+
+fun isDifferentPassword(oldPassword: String, newPassword: String): Boolean {
+    return oldPassword != newPassword
+}
+
 /**
  * Toolkits Transform Objek
  */
-fun formatRupiah(total: Long): String{
+fun formatRupiah(total: Long): String {
     val formatter = NumberFormat.getInstance(Locale("id", "ID"))
     return "Rp${formatter.format(total)},00"
 }
 
-fun formatTotal(total: Int): String{
+fun formatTotal(total: Int): String {
     val formatter = NumberFormat.getInstance(Locale("id", "ID"))
     return formatter.format(total)
 }
