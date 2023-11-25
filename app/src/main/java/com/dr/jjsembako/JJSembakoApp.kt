@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dr.jjsembako.navigation.Screen
+import com.dr.jjsembako.ui.feature_auth.check_username.PengecekanUsernameScreen
 import com.dr.jjsembako.ui.feature_auth.login.LoginScreen
 import com.dr.jjsembako.ui.feature_home.HomeScreen
 import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
@@ -23,11 +24,24 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Login.route) {
         composable(Screen.Login.route) {
-            LoginScreen(navController = navController, onLoginSuccess = {
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Login.route) { inclusive = true }
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
+                onNavigateToCheckUsername = {
+                    navController.navigate(Screen.PengecekanUsername.route) {
+                        launchSingleTop = true
+                    }
                 }
-            })
+            )
+        }
+
+        composable(Screen.PengecekanUsername.route){
+            PengecekanUsernameScreen(
+                onNavigateToLogin = { navController.popBackStack() },
+                onNavigateToCheckAnswer = { /*TODO*/ })
         }
 
 
@@ -89,7 +103,7 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
         }
 
         composable(Screen.GantiKataSandi.route) {
-            GantiKataSandiScreen(onNavigateToSetting = {navController.popBackStack()})
+            GantiKataSandiScreen(onNavigateToSetting = { navController.popBackStack() })
         }
     }
 }

@@ -3,6 +3,7 @@ package com.dr.jjsembako.ui.feature_auth.login
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,8 +46,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -61,8 +60,8 @@ import com.dr.jjsembako.ui.theme.JJSembakoTheme
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
-    navController: NavController,
     onLoginSuccess: () -> Unit,
+    onNavigateToCheckUsername: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -212,11 +211,18 @@ fun LoginScreen(
 
         Spacer(modifier = modifier.height(64.dp))
 
-        Text(
-            text = stringResource(id = R.string.lupa_pass),
+        Column(
             modifier = modifier
-                .padding(bottom = 24.dp)
-        )
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = { onNavigateToCheckUsername() })
+                .padding(bottom = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = stringResource(id = R.string.lupa_pass))
+        }
     }
 }
 
@@ -224,6 +230,6 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     JJSembakoTheme {
-        LoginScreen(navController = rememberNavController(), onLoginSuccess = {})
+        LoginScreen(onLoginSuccess = {}, onNavigateToCheckUsername = {})
     }
 }
