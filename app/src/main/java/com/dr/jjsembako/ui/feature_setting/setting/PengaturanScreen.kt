@@ -40,7 +40,8 @@ import com.dr.jjsembako.ui.theme.JJSembakoTheme
 fun PengaturanScreen(
     onLogout: () -> Unit,
     onNavigateToChangePassword: () -> Unit,
-    onNavigateToAccountRecovery: () -> Unit
+    onNavigateToAccountRecovery: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var username by rememberSaveable { mutableStateOf("username") }
     val context = LocalContext.current
@@ -53,14 +54,14 @@ fun PengaturanScreen(
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .padding(16.dp),
     ) {
         // Logo and greetings
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -68,17 +69,17 @@ fun PengaturanScreen(
             Image(
                 painter = logo,
                 contentDescription = stringResource(R.string.app_logo),
-                modifier = Modifier
+                modifier = modifier
                     .size(150.dp)
                     .padding(top = 32.dp, bottom = 8.dp)
             )
             Text(text = "Hi, $username", fontWeight = FontWeight.Medium, fontSize = 14.sp)
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = modifier.height(8.dp))
         }
 
         // Button
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 64.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -87,27 +88,27 @@ fun PengaturanScreen(
             Button(
                 shape = RoundedCornerShape(12.dp),
                 onClick = { onNavigateToChangePassword() },
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
                 Text(stringResource(R.string.ganti_kata_sandi))
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = modifier.height(8.dp))
             Button(
                 shape = RoundedCornerShape(12.dp),
                 onClick = { onNavigateToAccountRecovery() },
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
                 Text(stringResource(R.string.pemulihan_akun))
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = modifier.height(8.dp))
             Button(
                 shape = RoundedCornerShape(12.dp),
                 onClick = { onLogout() },
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
@@ -117,7 +118,7 @@ fun PengaturanScreen(
 
         // Copyrights and version
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(bottom = 48.dp, top = 128.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
