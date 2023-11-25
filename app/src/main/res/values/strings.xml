@@ -4,19 +4,21 @@
     <string name="selamat_datang">Selamat Datang</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="old_password">Password lama</string>
+    <string name="new_password">Password baru</string>
+    <string name="conf_new_password">Konfirmasi password baru</string>
     <string name="masuk">Masuk</string>
     <string name="keluar">Keluar</string>
     <string name="lupa_pass">Lupa Password?</string>
     <string name="visible_pass">Visibilitas password</string>
-    <string name="err_username">Username minimal 5 karakter dengan dibolehkan memakai huruf, angka, dan tanda underscore saja!</string>
-    <string name="err_password">Password minimal 8 karakter!</string>
+    <string name="ubah">Ubah</string>
+    <string name="back">Kembali</string>
 
     <string name="omset_bulan_ini">Omset Penjualan Bulan Ini</string>
     <string name="pesanan_dibuat_bulan_ini">Pesanan Dibuat\n Bulan Ini</string>
     <string name="barang_dijual_bulan_ini">Barang Dijual\n Bulan Ini</string>
     <string name="penjualan_terakhir">Penjualan Terakhir</string>
     <string name="ikon_menu">Ikon dari menu %1$s</string>
-
 
     <string name="ganti_kata_sandi">Ganti Kata Sandi</string>
     <string name="pemulihan_akun">Pemulihan Akun</string>

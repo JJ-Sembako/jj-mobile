@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.ui.feature_auth.login.LoginScreen
 import com.dr.jjsembako.ui.feature_home.HomeScreen
+import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
 import com.dr.jjsembako.ui.feature_setting.setting.PengaturanScreen
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
@@ -85,6 +86,10 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
 
         composable(Screen.Pengaturan.route) {
             PengaturanScreen(navController = navController)
+        }
+
+        composable(Screen.GantiKataSandi.route) {
+            GantiKataSandiScreen(onNavigateToSetting = {navController.popBackStack()})
         }
     }
 }
