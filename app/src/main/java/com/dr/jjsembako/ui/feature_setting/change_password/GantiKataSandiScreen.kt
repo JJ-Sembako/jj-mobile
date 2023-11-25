@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -127,175 +126,180 @@ fun GantiKataSandiScreen(
     ) { contentPadding ->
         Column(
             modifier = modifier
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
                 .fillMaxSize()
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
                     onClick = { keyboardController?.hide() })
-                .padding(contentPadding).padding(16.dp),
+                .padding(contentPadding)
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
+            OutlinedTextField(
+                label = { Text(stringResource(R.string.old_password)) },
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                visualTransformation = if (oldPasswordVisibility) VisualTransformation.None
+                else PasswordVisualTransformation(),
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                trailingIcon = {
+                    IconButton(onClick = { oldPasswordVisibility = !oldPasswordVisibility }) {
+                        Icon(
+                            painter = iconOldPassword,
+                            contentDescription = stringResource(R.string.visible_pass)
+                        )
+                    }
+                },
+                isError = !isValidOldPassword.value,
+                value = oldPassword,
+                onValueChange = {
+                    oldPassword = it
+                    if (!isValidPassword(oldPassword)) {
+                        isValidOldPassword.value = false
+                        errMsgOldPassword.value = "Password minimal 8 karakter!"
+                    } else {
+                        isValidOldPassword.value = true
+                        errMsgOldPassword.value = ""
+                    }
+                    if (!isDifferentPassword(oldPassword, newPassword)) {
+                        isValidNewPassword.value = false
+                        errMsgNewPassword.value = "Password baru harus berbeda!"
+                    } else {
+                        isValidNewPassword.value = true
+                        errMsgNewPassword.value = ""
+                    }
+                },
                 modifier = modifier
-                    .imePadding()
-                    .verticalScroll(scrollState)
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { keyboardController?.hide() })
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+            )
+            Text(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                text = errMsgOldPassword.value,
+                fontSize = 14.sp,
+                color = Color.Red
+            )
+
+            OutlinedTextField(
+                label = { Text(stringResource(R.string.new_password)) },
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                visualTransformation = if (newPasswordVisibility) VisualTransformation.None
+                else PasswordVisualTransformation(),
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                trailingIcon = {
+                    IconButton(onClick = { newPasswordVisibility = !newPasswordVisibility }) {
+                        Icon(
+                            painter = iconNewPassword,
+                            contentDescription = stringResource(R.string.visible_pass)
+                        )
+                    }
+                },
+                isError = !isValidNewPassword.value,
+                value = newPassword,
+                onValueChange = {
+                    newPassword = it
+                    if (!isValidPassword(newPassword)) {
+                        isValidNewPassword.value = false
+                        errMsgNewPassword.value = "Password minimal 8 karakter!"
+                    } else if (!isDifferentPassword(oldPassword, newPassword)) {
+                        isValidNewPassword.value = false
+                        errMsgNewPassword.value = "Password baru harus berbeda!"
+                    } else {
+                        isValidNewPassword.value = true
+                        errMsgNewPassword.value = ""
+                    }
+                    if (!isValidNewPassword(newPassword, confNewPassword)) {
+                        isValidConfNewPassword.value = false
+                        errMsgConfNewPassword.value = "Konfirmasi password baru berbeda!"
+                    } else {
+                        isValidConfNewPassword.value = true
+                        errMsgConfNewPassword.value = ""
+                    }
+                },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+            )
+            Text(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                text = errMsgNewPassword.value,
+                fontSize = 14.sp,
+                color = Color.Red
+            )
+
+
+            OutlinedTextField(
+                label = { Text(stringResource(R.string.conf_new_password)) },
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                visualTransformation = if (confNewPasswordVisibility) VisualTransformation.None
+                else PasswordVisualTransformation(),
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                trailingIcon = {
+                    IconButton(onClick = {
+                        confNewPasswordVisibility = !confNewPasswordVisibility
+                    }) {
+                        Icon(
+                            painter = iconConfNewPassword,
+                            contentDescription = stringResource(R.string.visible_pass)
+                        )
+                    }
+                },
+                isError = !isValidConfNewPassword.value,
+                value = confNewPassword,
+                onValueChange = {
+                    confNewPassword = it
+                    if (!isValidPassword(confNewPassword)) {
+                        isValidConfNewPassword.value = false
+                        errMsgConfNewPassword.value = "Password minimal 8 karakter!"
+                    } else if (!isValidNewPassword(newPassword, confNewPassword)) {
+                        isValidConfNewPassword.value = false
+                        errMsgConfNewPassword.value = "Konfirmasi password baru berbeda!"
+                    } else {
+                        isValidConfNewPassword.value = true
+                        errMsgConfNewPassword.value = ""
+                    }
+                },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+            )
+            Text(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                text = errMsgConfNewPassword.value,
+                fontSize = 14.sp,
+                color = Color.Red
+            )
+
+            Spacer(modifier = modifier.height(16.dp))
+
+            Button(
+                onClick = { onNavigateToSetting() },
+                enabled = isValidOldPassword.value && isValidNewPassword.value && isValidConfNewPassword.value,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
             ) {
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.old_password)) },
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    visualTransformation = if (oldPasswordVisibility) VisualTransformation.None
-                    else PasswordVisualTransformation(),
-                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-                    trailingIcon = {
-                        IconButton(onClick = { oldPasswordVisibility = !oldPasswordVisibility }) {
-                            Icon(
-                                painter = iconOldPassword,
-                                contentDescription = stringResource(R.string.visible_pass)
-                            )
-                        }
-                    },
-                    isError = !isValidOldPassword.value,
-                    value = oldPassword,
-                    onValueChange = {
-                        oldPassword = it
-                        if (!isValidPassword(oldPassword)) {
-                            isValidOldPassword.value = false
-                            errMsgOldPassword.value = "Password minimal 8 karakter!"
-                        } else {
-                            isValidOldPassword.value = true
-                            errMsgOldPassword.value = ""
-                        }
-                    },
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                )
-                Text(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                    text = errMsgOldPassword.value,
-                    fontSize = 14.sp,
-                    color = Color.Red
-                )
-
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.new_password)) },
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    visualTransformation = if (newPasswordVisibility) VisualTransformation.None
-                    else PasswordVisualTransformation(),
-                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-                    trailingIcon = {
-                        IconButton(onClick = { newPasswordVisibility = !newPasswordVisibility }) {
-                            Icon(
-                                painter = iconNewPassword,
-                                contentDescription = stringResource(R.string.visible_pass)
-                            )
-                        }
-                    },
-                    isError = !isValidNewPassword.value,
-                    value = newPassword,
-                    onValueChange = {
-                        oldPassword = it
-                        if (!isValidPassword(newPassword)) {
-                            isValidNewPassword.value = false
-                            errMsgNewPassword.value = "Password minimal 8 karakter!"
-                        } else if (isDifferentPassword(oldPassword, newPassword)) {
-                            isValidNewPassword.value = false
-                            errMsgNewPassword.value = "Password baru harus berbeda!"
-                        } else {
-                            isValidNewPassword.value = true
-                            errMsgNewPassword.value = ""
-                        }
-                    },
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                )
-                Text(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                    text = errMsgNewPassword.value,
-                    fontSize = 14.sp,
-                    color = Color.Red
-                )
-
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.new_password)) },
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    visualTransformation = if (confNewPasswordVisibility) VisualTransformation.None
-                    else PasswordVisualTransformation(),
-                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            confNewPasswordVisibility = !confNewPasswordVisibility
-                        }) {
-                            Icon(
-                                painter = iconConfNewPassword,
-                                contentDescription = stringResource(R.string.visible_pass)
-                            )
-                        }
-                    },
-                    isError = !isValidConfNewPassword.value,
-                    value = confNewPassword,
-                    onValueChange = {
-                        oldPassword = it
-                        if (!isValidPassword(confNewPassword)) {
-                            isValidConfNewPassword.value = false
-                            errMsgConfNewPassword.value = "Password minimal 8 karakter!"
-                        } else if (isValidNewPassword(newPassword, confNewPassword)) {
-                            isValidConfNewPassword.value = false
-                            errMsgConfNewPassword.value = "Konfirmasi password baru berbeda!"
-                        } else {
-                            isValidConfNewPassword.value = true
-                            errMsgConfNewPassword.value = ""
-                        }
-                    },
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                )
-                Text(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                    text = errMsgConfNewPassword.value,
-                    fontSize = 14.sp,
-                    color = Color.Red
-                )
-
-                Spacer(modifier = modifier.height(16.dp))
-
-                Button(
-                    onClick = { onNavigateToSetting() },
-                    enabled = isValidOldPassword.value && isValidNewPassword.value && isValidConfNewPassword.value,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                ) {
-                    Text(stringResource(R.string.ubah))
-                }
+                Text(stringResource(R.string.ubah))
             }
+
         }
     }
 }

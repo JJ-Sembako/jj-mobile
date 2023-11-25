@@ -38,7 +38,7 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
             )
         }
 
-        composable(Screen.PengecekanUsername.route){
+        composable(Screen.PengecekanUsername.route) {
             PengecekanUsernameScreen(
                 onNavigateToLogin = { navController.popBackStack() },
                 onNavigateToCheckAnswer = { /*TODO*/ })
@@ -99,7 +99,19 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
         }
 
         composable(Screen.Pengaturan.route) {
-            PengaturanScreen(navController = navController)
+            PengaturanScreen(
+                onLogout = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                },
+                onNavigateToChangePassword = {
+                    navController.navigate(Screen.GantiKataSandi.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToAccountRecovery = {}
+            )
         }
 
         composable(Screen.GantiKataSandi.route) {

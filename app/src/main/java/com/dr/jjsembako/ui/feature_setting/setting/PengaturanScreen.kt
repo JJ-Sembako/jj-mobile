@@ -33,14 +33,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.dr.jjsembako.R
-import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun PengaturanScreen(navController: NavController) {
+fun PengaturanScreen(
+    onLogout: () -> Unit,
+    onNavigateToChangePassword: () -> Unit,
+    onNavigateToAccountRecovery: () -> Unit
+) {
     var username by rememberSaveable { mutableStateOf("username") }
     val context = LocalContext.current
     val versionName = getAppVersion(context)
@@ -85,31 +86,27 @@ fun PengaturanScreen(navController: NavController) {
         ) {
             Button(
                 shape = RoundedCornerShape(12.dp),
-                onClick = {},
+                onClick = { onNavigateToChangePassword() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    .padding(bottom = 8.dp)
             ) {
                 Text(stringResource(R.string.ganti_kata_sandi))
             }
+            Spacer(modifier = Modifier.height(8.dp))
             Button(
                 shape = RoundedCornerShape(12.dp),
-                onClick = {},
+                onClick = { onNavigateToAccountRecovery() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    .padding(bottom = 8.dp)
             ) {
                 Text(stringResource(R.string.pemulihan_akun))
             }
+            Spacer(modifier = Modifier.height(8.dp))
             Button(
                 shape = RoundedCornerShape(12.dp),
-                onClick = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Home.route) { inclusive = true }
-                    }
-                },
+                onClick = { onLogout() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
@@ -160,6 +157,9 @@ fun getAppVersion(context: Context): String {
 @Preview(showBackground = true)
 fun PengaturanScreenPreview() {
     JJSembakoTheme {
-        PengaturanScreen(navController = rememberNavController())
+        PengaturanScreen(
+            onLogout = {},
+            onNavigateToChangePassword = {},
+            onNavigateToAccountRecovery = {})
     }
 }
