@@ -46,11 +46,42 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
 
 
         composable(Screen.Home.route) {
-            HomeScreen(navController = navController, onLogout = {
-                navController.navigate(Screen.Login.route) {
-                    popUpTo(Screen.Home.route) { inclusive = true }
-                }
-            })
+            HomeScreen(
+                onNavigateToCreateOrder = {
+                    navController.navigate(Screen.BuatPesanan.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToWarehouse = {
+                    navController.navigate(Screen.Gudang.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToCustomer = {
+                    navController.navigate(Screen.Pelanggan.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToHistory = {
+                    navController.navigate(Screen.Riwayat.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToPerformance = {
+                    navController.navigate(Screen.Performa.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToSetting = {
+                    navController.navigate(Screen.Pengaturan.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onLogout = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                })
         }
 
         composable(Screen.BuatPesanan.route) {

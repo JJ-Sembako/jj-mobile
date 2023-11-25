@@ -20,8 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.dr.jjsembako.ui.feature_home.components.HistorySection
 import com.dr.jjsembako.ui.feature_home.components.MenuSection
 import com.dr.jjsembako.ui.feature_home.components.OmzetSection
@@ -30,7 +28,16 @@ import com.dr.jjsembako.ui.feature_home.components.WelcomeSection
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun HomeScreen(navController: NavController, onLogout: () -> Unit, modifier: Modifier = Modifier) {
+fun HomeScreen(
+    onNavigateToCreateOrder: () -> Unit,
+    onNavigateToWarehouse: () -> Unit,
+    onNavigateToCustomer: () -> Unit,
+    onNavigateToHistory: () -> Unit,
+    onNavigateToPerformance: () -> Unit,
+    onNavigateToSetting: () -> Unit,
+    onLogout: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var username by rememberSaveable { mutableStateOf("username") }
     var omzet by rememberSaveable { mutableStateOf(0L) }
     var totalPesanan by rememberSaveable { mutableStateOf(0) }
@@ -42,32 +49,40 @@ fun HomeScreen(navController: NavController, onLogout: () -> Unit, modifier: Mod
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
+        Box(modifier = modifier.fillMaxWidth()) {
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .height(224.dp)
                     .background(MaterialTheme.colorScheme.primary)
             )
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
-                WelcomeSection(name = username, onLogout = { onLogout() })
-                Spacer(modifier = Modifier.height(8.dp))
-                OmzetSection(omzet)
-                Spacer(modifier = Modifier.height(8.dp))
-                StatisticSection(totalPesanan, totalBarang)
+                Spacer(modifier = modifier.height(16.dp))
+                WelcomeSection(name = username, onLogout = { onLogout() }, modifier = modifier)
+                Spacer(modifier = modifier.height(8.dp))
+                OmzetSection(omzet, modifier)
+                Spacer(modifier = modifier.height(8.dp))
+                StatisticSection(totalPesanan, totalBarang, modifier)
             }
         }
         Column {
-            Spacer(modifier = Modifier.height(16.dp))
-            MenuSection(navController)
-            Spacer(modifier = Modifier.height(24.dp))
-            HistorySection()
+            Spacer(modifier = modifier.height(16.dp))
+            MenuSection(
+                onNavigateToCreateOrder = { onNavigateToCreateOrder() },
+                onNavigateToWarehouse = { onNavigateToWarehouse() },
+                onNavigateToCustomer = { onNavigateToCustomer() },
+                onNavigateToHistory = { onNavigateToHistory() },
+                onNavigateToPerformance = { onNavigateToPerformance() },
+                onNavigateToSetting = { onNavigateToSetting() },
+                modifier = modifier
+            )
+            Spacer(modifier = modifier.height(24.dp))
+            HistorySection(modifier = modifier)
         }
     }
 }
@@ -76,6 +91,14 @@ fun HomeScreen(navController: NavController, onLogout: () -> Unit, modifier: Mod
 @Composable
 fun LoginScreenPreview() {
     JJSembakoTheme {
-        HomeScreen(navController = rememberNavController(), onLogout = {})
+        HomeScreen(
+            onNavigateToCreateOrder = {},
+            onNavigateToWarehouse = {},
+            onNavigateToCustomer = {},
+            onNavigateToHistory = {},
+            onNavigateToPerformance = {},
+            onNavigateToSetting = {},
+            onLogout = {}
+        )
     }
 }

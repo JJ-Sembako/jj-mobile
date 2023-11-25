@@ -1,7 +1,6 @@
 package com.dr.jjsembako.ui.feature_home.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,26 +26,26 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun WelcomeSection(name: String, onLogout: () -> Unit) {
+fun WelcomeSection(name: String, onLogout: () -> Unit, modifier: Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Greetings(name)
+        Greetings(name, modifier)
         Icon(
             Icons.Default.ExitToApp,
             contentDescription = stringResource(R.string.keluar),
             tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.clickable { onLogout() }
+            modifier = modifier.clickable { onLogout() }
         )
     }
 }
 
 @Composable
-private fun Greetings(name: String) {
+private fun Greetings(name: String, modifier: Modifier) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -55,14 +53,17 @@ private fun Greetings(name: String) {
         Image(
             painter = painterResource(id = R.drawable.app_logo_white),
             contentDescription = stringResource(R.string.app_logo),
-            modifier = Modifier
+            modifier = modifier
                 .size(64.dp)
                 .padding(end = 8.dp)
         )
         Column {
             Text(
-                text = stringResource(R.string.app_name), fontSize = 20.sp, color = MaterialTheme.colorScheme.onPrimary,
-                fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 4.dp)
+                text = stringResource(R.string.app_name),
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.padding(bottom = 4.dp)
             )
             Text(text = "Hi, $name", color = MaterialTheme.colorScheme.onPrimary)
         }
@@ -73,7 +74,7 @@ private fun Greetings(name: String) {
 @Preview(showBackground = true)
 fun WelcomeSectionPreview() {
     JJSembakoTheme {
-        WelcomeSection(name = "UsernameIsCool12345678", onLogout = {})
+        WelcomeSection(name = "UsernameIsCool12345678", onLogout = {}, modifier = Modifier)
     }
 }
 
@@ -81,6 +82,6 @@ fun WelcomeSectionPreview() {
 @Preview(showBackground = true)
 fun GreetingsPreview() {
     JJSembakoTheme {
-        Greetings(name = "UsernameIsCool12345678")
+        Greetings(name = "UsernameIsCool12345678", modifier = Modifier)
     }
 }

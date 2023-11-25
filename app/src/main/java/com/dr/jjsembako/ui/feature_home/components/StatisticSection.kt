@@ -23,21 +23,21 @@ import com.dr.jjsembako.core.utils.formatTotal
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun StatisticSection(totalPesanan: Int = 0, totalBarang: Int = 0) {
+fun StatisticSection(totalPesanan: Int = 0, totalBarang: Int = 0, modifier: Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        StatisticCard(totalPesanan, true)
-        StatisticCard(totalBarang, false)
+        StatisticCard(totalPesanan, true, modifier)
+        StatisticCard(totalBarang, false, modifier)
     }
 }
 
 @Composable
-private fun StatisticCard(total: Int, isPesanan: Boolean) {
+private fun StatisticCard(total: Int, isPesanan: Boolean, modifier: Modifier) {
     val text = if (isPesanan) {
         stringResource(R.string.pesanan_dibuat_bulan_ini)
     } else stringResource(R.string.barang_dijual_bulan_ini)
@@ -45,7 +45,7 @@ private fun StatisticCard(total: Int, isPesanan: Boolean) {
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .width(160.dp)
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
@@ -54,7 +54,7 @@ private fun StatisticCard(total: Int, isPesanan: Boolean) {
             Text(
                 text = text,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = modifier.padding(bottom = 8.dp),
                 fontSize = 14.sp
             )
             Text(
@@ -70,7 +70,7 @@ private fun StatisticCard(total: Int, isPesanan: Boolean) {
 @Preview(showBackground = true)
 fun StatisticCardPesananPreview() {
     JJSembakoTheme {
-        StatisticCard(1813, true)
+        StatisticCard(1813, true, modifier = Modifier)
     }
 }
 
@@ -78,7 +78,7 @@ fun StatisticCardPesananPreview() {
 @Preview(showBackground = true)
 fun StatisticCardBarangPreview() {
     JJSembakoTheme {
-        StatisticCard(12345, false)
+        StatisticCard(12345, false, modifier = Modifier)
     }
 }
 
@@ -86,6 +86,6 @@ fun StatisticCardBarangPreview() {
 @Preview(showBackground = true)
 fun StatisticSectionPreview() {
     JJSembakoTheme {
-        StatisticSection(1813, 12345)
+        StatisticSection(1813, 12345, modifier = Modifier)
     }
 }

@@ -34,23 +34,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.model.MenuInfo
 import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun MenuSection(navController: NavController) {
+fun MenuSection(
+    onNavigateToCreateOrder: () -> Unit,
+    onNavigateToWarehouse: () -> Unit,
+    onNavigateToCustomer: () -> Unit,
+    onNavigateToHistory: () -> Unit,
+    onNavigateToPerformance: () -> Unit,
+    onNavigateToSetting: () -> Unit,
+    modifier: Modifier
+) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(8.dp),
             verticalArrangement = Arrangement.Center,
@@ -60,18 +66,36 @@ fun MenuSection(navController: NavController) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 menuList.take(3).forEachIndexed { index, menuInfo ->
-                    MenuItem(menuInfo, navController)
+                    MenuItem(
+                        menuInfo = menuInfo,
+                        onNavigateToCreateOrder = { onNavigateToCreateOrder() },
+                        onNavigateToWarehouse = { onNavigateToWarehouse() },
+                        onNavigateToCustomer = { onNavigateToCustomer() },
+                        onNavigateToHistory = { onNavigateToHistory() },
+                        onNavigateToPerformance = { onNavigateToPerformance() },
+                        onNavigateToSetting = { onNavigateToSetting() },
+                        modifier = modifier
+                    )
                     if (index < 2) {
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = modifier.width(8.dp))
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = modifier.height(8.dp))
             Row {
                 menuList.takeLast(3).forEachIndexed { index, menuInfo ->
-                    MenuItem(menuInfo, navController)
+                    MenuItem(
+                        menuInfo = menuInfo,
+                        onNavigateToCreateOrder = { onNavigateToCreateOrder() },
+                        onNavigateToWarehouse = { onNavigateToWarehouse() },
+                        onNavigateToCustomer = { onNavigateToCustomer() },
+                        onNavigateToHistory = { onNavigateToHistory() },
+                        onNavigateToPerformance = { onNavigateToPerformance() },
+                        onNavigateToSetting = { onNavigateToSetting() },
+                        modifier = modifier
+                    )
                     if (index < 2) {
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = modifier.width(8.dp))
                     }
                 }
             }
@@ -80,13 +104,28 @@ fun MenuSection(navController: NavController) {
 }
 
 @Composable
-private fun MenuItem(menuInfo: MenuInfo, navController: NavController) {
+private fun MenuItem(
+    menuInfo: MenuInfo,
+    onNavigateToCreateOrder: () -> Unit,
+    onNavigateToWarehouse: () -> Unit,
+    onNavigateToCustomer: () -> Unit,
+    onNavigateToHistory: () -> Unit,
+    onNavigateToPerformance: () -> Unit,
+    onNavigateToSetting: () -> Unit,
+    modifier: Modifier
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .clickable {
-                navController.navigate(menuInfo.route) {
-                    launchSingleTop = true
+                when (menuInfo.route) {
+                    Screen.BuatPesanan.route -> onNavigateToCreateOrder()
+                    Screen.Gudang.route -> onNavigateToWarehouse()
+                    Screen.Pelanggan.route -> onNavigateToCustomer()
+                    Screen.Riwayat.route -> onNavigateToHistory()
+                    Screen.Performa.route -> onNavigateToPerformance()
+                    Screen.Pengaturan.route -> onNavigateToSetting()
+                    else -> {}
                 }
             }
             .background(MaterialTheme.colorScheme.primary)
@@ -99,7 +138,7 @@ private fun MenuItem(menuInfo: MenuInfo, navController: NavController) {
             menuInfo.icon,
             contentDescription = stringResource(R.string.ikon_menu, menuInfo.title),
             tint = Color.White,
-            modifier = Modifier
+            modifier = modifier
                 .size(32.dp)
                 .padding(bottom = 8.dp)
         )
@@ -125,7 +164,16 @@ private val menuList = listOf(
 @Preview(showBackground = true)
 fun MenuItemPreview() {
     JJSembakoTheme {
-        MenuItem(menuList[0], navController = rememberNavController())
+        MenuItem(
+            menuList[0],
+            onNavigateToCreateOrder = {},
+            onNavigateToWarehouse = {},
+            onNavigateToCustomer = {},
+            onNavigateToHistory = {},
+            onNavigateToPerformance = {},
+            onNavigateToSetting = {},
+            modifier = Modifier
+        )
     }
 }
 
@@ -133,6 +181,14 @@ fun MenuItemPreview() {
 @Preview(showBackground = true)
 fun MenuSectionPreview() {
     JJSembakoTheme {
-        MenuSection(navController = rememberNavController())
+        MenuSection(
+            onNavigateToCreateOrder = {},
+            onNavigateToWarehouse = {},
+            onNavigateToCustomer = {},
+            onNavigateToHistory = {},
+            onNavigateToPerformance = {},
+            onNavigateToSetting = {},
+            modifier = Modifier
+        )
     }
 }

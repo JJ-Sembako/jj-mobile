@@ -18,15 +18,15 @@ import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun OmzetSection(omzet: Long = 0) {
+fun OmzetSection(omzet: Long = 0, modifier: Modifier) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 16.dp),
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(16.dp)
         ) {
             Text(
@@ -43,6 +43,6 @@ fun OmzetSection(omzet: Long = 0) {
 @Preview(showBackground = true)
 fun OmzetSectionPreview() {
     JJSembakoTheme {
-        OmzetSection(omzet = 123456789)
+        OmzetSection(omzet = 123456789, modifier = Modifier)
     }
 }
