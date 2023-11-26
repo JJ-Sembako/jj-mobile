@@ -22,9 +22,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +33,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -79,7 +81,7 @@ fun PemulihanAkunScreen(
         }
     }
 
-    var expanded by remember { mutableStateOf(false) }
+    var isExpanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf<DropDownOption?>(null) }
 
     var isActive by rememberSaveable { mutableStateOf(false) }
@@ -130,7 +132,7 @@ fun PemulihanAkunScreen(
                 Switch(checked = isActive, onCheckedChange = {
                     isActive = it
                     if (!isActive) {
-                        expanded = false
+                        isExpanded = false
                         selectedOption = null
                         questionId = ""
                         answer = ""
@@ -148,23 +150,38 @@ fun PemulihanAkunScreen(
 
             Spacer(modifier = modifier.height(48.dp))
             if (isActive) {
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
+                ExposedDropdownMenuBox(
+                    expanded = isExpanded,
+                    onExpandedChange = { isExpanded = it },
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp)
                 ) {
-                    dropDownOption.forEach { option ->
-                        DropdownMenuItem(
-                            text = { option.option },
-                            onClick = {
-                                selectedOption = option
-                                questionId = option.value
-                                expanded = false
-                            },
-                            enabled = option.enabled
-                        )
+                    TextField(
+                        placeholder = { Text(text = "Pilih pertanyaan") },
+                        value = selectedOption?.option ?: "Pilih pertanyaan",
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                        modifier = modifier
+                            .menuAnchor()
+                            .fillMaxWidth()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = isExpanded,
+                        onDismissRequest = { isExpanded = false }
+                    ) {
+                        dropDownOption.forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(text = option.option) },
+                                onClick = {
+                                    selectedOption = option
+                                    questionId = option.value
+                                    isExpanded = false
+                                }
+                            )
+                        }
                     }
                 }
 
@@ -204,7 +221,7 @@ fun PemulihanAkunScreen(
 
             Button(
                 onClick = { onNavigateToSetting() },
-                enabled = if (isActive) isValidAnswer.value else true,
+                enabled = if (isActive) isValidAnswer.value && questionId.isNotEmpty() else true,
                 modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
@@ -217,9 +234,8 @@ fun PemulihanAkunScreen(
 }
 
 private val dropDownOption = listOf(
-    DropDownOption("Pilih pertanyaan", "", false),
-    DropDownOption("Siapa nama kamu", "abcd-1234-1"),
-    DropDownOption("Siapa nama peliharaanmu", "wxyz-4567-1")
+    DropDownOption("Siapa nama kamu?", "abcd-1234-1"),
+    DropDownOption("Siapa nama peliharaanmu?", "wxyz-4567-1")
 )
 
 @Preview(showBackground = true)
