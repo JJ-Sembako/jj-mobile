@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_auth.check_username
+package com.dr.jjsembako.ui.feature_auth.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -50,15 +49,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.utils.isValidUsername
+import com.dr.jjsembako.core.utils.isValidAnswer
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun PengecekanUsernameScreen(
-    onNavigateToLogin: () -> Unit,
-    onNavigateToCheckAnswer: () -> Unit,
+fun PertanyaanPemulihanScreen(
+    onNavigateBack: () -> Unit,
+    onNavigateToChangePassword: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -73,9 +72,10 @@ fun PengecekanUsernameScreen(
         }
     }
 
-    var username by rememberSaveable { mutableStateOf("") }
-    var isValidUsername = rememberSaveable { mutableStateOf(false) }
-    var errMsgUsername = rememberSaveable { mutableStateOf("") }
+    var question by rememberSaveable { mutableStateOf("") }
+    var answer by rememberSaveable { mutableStateOf("") }
+    var isValidAnswer = rememberSaveable { mutableStateOf(false) }
+    var errMsgAnswer = rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -84,12 +84,13 @@ fun PengecekanUsernameScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
-                title = { Text(stringResource(R.string.check_username)) },
+                title = { Text(stringResource(R.string.question_recovery)) },
                 navigationIcon = {
-                    IconButton(onClick = { onNavigateToLogin() }) {
+                    IconButton(onClick = { onNavigateBack() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
+                            contentDescription = stringResource(R.string.back),
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
@@ -108,25 +109,36 @@ fun PengecekanUsernameScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                text = stringResource(R.string.question),
+                fontSize = 14.sp,
+            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, bottom = 24.dp),
+                text = if (question.isEmpty()) "Apa makanan favoritmu?" else question,
+            )
             OutlinedTextField(
-                label = { Text(stringResource(R.string.username)) },
+                label = { Text(stringResource(R.string.answer)) },
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
                 ),
-                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                isError = !isValidUsername.value,
-                value = username,
+                isError = !isValidAnswer.value,
+                value = answer,
                 onValueChange = {
-                    username = it
-                    if (!isValidUsername(username)) {
-                        isValidUsername.value = false
-                        errMsgUsername.value =
-                            "Username minimal 5 karakter diawali huruf diikuti karakter huruf, angka, underscore, atau strip!"
+                    answer = it
+                    if (!isValidAnswer(answer)) {
+                        isValidAnswer.value = false
+                        errMsgAnswer.value = "Jawaban minimal 3 karakter!"
                     } else {
-                        isValidUsername.value = true
-                        errMsgUsername.value = ""
+                        isValidAnswer.value = true
+                        errMsgAnswer.value = ""
                     }
                 },
                 modifier = modifier
@@ -137,7 +149,7 @@ fun PengecekanUsernameScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                text = errMsgUsername.value,
+                text = errMsgAnswer.value,
                 fontSize = 14.sp,
                 color = Color.Red
             )
@@ -145,13 +157,13 @@ fun PengecekanUsernameScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { onNavigateToCheckAnswer() },
-                enabled = isValidUsername.value,
+                onClick = { onNavigateToChangePassword() },
+                enabled = isValidAnswer.value,
                 modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text(stringResource(R.string.check))
+                Text(stringResource(R.string.verification))
             }
         }
     }
@@ -159,8 +171,11 @@ fun PengecekanUsernameScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PengecekanUsernameScreenPreview() {
+fun PertanyaanPemulihanScreenPreview() {
     JJSembakoTheme {
-        PengecekanUsernameScreen(onNavigateToLogin = {}, onNavigateToCheckAnswer = {})
+        PertanyaanPemulihanScreen(
+            onNavigateBack = {},
+            onNavigateToChangePassword = {}
+        )
     }
 }
