@@ -89,7 +89,8 @@ fun PengecekanUsernameScreen(
                     IconButton(onClick = { onNavigateToLogin() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
+                            contentDescription = stringResource(R.string.back),
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
