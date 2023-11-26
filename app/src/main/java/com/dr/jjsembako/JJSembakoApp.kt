@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.ui.feature_auth.check_username.PengecekanUsernameScreen
 import com.dr.jjsembako.ui.feature_auth.login.LoginScreen
+import com.dr.jjsembako.ui.feature_auth.password_recovery.PemulihanKataSandiScreen
 import com.dr.jjsembako.ui.feature_auth.recovery_question.PertanyaanPemulihanScreen
 import com.dr.jjsembako.ui.feature_home.HomeScreen
 import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
@@ -49,10 +50,24 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
                 })
         }
 
-        composable(Screen.PertanyaanPemulihan.route){
+        composable(Screen.PertanyaanPemulihan.route) {
             PertanyaanPemulihanScreen(
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToChangePassword = { /*TODO*/ })
+                onNavigateToChangePassword = {
+                    navController.navigate(Screen.PemulihanKataSandi.route) {
+                        launchSingleTop = true
+                    }
+                })
+        }
+
+        composable(Screen.PemulihanKataSandi.route) {
+            PemulihanKataSandiScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                })
         }
 
         composable(Screen.Home.route) {
