@@ -92,7 +92,7 @@ fun PengaturanScreen(
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text(stringResource(R.string.ganti_kata_sandi))
+                Text(stringResource(R.string.change_password))
             }
             Spacer(modifier = modifier.height(8.dp))
             Button(
@@ -102,7 +102,7 @@ fun PengaturanScreen(
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text(stringResource(R.string.pemulihan_akun))
+                Text(stringResource(R.string.account_recovery))
             }
             Spacer(modifier = modifier.height(8.dp))
             Button(
@@ -112,7 +112,7 @@ fun PengaturanScreen(
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text(stringResource(R.string.keluar))
+                Text(stringResource(R.string.logout))
             }
         }
 
@@ -125,16 +125,16 @@ fun PengaturanScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(R.string.milik),
+                text = stringResource(R.string.copyright),
                 fontSize = 11.sp,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = stringResource(R.string.perusahaan),
+                text = stringResource(R.string.company),
                 fontSize = 11.sp,
                 textAlign = TextAlign.Center
             )
-            Text(text = stringResource(R.string.versi, versionName), fontSize = 11.sp)
+            Text(text = stringResource(R.string.version, versionName), fontSize = 11.sp)
         }
     }
 }

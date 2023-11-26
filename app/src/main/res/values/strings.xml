@@ -1,22 +1,21 @@
 <resources>
     <string name="app_name">JJ Sembako</string>
     <string name="app_logo">Logo aplikasi JJ Sembako</string>
-    <string name="selamat_datang">Selamat Datang</string>
+    <string name="welcome">Selamat Datang</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="old_password">Password lama</string>
     <string name="new_password">Password baru</string>
     <string name="conf_new_password">Konfirmasi password baru</string>
-    <string name="masuk">Masuk</string>
-    <string name="keluar">Keluar</string>
-    <string name="lupa_pass">Lupa Password?</string>
+    <string name="login">Masuk</string>
+    <string name="logout">Keluar</string>
+    <string name="forget_pass">Lupa Password?</string>
     <string name="visible_pass">Visibilitas password</string>
-    <string name="ubah">Ubah</string>
+    <string name="change">Ubah</string>
     <string name="back">Kembali</string>
 
     <string name="check_username">Pengecekan Username</string>
     <string name="question_recovery">Pertanyaan Pemulihan</string>
-    <string name="account_recovery">Pemulihan Akun</string>
     <string name="question">Pertanyaan</string>
     <string name="answer">Jawaban</string>
     <string name="verification">Verifikasi</string>
@@ -28,9 +27,9 @@
     <string name="penjualan_terakhir">Penjualan Terakhir</string>
     <string name="ikon_menu">Ikon dari menu %1$s</string>
 
-    <string name="ganti_kata_sandi">Ganti Kata Sandi</string>
-    <string name="pemulihan_akun">Pemulihan Akun</string>
-    <string name="milik">Milik</string>
-    <string name="perusahaan">CV Nurhalim Jaya Tekstil</string>
-    <string name="versi">Versi %1$s</string>
+    <string name="change_password">Ganti Kata Sandi</string>
+    <string name="account_recovery">Pemulihan Akun</string>
+    <string name="copyright">Milik</string>
+    <string name="company">CV Nurhalim Jaya Tekstil</string>
+    <string name="version">Versi %1$s</string>
 </resources>

@@ -37,7 +37,7 @@ fun WelcomeSection(name: String, onLogout: () -> Unit, modifier: Modifier) {
         Greetings(name, modifier)
         Icon(
             Icons.Default.ExitToApp,
-            contentDescription = stringResource(R.string.keluar),
+            contentDescription = stringResource(R.string.logout),
             tint = MaterialTheme.colorScheme.onPrimary,
             modifier = modifier.clickable { onLogout() }
         )

@@ -112,7 +112,7 @@ fun GantiKataSandiScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
-                title = { Text(stringResource(R.string.ganti_kata_sandi)) },
+                title = { Text(stringResource(R.string.change_password)) },
                 navigationIcon = {
                     IconButton(onClick = { onNavigateToSetting() }) {
                         Icon(
@@ -298,7 +298,7 @@ fun GantiKataSandiScreen(
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text(stringResource(R.string.ubah))
+                Text(stringResource(R.string.change))
             }
 
         }

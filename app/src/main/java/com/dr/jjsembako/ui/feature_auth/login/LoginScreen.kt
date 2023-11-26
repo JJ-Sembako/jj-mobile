@@ -114,7 +114,7 @@ fun LoginScreen(
         Spacer(modifier = modifier.height(16.dp))
 
         Text(
-            text = stringResource(id = R.string.selamat_datang),
+            text = stringResource(id = R.string.welcome),
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             modifier = modifier
@@ -206,7 +206,7 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .height(56.dp)
         ) {
-            Text(stringResource(R.string.masuk))
+            Text(stringResource(R.string.login))
         }
 
         Spacer(modifier = modifier.height(64.dp))
@@ -221,7 +221,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = stringResource(id = R.string.lupa_pass))
+            Text(text = stringResource(id = R.string.forget_pass))
         }
     }
 }
