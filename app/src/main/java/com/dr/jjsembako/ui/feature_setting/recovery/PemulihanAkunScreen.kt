@@ -22,6 +22,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,6 +56,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.model.DropDownOption
 import com.dr.jjsembako.core.utils.isValidAnswer
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
@@ -75,6 +78,9 @@ fun PemulihanAkunScreen(
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
     }
+
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOption by remember { mutableStateOf<DropDownOption?>(null) }
 
     var isActive by rememberSaveable { mutableStateOf(false) }
     var questionId by rememberSaveable { mutableStateOf("") }
@@ -101,7 +107,7 @@ fun PemulihanAkunScreen(
                 },
             )
         }
-    ){contentPadding ->
+    ) { contentPadding ->
         Column(
             modifier = modifier
                 .verticalScroll(scrollState)
@@ -113,7 +119,7 @@ fun PemulihanAkunScreen(
                 .padding(contentPadding)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
             Row(
                 modifier = modifier
                     .fillMaxWidth(),
@@ -121,14 +127,47 @@ fun PemulihanAkunScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(id = R.string.activate_account_recovery))
-                Switch(checked = isActive, onCheckedChange = {isActive = it})
+                Switch(checked = isActive, onCheckedChange = {
+                    isActive = it
+                    if (!isActive) {
+                        expanded = false
+                        selectedOption = null
+                        questionId = ""
+                        answer = ""
+                        isValidAnswer.value = false
+                        errMsgAnswer.value = ""
+                    }
+                })
             }
             Spacer(modifier = modifier.height(16.dp))
-            Divider(modifier = modifier.fillMaxWidth().width(1.dp), color = MaterialTheme.colorScheme.tertiary)
+            Divider(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+            )
 
             Spacer(modifier = modifier.height(48.dp))
-            if(isActive){
-                Text(text = "pertanyaan")
+            if (isActive) {
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                ) {
+                    dropDownOption.forEach { option ->
+                        DropdownMenuItem(
+                            text = { option.option },
+                            onClick = {
+                                selectedOption = option
+                                questionId = option.value
+                                expanded = false
+                            },
+                            enabled = option.enabled
+                        )
+                    }
+                }
+
                 OutlinedTextField(
                     label = { Text(stringResource(R.string.answer)) },
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
@@ -165,7 +204,7 @@ fun PemulihanAkunScreen(
 
             Button(
                 onClick = { onNavigateToSetting() },
-                enabled = if(isActive) isValidAnswer.value else true,
+                enabled = if (isActive) isValidAnswer.value else true,
                 modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
@@ -176,6 +215,12 @@ fun PemulihanAkunScreen(
 
     }
 }
+
+private val dropDownOption = listOf(
+    DropDownOption("Pilih pertanyaan", "", false),
+    DropDownOption("Siapa nama kamu", "abcd-1234-1"),
+    DropDownOption("Siapa nama peliharaanmu", "wxyz-4567-1")
+)
 
 @Preview(showBackground = true)
 @Composable
