@@ -99,7 +99,10 @@ fun PemulihanAkunScreen(
                 ),
                 title = { Text(stringResource(R.string.account_recovery)) },
                 navigationIcon = {
-                    IconButton(onClick = { onNavigateToSetting() }) {
+                    IconButton(onClick = {
+                        keyboardController?.hide()
+                        onNavigateToSetting()
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
@@ -220,7 +223,10 @@ fun PemulihanAkunScreen(
             Spacer(modifier = modifier.height(48.dp))
 
             Button(
-                onClick = { onNavigateToSetting() },
+                onClick = {
+                    keyboardController?.hide()
+                    onNavigateToSetting()
+                },
                 enabled = if (isActive) isValidAnswer.value && questionId.isNotEmpty() else true,
                 modifier = modifier
                     .fillMaxWidth()

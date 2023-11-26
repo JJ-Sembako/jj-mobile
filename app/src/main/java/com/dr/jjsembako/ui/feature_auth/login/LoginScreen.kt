@@ -199,6 +199,7 @@ fun LoginScreen(
 
         Button(
             onClick = {
+                keyboardController?.hide()
                 onLoginSuccess()
             },
             enabled = isValidUsername.value && isValidPassword.value,

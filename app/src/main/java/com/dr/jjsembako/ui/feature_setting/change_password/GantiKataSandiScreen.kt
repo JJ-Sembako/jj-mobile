@@ -114,7 +114,10 @@ fun GantiKataSandiScreen(
                 ),
                 title = { Text(stringResource(R.string.change_password)) },
                 navigationIcon = {
-                    IconButton(onClick = { onNavigateToSetting() }) {
+                    IconButton(onClick = {
+                        keyboardController?.hide()
+                        onNavigateToSetting()
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
@@ -292,7 +295,10 @@ fun GantiKataSandiScreen(
             Spacer(modifier = modifier.height(16.dp))
 
             Button(
-                onClick = { onNavigateToSetting() },
+                onClick = {
+                    keyboardController?.hide()
+                    onNavigateToSetting()
+                },
                 enabled = isValidOldPassword.value && isValidNewPassword.value && isValidConfNewPassword.value,
                 modifier = modifier
                     .fillMaxWidth()

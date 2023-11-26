@@ -86,7 +86,10 @@ fun PertanyaanPemulihanScreen(
                 ),
                 title = { Text(stringResource(R.string.question_recovery)) },
                 navigationIcon = {
-                    IconButton(onClick = { onNavigateBack() }) {
+                    IconButton(onClick = {
+                        keyboardController?.hide()
+                        onNavigateBack()
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
@@ -157,7 +160,10 @@ fun PertanyaanPemulihanScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { onNavigateToChangePassword() },
+                onClick = {
+                    keyboardController?.hide()
+                    onNavigateToChangePassword()
+                },
                 enabled = isValidAnswer.value,
                 modifier = modifier
                     .fillMaxWidth()

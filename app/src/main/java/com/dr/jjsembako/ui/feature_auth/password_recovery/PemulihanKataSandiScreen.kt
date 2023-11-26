@@ -106,7 +106,10 @@ fun PemulihanKataSandiScreen(
                 ),
                 title = { Text(stringResource(R.string.change_password)) },
                 navigationIcon = {
-                    IconButton(onClick = { onNavigateBack() }) {
+                    IconButton(onClick = {
+                        keyboardController?.hide()
+                        onNavigateBack()
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
@@ -231,7 +234,10 @@ fun PemulihanKataSandiScreen(
             Spacer(modifier = modifier.height(16.dp))
 
             Button(
-                onClick = { onNavigateToLogin() },
+                onClick = {
+                    keyboardController?.hide()
+                    onNavigateToLogin()
+                },
                 enabled = isValidNewPassword.value && isValidConfNewPassword.value,
                 modifier = modifier
                     .fillMaxWidth()

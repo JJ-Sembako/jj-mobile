@@ -86,7 +86,10 @@ fun PengecekanUsernameScreen(
                 ),
                 title = { Text(stringResource(R.string.check_username)) },
                 navigationIcon = {
-                    IconButton(onClick = { onNavigateToLogin() }) {
+                    IconButton(onClick = {
+                        keyboardController?.hide()
+                        onNavigateToLogin()
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
@@ -146,7 +149,10 @@ fun PengecekanUsernameScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { onNavigateToCheckAnswer() },
+                onClick = {
+                    keyboardController?.hide()
+                    onNavigateToCheckAnswer()
+                },
                 enabled = isValidUsername.value,
                 modifier = modifier
                     .fillMaxWidth()
