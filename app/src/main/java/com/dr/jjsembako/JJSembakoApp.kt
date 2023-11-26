@@ -18,6 +18,7 @@ import com.dr.jjsembako.ui.feature_auth.password_recovery.PemulihanKataSandiScre
 import com.dr.jjsembako.ui.feature_auth.recovery_question.PertanyaanPemulihanScreen
 import com.dr.jjsembako.ui.feature_home.HomeScreen
 import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
+import com.dr.jjsembako.ui.feature_setting.recovery.PemulihanAkunScreen
 import com.dr.jjsembako.ui.feature_setting.setting.PengaturanScreen
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
@@ -166,12 +167,20 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
                         launchSingleTop = true
                     }
                 },
-                onNavigateToAccountRecovery = {}
+                onNavigateToAccountRecovery = {
+                    navController.navigate(Screen.PemulihanAkun.route) {
+                        launchSingleTop = true
+                    }
+                }
             )
         }
 
         composable(Screen.GantiKataSandi.route) {
             GantiKataSandiScreen(onNavigateToSetting = { navController.popBackStack() })
+        }
+
+        composable(Screen.PemulihanAkun.route) {
+            PemulihanAkunScreen(onNavigateToSetting = { navController.popBackStack() })
         }
     }
 }
