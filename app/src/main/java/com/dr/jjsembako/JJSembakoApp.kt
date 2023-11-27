@@ -16,6 +16,7 @@ import com.dr.jjsembako.ui.feature_auth.check_username.PengecekanUsernameScreen
 import com.dr.jjsembako.ui.feature_auth.login.LoginScreen
 import com.dr.jjsembako.ui.feature_auth.password_recovery.PemulihanKataSandiScreen
 import com.dr.jjsembako.ui.feature_auth.recovery_question.PertanyaanPemulihanScreen
+import com.dr.jjsembako.ui.feature_customer.list.PelangganScreen
 import com.dr.jjsembako.ui.feature_home.HomeScreen
 import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
 import com.dr.jjsembako.ui.feature_setting.recovery.PemulihanAkunScreen
@@ -129,12 +130,7 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
         }
 
         composable(Screen.Pelanggan.route) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Pelanggan")
-            }
+            PelangganScreen()
         }
 
         composable(Screen.Riwayat.route) {
