@@ -1,14 +1,10 @@
 package com.dr.jjsembako.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,13 +23,13 @@ import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun CustomerInfo(customer: Customer, modifier: Modifier) {
+fun CustomerInfo(onNavigateToDetailCust: () -> Unit, customer: Customer, modifier: Modifier) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
-            .clickable {  },
+            .clickable { onNavigateToDetailCust() },
     ) {
         Column(
             modifier = modifier
@@ -65,6 +61,7 @@ fun CustomerInfo(customer: Customer, modifier: Modifier) {
 fun CustomerInfoPreview() {
     JJSembakoTheme {
         CustomerInfo(
+            onNavigateToDetailCust = {},
             Customer(
                 "abcd-123",
                 "Bambang",

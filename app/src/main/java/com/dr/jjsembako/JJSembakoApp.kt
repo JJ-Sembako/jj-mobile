@@ -26,7 +26,8 @@ import com.dr.jjsembako.ui.theme.JJSembakoTheme
 @Composable
 fun JJSembakoApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
+    val startDestination = Screen.Pelanggan.route
+    NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
@@ -130,7 +131,11 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
         }
 
         composable(Screen.Pelanggan.route) {
-            PelangganScreen(onNavigateBack = {navController.popBackStack()})
+            PelangganScreen(
+                onNavigateBack = {navController.popBackStack()},
+                onNavigateToDetailCust = {},
+                onNavigateToAddCust = {}
+            )
         }
 
         composable(Screen.Riwayat.route) {

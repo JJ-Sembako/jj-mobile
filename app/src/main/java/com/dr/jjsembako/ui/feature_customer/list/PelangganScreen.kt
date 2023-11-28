@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -55,6 +57,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun PelangganScreen(
     onNavigateBack: () -> Unit,
+    onNavigateToDetailCust: () -> Unit,
+    onNavigateToAddCust: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -63,7 +67,9 @@ fun PelangganScreen(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
     var showSheet = remember { mutableStateOf(false) }
-    var (selectedOption, onOptionSelected) = remember { mutableStateOf<FilterOption>(radioOptions[0]) }
+    var (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+    var searchQuery = remember { mutableStateOf("") }
+    var activeSearch = remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = keyboardHeight) {
         coroutineScope.launch {
@@ -94,8 +100,16 @@ fun PelangganScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {}, containerColor = MaterialTheme.colorScheme.primary) {
-                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_new_cust))
+            if (!activeSearch.value) {
+                FloatingActionButton(
+                    onClick = { onNavigateToAddCust() },
+                    containerColor = MaterialTheme.colorScheme.primary
+                ) {
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = stringResource(R.string.add_new_cust)
+                    )
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.End
@@ -103,7 +117,7 @@ fun PelangganScreen(
         Column(
             modifier = modifier
 //                .verticalScroll(scrollState)
-                .verticalScroll(rememberScrollState())
+//                .verticalScroll(rememberScrollState())
                 .fillMaxSize()
                 .clickable(
                     indication = null,
@@ -113,13 +127,27 @@ fun PelangganScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SearchFilter(openFilter = {showSheet.value = !showSheet.value}, modifier = modifier)
+            SearchFilter(
+                activeSearch,
+                searchQuery,
+                openFilter = { showSheet.value = !showSheet.value },
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(16.dp))
-            custList.forEach { cust ->
-                CustomerInfo(customer = cust, modifier = modifier)
-                Spacer(modifier = modifier.height(8.dp))
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxWidth()
+            ) {
+                items(items = custList, itemContent = { cust ->
+                    CustomerInfo(
+                        onNavigateToDetailCust = { onNavigateToDetailCust() },
+                        customer = cust,
+                        modifier = modifier
+                    )
+                    Spacer(modifier = modifier.height(8.dp))
+                })
             }
-            if(showSheet.value){
+            if (showSheet.value) {
                 BottomSheetCustomer(
                     optionList = radioOptions,
                     selectedOption = selectedOption,
@@ -151,6 +179,60 @@ private val custList = listOf(
         "081234567890",
         0L
     ),
+    Customer(
+        "bcde-123",
+        "Yulianti",
+        "Warung Sejahter",
+        "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
+        "https://gmaps.com/123123",
+        "081234567890",
+        500_000L
+    ),
+    Customer(
+        "klmn-456",
+        "Susi",
+        "Toko Susi",
+        "Jl. Kalibata Raya No. 5 Gang Cenderawasih, Sapi, Gajah, Harimau, Mamalia, Hewan",
+        "https://gmaps.com/123123",
+        "081234567890",
+        0L
+    ),
+    Customer(
+        "rasa-123",
+        "Dewi",
+        "Toko Dewi Pojok",
+        "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
+        "https://gmaps.com/123123",
+        "081234567890",
+        300_000L
+    ),
+    Customer(
+        "kjas-456",
+        "Tukimin",
+        "Toko Min Jo",
+        "Jl. Kalibata Raya No. 5 Gang Cenderawasih, Sapi, Gajah, Harimau, Mamalia, Hewan",
+        "https://gmaps.com/123123",
+        "081234567890",
+        0L
+    ),
+    Customer(
+        "asad-123",
+        "Heru",
+        "Warung Pojok",
+        "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
+        "https://gmaps.com/123123",
+        "081234567890",
+        500_000L
+    ),
+    Customer(
+        "pqrs-456",
+        "Sulistiati",
+        "Toko Sulis",
+        "Jl. Kalibata Raya No. 5 Gang Cenderawasih, Sapi, Gajah, Harimau, Mamalia, Hewan",
+        "https://gmaps.com/123123",
+        "081234567890",
+        0L
+    ),
 )
 
 private val radioOptions = listOf(
@@ -162,6 +244,11 @@ private val radioOptions = listOf(
 @Preview(showBackground = true)
 fun PelangganScreenPreview() {
     JJSembakoTheme {
-        PelangganScreen(onNavigateBack = {}, modifier = Modifier)
+        PelangganScreen(
+            onNavigateBack = {},
+            onNavigateToDetailCust = {},
+            onNavigateToAddCust = {},
+            modifier = Modifier
+        )
     }
 }

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -15,17 +17,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,30 +38,35 @@ import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchFilter(openFilter: ()->Unit, modifier: Modifier) {
-    var searchQuery by remember { mutableStateOf("") }
-    var active by remember { mutableStateOf(false) }
+fun SearchFilter(
+    activeSearch: MutableState<Boolean>,
+    searchQuery: MutableState<String>,
+    openFilter: () -> Unit,
+    modifier: Modifier
+) {
     val placeholder = stringResource(R.string.search_cust)
 
     Row(
         modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween // Adjusted horizontal arrangement
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         // SearchBar
-        SearchBar(
-            modifier = modifier.weight(1f),
-            query = searchQuery,
+        DockedSearchBar(
+            modifier = modifier
+                .weight(1f)
+                .heightIn(min = 48.dp),
+            query = searchQuery.value,
             onQueryChange = {
-                searchQuery = it
+                searchQuery.value = it
             },
             onSearch = {
-                active = false
+                activeSearch.value = false
             },
-            active = active,
+            active = activeSearch.value,
             onActiveChange = {
-                active = it
+                activeSearch.value = it
             },
             placeholder = {
                 Text(text = placeholder)
@@ -69,39 +75,45 @@ fun SearchFilter(openFilter: ()->Unit, modifier: Modifier) {
                 Icon(Icons.Default.Search, contentDescription = stringResource(R.string.search))
             },
             trailingIcon = {
-                if (active) {
+                if (activeSearch.value) {
                     Icon(
                         modifier = modifier.clickable {
-                            if (searchQuery.isNotEmpty()) {
-                                searchQuery = ""
+                            if (searchQuery.value.isNotEmpty()) {
+                                searchQuery.value = ""
                             } else {
-                                active = false
+                                activeSearch.value = false
                             }
                         },
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(R.string.close_search)
                     )
                 }
-            }
-        ) {}
+            },
+        ) {
+            Column(modifier = modifier.height(0.dp)) {
 
-        Spacer(modifier = modifier.width(12.dp))
-
-        // Filter icon
-        Column(modifier = modifier.padding(top = 8.dp)){
-            IconButton(
-                onClick = {openFilter()}, modifier = modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .size(48.dp)
-                    .background(MaterialTheme.colorScheme.primary)
-            ) {
-                Icon(
-                    Icons.Default.FilterAlt,
-                    contentDescription = stringResource(R.string.filter),
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
             }
         }
+
+        // Filter icon
+        if (!activeSearch.value) {
+            Spacer(modifier = modifier.width(12.dp))
+            Column(modifier = modifier.padding(top = 8.dp)) {
+                IconButton(
+                    onClick = { openFilter() }, modifier = modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .size(48.dp)
+                        .background(MaterialTheme.colorScheme.primary)
+                ) {
+                    Icon(
+                        Icons.Default.FilterAlt,
+                        contentDescription = stringResource(R.string.filter),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+        }
+
     }
 }
 
@@ -109,6 +121,11 @@ fun SearchFilter(openFilter: ()->Unit, modifier: Modifier) {
 @Preview(showBackground = true)
 fun SearchFilterPreview() {
     JJSembakoTheme {
-        SearchFilter(openFilter = {}, modifier = Modifier)
+        SearchFilter(
+            activeSearch = remember { mutableStateOf(false) },
+            searchQuery = remember { mutableStateOf("") },
+            openFilter = {},
+            modifier = Modifier
+        )
     }
 }
