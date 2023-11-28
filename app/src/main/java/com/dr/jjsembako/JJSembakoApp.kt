@@ -130,7 +130,7 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
         }
 
         composable(Screen.Pelanggan.route) {
-            PelangganScreen()
+            PelangganScreen(onNavigateBack = {navController.popBackStack()})
         }
 
         composable(Screen.Riwayat.route) {

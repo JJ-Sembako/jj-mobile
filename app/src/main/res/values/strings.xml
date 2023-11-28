@@ -35,4 +35,15 @@
     <string name="copyright">Milik</string>
     <string name="company">CV Nurhalim Jaya Tekstil</string>
     <string name="version">Versi %1$s</string>
+
+    <string name="search">Pencarian</string>
+    <string name="close_search">Tutup pencarian</string>
+    <string name="filter">Filter</string>
+    <string name="search_cust">Cari pelanggan</string>
+    <string name="filter_cust">Filter pelanggan</string>
+    <string name="all_cust">Semua pelanggan</string>
+    <string name="my_cust">Pelanggan saya</string>
+    <string name="total_debt">Total utang: %1$s</string>
+    <string name="cust">Pelanggan</string>
+    <string name="add_new_cust">Tambah data pelanggan baru</string>
 </resources>
