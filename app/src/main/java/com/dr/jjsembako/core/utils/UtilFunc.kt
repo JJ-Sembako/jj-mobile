@@ -42,3 +42,13 @@ fun formatTotal(total: Int): String {
 fun isValidAnswer(answer: String): Boolean{
     return answer.length >= 3
 }
+
+/**
+ * Toolkits Pelanggan
+ */
+fun isValidPhoneNumber(phone: String): Boolean{
+    return phone.length >= 3
+}
+fun isValidLinkGmaps(link: String): Boolean{
+    return link.length >= 3
+}

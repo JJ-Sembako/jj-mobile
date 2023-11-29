@@ -15,6 +15,10 @@
     <string name="save">Simpan</string>
     <string name="update">Perbarui</string>
     <string name="back">Kembali</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Hapus</string>
+    <string name="cancel">Batal</string>
+    <string name="err_input_empty">Inputan Wajib diisi!</string>
 
     <string name="check_username">Pengecekan Username</string>
     <string name="question_recovery">Pertanyaan Pemulihan</string>
@@ -45,5 +49,15 @@
     <string name="my_cust">Pelanggan saya</string>
     <string name="total_debt">Total utang: %1$s</string>
     <string name="cust">Pelanggan</string>
-    <string name="add_new_cust">Tambah data pelanggan baru</string>
+    <string name="add_new_cust">Tambah Pelanggan</string>
+    <string name="det_new_cust">Detail Pelanggan</string>
+    <string name="edit_new_cust">Edit Pelanggan</string>
+    <string name="view_gmaps">Lihat Lokasi GMaps</string>
+    <string name="call">Telepon</string>
+    <string name="chat">Chat WA</string>
+    <string name="name">Nama</string>
+    <string name="shop_name">Nama Toko</string>
+    <string name="phone_number">No. Telp</string>
+    <string name="address">Alamat</string>
+    <string name="link_gmaps">Link Google Maps</string>
 </resources>
