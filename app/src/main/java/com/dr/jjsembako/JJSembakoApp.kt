@@ -26,7 +26,7 @@ import com.dr.jjsembako.ui.theme.JJSembakoTheme
 @Composable
 fun JJSembakoApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    val startDestination = Screen.Pelanggan.route
+    val startDestination = Screen.Home.route
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(
