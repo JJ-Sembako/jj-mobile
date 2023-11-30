@@ -1,5 +1,9 @@
 package com.dr.jjsembako.core.utils
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -47,8 +51,42 @@ fun isValidAnswer(answer: String): Boolean{
  * Toolkits Pelanggan
  */
 fun isValidPhoneNumber(phone: String): Boolean{
-    return phone.length >= 3
+    val regex = Regex("^(\\+62|62)?[\\s-]?0?8[1-9]{1}\\d{1}[\\s-]?\\d{4}[\\s-]?\\d{2,5}\$")
+    return phone.isNotEmpty() && regex.matches(phone)
 }
-fun isValidLinkGmaps(link: String): Boolean{
-    return link.length >= 3
+fun isValidLinkMaps(link: String): Boolean{
+    val regexGmaps = Regex("(https:\\/\\/)goo.gl\\/maps\\/.*|(https:\\/\\/)www.google.(co.id|com)\\/maps\\/place\\/.*|(https:\\/\\/)maps.app.goo.gl\\/.*")
+    val regexAppleMaps = Regex("(https:\\/\\/)maps.apple.com\\/.*|(https:\\/\\/)maps\\.app\\.goo\\.gl\\/.*\n")
+    return if(link.isEmpty()) false
+    else regexGmaps.matches(link) || regexAppleMaps.matches(link)
+}
+fun convertToChatWA(phone: String): String {
+    // Hapus semua karakter yang bukan digit dari nomor telepon
+    val cleanedPhoneNumber = phone.replace(Regex("[^\\d]"), "")
+
+    // Periksa apakah nomor telepon dimulai dengan 0, jika iya, hilangkan
+    val formattedPhoneNumber = if (cleanedPhoneNumber.startsWith("0")) {
+        cleanedPhoneNumber.substring(1)
+    } else {
+        cleanedPhoneNumber
+    }
+
+    // Membuat link
+    val waLink = when {
+        formattedPhoneNumber.startsWith("62") -> "https://wa.me/$formattedPhoneNumber"
+        formattedPhoneNumber.startsWith("+62") -> "https://wa.me/$formattedPhoneNumber"
+        formattedPhoneNumber.startsWith("0") -> "https://wa.me/62$formattedPhoneNumber"
+        else -> "https://wa.me/$formattedPhoneNumber"
+    }
+
+    return waLink
+}
+
+fun openMaps(context: Context, url: String) {
+    Log.e("Maps Link", "URL IS: $url")
+    val urlIntent = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse(url)
+    )
+    context.startActivity(urlIntent)
 }

@@ -52,12 +52,14 @@
     <string name="add_new_cust">Tambah Pelanggan</string>
     <string name="det_new_cust">Detail Pelanggan</string>
     <string name="edit_new_cust">Edit Pelanggan</string>
-    <string name="view_gmaps">Lihat Lokasi GMaps</string>
+    <string name="view_maps">Lihat Lokasi Maps</string>
     <string name="call">Telepon</string>
     <string name="chat">Chat WA</string>
     <string name="name">Nama</string>
     <string name="shop_name">Nama Toko</string>
     <string name="phone_number">No. Telp</string>
     <string name="address">Alamat</string>
-    <string name="link_gmaps">Link Google Maps</string>
+    <string name="maps_link">Link Maps</string>
+    <string name="err_invalid_link">Link tidak valid, ambil link dari GMaps atau Apple Maps!</string>
+    <string name="err_invalid_phone_number">No. telp tidak valid!</string>
 </resources>

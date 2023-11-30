@@ -54,6 +54,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.utils.isValidLinkMaps
+import com.dr.jjsembako.core.utils.isValidPhoneNumber
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 
@@ -61,7 +63,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TambahPelangganScreen(
     onNavigateToPelangganScreen: () -> Unit,
-    openMaps: () -> Unit,
+    openMaps: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -80,21 +82,23 @@ fun TambahPelangganScreen(
     var shopName by rememberSaveable { mutableStateOf("") }
     var phoneNumber by rememberSaveable { mutableStateOf("") }
     var address by rememberSaveable { mutableStateOf("") }
-    var linkGmaps by rememberSaveable { mutableStateOf("") }
+    var mapsLink by rememberSaveable { mutableStateOf("") }
 
     var isValidName = rememberSaveable { mutableStateOf(false) }
     var isValidShopName = rememberSaveable { mutableStateOf(false) }
     var isValidPhoneNumber = rememberSaveable { mutableStateOf(false) }
     var isValidAddress = rememberSaveable { mutableStateOf(false) }
-    var isValidLinkGmaps = rememberSaveable { mutableStateOf(false) }
+    var isValidMapsLink = rememberSaveable { mutableStateOf(false) }
 
     var errMsgName = rememberSaveable { mutableStateOf("") }
     var errMsgShopName = rememberSaveable { mutableStateOf("") }
     var errMsgPhoneNumber = rememberSaveable { mutableStateOf("") }
     var errMsgAddress = rememberSaveable { mutableStateOf("") }
-    var errMsgLinkGmaps = rememberSaveable { mutableStateOf("") }
+    var errMsgMapsLink = rememberSaveable { mutableStateOf("") }
 
     val errInputEmpty = stringResource(R.string.err_input_empty)
+    val errInvalidLink = stringResource(R.string.err_invalid_link)
+    val errInvalidPhoneNumber = stringResource(R.string.err_invalid_phone_number)
 
     Scaffold(
         topBar = {
@@ -141,7 +145,7 @@ fun TambahPelangganScreen(
                 isError = !isValidName.value,
                 value = name,
                 onValueChange = {
-                    name = it
+                    name = it.trimStart()
                     if (name.isEmpty()) {
                         isValidName.value = false
                         errMsgName.value = errInputEmpty
@@ -173,7 +177,7 @@ fun TambahPelangganScreen(
                 isError = !isValidShopName.value,
                 value = shopName,
                 onValueChange = {
-                    shopName = it
+                    shopName = it.trimStart()
                     if (shopName.isEmpty()) {
                         isValidShopName.value = false
                         errMsgShopName.value = errInputEmpty
@@ -209,6 +213,9 @@ fun TambahPelangganScreen(
                     if (phoneNumber.isEmpty()) {
                         isValidPhoneNumber.value = false
                         errMsgPhoneNumber.value = errInputEmpty
+                    } else if (!isValidPhoneNumber(phoneNumber)) {
+                        isValidPhoneNumber.value = false
+                        errMsgPhoneNumber.value = errInvalidPhoneNumber
                     } else {
                         isValidPhoneNumber.value = true
                         errMsgPhoneNumber.value = ""
@@ -231,13 +238,13 @@ fun TambahPelangganScreen(
                 label = { Text(stringResource(R.string.address)) },
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Phone,
+                    keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
                 ),
                 isError = !isValidAddress.value,
                 value = address,
                 onValueChange = {
-                    address = it
+                    address = it.trimStart()
                     if (address.isEmpty()) {
                         isValidAddress.value = false
                         errMsgAddress.value = errInputEmpty
@@ -260,22 +267,25 @@ fun TambahPelangganScreen(
             )
 
             OutlinedTextField(
-                label = { Text(stringResource(R.string.link_gmaps)) },
+                label = { Text(stringResource(R.string.maps_link)) },
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Phone,
+                    keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
                 ),
-                isError = !isValidLinkGmaps.value,
-                value = linkGmaps,
+                isError = !isValidMapsLink.value,
+                value = mapsLink,
                 onValueChange = {
-                    linkGmaps = it
-                    if (linkGmaps.isEmpty()) {
-                        isValidLinkGmaps.value = false
-                        errMsgLinkGmaps.value = errInputEmpty
+                    mapsLink = it.trimStart()
+                    if (mapsLink.isEmpty()) {
+                        isValidMapsLink.value = false
+                        errMsgMapsLink.value = errInputEmpty
+                    } else if (!isValidLinkMaps(mapsLink)) {
+                        isValidMapsLink.value = false
+                        errMsgMapsLink.value = errInvalidLink
                     } else {
-                        isValidLinkGmaps.value = true
-                        errMsgLinkGmaps.value = ""
+                        isValidMapsLink.value = true
+                        errMsgMapsLink.value = ""
                     }
                 },
                 modifier = modifier
@@ -286,7 +296,7 @@ fun TambahPelangganScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                text = errMsgLinkGmaps.value,
+                text = errMsgMapsLink.value,
                 fontSize = 14.sp,
                 color = Color.Red
             )
@@ -296,20 +306,20 @@ fun TambahPelangganScreen(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    openMaps()
+                    openMaps(mapsLink)
                 },
-                enabled = isValidLinkGmaps.value,
+                enabled = isValidMapsLink.value,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 modifier = modifier
                     .height(56.dp)
             ) {
                 Icon(
                     Icons.Default.LocationOn,
-                    contentDescription = stringResource(R.string.view_gmaps),
+                    contentDescription = stringResource(R.string.view_maps),
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = modifier.padding(end = 4.dp)
                 )
-                Text(stringResource(R.string.view_gmaps))
+                Text(stringResource(R.string.view_maps))
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -338,7 +348,7 @@ fun TambahPelangganScreen(
                         keyboardController?.hide()
                         onNavigateToPelangganScreen()
                     },
-                    enabled = isValidName.value && isValidShopName.value && isValidPhoneNumber.value && isValidAddress.value && isValidLinkGmaps.value,
+                    enabled = isValidName.value && isValidShopName.value && isValidPhoneNumber.value && isValidAddress.value && isValidMapsLink.value,
                     modifier = modifier
                         .width(120.dp)
                         .height(56.dp)

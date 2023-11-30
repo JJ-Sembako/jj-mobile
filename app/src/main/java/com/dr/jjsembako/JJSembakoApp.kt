@@ -6,16 +6,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.dr.jjsembako.core.utils.openMaps
 import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.ui.feature_auth.check_username.PengecekanUsernameScreen
 import com.dr.jjsembako.ui.feature_auth.login.LoginScreen
 import com.dr.jjsembako.ui.feature_auth.password_recovery.PemulihanKataSandiScreen
 import com.dr.jjsembako.ui.feature_auth.recovery_question.PertanyaanPemulihanScreen
+import com.dr.jjsembako.ui.feature_customer.add.TambahPelangganScreen
 import com.dr.jjsembako.ui.feature_customer.list.PelangganScreen
 import com.dr.jjsembako.ui.feature_home.HomeScreen
 import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
@@ -25,6 +28,7 @@ import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
 fun JJSembakoApp(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     val navController = rememberNavController()
     val startDestination = Screen.Home.route
     NavHost(navController = navController, startDestination = startDestination) {
@@ -132,10 +136,26 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
 
         composable(Screen.Pelanggan.route) {
             PelangganScreen(
-                onNavigateBack = {navController.popBackStack()},
+                onNavigateBack = { navController.popBackStack() },
                 onNavigateToDetailCust = {},
-                onNavigateToAddCust = {}
+                onNavigateToAddCust = {
+                    navController.navigate(Screen.TambahPelanggan.route) {
+                        launchSingleTop = true
+                    }
+                }
             )
+        }
+
+        composable(Screen.TambahPelanggan.route) {
+            TambahPelangganScreen(
+                onNavigateToPelangganScreen = {
+                    navController.navigate(Screen.Pelanggan.route) {
+                        popUpTo(Screen.Pelanggan.route) { inclusive = true }
+                    }
+                },
+                openMaps = { url ->
+                    openMaps(context, url)
+                })
         }
 
         composable(Screen.Riwayat.route) {
