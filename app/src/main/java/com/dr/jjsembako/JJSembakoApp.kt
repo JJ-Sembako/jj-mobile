@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dr.jjsembako.core.utils.call
+import com.dr.jjsembako.core.utils.chatWA
 import com.dr.jjsembako.core.utils.openMaps
 import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.ui.feature_auth.check_username.PengecekanUsernameScreen
@@ -182,7 +183,7 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
                 },
                 openMaps = { url -> openMaps(context, url) },
                 call = { uri -> call(context, uri) },
-                chatWA = { url -> openMaps(context, url) }
+                chatWA = { url -> chatWA(context, url) }
             )
         }
 

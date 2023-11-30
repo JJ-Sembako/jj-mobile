@@ -95,7 +95,7 @@ fun chatWA(context: Context, url: String) {
     Log.e("Chat WA", "URL IS: $url")
     val urlIntent = Intent(
         Intent.ACTION_VIEW,
-        Uri.parse(url)
+        Uri.parse(convertToChatWA(url))
     )
     context.startActivity(urlIntent)
 }
