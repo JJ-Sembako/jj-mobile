@@ -60,7 +60,7 @@ fun CustomerButtonInfo(
                 keyboardController?.hide()
                 openMaps(cust.gmapsLink)
             },
-//            enabled = isValidLinkMaps(cust.gmapsLink),
+            enabled = isValidLinkMaps(cust.gmapsLink),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
             modifier = modifier
                 .height(56.dp)
