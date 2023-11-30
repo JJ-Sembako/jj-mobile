@@ -90,3 +90,21 @@ fun openMaps(context: Context, url: String) {
     )
     context.startActivity(urlIntent)
 }
+
+fun chatWA(context: Context, url: String) {
+    Log.e("Chat WA", "URL IS: $url")
+    val urlIntent = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse(url)
+    )
+    context.startActivity(urlIntent)
+}
+
+fun call(context: Context, uri: String) {
+    Log.e("Call", "URI IS: $uri")
+    val callIntent = Intent(
+        Intent.ACTION_CALL,
+        Uri.parse("tel: $uri")
+    )
+    context.startActivity(callIntent)
+}

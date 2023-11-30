@@ -46,7 +46,7 @@ import com.dr.jjsembako.ui.theme.JJSembakoTheme
 @Composable
 fun PelangganScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToDetailCust: () -> Unit,
+    onNavigateToDetailCust: (String) -> Unit,
     onNavigateToAddCust: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -110,6 +110,7 @@ fun PelangganScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SearchFilter(
+                placeholder = stringResource(R.string.search_cust),
                 activeSearch,
                 searchQuery,
                 openFilter = { showSheet.value = !showSheet.value },
@@ -122,7 +123,7 @@ fun PelangganScreen(
             ) {
                 items(items = custList, itemContent = { cust ->
                     CustomerInfo(
-                        onNavigateToDetailCust = { onNavigateToDetailCust() },
+                        onNavigateToDetailCust = { onNavigateToDetailCust(cust.id) },
                         customer = cust,
                         modifier = modifier
                     )

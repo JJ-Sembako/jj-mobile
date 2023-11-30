@@ -9,9 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.dr.jjsembako.core.utils.call
 import com.dr.jjsembako.core.utils.openMaps
 import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.ui.feature_auth.check_username.PengecekanUsernameScreen
@@ -19,6 +22,8 @@ import com.dr.jjsembako.ui.feature_auth.login.LoginScreen
 import com.dr.jjsembako.ui.feature_auth.password_recovery.PemulihanKataSandiScreen
 import com.dr.jjsembako.ui.feature_auth.recovery_question.PertanyaanPemulihanScreen
 import com.dr.jjsembako.ui.feature_customer.add.TambahPelangganScreen
+import com.dr.jjsembako.ui.feature_customer.detail.DetailPelangganScreen
+import com.dr.jjsembako.ui.feature_customer.edit.EditPelangganScreen
 import com.dr.jjsembako.ui.feature_customer.list.PelangganScreen
 import com.dr.jjsembako.ui.feature_home.HomeScreen
 import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
@@ -137,7 +142,11 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
         composable(Screen.Pelanggan.route) {
             PelangganScreen(
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToDetailCust = {},
+                onNavigateToDetailCust = { id ->
+                    navController.navigate(Screen.DetailPelanggan.createRoute(id)){
+                        launchSingleTop = true
+                    }
+                },
                 onNavigateToAddCust = {
                     navController.navigate(Screen.TambahPelanggan.route) {
                         launchSingleTop = true
@@ -156,6 +165,36 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
                 openMaps = { url ->
                     openMaps(context, url)
                 })
+        }
+
+        composable(
+            route = Screen.DetailPelanggan.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            DetailPelangganScreen(
+                idCust = id,
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToEditCust = { id ->
+                    navController.navigate(Screen.EditPelanggan.createRoute(id)){
+                        launchSingleTop = true
+                    }
+                },
+                openMaps = { url -> openMaps(context, url) },
+                call = { uri -> call(context, uri) },
+                chatWA = { url -> openMaps(context, url) }
+            )
+        }
+
+        composable(
+            route = Screen.EditPelanggan.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            EditPelangganScreen(
+                idCust = id,
+                onNavigateToDetailCust = { navController.popBackStack() },
+                openMaps = { url -> openMaps(context, url) })
         }
 
         composable(Screen.Riwayat.route) {

@@ -42,13 +42,13 @@ import com.dr.jjsembako.ui.theme.JJSembakoTheme
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SearchFilter(
+    placeholder: String,
     activeSearch: MutableState<Boolean>,
     searchQuery: MutableState<String>,
     openFilter: () -> Unit,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
-    val placeholder = stringResource(R.string.search_cust)
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Row(
@@ -131,6 +131,7 @@ fun SearchFilter(
 fun SearchFilterPreview() {
     JJSembakoTheme {
         SearchFilter(
+            placeholder = stringResource(R.string.search_cust),
             activeSearch = remember { mutableStateOf(false) },
             searchQuery = remember { mutableStateOf("") },
             openFilter = {},

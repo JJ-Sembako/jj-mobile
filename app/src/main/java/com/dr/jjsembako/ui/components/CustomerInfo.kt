@@ -23,13 +23,13 @@ import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun CustomerInfo(onNavigateToDetailCust: () -> Unit, customer: Customer, modifier: Modifier) {
+fun CustomerInfo(onNavigateToDetailCust: (String) -> Unit, customer: Customer, modifier: Modifier) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
-            .clickable { onNavigateToDetailCust() },
+            .clickable { onNavigateToDetailCust(customer.id) },
     ) {
         Column(
             modifier = modifier
