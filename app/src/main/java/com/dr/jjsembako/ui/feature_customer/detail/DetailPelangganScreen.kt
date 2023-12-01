@@ -182,7 +182,11 @@ private fun DetailPelangganContent(
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = { keyboardController?.hide() })
+                    onClick = {
+                        keyboardController?.hide()
+                        activeSearch.value = false
+                        focusManager.clearFocus()
+                    })
                 .padding(contentPadding)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
