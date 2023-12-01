@@ -33,6 +33,7 @@ import com.dr.jjsembako.ui.theme.JJSembakoTheme
 fun ErrorScreen(
     onNavigateBack: () -> Unit,
     message: String = "",
+    showButton: Boolean = true,
     modifier: Modifier,
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_warning))
@@ -78,12 +79,14 @@ fun ErrorScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = { onNavigateBack() },
-                modifier = modifier
-                    .height(56.dp)
-            ) {
-                Text(stringResource(R.string.back))
+            if(showButton){
+                Button(
+                    onClick = { onNavigateBack() },
+                    modifier = modifier
+                        .height(56.dp)
+                ) {
+                    Text(stringResource(R.string.back))
+                }
             }
         }
     }
