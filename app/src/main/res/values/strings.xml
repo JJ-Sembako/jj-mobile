@@ -16,9 +16,13 @@
     <string name="update">Perbarui</string>
     <string name="back">Kembali</string>
     <string name="edit">Edit</string>
+    <string name="are_you_sure">Apakah Anda Yakin?</string>
+    <string name="content_del">Aksi ini akan menghapus data secara permanen dan tidak dapat dipulihkan kembali.</string>
     <string name="delete">Hapus</string>
+    <string name="yes_delete">Ya, Hapus!</string>
     <string name="cancel">Batal</string>
     <string name="menu">Menu</string>
+    <string name="alert">Peringatan</string>
     <string name="error">Terjadi Kesalahan</string>
     <string name="err_input_empty">Inputan Wajib diisi!</string>
 

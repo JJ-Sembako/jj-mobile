@@ -53,6 +53,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.domain.model.Customer
 import com.dr.jjsembako.core.model.FilterOption
+import com.dr.jjsembako.ui.components.AlertDeleteDialog
 import com.dr.jjsembako.ui.components.BottomSheetOrder
 import com.dr.jjsembako.ui.components.CustomerInfo
 import com.dr.jjsembako.ui.components.ErrorScreen
@@ -107,7 +108,7 @@ private fun DetailPelangganContent(
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
     var menuExpanded by remember { mutableStateOf(false) }
-
+    var showDialog = remember { mutableStateOf(false) }
     var showSheet = remember { mutableStateOf(false) }
     var (selectedOptionPayment, onOptionSelectedPayment) = remember {
         mutableStateOf(
@@ -164,10 +165,11 @@ private fun DetailPelangganContent(
                         onDismissRequest = { menuExpanded = false }) {
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.edit)) },
-                            onClick = { onNavigateToEditCust(cust.id) },)
+                            onClick = { onNavigateToEditCust(cust.id) },
+                        )
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.delete)) },
-                            onClick = { /*TODO*/ })
+                            onClick = { showDialog.value = true })
                     }
                 }
             )
@@ -228,6 +230,13 @@ private fun DetailPelangganContent(
                     onOptionSelectedPayment = onOptionSelectedPayment,
                     onOptionSelectedOrder = onOptionSelectedOrder,
                     showSheet = showSheet,
+                    modifier = modifier
+                )
+            }
+            if (showDialog.value) {
+                AlertDeleteDialog(
+                    onNavigateBack = { onNavigateBack() },
+                    showDialog = showDialog,
                     modifier = modifier
                 )
             }
