@@ -25,6 +25,9 @@
     <string name="alert">Peringatan</string>
     <string name="error">Terjadi Kesalahan</string>
     <string name="err_input_empty">Inputan Wajib diisi!</string>
+    <string name="err_username">Username minimal 5 karakter diawali huruf diikuti karakter huruf, angka, underscore, atau strip!</string>
+    <string name="err_pass_min">Password minimal 8 karakter!</string>
+    <string name="err_pass_not_whitespace">Password tidak boleh memakai spasi!</string>
 
     <string name="check_username">Pengecekan Username</string>
     <string name="question_recovery">Pertanyaan Pemulihan</string>
