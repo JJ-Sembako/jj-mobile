@@ -136,7 +136,7 @@ private fun MenuItem(
     ) {
         Icon(
             menuInfo.icon,
-            contentDescription = stringResource(R.string.ikon_menu, menuInfo.title),
+            contentDescription = stringResource(R.string.icon_of_menu, menuInfo.title),
             tint = Color.White,
             modifier = modifier
                 .size(32.dp)

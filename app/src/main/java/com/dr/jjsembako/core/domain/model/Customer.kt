@@ -7,5 +7,5 @@ data class Customer(
     val address: String,
     val gmapsLink: String,
     val phoneNumber: String,
-    val hutang: Long = 0
+    val debt: Long = 0
 )

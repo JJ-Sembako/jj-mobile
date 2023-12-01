@@ -71,12 +71,6 @@ fun GantiKataSandiScreen(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    LaunchedEffect(key1 = keyboardHeight) {
-        coroutineScope.launch {
-            scrollState.scrollBy(keyboardHeight.toFloat())
-        }
-    }
-
     var oldPassword by rememberSaveable { mutableStateOf("") }
     var newPassword by rememberSaveable { mutableStateOf("") }
     var confNewPassword by rememberSaveable { mutableStateOf("") }
@@ -86,11 +80,19 @@ fun GantiKataSandiScreen(
     var confNewPasswordVisibility by remember { mutableStateOf(false) }
 
     var isValidOldPassword = rememberSaveable { mutableStateOf(false) }
-    var errMsgOldPassword = rememberSaveable { mutableStateOf("") }
     var isValidNewPassword = rememberSaveable { mutableStateOf(false) }
-    var errMsgNewPassword = rememberSaveable { mutableStateOf("") }
     var isValidConfNewPassword = rememberSaveable { mutableStateOf(false) }
+
+    var errMsgOldPassword = rememberSaveable { mutableStateOf("") }
+    var errMsgNewPassword = rememberSaveable { mutableStateOf("") }
     var errMsgConfNewPassword = rememberSaveable { mutableStateOf("") }
+
+    val msgError = listOf(
+        stringResource(R.string.err_pass_min),
+        stringResource(R.string.err_pass_not_whitespace),
+        stringResource(R.string.err_conf_pass),
+        stringResource(R.string.err_new_pass),
+    )
 
     var iconOldPassword =
         if (oldPasswordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
@@ -104,6 +106,12 @@ fun GantiKataSandiScreen(
         if (confNewPasswordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
             id = R.drawable.ic_visibility_off
         )
+
+    LaunchedEffect(key1 = keyboardHeight) {
+        coroutineScope.launch {
+            scrollState.scrollBy(keyboardHeight.toFloat())
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -162,16 +170,19 @@ fun GantiKataSandiScreen(
                 value = oldPassword,
                 onValueChange = {
                     oldPassword = it
-                    if (!isValidPassword(oldPassword)) {
+                    if (oldPassword.contains(" ")) {
                         isValidOldPassword.value = false
-                        errMsgOldPassword.value = "Password minimal 8 karakter!"
+                        errMsgOldPassword.value = msgError[1]
+                    } else if (!isValidPassword(oldPassword)) {
+                        isValidOldPassword.value = false
+                        errMsgOldPassword.value = msgError[0]
                     } else {
                         isValidOldPassword.value = true
                         errMsgOldPassword.value = ""
                     }
                     if (!isDifferentPassword(oldPassword, newPassword)) {
                         isValidNewPassword.value = false
-                        errMsgNewPassword.value = "Password baru harus berbeda!"
+                        errMsgNewPassword.value = msgError[3]
                     } else {
                         isValidNewPassword.value = true
                         errMsgNewPassword.value = ""
@@ -212,19 +223,22 @@ fun GantiKataSandiScreen(
                 value = newPassword,
                 onValueChange = {
                     newPassword = it
-                    if (!isValidPassword(newPassword)) {
+                    if (newPassword.contains(" ")) {
                         isValidNewPassword.value = false
-                        errMsgNewPassword.value = "Password minimal 8 karakter!"
+                        errMsgNewPassword.value = msgError[1]
+                    } else if (!isValidPassword(newPassword)) {
+                        isValidNewPassword.value = false
+                        errMsgNewPassword.value = msgError[0]
                     } else if (!isDifferentPassword(oldPassword, newPassword)) {
                         isValidNewPassword.value = false
-                        errMsgNewPassword.value = "Password baru harus berbeda!"
+                        errMsgNewPassword.value = msgError[3]
                     } else {
                         isValidNewPassword.value = true
                         errMsgNewPassword.value = ""
                     }
                     if (!isValidNewPassword(newPassword, confNewPassword)) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = "Konfirmasi password baru berbeda!"
+                        errMsgConfNewPassword.value = msgError[2]
                     } else {
                         isValidConfNewPassword.value = true
                         errMsgConfNewPassword.value = ""
@@ -268,12 +282,15 @@ fun GantiKataSandiScreen(
                 value = confNewPassword,
                 onValueChange = {
                     confNewPassword = it
-                    if (!isValidPassword(confNewPassword)) {
+                    if (confNewPassword.contains(" ")) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = "Password minimal 8 karakter!"
+                        errMsgConfNewPassword.value = msgError[1]
+                    } else if (!isValidPassword(confNewPassword)) {
+                        isValidConfNewPassword.value = false
+                        errMsgConfNewPassword.value = msgError[0]
                     } else if (!isValidNewPassword(newPassword, confNewPassword)) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = "Konfirmasi password baru berbeda!"
+                        errMsgConfNewPassword.value = msgError[2]
                     } else {
                         isValidConfNewPassword.value = true
                         errMsgConfNewPassword.value = ""

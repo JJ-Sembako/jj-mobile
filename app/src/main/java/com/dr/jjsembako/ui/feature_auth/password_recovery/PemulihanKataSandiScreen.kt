@@ -71,12 +71,6 @@ fun PemulihanKataSandiScreen(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    LaunchedEffect(key1 = keyboardHeight) {
-        coroutineScope.launch {
-            scrollState.scrollBy(keyboardHeight.toFloat())
-        }
-    }
-
     var newPassword by rememberSaveable { mutableStateOf("") }
     var confNewPassword by rememberSaveable { mutableStateOf("") }
 
@@ -84,9 +78,16 @@ fun PemulihanKataSandiScreen(
     var confNewPasswordVisibility by remember { mutableStateOf(false) }
 
     var isValidNewPassword = rememberSaveable { mutableStateOf(false) }
-    var errMsgNewPassword = rememberSaveable { mutableStateOf("") }
     var isValidConfNewPassword = rememberSaveable { mutableStateOf(false) }
+
+    var errMsgNewPassword = rememberSaveable { mutableStateOf("") }
     var errMsgConfNewPassword = rememberSaveable { mutableStateOf("") }
+
+    val msgError = listOf(
+        stringResource(R.string.err_pass_min),
+        stringResource(R.string.err_pass_not_whitespace),
+        stringResource(R.string.err_conf_pass)
+    )
 
     var iconNewPassword =
         if (newPasswordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
@@ -96,6 +97,12 @@ fun PemulihanKataSandiScreen(
         if (confNewPasswordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
             id = R.drawable.ic_visibility_off
         )
+
+    LaunchedEffect(key1 = keyboardHeight) {
+        coroutineScope.launch {
+            scrollState.scrollBy(keyboardHeight.toFloat())
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -154,16 +161,19 @@ fun PemulihanKataSandiScreen(
                 value = newPassword,
                 onValueChange = {
                     newPassword = it
-                    if (!isValidPassword(newPassword)) {
+                    if (newPassword.contains(" ")) {
                         isValidNewPassword.value = false
-                        errMsgNewPassword.value = "Password minimal 8 karakter!"
+                        errMsgNewPassword.value = msgError[1]
+                    } else if (!isValidPassword(newPassword)) {
+                        isValidNewPassword.value = false
+                        errMsgNewPassword.value = msgError[0]
                     } else {
                         isValidNewPassword.value = true
                         errMsgNewPassword.value = ""
                     }
                     if (!isValidNewPassword(newPassword, confNewPassword)) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = "Konfirmasi password baru berbeda!"
+                        errMsgConfNewPassword.value = msgError[2]
                     } else {
                         isValidConfNewPassword.value = true
                         errMsgConfNewPassword.value = ""
@@ -207,12 +217,15 @@ fun PemulihanKataSandiScreen(
                 value = confNewPassword,
                 onValueChange = {
                     confNewPassword = it
-                    if (!isValidPassword(confNewPassword)) {
+                    if (confNewPassword.contains(" ")) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = "Password minimal 8 karakter!"
+                        errMsgConfNewPassword.value = msgError[1]
+                    } else if (!isValidPassword(confNewPassword)) {
+                        isValidConfNewPassword.value = false
+                        errMsgConfNewPassword.value = msgError[0]
                     } else if (!isValidNewPassword(newPassword, confNewPassword)) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = "Konfirmasi password baru berbeda!"
+                        errMsgConfNewPassword.value = msgError[2]
                     } else {
                         isValidConfNewPassword.value = true
                         errMsgConfNewPassword.value = ""

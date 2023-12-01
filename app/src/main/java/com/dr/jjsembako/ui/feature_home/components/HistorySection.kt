@@ -25,7 +25,7 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun HistorySection(modifier: Modifier = Modifier) {
+fun HistorySection(modifier: Modifier) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
     val progress by animateLottieCompositionAsState(
         composition,
@@ -38,12 +38,11 @@ fun HistorySection(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp)
     ) {
         Text(
-            text = stringResource(R.string.penjualan_terakhir), fontWeight = FontWeight.Bold
+            text = stringResource(R.string.latest_sale), fontWeight = FontWeight.Bold
         )
         Spacer(modifier = modifier.height(16.dp))
         Column(
-            modifier = modifier
-                .fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

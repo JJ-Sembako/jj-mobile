@@ -69,15 +69,21 @@ fun LoginScreen(
     val imeState = rememberImeState()
     val scrollState = rememberScrollState()
 
-    LaunchedEffect(key1 = imeState.value) {
-        if (imeState.value) {
-            scrollState.animateScrollTo(scrollState.maxValue, tween(300))
-        }
-    }
-
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
+
+    var isValidUsername = rememberSaveable { mutableStateOf(false) }
+    var isValidPassword = rememberSaveable { mutableStateOf(false) }
+
+    var errMsgUsername = rememberSaveable { mutableStateOf("") }
+    var errMsgPassword = rememberSaveable { mutableStateOf("") }
+
+    val msgError = listOf(
+        stringResource(R.string.err_username),
+        stringResource(R.string.err_pass_min),
+        stringResource(R.string.err_pass_not_whitespace)
+    )
 
     var icon =
         if (passwordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
@@ -88,10 +94,12 @@ fun LoginScreen(
         composition,
         iterations = LottieConstants.IterateForever,
     )
-    var isValidUsername = rememberSaveable { mutableStateOf(false) }
-    var errMsgUsername = rememberSaveable { mutableStateOf("") }
-    var isValidPassword = rememberSaveable { mutableStateOf(false) }
-    var errMsgPassword = rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect(key1 = imeState.value) {
+        if (imeState.value) {
+            scrollState.animateScrollTo(scrollState.maxValue, tween(300))
+        }
+    }
 
     Column(
         modifier = modifier
@@ -108,7 +116,7 @@ fun LoginScreen(
             enableMergePaths = true,
             composition = composition,
             progress = { progress },
-            modifier = Modifier.size(150.dp)
+            modifier = modifier.size(150.dp)
         )
 
         Spacer(modifier = modifier.height(16.dp))
@@ -135,8 +143,7 @@ fun LoginScreen(
                 username = it
                 if (!isValidUsername(username)) {
                     isValidUsername.value = false
-                    errMsgUsername.value =
-                        "Username minimal 5 karakter diawali huruf diikuti karakter huruf, angka, underscore, atau strip!"
+                    errMsgUsername.value = msgError[0]
                 } else {
                     isValidUsername.value = true
                     errMsgUsername.value = ""
@@ -147,7 +154,7 @@ fun LoginScreen(
                 .padding(start = 8.dp, end = 8.dp, top = 8.dp)
         )
         Text(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
             text = errMsgUsername.value,
@@ -174,9 +181,12 @@ fun LoginScreen(
             value = password,
             onValueChange = {
                 password = it
-                if (!isValidPassword(password)) {
+                if (password.contains(" ")) {
                     isValidPassword.value = false
-                    errMsgPassword.value = "Password minimal 8 karakter!"
+                    errMsgPassword.value = msgError[2]
+                } else if (!isValidPassword(password)) {
+                    isValidPassword.value = false
+                    errMsgPassword.value = msgError[1]
                 } else {
                     isValidPassword.value = true
                     errMsgPassword.value = ""
@@ -187,7 +197,7 @@ fun LoginScreen(
                 .padding(start = 8.dp, end = 8.dp, top = 8.dp)
         )
         Text(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
             text = errMsgPassword.value,
@@ -195,7 +205,7 @@ fun LoginScreen(
             color = Color.Red
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = modifier.height(16.dp))
 
         Button(
             onClick = {

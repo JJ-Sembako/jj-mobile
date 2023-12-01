@@ -51,9 +51,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,20 +78,28 @@ fun PemulihanAkunScreen(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
+    var isExpanded by remember { mutableStateOf(false) }
+    var selectedOption by remember { mutableStateOf<DropDownOption?>(null) }
+    var isActive by rememberSaveable { mutableStateOf(false) }
+
+    var questionId by rememberSaveable { mutableStateOf("") }
+    var answer by rememberSaveable { mutableStateOf("") }
+    var answerVisibility by remember { mutableStateOf(false) }
+
+    var isValidAnswer = rememberSaveable { mutableStateOf(false) }
+    var errMsgAnswer = rememberSaveable { mutableStateOf("") }
+
+    val msgError = stringResource(R.string.err_answer)
+    var icon =
+        if (answerVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
+            id = R.drawable.ic_visibility_off
+        )
+
     LaunchedEffect(key1 = keyboardHeight) {
         coroutineScope.launch {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
     }
-
-    var isExpanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf<DropDownOption?>(null) }
-
-    var isActive by rememberSaveable { mutableStateOf(false) }
-    var questionId by rememberSaveable { mutableStateOf("") }
-    var answer by rememberSaveable { mutableStateOf("") }
-    var isValidAnswer = rememberSaveable { mutableStateOf(false) }
-    var errMsgAnswer = rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -161,8 +172,8 @@ fun PemulihanAkunScreen(
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp)
                 ) {
                     TextField(
-                        placeholder = { Text(text = "Pilih pertanyaan") },
-                        value = selectedOption?.option ?: "Pilih pertanyaan",
+                        placeholder = { Text(text = stringResource(R.string.choose_question)) },
+                        value = selectedOption?.option ?: stringResource(R.string.choose_question),
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
@@ -192,16 +203,26 @@ fun PemulihanAkunScreen(
                     label = { Text(stringResource(R.string.answer)) },
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
+                        keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done
                     ),
+                    visualTransformation = if (answerVisibility) VisualTransformation.None
+                    else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = { answerVisibility = !answerVisibility }) {
+                            Icon(
+                                painter = icon,
+                                contentDescription = stringResource(R.string.visible_answer)
+                            )
+                        }
+                    },
                     isError = !isValidAnswer.value,
                     value = answer,
                     onValueChange = {
                         answer = it
                         if (!isValidAnswer(answer)) {
                             isValidAnswer.value = false
-                            errMsgAnswer.value = "Jawaban minimal 3 karakter!"
+                            errMsgAnswer.value = msgError
                         } else {
                             isValidAnswer.value = true
                             errMsgAnswer.value = ""

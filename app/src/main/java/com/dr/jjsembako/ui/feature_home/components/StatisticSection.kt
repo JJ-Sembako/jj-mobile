@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,8 +41,8 @@ fun StatisticSection(totalPesanan: Int = 0, totalBarang: Int = 0, modifier: Modi
 @Composable
 private fun StatisticCard(total: Int, isPesanan: Boolean, modifier: Modifier) {
     val text = if (isPesanan) {
-        stringResource(R.string.pesanan_dibuat_bulan_ini)
-    } else stringResource(R.string.barang_dijual_bulan_ini)
+        stringResource(R.string.orders_made_this_month)
+    } else stringResource(R.string.items_sold_this_month)
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
@@ -55,7 +57,8 @@ private fun StatisticCard(total: Int, isPesanan: Boolean, modifier: Modifier) {
                 text = text,
                 textAlign = TextAlign.Center,
                 modifier = modifier.padding(bottom = 8.dp),
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
                 text = formatTotal(total),

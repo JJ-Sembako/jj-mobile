@@ -5,17 +5,26 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.dr.jjsembako.core.utils.call
+import com.dr.jjsembako.core.utils.chatWA
+import com.dr.jjsembako.core.utils.getAppVersion
+import com.dr.jjsembako.core.utils.openMaps
 import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.ui.feature_auth.check_username.PengecekanUsernameScreen
 import com.dr.jjsembako.ui.feature_auth.login.LoginScreen
 import com.dr.jjsembako.ui.feature_auth.password_recovery.PemulihanKataSandiScreen
 import com.dr.jjsembako.ui.feature_auth.recovery_question.PertanyaanPemulihanScreen
+import com.dr.jjsembako.ui.feature_customer.add.TambahPelangganScreen
+import com.dr.jjsembako.ui.feature_customer.detail.DetailPelangganScreen
+import com.dr.jjsembako.ui.feature_customer.edit.EditPelangganScreen
 import com.dr.jjsembako.ui.feature_customer.list.PelangganScreen
 import com.dr.jjsembako.ui.feature_home.HomeScreen
 import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
@@ -24,9 +33,11 @@ import com.dr.jjsembako.ui.feature_setting.setting.PengaturanScreen
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun JJSembakoApp(modifier: Modifier = Modifier) {
+fun JJSembakoApp() {
+    val context = LocalContext.current
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
+    val startDestination = Screen.Login.route
+    NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
@@ -130,7 +141,61 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
         }
 
         composable(Screen.Pelanggan.route) {
-            PelangganScreen()
+            PelangganScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToDetailCust = { id ->
+                    navController.navigate(Screen.DetailPelanggan.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToAddCust = {
+                    navController.navigate(Screen.TambahPelanggan.route) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(Screen.TambahPelanggan.route) {
+            TambahPelangganScreen(
+                onNavigateToPelangganScreen = {
+                    navController.navigate(Screen.Pelanggan.route) {
+                        popUpTo(Screen.Pelanggan.route) { inclusive = true }
+                    }
+                },
+                openMaps = { url ->
+                    openMaps(context, url)
+                })
+        }
+
+        composable(
+            route = Screen.DetailPelanggan.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            DetailPelangganScreen(
+                idCust = id,
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToEditCust = { id ->
+                    navController.navigate(Screen.EditPelanggan.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
+                openMaps = { url -> openMaps(context, url) },
+                call = { uri -> call(context, uri) },
+                chatWA = { url -> chatWA(context, url) }
+            )
+        }
+
+        composable(
+            route = Screen.EditPelanggan.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            EditPelangganScreen(
+                idCust = id,
+                onNavigateToDetailCust = { navController.popBackStack() },
+                openMaps = { url -> openMaps(context, url) })
         }
 
         composable(Screen.Riwayat.route) {
@@ -167,7 +232,8 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
                     navController.navigate(Screen.PemulihanAkun.route) {
                         launchSingleTop = true
                     }
-                }
+                },
+                getAppVersion = { getAppVersion(context) }
             )
         }
 
