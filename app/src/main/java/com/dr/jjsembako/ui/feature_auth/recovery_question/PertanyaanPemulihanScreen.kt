@@ -66,16 +66,21 @@ fun PertanyaanPemulihanScreen(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
+    var question by rememberSaveable { mutableStateOf("") }
+    var answer by rememberSaveable { mutableStateOf("") }
+    var isValidAnswer = rememberSaveable { mutableStateOf(false) }
+    var errMsgAnswer = rememberSaveable { mutableStateOf("") }
+
+    val msgError = listOf(
+        stringResource(R.string.err_question_not_found),
+        stringResource(R.string.err_answer)
+    )
+
     LaunchedEffect(key1 = keyboardHeight) {
         coroutineScope.launch {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
     }
-
-    var question by rememberSaveable { mutableStateOf("") }
-    var answer by rememberSaveable { mutableStateOf("") }
-    var isValidAnswer = rememberSaveable { mutableStateOf(false) }
-    var errMsgAnswer = rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -113,17 +118,17 @@ fun PertanyaanPemulihanScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
                 text = stringResource(R.string.question),
                 fontSize = 14.sp,
             )
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, bottom = 24.dp),
-                text = if (question.isEmpty()) "Apa makanan favoritmu?" else question,
+                text = question.ifEmpty { msgError[0] },
             )
             OutlinedTextField(
                 label = { Text(stringResource(R.string.answer)) },
@@ -138,7 +143,7 @@ fun PertanyaanPemulihanScreen(
                     answer = it
                     if (!isValidAnswer(answer)) {
                         isValidAnswer.value = false
-                        errMsgAnswer.value = "Jawaban minimal 3 karakter!"
+                        errMsgAnswer.value = msgError[1]
                     } else {
                         isValidAnswer.value = true
                         errMsgAnswer.value = ""
@@ -149,7 +154,7 @@ fun PertanyaanPemulihanScreen(
                     .padding(start = 8.dp, end = 8.dp, top = 8.dp)
             )
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
                 text = errMsgAnswer.value,
@@ -157,7 +162,7 @@ fun PertanyaanPemulihanScreen(
                 color = Color.Red
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = modifier.height(16.dp))
 
             Button(
                 onClick = {

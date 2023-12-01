@@ -36,6 +36,8 @@
     <string name="verification">Verifikasi</string>
     <string name="check">Periksa</string>
     <string name="activate_account_recovery">Aktifkan pemulihan akun</string>
+    <string name="err_question_not_found">Pertanyaan tidak ditemukan</string>
+    <string name="err_answer">Jawaban minimal 3 karakter</string>
 
     <string name="omset_bulan_ini">Omset Penjualan Bulan Ini</string>
     <string name="pesanan_dibuat_bulan_ini">Pesanan Dibuat\n Bulan Ini</string>
