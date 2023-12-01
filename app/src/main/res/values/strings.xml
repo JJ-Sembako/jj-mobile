@@ -43,11 +43,11 @@
     <string name="err_question_not_found">Pertanyaan tidak ditemukan</string>
     <string name="err_answer">Jawaban minimal 3 karakter</string>
 
-    <string name="omset_bulan_ini">Omset Penjualan Bulan Ini</string>
-    <string name="pesanan_dibuat_bulan_ini">Pesanan Dibuat\n Bulan Ini</string>
-    <string name="barang_dijual_bulan_ini">Barang Dijual\n Bulan Ini</string>
-    <string name="penjualan_terakhir">Penjualan Terakhir</string>
-    <string name="ikon_menu">Ikon dari menu %1$s</string>
+    <string name="turnover_this_month">Omset Penjualan Bulan Ini</string>
+    <string name="orders_made_this_month">Pesanan Dibuat\n Bulan Ini</string>
+    <string name="items_sold_this_month">Barang Dijual\n Bulan Ini</string>
+    <string name="latest_sale">Penjualan Terakhir</string>
+    <string name="icon_of_menu">Ikon dari menu %1$s</string>
 
     <string name="change_password">Ganti Kata Sandi</string>
     <string name="account_recovery">Pemulihan Akun</string>

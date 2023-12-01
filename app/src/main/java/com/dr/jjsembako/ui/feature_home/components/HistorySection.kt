@@ -38,7 +38,7 @@ fun HistorySection(modifier: Modifier) {
             .padding(horizontal = 16.dp)
     ) {
         Text(
-            text = stringResource(R.string.penjualan_terakhir), fontWeight = FontWeight.Bold
+            text = stringResource(R.string.latest_sale), fontWeight = FontWeight.Bold
         )
         Spacer(modifier = modifier.height(16.dp))
         Column(

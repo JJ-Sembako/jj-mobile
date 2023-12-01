@@ -41,8 +41,8 @@ fun StatisticSection(totalPesanan: Int = 0, totalBarang: Int = 0, modifier: Modi
 @Composable
 private fun StatisticCard(total: Int, isPesanan: Boolean, modifier: Modifier) {
     val text = if (isPesanan) {
-        stringResource(R.string.pesanan_dibuat_bulan_ini)
-    } else stringResource(R.string.barang_dijual_bulan_ini)
+        stringResource(R.string.orders_made_this_month)
+    } else stringResource(R.string.items_sold_this_month)
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {

@@ -29,7 +29,7 @@ fun OmzetSection(omzet: Long = 0, modifier: Modifier) {
             modifier = modifier.padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.omset_bulan_ini), fontWeight = FontWeight.Bold
+                text = stringResource(R.string.turnover_this_month), fontWeight = FontWeight.Bold
             )
             Text(text = formatRupiah(omzet))
         }
