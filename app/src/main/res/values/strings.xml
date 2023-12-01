@@ -34,7 +34,9 @@
     <string name="check_username">Pengecekan Username</string>
     <string name="question_recovery">Pertanyaan Pemulihan</string>
     <string name="question">Pertanyaan</string>
+    <string name="choose_question">Pilih pertanyaan</string>
     <string name="answer">Jawaban</string>
+    <string name="visible_answer">Visibilitas jawaban</string>
     <string name="verification">Verifikasi</string>
     <string name="check">Periksa</string>
     <string name="activate_account_recovery">Aktifkan pemulihan akun</string>
