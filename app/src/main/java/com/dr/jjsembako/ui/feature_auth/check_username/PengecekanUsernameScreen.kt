@@ -67,15 +67,17 @@ fun PengecekanUsernameScreen(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
+    var username by rememberSaveable { mutableStateOf("") }
+    var isValidUsername = rememberSaveable { mutableStateOf(false) }
+    var errMsgUsername = rememberSaveable { mutableStateOf("") }
+
+    val msgError = stringResource(R.string.err_username)
+
     LaunchedEffect(key1 = keyboardHeight) {
         coroutineScope.launch {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
     }
-
-    var username by rememberSaveable { mutableStateOf("") }
-    var isValidUsername = rememberSaveable { mutableStateOf(false) }
-    var errMsgUsername = rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -126,8 +128,7 @@ fun PengecekanUsernameScreen(
                     username = it
                     if (!isValidUsername(username)) {
                         isValidUsername.value = false
-                        errMsgUsername.value =
-                            "Username minimal 5 karakter diawali huruf diikuti karakter huruf, angka, underscore, atau strip!"
+                        errMsgUsername.value = msgError
                     } else {
                         isValidUsername.value = true
                         errMsgUsername.value = ""
@@ -138,7 +139,7 @@ fun PengecekanUsernameScreen(
                     .padding(start = 8.dp, end = 8.dp, top = 8.dp)
             )
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
                 text = errMsgUsername.value,
@@ -146,7 +147,7 @@ fun PengecekanUsernameScreen(
                 color = Color.Red
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = modifier.height(16.dp))
 
             Button(
                 onClick = {
