@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,10 +33,10 @@ import com.dr.jjsembako.ui.feature_setting.setting.PengaturanScreen
 import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
-fun JJSembakoApp(modifier: Modifier = Modifier) {
+fun JJSembakoApp() {
     val context = LocalContext.current
     val navController = rememberNavController()
-    val startDestination = Screen.Home.route
+    val startDestination = Screen.Login.route
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(
@@ -145,7 +144,7 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
             PelangganScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToDetailCust = { id ->
-                    navController.navigate(Screen.DetailPelanggan.createRoute(id)){
+                    navController.navigate(Screen.DetailPelanggan.createRoute(id)) {
                         launchSingleTop = true
                     }
                 },
@@ -178,7 +177,7 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
                 idCust = id,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToEditCust = { id ->
-                    navController.navigate(Screen.EditPelanggan.createRoute(id)){
+                    navController.navigate(Screen.EditPelanggan.createRoute(id)) {
                         launchSingleTop = true
                     }
                 },
