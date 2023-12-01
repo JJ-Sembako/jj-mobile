@@ -72,12 +72,6 @@ fun TambahPelangganScreen(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    LaunchedEffect(key1 = keyboardHeight) {
-        coroutineScope.launch {
-            scrollState.scrollBy(keyboardHeight.toFloat())
-        }
-    }
-
     var name by rememberSaveable { mutableStateOf("") }
     var shopName by rememberSaveable { mutableStateOf("") }
     var phoneNumber by rememberSaveable { mutableStateOf("") }
@@ -99,6 +93,12 @@ fun TambahPelangganScreen(
     val errInputEmpty = stringResource(R.string.err_input_empty)
     val errInvalidLink = stringResource(R.string.err_invalid_link)
     val errInvalidPhoneNumber = stringResource(R.string.err_invalid_phone_number)
+
+    LaunchedEffect(key1 = keyboardHeight) {
+        coroutineScope.launch {
+            scrollState.scrollBy(keyboardHeight.toFloat())
+        }
+    }
 
     Scaffold(
         topBar = {
