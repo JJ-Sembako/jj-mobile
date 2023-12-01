@@ -97,12 +97,6 @@ private fun EditPelangganContent(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    LaunchedEffect(key1 = keyboardHeight) {
-        coroutineScope.launch {
-            scrollState.scrollBy(keyboardHeight.toFloat())
-        }
-    }
-
     var name by rememberSaveable { mutableStateOf(cust.name) }
     var shopName by rememberSaveable { mutableStateOf(cust.shopName) }
     var phoneNumber by rememberSaveable { mutableStateOf(cust.phoneNumber) }
@@ -124,6 +118,12 @@ private fun EditPelangganContent(
     val errInputEmpty = stringResource(R.string.err_input_empty)
     val errInvalidLink = stringResource(R.string.err_invalid_link)
     val errInvalidPhoneNumber = stringResource(R.string.err_invalid_phone_number)
+
+    LaunchedEffect(key1 = keyboardHeight) {
+        coroutineScope.launch {
+            scrollState.scrollBy(keyboardHeight.toFloat())
+        }
+    }
 
     Scaffold(
         topBar = {
