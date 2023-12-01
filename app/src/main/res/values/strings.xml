@@ -29,6 +29,7 @@
     <string name="err_pass_min">Password minimal 8 karakter!</string>
     <string name="err_pass_not_whitespace">Password tidak boleh memakai spasi!</string>
     <string name="err_conf_pass">Konfirmasi password baru berbeda!</string>
+    <string name="err_new_pass">Password baru harus berbeda!</string>
 
     <string name="check_username">Pengecekan Username</string>
     <string name="question_recovery">Pertanyaan Pemulihan</string>
