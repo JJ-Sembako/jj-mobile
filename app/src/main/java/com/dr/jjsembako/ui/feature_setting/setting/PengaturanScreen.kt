@@ -1,8 +1,5 @@
 package com.dr.jjsembako.ui.feature_setting.setting
 
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +22,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,11 +37,11 @@ fun PengaturanScreen(
     onLogout: () -> Unit,
     onNavigateToChangePassword: () -> Unit,
     onNavigateToAccountRecovery: () -> Unit,
+    getAppVersion: () -> String,
     modifier: Modifier = Modifier
 ) {
     var username by rememberSaveable { mutableStateOf("username") }
-    val context = LocalContext.current
-    val versionName = getAppVersion(context)
+    val versionName = getAppVersion()
     val isDarkTheme = isSystemInDarkTheme()
     val logo = if (isDarkTheme) {
         painterResource(id = R.drawable.app_logo_white)
@@ -139,21 +135,6 @@ fun PengaturanScreen(
     }
 }
 
-fun getAppVersion(context: Context): String {
-    try {
-        val packageManager = context.packageManager
-        val packageName = context.packageName
-        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
-        } else {
-            packageManager.getPackageInfo(packageName, 0)
-        }
-        return packageInfo.versionName
-    } catch (e: Exception) {
-        return "x.x.x"
-    }
-}
-
 @Composable
 @Preview(showBackground = true)
 fun PengaturanScreenPreview() {
@@ -161,6 +142,8 @@ fun PengaturanScreenPreview() {
         PengaturanScreen(
             onLogout = {},
             onNavigateToChangePassword = {},
-            onNavigateToAccountRecovery = {})
+            onNavigateToAccountRecovery = {},
+            getAppVersion = { "x.x.x" }
+        )
     }
 }

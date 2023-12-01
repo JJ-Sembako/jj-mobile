@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dr.jjsembako.core.utils.call
 import com.dr.jjsembako.core.utils.chatWA
+import com.dr.jjsembako.core.utils.getAppVersion
 import com.dr.jjsembako.core.utils.openMaps
 import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.ui.feature_auth.check_username.PengecekanUsernameScreen
@@ -232,7 +233,8 @@ fun JJSembakoApp(modifier: Modifier = Modifier) {
                     navController.navigate(Screen.PemulihanAkun.route) {
                         launchSingleTop = true
                     }
-                }
+                },
+                getAppVersion = { getAppVersion(context) }
             )
         }
 

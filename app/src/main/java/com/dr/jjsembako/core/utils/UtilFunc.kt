@@ -2,10 +2,30 @@ package com.dr.jjsembako.core.utils
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import java.text.NumberFormat
 import java.util.Locale
+
+/**
+ * Toolkits Sistem
+ */
+fun getAppVersion(context: Context): String {
+    return try {
+        val packageManager = context.packageManager
+        val packageName = context.packageName
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
+        } else {
+            packageManager.getPackageInfo(packageName, 0)
+        }
+        packageInfo.versionName
+    } catch (e: Exception) {
+        "x.x.x"
+    }
+}
 
 /**
  * Toolkits Pengecekan Autentikasi
