@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -149,12 +151,20 @@ private fun DetailPelangganContent(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { menuExpanded = !menuExpanded }) {
+                        Icon(
+                            Icons.Default.MoreVert,
+                            stringResource(R.string.menu),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                     DropdownMenu(
+                        modifier = modifier.width(144.dp),
                         expanded = menuExpanded,
                         onDismissRequest = { menuExpanded = false }) {
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.edit)) },
-                            onClick = { onNavigateToEditCust(cust.id) })
+                            onClick = { onNavigateToEditCust(cust.id) },)
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.delete)) },
                             onClick = { /*TODO*/ })

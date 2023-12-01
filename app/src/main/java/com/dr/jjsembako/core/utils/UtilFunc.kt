@@ -43,23 +43,27 @@ fun formatTotal(total: Int): String {
 /**
  * Toolkits Pemulihan
  */
-fun isValidAnswer(answer: String): Boolean{
+fun isValidAnswer(answer: String): Boolean {
     return answer.length >= 3
 }
 
 /**
  * Toolkits Pelanggan
  */
-fun isValidPhoneNumber(phone: String): Boolean{
+fun isValidPhoneNumber(phone: String): Boolean {
     val regex = Regex("^(\\+62|62)?[\\s-]?0?8[1-9]{1}\\d{1}[\\s-]?\\d{4}[\\s-]?\\d{2,5}\$")
     return phone.isNotEmpty() && regex.matches(phone)
 }
-fun isValidLinkMaps(link: String): Boolean{
-    val regexGmaps = Regex("(https:\\/\\/)goo.gl\\/maps\\/.*|(https:\\/\\/)www.google.(co.id|com)\\/maps\\/place\\/.*|(https:\\/\\/)maps.app.goo.gl\\/.*")
-    val regexAppleMaps = Regex("(https:\\/\\/)maps.apple.com\\/.*|(https:\\/\\/)maps\\.app\\.goo\\.gl\\/.*\n")
-    return if(link.isEmpty()) false
+
+fun isValidLinkMaps(link: String): Boolean {
+    val regexGmaps =
+        Regex("(https:\\/\\/)goo.gl\\/maps\\/.*|(https:\\/\\/)www.google.(co.id|com)\\/maps\\/place\\/.*|(https:\\/\\/)maps.app.goo.gl\\/.*")
+    val regexAppleMaps =
+        Regex("(https:\\/\\/)maps.apple.com\\/.*|(https:\\/\\/)maps\\.app\\.goo\\.gl\\/.*\n")
+    return if (link.isEmpty()) false
     else regexGmaps.matches(link) || regexAppleMaps.matches(link)
 }
+
 fun convertToChatWA(phone: String): String {
     // Hapus semua karakter yang bukan digit dari nomor telepon
     val cleanedPhoneNumber = phone.replace(Regex("[^\\d]"), "")
@@ -103,7 +107,7 @@ fun chatWA(context: Context, url: String) {
 fun call(context: Context, uri: String) {
     Log.e("Call", "URI IS: $uri")
     val callIntent = Intent(
-        Intent.ACTION_CALL,
+        Intent.ACTION_DIAL,
         Uri.parse("tel: $uri")
     )
     context.startActivity(callIntent)

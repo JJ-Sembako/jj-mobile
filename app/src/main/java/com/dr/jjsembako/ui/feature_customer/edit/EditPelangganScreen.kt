@@ -390,7 +390,7 @@ private val dummy = Customer(
     "Bambang",
     "Toko Makmur",
     "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
-    "https:://maps.app.goo.gl/MQBEcptYvdYfBaNc9",
+    "https://maps.app.goo.gl/MQBEcptYvdYfBaNc9",
     "081234567890",
     1_500_000L
 )

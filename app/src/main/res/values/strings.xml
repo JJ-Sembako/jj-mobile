@@ -18,6 +18,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Hapus</string>
     <string name="cancel">Batal</string>
+    <string name="menu">Menu</string>
     <string name="error">Terjadi Kesalahan</string>
     <string name="err_input_empty">Inputan Wajib diisi!</string>
 
