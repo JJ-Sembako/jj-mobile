@@ -26,15 +26,12 @@ fun OmzetSection(omzet: Long = 0, modifier: Modifier) {
             .padding(horizontal = 16.dp),
     ) {
         Column(
-            modifier = modifier
-                .padding(16.dp)
+            modifier = modifier.padding(16.dp)
         ) {
             Text(
                 text = stringResource(R.string.omset_bulan_ini), fontWeight = FontWeight.Bold
             )
-            Text(
-                text = formatRupiah(omzet)
-            )
+            Text(text = formatRupiah(omzet))
         }
     }
 }
