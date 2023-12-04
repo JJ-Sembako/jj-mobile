@@ -71,10 +71,8 @@ fun PertanyaanPemulihanScreen(
     var isValidAnswer = rememberSaveable { mutableStateOf(false) }
     var errMsgAnswer = rememberSaveable { mutableStateOf("") }
 
-    val msgError = listOf(
-        stringResource(R.string.err_question_not_found),
-        stringResource(R.string.err_answer)
-    )
+    val errQuestionNotFound = stringResource(R.string.err_question_not_found)
+    val errAnswerMin3Char = stringResource(R.string.err_answer)
 
     LaunchedEffect(key1 = keyboardHeight) {
         coroutineScope.launch {
@@ -128,7 +126,7 @@ fun PertanyaanPemulihanScreen(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, bottom = 24.dp),
-                text = question.ifEmpty { msgError[0] },
+                text = question.ifEmpty { errQuestionNotFound },
             )
             OutlinedTextField(
                 label = { Text(stringResource(R.string.answer)) },
@@ -143,7 +141,7 @@ fun PertanyaanPemulihanScreen(
                     answer = it
                     if (!isValidAnswer(answer)) {
                         isValidAnswer.value = false
-                        errMsgAnswer.value = msgError[1]
+                        errMsgAnswer.value = errAnswerMin3Char
                     } else {
                         isValidAnswer.value = true
                         errMsgAnswer.value = ""
