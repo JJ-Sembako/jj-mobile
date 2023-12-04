@@ -89,7 +89,7 @@ fun PemulihanAkunScreen(
     var isValidAnswer = rememberSaveable { mutableStateOf(false) }
     var errMsgAnswer = rememberSaveable { mutableStateOf("") }
 
-    val msgError = stringResource(R.string.err_answer)
+    val errAnswerMin3Char = stringResource(R.string.err_answer)
     var icon =
         if (answerVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
             id = R.drawable.ic_visibility_off
@@ -222,7 +222,7 @@ fun PemulihanAkunScreen(
                         answer = it
                         if (!isValidAnswer(answer)) {
                             isValidAnswer.value = false
-                            errMsgAnswer.value = msgError
+                            errMsgAnswer.value = errAnswerMin3Char
                         } else {
                             isValidAnswer.value = true
                             errMsgAnswer.value = ""
