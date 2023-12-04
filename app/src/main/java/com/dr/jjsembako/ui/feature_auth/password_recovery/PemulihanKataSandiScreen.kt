@@ -83,11 +83,9 @@ fun PemulihanKataSandiScreen(
     var errMsgNewPassword = rememberSaveable { mutableStateOf("") }
     var errMsgConfNewPassword = rememberSaveable { mutableStateOf("") }
 
-    val msgError = listOf(
-        stringResource(R.string.err_pass_min),
-        stringResource(R.string.err_pass_not_whitespace),
-        stringResource(R.string.err_conf_pass)
-    )
+    val errPassMin8Char = stringResource(R.string.err_pass_min)
+    val errPassContainWhiteSpace = stringResource(R.string.err_pass_not_whitespace)
+    val errConfPassDifferent = stringResource(R.string.err_conf_pass)
 
     var iconNewPassword =
         if (newPasswordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
@@ -163,17 +161,17 @@ fun PemulihanKataSandiScreen(
                     newPassword = it
                     if (newPassword.contains(" ")) {
                         isValidNewPassword.value = false
-                        errMsgNewPassword.value = msgError[1]
+                        errMsgNewPassword.value = errPassContainWhiteSpace
                     } else if (!isValidPassword(newPassword)) {
                         isValidNewPassword.value = false
-                        errMsgNewPassword.value = msgError[0]
+                        errMsgNewPassword.value = errPassMin8Char
                     } else {
                         isValidNewPassword.value = true
                         errMsgNewPassword.value = ""
                     }
                     if (!isValidNewPassword(newPassword, confNewPassword)) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = msgError[2]
+                        errMsgConfNewPassword.value = errConfPassDifferent
                     } else {
                         isValidConfNewPassword.value = true
                         errMsgConfNewPassword.value = ""
@@ -219,13 +217,13 @@ fun PemulihanKataSandiScreen(
                     confNewPassword = it
                     if (confNewPassword.contains(" ")) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = msgError[1]
+                        errMsgConfNewPassword.value = errPassContainWhiteSpace
                     } else if (!isValidPassword(confNewPassword)) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = msgError[0]
+                        errMsgConfNewPassword.value = errPassMin8Char
                     } else if (!isValidNewPassword(newPassword, confNewPassword)) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = msgError[2]
+                        errMsgConfNewPassword.value = errConfPassDifferent
                     } else {
                         isValidConfNewPassword.value = true
                         errMsgConfNewPassword.value = ""
