@@ -79,11 +79,9 @@ fun LoginScreen(
     var errMsgUsername = rememberSaveable { mutableStateOf("") }
     var errMsgPassword = rememberSaveable { mutableStateOf("") }
 
-    val msgError = listOf(
-        stringResource(R.string.err_username),
-        stringResource(R.string.err_pass_min),
-        stringResource(R.string.err_pass_not_whitespace)
-    )
+    val errUsernameConstraint = stringResource(R.string.err_username)
+    val errPassMin8Char = stringResource(R.string.err_pass_min)
+    val errPassContainWhiteSpace = stringResource(R.string.err_pass_not_whitespace)
 
     var icon =
         if (passwordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
@@ -143,7 +141,7 @@ fun LoginScreen(
                 username = it
                 if (!isValidUsername(username)) {
                     isValidUsername.value = false
-                    errMsgUsername.value = msgError[0]
+                    errMsgUsername.value = errUsernameConstraint
                 } else {
                     isValidUsername.value = true
                     errMsgUsername.value = ""
@@ -183,10 +181,10 @@ fun LoginScreen(
                 password = it
                 if (password.contains(" ")) {
                     isValidPassword.value = false
-                    errMsgPassword.value = msgError[2]
+                    errMsgPassword.value = errPassContainWhiteSpace
                 } else if (!isValidPassword(password)) {
                     isValidPassword.value = false
-                    errMsgPassword.value = msgError[1]
+                    errMsgPassword.value = errPassMin8Char
                 } else {
                     isValidPassword.value = true
                     errMsgPassword.value = ""
