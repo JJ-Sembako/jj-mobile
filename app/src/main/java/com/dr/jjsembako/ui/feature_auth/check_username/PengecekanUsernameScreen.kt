@@ -71,7 +71,7 @@ fun PengecekanUsernameScreen(
     var isValidUsername = rememberSaveable { mutableStateOf(false) }
     var errMsgUsername = rememberSaveable { mutableStateOf("") }
 
-    val msgError = stringResource(R.string.err_username)
+    val errUsernameConstraint = stringResource(R.string.err_username)
 
     LaunchedEffect(key1 = keyboardHeight) {
         coroutineScope.launch {
@@ -128,7 +128,7 @@ fun PengecekanUsernameScreen(
                     username = it
                     if (!isValidUsername(username)) {
                         isValidUsername.value = false
-                        errMsgUsername.value = msgError
+                        errMsgUsername.value = errUsernameConstraint
                     } else {
                         isValidUsername.value = true
                         errMsgUsername.value = ""
