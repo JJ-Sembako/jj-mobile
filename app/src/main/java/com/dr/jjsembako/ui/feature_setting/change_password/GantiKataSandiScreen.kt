@@ -87,12 +87,10 @@ fun GantiKataSandiScreen(
     var errMsgNewPassword = rememberSaveable { mutableStateOf("") }
     var errMsgConfNewPassword = rememberSaveable { mutableStateOf("") }
 
-    val msgError = listOf(
-        stringResource(R.string.err_pass_min),
-        stringResource(R.string.err_pass_not_whitespace),
-        stringResource(R.string.err_conf_pass),
-        stringResource(R.string.err_new_pass),
-    )
+    val errPassMin8Char = stringResource(R.string.err_pass_min)
+    val errPassContainWhiteSpace = stringResource(R.string.err_pass_not_whitespace)
+    val errConfPassDifferent = stringResource(R.string.err_conf_pass)
+    val errNewPassMustDifferent = stringResource(R.string.err_new_pass)
 
     var iconOldPassword =
         if (oldPasswordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
@@ -172,17 +170,17 @@ fun GantiKataSandiScreen(
                     oldPassword = it
                     if (oldPassword.contains(" ")) {
                         isValidOldPassword.value = false
-                        errMsgOldPassword.value = msgError[1]
+                        errMsgOldPassword.value = errPassContainWhiteSpace
                     } else if (!isValidPassword(oldPassword)) {
                         isValidOldPassword.value = false
-                        errMsgOldPassword.value = msgError[0]
+                        errMsgOldPassword.value = errPassMin8Char
                     } else {
                         isValidOldPassword.value = true
                         errMsgOldPassword.value = ""
                     }
                     if (!isDifferentPassword(oldPassword, newPassword)) {
                         isValidNewPassword.value = false
-                        errMsgNewPassword.value = msgError[3]
+                        errMsgNewPassword.value = errNewPassMustDifferent
                     } else {
                         isValidNewPassword.value = true
                         errMsgNewPassword.value = ""
@@ -225,20 +223,20 @@ fun GantiKataSandiScreen(
                     newPassword = it
                     if (newPassword.contains(" ")) {
                         isValidNewPassword.value = false
-                        errMsgNewPassword.value = msgError[1]
+                        errMsgNewPassword.value = errPassContainWhiteSpace
                     } else if (!isValidPassword(newPassword)) {
                         isValidNewPassword.value = false
-                        errMsgNewPassword.value = msgError[0]
+                        errMsgNewPassword.value = errPassMin8Char
                     } else if (!isDifferentPassword(oldPassword, newPassword)) {
                         isValidNewPassword.value = false
-                        errMsgNewPassword.value = msgError[3]
+                        errMsgNewPassword.value = errNewPassMustDifferent
                     } else {
                         isValidNewPassword.value = true
                         errMsgNewPassword.value = ""
                     }
                     if (!isValidNewPassword(newPassword, confNewPassword)) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = msgError[2]
+                        errMsgConfNewPassword.value = errConfPassDifferent
                     } else {
                         isValidConfNewPassword.value = true
                         errMsgConfNewPassword.value = ""
@@ -284,13 +282,13 @@ fun GantiKataSandiScreen(
                     confNewPassword = it
                     if (confNewPassword.contains(" ")) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = msgError[1]
+                        errMsgConfNewPassword.value = errPassContainWhiteSpace
                     } else if (!isValidPassword(confNewPassword)) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = msgError[0]
+                        errMsgConfNewPassword.value = errPassMin8Char
                     } else if (!isValidNewPassword(newPassword, confNewPassword)) {
                         isValidConfNewPassword.value = false
-                        errMsgConfNewPassword.value = msgError[2]
+                        errMsgConfNewPassword.value = errConfPassDifferent
                     } else {
                         isValidConfNewPassword.value = true
                         errMsgConfNewPassword.value = ""
