@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_home
+package com.dr.jjsembako.feature_home.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,11 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dr.jjsembako.ui.feature_home.components.HistorySection
-import com.dr.jjsembako.ui.feature_home.components.MenuSection
-import com.dr.jjsembako.ui.feature_home.components.OmzetSection
-import com.dr.jjsembako.ui.feature_home.components.StatisticSection
-import com.dr.jjsembako.ui.feature_home.components.WelcomeSection
+import com.dr.jjsembako.feature_home.presentation.components.HistorySection
+import com.dr.jjsembako.feature_home.presentation.components.MenuSection
+import com.dr.jjsembako.feature_home.presentation.components.OmzetSection
+import com.dr.jjsembako.feature_home.presentation.components.StatisticSection
+import com.dr.jjsembako.feature_home.presentation.components.WelcomeSection
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable

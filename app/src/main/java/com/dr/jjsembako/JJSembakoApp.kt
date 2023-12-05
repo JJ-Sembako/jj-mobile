@@ -26,7 +26,7 @@ import com.dr.jjsembako.feature_customer.presentation.add.TambahPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.detail.DetailPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.edit.EditPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
-import com.dr.jjsembako.ui.feature_home.HomeScreen
+import com.dr.jjsembako.feature_home.presentation.HomeScreen
 import com.dr.jjsembako.feature_setting.presentation.change_password.GantiKataSandiScreen
 import com.dr.jjsembako.feature_setting.presentation.recovery.PemulihanAkunScreen
 import com.dr.jjsembako.feature_setting.presentation.setting.PengaturanScreen
