@@ -36,7 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.domain.model.Customer
-import com.dr.jjsembako.core.model.FilterOption
+import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.presentation.components.BottomSheetCustomer
 import com.dr.jjsembako.core.presentation.components.CustomerInfo
 import com.dr.jjsembako.core.presentation.components.SearchFilter

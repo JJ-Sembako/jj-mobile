@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.model.FilterOption
+import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 

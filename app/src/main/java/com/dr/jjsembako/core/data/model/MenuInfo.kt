@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.model
+package com.dr.jjsembako.core.data.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

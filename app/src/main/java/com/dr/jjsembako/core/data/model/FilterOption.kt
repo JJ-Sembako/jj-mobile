@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.model
+package com.dr.jjsembako.core.data.model
 
 data class FilterOption(
     val name: String,

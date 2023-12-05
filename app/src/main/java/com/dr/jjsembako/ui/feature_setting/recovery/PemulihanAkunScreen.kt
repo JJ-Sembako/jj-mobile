@@ -61,7 +61,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.model.DropDownOption
+import com.dr.jjsembako.core.data.model.DropDownOption
 import com.dr.jjsembako.core.utils.isValidAnswer
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
