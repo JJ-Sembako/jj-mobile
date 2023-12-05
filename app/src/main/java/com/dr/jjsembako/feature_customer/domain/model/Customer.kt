@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.domain.model
+package com.dr.jjsembako.feature_customer.domain.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

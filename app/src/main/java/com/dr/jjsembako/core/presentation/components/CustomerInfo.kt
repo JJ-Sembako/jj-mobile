@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.domain.model.Customer
+import com.dr.jjsembako.feature_customer.domain.model.Customer
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
