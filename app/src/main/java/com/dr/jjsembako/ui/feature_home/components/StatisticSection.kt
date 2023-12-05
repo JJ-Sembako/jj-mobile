@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.utils.formatTotal
-import com.dr.jjsembako.ui.theme.JJSembakoTheme
+import com.dr.jjsembako.core.theme.JJSembakoTheme
 
 @Composable
 fun StatisticSection(totalPesanan: Int = 0, totalBarang: Int = 0, modifier: Modifier) {

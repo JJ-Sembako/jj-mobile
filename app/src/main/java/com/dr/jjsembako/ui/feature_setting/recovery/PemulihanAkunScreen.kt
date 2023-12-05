@@ -63,7 +63,7 @@ import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.model.DropDownOption
 import com.dr.jjsembako.core.utils.isValidAnswer
-import com.dr.jjsembako.ui.theme.JJSembakoTheme
+import com.dr.jjsembako.core.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)

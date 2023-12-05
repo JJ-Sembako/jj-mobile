@@ -27,7 +27,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
-import com.dr.jjsembako.ui.theme.JJSembakoTheme
+import com.dr.jjsembako.core.theme.JJSembakoTheme
 
 @Composable
 fun ErrorScreen(

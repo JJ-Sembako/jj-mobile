@@ -56,7 +56,7 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.utils.isDifferentPassword
 import com.dr.jjsembako.core.utils.isValidNewPassword
 import com.dr.jjsembako.core.utils.isValidPassword
-import com.dr.jjsembako.ui.theme.JJSembakoTheme
+import com.dr.jjsembako.core.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)

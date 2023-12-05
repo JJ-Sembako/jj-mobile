@@ -25,7 +25,7 @@ import com.dr.jjsembako.ui.feature_home.components.MenuSection
 import com.dr.jjsembako.ui.feature_home.components.OmzetSection
 import com.dr.jjsembako.ui.feature_home.components.StatisticSection
 import com.dr.jjsembako.ui.feature_home.components.WelcomeSection
-import com.dr.jjsembako.ui.theme.JJSembakoTheme
+import com.dr.jjsembako.core.theme.JJSembakoTheme
 
 @Composable
 fun HomeScreen(

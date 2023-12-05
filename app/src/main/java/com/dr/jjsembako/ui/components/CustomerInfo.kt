@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.domain.model.Customer
 import com.dr.jjsembako.core.utils.formatRupiah
-import com.dr.jjsembako.ui.theme.JJSembakoTheme
+import com.dr.jjsembako.core.theme.JJSembakoTheme
 
 @Composable
 fun CustomerInfo(onNavigateToDetailCust: (String) -> Unit, customer: Customer, modifier: Modifier) {

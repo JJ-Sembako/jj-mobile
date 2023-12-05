@@ -40,7 +40,7 @@ import com.dr.jjsembako.core.model.FilterOption
 import com.dr.jjsembako.ui.components.BottomSheetCustomer
 import com.dr.jjsembako.ui.components.CustomerInfo
 import com.dr.jjsembako.ui.components.SearchFilter
-import com.dr.jjsembako.ui.theme.JJSembakoTheme
+import com.dr.jjsembako.core.theme.JJSembakoTheme
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable

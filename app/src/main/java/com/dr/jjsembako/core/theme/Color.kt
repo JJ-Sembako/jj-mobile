@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.theme
+package com.dr.jjsembako.core.theme
 
 import androidx.compose.ui.graphics.Color
 

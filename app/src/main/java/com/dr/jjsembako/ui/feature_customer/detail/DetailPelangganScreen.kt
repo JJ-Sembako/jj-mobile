@@ -59,7 +59,7 @@ import com.dr.jjsembako.ui.components.CustomerInfo
 import com.dr.jjsembako.ui.components.ErrorScreen
 import com.dr.jjsembako.ui.components.SearchFilter
 import com.dr.jjsembako.ui.feature_customer.components.CustomerButtonInfo
-import com.dr.jjsembako.ui.theme.JJSembakoTheme
+import com.dr.jjsembako.core.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
