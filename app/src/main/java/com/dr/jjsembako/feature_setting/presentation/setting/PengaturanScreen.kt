@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_setting.setting
+package com.dr.jjsembako.feature_setting.presentation.setting
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme

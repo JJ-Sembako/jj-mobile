@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_setting.change_password
+package com.dr.jjsembako.feature_setting.presentation.change_password
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy

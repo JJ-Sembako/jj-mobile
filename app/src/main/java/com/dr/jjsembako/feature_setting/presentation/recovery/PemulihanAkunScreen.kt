@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_setting.recovery
+package com.dr.jjsembako.feature_setting.presentation.recovery
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
