@@ -1,5 +1,9 @@
 package com.dr.jjsembako.core.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Customer(
     val id: String,
     val name: String,
@@ -8,4 +12,4 @@ data class Customer(
     val gmapsLink: String,
     val phoneNumber: String,
     val debt: Long = 0
-)
+) : Parcelable
