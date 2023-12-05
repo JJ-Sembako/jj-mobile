@@ -6,8 +6,8 @@ import com.dr.jjsembako.feature_auth.domain.repository.IAuthRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class AuthInteractor @Inject constructor(private val authRepository: IAuthRepository) :
-    AuthUseCase {
+class LoginInteractor @Inject constructor(private val authRepository: IAuthRepository) :
+    LoginUseCase {
     override suspend fun handleLogin(
         username: String,
         password: String
