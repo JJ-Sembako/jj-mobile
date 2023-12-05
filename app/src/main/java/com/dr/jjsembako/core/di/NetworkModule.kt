@@ -1,7 +1,8 @@
 package com.dr.jjsembako.core.di
 
 import android.content.SharedPreferences
-import com.dr.jjsembako.core.data.remote.network.ApiService
+import com.dr.jjsembako.core.data.remote.network.AccountApiService
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,13 +38,29 @@ class NetworkModule {
             .build()
     }
 
+    fun provideRetrofit(client: OkHttpClient): Retrofit {
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+        return Retrofit.Builder()
+            .baseUrl("http://54.251.20.182:3000/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(client)
+            .build()
+    }
+
     @Provides
-    fun provideApiService(client: OkHttpClient): ApiService {
+    fun provideAccountService(retrofit: Retrofit): AccountApiService {
+        return retrofit.create(AccountApiService::class.java)
+    }
+
+    @Provides
+    fun provideApiService(client: OkHttpClient): AccountApiService {
         val retrofit = Retrofit.Builder()
             .baseUrl("http://54.251.20.182:3000/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
-        return retrofit.create(ApiService::class.java)
+        return retrofit.create(AccountApiService::class.java)
     }
 }
