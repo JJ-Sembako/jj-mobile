@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.components
+package com.dr.jjsembako.core.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

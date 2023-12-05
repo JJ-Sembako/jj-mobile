@@ -37,9 +37,9 @@ import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.domain.model.Customer
 import com.dr.jjsembako.core.model.FilterOption
-import com.dr.jjsembako.ui.components.BottomSheetCustomer
-import com.dr.jjsembako.ui.components.CustomerInfo
-import com.dr.jjsembako.ui.components.SearchFilter
+import com.dr.jjsembako.core.components.BottomSheetCustomer
+import com.dr.jjsembako.core.components.CustomerInfo
+import com.dr.jjsembako.core.components.SearchFilter
 import com.dr.jjsembako.core.theme.JJSembakoTheme
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)

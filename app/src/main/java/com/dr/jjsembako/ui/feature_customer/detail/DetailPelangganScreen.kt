@@ -53,11 +53,11 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.domain.model.Customer
 import com.dr.jjsembako.core.model.FilterOption
-import com.dr.jjsembako.ui.components.AlertDeleteDialog
-import com.dr.jjsembako.ui.components.BottomSheetOrder
-import com.dr.jjsembako.ui.components.CustomerInfo
-import com.dr.jjsembako.ui.components.ErrorScreen
-import com.dr.jjsembako.ui.components.SearchFilter
+import com.dr.jjsembako.core.components.AlertDeleteDialog
+import com.dr.jjsembako.core.components.BottomSheetOrder
+import com.dr.jjsembako.core.components.CustomerInfo
+import com.dr.jjsembako.core.components.ErrorScreen
+import com.dr.jjsembako.core.components.SearchFilter
 import com.dr.jjsembako.ui.feature_customer.components.CustomerButtonInfo
 import com.dr.jjsembako.core.theme.JJSembakoTheme
 import kotlinx.coroutines.launch

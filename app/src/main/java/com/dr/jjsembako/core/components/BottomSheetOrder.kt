@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.components
+package com.dr.jjsembako.core.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

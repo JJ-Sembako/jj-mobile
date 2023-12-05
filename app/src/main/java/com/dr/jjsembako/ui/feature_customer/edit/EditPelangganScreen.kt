@@ -57,7 +57,7 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.domain.model.Customer
 import com.dr.jjsembako.core.utils.isValidLinkMaps
 import com.dr.jjsembako.core.utils.isValidPhoneNumber
-import com.dr.jjsembako.ui.components.ErrorScreen
+import com.dr.jjsembako.core.components.ErrorScreen
 import com.dr.jjsembako.core.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 import kotlin.random.Random
