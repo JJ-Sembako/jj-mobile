@@ -20,5 +20,8 @@ data class DataAccountRecoveryQuestion(
 	val question: String,
 
 	@field:SerializedName("id")
-	val id: String
+	val id: String,
+
+	@field:SerializedName("role")
+	val role: String
 )

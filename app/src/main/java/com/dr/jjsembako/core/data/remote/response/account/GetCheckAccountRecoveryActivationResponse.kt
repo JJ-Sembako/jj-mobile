@@ -17,5 +17,8 @@ data class GetCheckAccountRecoveryActivationResponse(
 data class DataCheckAccountRecoveryActivation(
 
 	@field:SerializedName("isActive")
-	val isActive: Boolean
+	val isActive: Boolean,
+
+	@field:SerializedName("role")
+	val role: String
 )
