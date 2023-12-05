@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_customer.add
+package com.dr.jjsembako.feature_customer.presentation.add
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy

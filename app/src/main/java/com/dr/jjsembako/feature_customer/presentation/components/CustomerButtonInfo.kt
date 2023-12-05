@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_customer.components
+package com.dr.jjsembako.feature_customer.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

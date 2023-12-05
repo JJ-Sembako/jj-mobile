@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_customer.list
+package com.dr.jjsembako.feature_customer.presentation.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

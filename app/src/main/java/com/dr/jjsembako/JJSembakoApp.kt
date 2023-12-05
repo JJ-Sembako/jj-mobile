@@ -22,10 +22,10 @@ import com.dr.jjsembako.feature_auth.presentation.check_username.PengecekanUsern
 import com.dr.jjsembako.feature_auth.presentation.login.LoginScreen
 import com.dr.jjsembako.feature_auth.presentation.password_recovery.PemulihanKataSandiScreen
 import com.dr.jjsembako.feature_auth.presentation.recovery_question.PertanyaanPemulihanScreen
-import com.dr.jjsembako.ui.feature_customer.add.TambahPelangganScreen
-import com.dr.jjsembako.ui.feature_customer.detail.DetailPelangganScreen
-import com.dr.jjsembako.ui.feature_customer.edit.EditPelangganScreen
-import com.dr.jjsembako.ui.feature_customer.list.PelangganScreen
+import com.dr.jjsembako.feature_customer.presentation.add.TambahPelangganScreen
+import com.dr.jjsembako.feature_customer.presentation.detail.DetailPelangganScreen
+import com.dr.jjsembako.feature_customer.presentation.edit.EditPelangganScreen
+import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
 import com.dr.jjsembako.ui.feature_home.HomeScreen
 import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
 import com.dr.jjsembako.ui.feature_setting.recovery.PemulihanAkunScreen

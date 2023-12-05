@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_customer.detail
+package com.dr.jjsembako.feature_customer.presentation.detail
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
@@ -58,7 +58,7 @@ import com.dr.jjsembako.core.presentation.components.BottomSheetOrder
 import com.dr.jjsembako.core.presentation.components.CustomerInfo
 import com.dr.jjsembako.core.presentation.components.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
-import com.dr.jjsembako.ui.feature_customer.components.CustomerButtonInfo
+import com.dr.jjsembako.feature_customer.presentation.components.CustomerButtonInfo
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 import kotlin.random.Random
