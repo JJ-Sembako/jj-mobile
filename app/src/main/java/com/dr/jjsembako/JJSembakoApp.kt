@@ -18,10 +18,10 @@ import com.dr.jjsembako.core.utils.chatWA
 import com.dr.jjsembako.core.utils.getAppVersion
 import com.dr.jjsembako.core.utils.openMaps
 import com.dr.jjsembako.navigation.Screen
-import com.dr.jjsembako.ui.feature_auth.check_username.PengecekanUsernameScreen
-import com.dr.jjsembako.ui.feature_auth.login.LoginScreen
-import com.dr.jjsembako.ui.feature_auth.password_recovery.PemulihanKataSandiScreen
-import com.dr.jjsembako.ui.feature_auth.recovery_question.PertanyaanPemulihanScreen
+import com.dr.jjsembako.feature_auth.presentation.check_username.PengecekanUsernameScreen
+import com.dr.jjsembako.feature_auth.presentation.login.LoginScreen
+import com.dr.jjsembako.feature_auth.presentation.password_recovery.PemulihanKataSandiScreen
+import com.dr.jjsembako.feature_auth.presentation.recovery_question.PertanyaanPemulihanScreen
 import com.dr.jjsembako.ui.feature_customer.add.TambahPelangganScreen
 import com.dr.jjsembako.ui.feature_customer.detail.DetailPelangganScreen
 import com.dr.jjsembako.ui.feature_customer.edit.EditPelangganScreen

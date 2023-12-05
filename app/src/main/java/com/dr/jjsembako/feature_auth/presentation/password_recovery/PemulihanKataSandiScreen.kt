@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_auth.password_recovery
+package com.dr.jjsembako.feature_auth.presentation.password_recovery
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy

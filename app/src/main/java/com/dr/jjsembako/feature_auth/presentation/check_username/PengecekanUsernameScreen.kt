@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_auth.recovery_question
+package com.dr.jjsembako.feature_auth.presentation.check_username
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -49,15 +50,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.utils.isValidAnswer
+import com.dr.jjsembako.core.utils.isValidUsername
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun PertanyaanPemulihanScreen(
-    onNavigateBack: () -> Unit,
-    onNavigateToChangePassword: () -> Unit,
+fun PengecekanUsernameScreen(
+    onNavigateToLogin: () -> Unit,
+    onNavigateToCheckAnswer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -66,13 +67,11 @@ fun PertanyaanPemulihanScreen(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    var question by rememberSaveable { mutableStateOf("") }
-    var answer by rememberSaveable { mutableStateOf("") }
-    var isValidAnswer = rememberSaveable { mutableStateOf(false) }
-    var errMsgAnswer = rememberSaveable { mutableStateOf("") }
+    var username by rememberSaveable { mutableStateOf("") }
+    var isValidUsername = rememberSaveable { mutableStateOf(false) }
+    var errMsgUsername = rememberSaveable { mutableStateOf("") }
 
-    val errQuestionNotFound = stringResource(R.string.err_question_not_found)
-    val errAnswerMin3Char = stringResource(R.string.err_answer)
+    val errUsernameConstraint = stringResource(R.string.err_username)
 
     LaunchedEffect(key1 = keyboardHeight) {
         coroutineScope.launch {
@@ -87,11 +86,11 @@ fun PertanyaanPemulihanScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
-                title = { Text(stringResource(R.string.question_recovery)) },
+                title = { Text(stringResource(R.string.check_username)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         keyboardController?.hide()
-                        onNavigateBack()
+                        onNavigateToLogin()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -115,36 +114,24 @@ fun PertanyaanPemulihanScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                text = stringResource(R.string.question),
-                fontSize = 14.sp,
-            )
-            Text(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 24.dp),
-                text = question.ifEmpty { errQuestionNotFound },
-            )
             OutlinedTextField(
-                label = { Text(stringResource(R.string.answer)) },
+                label = { Text(stringResource(R.string.username)) },
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
                 ),
-                isError = !isValidAnswer.value,
-                value = answer,
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                isError = !isValidUsername.value,
+                value = username,
                 onValueChange = {
-                    answer = it
-                    if (!isValidAnswer(answer)) {
-                        isValidAnswer.value = false
-                        errMsgAnswer.value = errAnswerMin3Char
+                    username = it
+                    if (!isValidUsername(username)) {
+                        isValidUsername.value = false
+                        errMsgUsername.value = errUsernameConstraint
                     } else {
-                        isValidAnswer.value = true
-                        errMsgAnswer.value = ""
+                        isValidUsername.value = true
+                        errMsgUsername.value = ""
                     }
                 },
                 modifier = modifier
@@ -155,7 +142,7 @@ fun PertanyaanPemulihanScreen(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                text = errMsgAnswer.value,
+                text = errMsgUsername.value,
                 fontSize = 14.sp,
                 color = Color.Red
             )
@@ -165,14 +152,14 @@ fun PertanyaanPemulihanScreen(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    onNavigateToChangePassword()
+                    onNavigateToCheckAnswer()
                 },
-                enabled = isValidAnswer.value,
+                enabled = isValidUsername.value,
                 modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text(stringResource(R.string.verification))
+                Text(stringResource(R.string.check))
             }
         }
     }
@@ -180,11 +167,8 @@ fun PertanyaanPemulihanScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PertanyaanPemulihanScreenPreview() {
+fun PengecekanUsernameScreenPreview() {
     JJSembakoTheme {
-        PertanyaanPemulihanScreen(
-            onNavigateBack = {},
-            onNavigateToChangePassword = {}
-        )
+        PengecekanUsernameScreen(onNavigateToLogin = {}, onNavigateToCheckAnswer = {})
     }
 }

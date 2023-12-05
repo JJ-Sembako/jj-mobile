@@ -1,4 +1,4 @@
-package com.dr.jjsembako.ui.feature_auth.login
+package com.dr.jjsembako.feature_auth.presentation.login
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
