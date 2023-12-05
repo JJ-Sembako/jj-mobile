@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.utils.formatRupiah
-import com.dr.jjsembako.core.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun OmzetSection(omzet: Long = 0, modifier: Modifier) {

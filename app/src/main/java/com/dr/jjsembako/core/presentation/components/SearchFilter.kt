@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.components
+package com.dr.jjsembako.core.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,7 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable

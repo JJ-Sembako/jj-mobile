@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.components
+package com.dr.jjsembako.core.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding
@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun AlertDeleteDialog(

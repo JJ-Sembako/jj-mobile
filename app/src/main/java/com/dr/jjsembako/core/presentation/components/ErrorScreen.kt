@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.components
+package com.dr.jjsembako.core.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,7 +27,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun ErrorScreen(

@@ -30,7 +30,7 @@ import com.dr.jjsembako.ui.feature_home.HomeScreen
 import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
 import com.dr.jjsembako.ui.feature_setting.recovery.PemulihanAkunScreen
 import com.dr.jjsembako.ui.feature_setting.setting.PengaturanScreen
-import com.dr.jjsembako.core.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun JJSembakoApp() {

@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.model.MenuInfo
 import com.dr.jjsembako.navigation.Screen
-import com.dr.jjsembako.core.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun MenuSection(

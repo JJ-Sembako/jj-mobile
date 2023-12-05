@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.theme
+package com.dr.jjsembako.core.presentation.theme
 
 import android.app.Activity
 import android.os.Build

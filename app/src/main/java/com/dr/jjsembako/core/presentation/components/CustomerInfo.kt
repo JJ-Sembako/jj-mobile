@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.components
+package com.dr.jjsembako.core.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.domain.model.Customer
 import com.dr.jjsembako.core.utils.formatRupiah
-import com.dr.jjsembako.core.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun CustomerInfo(onNavigateToDetailCust: (String) -> Unit, customer: Customer, modifier: Modifier) {
