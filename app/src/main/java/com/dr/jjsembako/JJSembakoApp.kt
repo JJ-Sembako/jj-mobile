@@ -4,10 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,12 +34,16 @@ import com.dr.jjsembako.feature_setting.presentation.change_password.GantiKataSa
 import com.dr.jjsembako.feature_setting.presentation.recovery.PemulihanAkunScreen
 import com.dr.jjsembako.feature_setting.presentation.setting.PengaturanScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.TokenViewModel
 
 @Composable
 fun JJSembakoApp() {
+    val tokenViewModel: TokenViewModel = hiltViewModel()
+    val token by rememberUpdatedState(newValue = tokenViewModel.getToken())
     val context = LocalContext.current
     val navController = rememberNavController()
-    val startDestination = Screen.Login.route
+    var startDestination = if(token.isEmpty()) Screen.Login.route else Screen.Home.route
+
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(
