@@ -49,7 +49,6 @@ fun LoadingDialog(
                     minWidth = dialogMinWidth,
                     maxWidth = dialogMaxWidth
                 )
-                .height(300.dp)
                 .padding(24.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant),
