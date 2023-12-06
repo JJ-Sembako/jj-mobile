@@ -186,7 +186,7 @@ fun JJSembakoApp() {
             DetailPelangganScreen(
                 idCust = id,
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToEditCust = { id ->
+                onNavigateToEditCust = {
                     navController.navigate(Screen.EditPelanggan.createRoute(id)) {
                         launchSingleTop = true
                     }

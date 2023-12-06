@@ -67,7 +67,7 @@ import kotlin.random.Random
 fun DetailPelangganScreen(
     idCust: String,
     onNavigateBack: () -> Unit,
-    onNavigateToEditCust: (String) -> Unit,
+    onNavigateToEditCust: () -> Unit,
     openMaps: (String) -> Unit,
     call: (String) -> Unit,
     chatWA: (String) -> Unit,
@@ -79,7 +79,7 @@ fun DetailPelangganScreen(
         DetailPelangganContent(
             cust = dummy,
             onNavigateBack = { onNavigateBack() },
-            onNavigateToEditCust = { id -> onNavigateToEditCust(id) },
+            onNavigateToEditCust = { onNavigateToEditCust() },
             openMaps = { url -> openMaps(url) },
             call = { uri -> call(uri) },
             chatWA = { url -> chatWA(url) },
@@ -95,7 +95,7 @@ fun DetailPelangganScreen(
 private fun DetailPelangganContent(
     cust: Customer,
     onNavigateBack: () -> Unit,
-    onNavigateToEditCust: (String) -> Unit,
+    onNavigateToEditCust: () -> Unit,
     openMaps: (String) -> Unit,
     call: (String) -> Unit,
     chatWA: (String) -> Unit,
@@ -165,7 +165,7 @@ private fun DetailPelangganContent(
                         onDismissRequest = { menuExpanded = false }) {
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.edit)) },
-                            onClick = { onNavigateToEditCust(cust.id) },
+                            onClick = { onNavigateToEditCust() },
                         )
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.delete)) },
