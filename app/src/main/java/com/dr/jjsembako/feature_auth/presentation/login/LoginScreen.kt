@@ -46,24 +46,28 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidPassword
 import com.dr.jjsembako.core.utils.isValidUsername
 import com.dr.jjsembako.core.utils.rememberImeState
-import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import kotlinx.coroutines.coroutineScope
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToCheckUsername: () -> Unit,
+    setToken: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val loginViewModel: LoginViewModel = hiltViewModel()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val imeState = rememberImeState()
@@ -208,6 +212,7 @@ fun LoginScreen(
         Button(
             onClick = {
                 keyboardController?.hide()
+                loginViewModel.handleLogin(username, password)
                 onLoginSuccess()
             },
             enabled = isValidUsername.value && isValidPassword.value,
@@ -239,6 +244,6 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     JJSembakoTheme {
-        LoginScreen(onLoginSuccess = {}, onNavigateToCheckUsername = {})
+        LoginScreen(onLoginSuccess = {}, onNavigateToCheckUsername = {}, setToken = {})
     }
 }

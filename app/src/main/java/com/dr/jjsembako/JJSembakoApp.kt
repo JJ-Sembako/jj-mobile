@@ -56,6 +56,9 @@ fun JJSembakoApp() {
                     navController.navigate(Screen.PengecekanUsername.route) {
                         launchSingleTop = true
                     }
+                },
+                setToken = { token ->
+                    tokenViewModel.setToken(token)
                 }
             )
         }

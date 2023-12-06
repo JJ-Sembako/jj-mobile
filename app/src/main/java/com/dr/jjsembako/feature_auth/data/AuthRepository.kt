@@ -29,9 +29,7 @@ class AuthRepository @Inject constructor(private val authDataSource: AuthDataSou
                     val user = response.data.data
                     emit(Resource.Success(user, response.data.message, response.data.statusCode))
                 } else emit(Resource.Error(response.data.message))
-
             }
-
             is ApiResponse.Error -> emit(Resource.Error(response.errorMessage))
         }
     }.catch {

@@ -1,5 +1,6 @@
 package com.dr.jjsembako.core.di
 
+import com.dr.jjsembako.feature_auth.data.AuthRepository
 import com.dr.jjsembako.feature_auth.domain.repository.IAuthRepository
 import com.dr.jjsembako.feature_customer.domain.repository.ICustomerRepository
 import dagger.Binds
@@ -11,8 +12,8 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
     @Binds
-    abstract fun provideRepositoryAuth(): IAuthRepository
+    abstract fun provideRepositoryAuth(authRepository: AuthRepository): IAuthRepository
 
-    @Binds
-    abstract fun provideRepositoryCustomer(): ICustomerRepository
+//    @Binds
+//    abstract fun provideRepositoryCustomer(): ICustomerRepository
 }
