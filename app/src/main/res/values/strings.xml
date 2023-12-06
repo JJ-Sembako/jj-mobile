@@ -20,6 +20,7 @@
     <string name="content_del">Aksi ini akan menghapus data secara permanen dan tidak dapat dipulihkan kembali.</string>
     <string name="delete">Hapus</string>
     <string name="yes_delete">Ya, Hapus!</string>
+    <string name="ok">Ok</string>
     <string name="cancel">Batal</string>
     <string name="menu">Menu</string>
     <string name="alert">Peringatan</string>
