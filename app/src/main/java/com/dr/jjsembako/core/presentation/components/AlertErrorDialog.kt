@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -96,7 +98,8 @@ fun AlertErrorDialog(
                     text = stringResource(R.string.ok),
                     color = Color.White,
                     fontSize = 12.sp,
-                    modifier = modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                    modifier = modifier.padding(horizontal = 4.dp, vertical = 4.dp),
+                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
                 )
             }
         }
