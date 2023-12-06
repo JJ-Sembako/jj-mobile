@@ -70,7 +70,7 @@ fun LoadingDialog(
             Spacer(modifier = modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.please_wait),
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 modifier = modifier.wrapContentSize(Alignment.Center)
