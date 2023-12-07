@@ -11,6 +11,6 @@ class LoginInteractor @Inject constructor(private val authRepository: IAuthRepos
     override suspend fun handleLogin(
         username: String,
         password: String
-    ): Flow<Resource<DataHandleLogin?>> =
+    ): Flow<Resource<out DataHandleLogin?>> =
         authRepository.handleLogin(username, password)
 }

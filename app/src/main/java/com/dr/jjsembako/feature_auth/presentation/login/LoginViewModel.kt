@@ -46,7 +46,7 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
                         if (data != null && data.role == "SALES") {
                             _token.value = data.token
                             _username.value = data.username
-                        } else{
+                        } else {
                             _state.value = StateResponse.ERROR
                             _message.value = "Akses ditolak!\n Aplikasi ini khusus untuk SALES."
                         }
@@ -57,6 +57,8 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
+
+                    else -> {}
                 }
             }
         }

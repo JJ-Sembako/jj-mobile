@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface IAuthRepository {
 
-    suspend fun handleLogin(username: String, password: String): Flow<Resource<DataHandleLogin?>>
+    suspend fun handleLogin(username: String, password: String): Flow<Resource<out DataHandleLogin?>>
 
 }
