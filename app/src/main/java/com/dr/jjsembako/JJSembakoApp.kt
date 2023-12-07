@@ -40,6 +40,7 @@ import com.dr.jjsembako.core.utils.TokenViewModel
 fun JJSembakoApp() {
     val tokenViewModel: TokenViewModel = hiltViewModel()
     val token by rememberUpdatedState(newValue = tokenViewModel.getToken())
+    val username by rememberUpdatedState(newValue = tokenViewModel.getUsername())
     val context = LocalContext.current
     val navController = rememberNavController()
     var startDestination = if(token.isEmpty()) Screen.Login.route else Screen.Home.route
@@ -59,6 +60,9 @@ fun JJSembakoApp() {
                 },
                 setToken = { token ->
                     tokenViewModel.setToken(token)
+                },
+                setUsername = { username ->
+                    tokenViewModel.setUsername(username)
                 }
             )
         }
@@ -95,6 +99,7 @@ fun JJSembakoApp() {
 
         composable(Screen.Home.route) {
             HomeScreen(
+                username = username,
                 onNavigateToCreateOrder = {
                     navController.navigate(Screen.BuatPesanan.route) {
                         launchSingleTop = true
@@ -228,6 +233,7 @@ fun JJSembakoApp() {
 
         composable(Screen.Pengaturan.route) {
             PengaturanScreen(
+                username = username,
                 onLogout = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }

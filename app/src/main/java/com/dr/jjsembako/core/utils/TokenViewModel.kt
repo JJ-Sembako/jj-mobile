@@ -19,5 +19,12 @@ class TokenViewModel @Inject constructor(private val sharedPreferences: SharedPr
         }
     }
 
-    fun deleteToken(token: String) = setToken("")
+    fun getUsername(): String = sharedPreferences.getString(SharedPreferencesModule.USERNAME_KEY, "") ?: ""
+
+    fun setUsername(username: String) {
+        with(sharedPreferences.edit()) {
+            putString(SharedPreferencesModule.USERNAME_KEY, username)
+            apply()
+        }
+    }
 }

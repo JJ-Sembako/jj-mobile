@@ -65,6 +65,7 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToCheckUsername: () -> Unit,
     setToken: (String) -> Unit,
+    setUsername: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val loginViewModel: LoginViewModel = hiltViewModel()
@@ -244,6 +245,6 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     JJSembakoTheme {
-        LoginScreen(onLoginSuccess = {}, onNavigateToCheckUsername = {}, setToken = {})
+        LoginScreen(onLoginSuccess = {}, onNavigateToCheckUsername = {}, setToken = {}, setUsername = {})
     }
 }

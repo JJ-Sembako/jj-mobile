@@ -34,13 +34,13 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun PengaturanScreen(
+    username: String = "username",
     onLogout: () -> Unit,
     onNavigateToChangePassword: () -> Unit,
     onNavigateToAccountRecovery: () -> Unit,
     getAppVersion: () -> String,
     modifier: Modifier = Modifier
 ) {
-    var username by rememberSaveable { mutableStateOf("username") }
     val versionName = getAppVersion()
     val isDarkTheme = isSystemInDarkTheme()
     val logo = if (isDarkTheme) {

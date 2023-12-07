@@ -29,6 +29,7 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun HomeScreen(
+    username: String = "username",
     onNavigateToCreateOrder: () -> Unit,
     onNavigateToWarehouse: () -> Unit,
     onNavigateToCustomer: () -> Unit,
@@ -38,7 +39,6 @@ fun HomeScreen(
     onLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var username by rememberSaveable { mutableStateOf("username") }
     var omzet by rememberSaveable { mutableStateOf(0L) }
     var totalPesanan by rememberSaveable { mutableStateOf(0) }
     var totalBarang by rememberSaveable { mutableStateOf(0) }
