@@ -12,8 +12,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class SharedPreferencesModule {
-    companion object{
+    companion object {
         val PREFS_NAME = "auth_pref"
+        val TOKEN_KEY = "token"
         val USERNAME_KEY = "username"
     }
 
@@ -26,7 +27,7 @@ class SharedPreferencesModule {
     @Singleton
     @Provides
     fun provideToken(sharedPreferences: SharedPreferences): String {
-        return sharedPreferences.getString(PREFS_NAME, "") ?: ""
+        return sharedPreferences.getString(TOKEN_KEY, "") ?: ""
     }
 
     @Singleton

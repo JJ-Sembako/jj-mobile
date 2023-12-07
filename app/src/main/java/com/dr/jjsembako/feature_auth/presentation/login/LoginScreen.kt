@@ -133,6 +133,7 @@ fun LoginScreen(
         }
 
         StateResponse.SUCCESS -> {
+            loginViewModel.setState(null)
             if (statusCode == 200) {
                 showLoadingDialog.value = false
                 showErrorDialog.value = false

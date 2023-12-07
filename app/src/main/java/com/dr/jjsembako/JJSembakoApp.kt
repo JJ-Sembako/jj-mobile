@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -16,11 +18,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.TokenViewModel
 import com.dr.jjsembako.core.utils.call
 import com.dr.jjsembako.core.utils.chatWA
 import com.dr.jjsembako.core.utils.getAppVersion
 import com.dr.jjsembako.core.utils.openMaps
-import com.dr.jjsembako.navigation.Screen
 import com.dr.jjsembako.feature_auth.presentation.check_username.PengecekanUsernameScreen
 import com.dr.jjsembako.feature_auth.presentation.login.LoginScreen
 import com.dr.jjsembako.feature_auth.presentation.password_recovery.PemulihanKataSandiScreen
@@ -33,25 +36,19 @@ import com.dr.jjsembako.feature_home.presentation.HomeScreen
 import com.dr.jjsembako.feature_setting.presentation.change_password.GantiKataSandiScreen
 import com.dr.jjsembako.feature_setting.presentation.recovery.PemulihanAkunScreen
 import com.dr.jjsembako.feature_setting.presentation.setting.PengaturanScreen
-import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.utils.TokenViewModel
+import com.dr.jjsembako.navigation.Screen
 
 @Composable
 fun JJSembakoApp() {
     val tokenViewModel: TokenViewModel = hiltViewModel()
-    val token by rememberUpdatedState(newValue = tokenViewModel.getToken())
-    val username by rememberUpdatedState(newValue = tokenViewModel.getUsername())
+    val token by tokenViewModel.token.collectAsState()
+    val username by tokenViewModel.username.collectAsState()
     val context = LocalContext.current
     val navController = rememberNavController()
     var startDestination = if(token.isEmpty()) Screen.Login.route else Screen.Home.route
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
-            if(token.isNotEmpty()){
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Login.route) { inclusive = true }
-                }
-            }
             LoginScreen(
                 onLoginSuccess = {
                     navController.navigate(Screen.Home.route) {
@@ -63,21 +60,18 @@ fun JJSembakoApp() {
                         launchSingleTop = true
                     }
                 },
-                setToken = { token ->
-                    tokenViewModel.setToken(token)
+                setToken = { newToken ->
+                    tokenViewModel.setToken(newToken)
+                    tokenViewModel.updateStateToken()
                 },
                 setUsername = { username ->
                     tokenViewModel.setUsername(username)
+                    tokenViewModel.updateStateUsername()
                 }
             )
         }
 
         composable(Screen.PengecekanUsername.route) {
-            if(token.isNotEmpty()){
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Login.route) { inclusive = true }
-                }
-            }
             PengecekanUsernameScreen(
                 onNavigateToLogin = { navController.popBackStack() },
                 onNavigateToCheckAnswer = {
@@ -88,11 +82,6 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.PertanyaanPemulihan.route) {
-            if(token.isNotEmpty()){
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Login.route) { inclusive = true }
-                }
-            }
             PertanyaanPemulihanScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToChangePassword = {
@@ -103,11 +92,6 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.PemulihanKataSandi.route) {
-            if(token.isNotEmpty()){
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Login.route) { inclusive = true }
-                }
-            }
             PemulihanKataSandiScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToLogin = {
@@ -118,11 +102,28 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.Home.route) {
-            if(token.isEmpty()){
-                navController.navigate(Screen.Login.route) {
-                    popUpTo(Screen.Home.route) { inclusive = true }
+            // Middleware untuk memeriksa token
+            DisposableEffect(navController) {
+                val callback = rememberUpdatedState(token) {
+                    NavController.OnDestinationChangedListener { _, _, _ ->
+                        // Pemeriksaan token di sini
+                        if (token.isEmpty()) {
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(Screen.Home.route) { inclusive = true }
+                            }
+                        }
+                    }
+                }
+
+                // Tambahkan listener ke navController
+                navController.addOnDestinationChangedListener(callback)
+
+                // Cleanup saat komposable dihancurkan
+                onDispose {
+                    navController.removeOnDestinationChangedListener(callback)
                 }
             }
+
             HomeScreen(
                 username = username,
                 onNavigateToCreateOrder = {
@@ -161,6 +162,8 @@ fun JJSembakoApp() {
                     }
                     tokenViewModel.setToken("")
                     tokenViewModel.setUsername("username")
+                    tokenViewModel.updateStateToken()
+                    tokenViewModel.updateStateUsername()
                 })
         }
 
@@ -259,11 +262,6 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.Pengaturan.route) {
-            if(token.isEmpty()){
-                navController.navigate(Screen.Login.route) {
-                    popUpTo(Screen.Home.route) { inclusive = true }
-                }
-            }
             PengaturanScreen(
                 username = username,
                 onLogout = {
@@ -272,6 +270,8 @@ fun JJSembakoApp() {
                     }
                     tokenViewModel.setToken("")
                     tokenViewModel.setUsername("username")
+                    tokenViewModel.updateStateToken()
+                    tokenViewModel.updateStateUsername()
                 },
                 onNavigateToChangePassword = {
                     navController.navigate(Screen.GantiKataSandi.route) {

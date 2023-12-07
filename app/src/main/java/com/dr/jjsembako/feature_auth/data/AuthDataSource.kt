@@ -5,6 +5,7 @@ import com.dr.jjsembako.core.data.remote.network.AccountApiService
 import com.dr.jjsembako.core.data.remote.response.account.DataHandleLogin
 import com.dr.jjsembako.core.data.remote.response.account.PostHandleLoginResponse
 import com.google.gson.Gson
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,7 +14,7 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 class AuthDataSource @Inject constructor(private val accountApiService: AccountApiService) {
-//    }
+    //    }
     suspend fun handleLogin(
         username: String,
         password: String
@@ -21,6 +22,8 @@ class AuthDataSource @Inject constructor(private val accountApiService: AccountA
         try {
             val response = accountApiService.handleLogin(username, password)
             emit(Resource.Success(response.data, response.message, response.statusCode))
+        } catch (e: CancellationException) {
+            // Do nothing, the flow is cancelled
         } catch (e: Exception) {
             if (e is HttpException) {
                 val errorResponse = e.response()?.errorBody()?.string()
@@ -28,7 +31,8 @@ class AuthDataSource @Inject constructor(private val accountApiService: AccountA
                 val errorMessage = e.message()
 
                 if (errorResponse != null) {
-                    val errorResponseObj = Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                    val errorResponseObj =
+                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
