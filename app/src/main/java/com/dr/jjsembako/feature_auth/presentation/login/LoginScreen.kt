@@ -28,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -53,6 +54,9 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.LoadingDialog
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidPassword
 import com.dr.jjsembako.core.utils.isValidUsername
@@ -69,10 +73,19 @@ fun LoginScreen(
     modifier: Modifier = Modifier
 ) {
     val loginViewModel: LoginViewModel = hiltViewModel()
+    val state by rememberUpdatedState(newValue = loginViewModel.state.value)
+    val statusCode by rememberUpdatedState(newValue = loginViewModel.statusCode.value)
+    val token by rememberUpdatedState(newValue = loginViewModel.token.value)
+    val message by rememberUpdatedState(newValue = loginViewModel.message.value)
+    val trueUsername by rememberUpdatedState(newValue = loginViewModel.username.value)
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val imeState = rememberImeState()
     val scrollState = rememberScrollState()
+
+    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -214,7 +227,33 @@ fun LoginScreen(
             onClick = {
                 keyboardController?.hide()
                 loginViewModel.handleLogin(username, password)
-                onLoginSuccess()
+
+                when (state) {
+                    StateResponse.LOADING -> {
+                        showLoadingDialog.value = true
+                    }
+
+                    StateResponse.ERROR -> {
+                        showLoadingDialog.value = false
+                        showErrorDialog.value = true
+                    }
+
+                    StateResponse.SUCCESS -> {
+                        if(statusCode == 200){
+                            showLoadingDialog.value = false
+                            showErrorDialog.value = false
+                            setUsername(trueUsername!!)
+                            setToken(token!!)
+                            onLoginSuccess()
+                        }else {
+                            showLoadingDialog.value = false
+                            showErrorDialog.value = true
+                        }
+                    }
+
+                    else -> {}
+                }
+
             },
             enabled = isValidUsername.value && isValidPassword.value,
             modifier = modifier
@@ -238,6 +277,18 @@ fun LoginScreen(
         ) {
             Text(text = stringResource(id = R.string.forget_pass))
         }
+
+        if (showLoadingDialog.value) {
+            LoadingDialog(showLoadingDialog, modifier)
+        }
+
+        if (showErrorDialog.value) {
+            AlertErrorDialog(
+                message = message ?: stringResource(id = R.string.error_msg_default),
+                showDialog = showErrorDialog,
+                modifier = modifier
+            )
+        }
     }
 }
 
@@ -245,6 +296,10 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     JJSembakoTheme {
-        LoginScreen(onLoginSuccess = {}, onNavigateToCheckUsername = {}, setToken = {}, setUsername = {})
+        LoginScreen(
+            onLoginSuccess = {},
+            onNavigateToCheckUsername = {},
+            setToken = {},
+            setUsername = {})
     }
 }

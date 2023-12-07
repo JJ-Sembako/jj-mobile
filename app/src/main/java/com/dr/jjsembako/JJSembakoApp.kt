@@ -73,6 +73,11 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.PengecekanUsername.route) {
+            if(token.isNotEmpty()){
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Login.route) { inclusive = true }
+                }
+            }
             PengecekanUsernameScreen(
                 onNavigateToLogin = { navController.popBackStack() },
                 onNavigateToCheckAnswer = {
@@ -83,6 +88,11 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.PertanyaanPemulihan.route) {
+            if(token.isNotEmpty()){
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Login.route) { inclusive = true }
+                }
+            }
             PertanyaanPemulihanScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToChangePassword = {
@@ -93,6 +103,11 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.PemulihanKataSandi.route) {
+            if(token.isNotEmpty()){
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Login.route) { inclusive = true }
+                }
+            }
             PemulihanKataSandiScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToLogin = {
@@ -144,6 +159,8 @@ fun JJSembakoApp() {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
                     }
+                    tokenViewModel.setToken("")
+                    tokenViewModel.setUsername("username")
                 })
         }
 
@@ -242,12 +259,19 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.Pengaturan.route) {
+            if(token.isEmpty()){
+                navController.navigate(Screen.Login.route) {
+                    popUpTo(Screen.Home.route) { inclusive = true }
+                }
+            }
             PengaturanScreen(
                 username = username,
                 onLogout = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
                     }
+                    tokenViewModel.setToken("")
+                    tokenViewModel.setUsername("username")
                 },
                 onNavigateToChangePassword = {
                     navController.navigate(Screen.GantiKataSandi.route) {
