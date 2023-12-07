@@ -37,7 +37,7 @@ class NetworkModule {
             .readTimeout(120, TimeUnit.SECONDS)
             .build()
     }
-
+    @Provides
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         val gson = GsonBuilder()
             .setLenient()
@@ -51,16 +51,6 @@ class NetworkModule {
 
     @Provides
     fun provideAccountService(retrofit: Retrofit): AccountApiService {
-        return retrofit.create(AccountApiService::class.java)
-    }
-
-    @Provides
-    fun provideApiService(client: OkHttpClient): AccountApiService {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://54.251.20.182:3000/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build()
         return retrofit.create(AccountApiService::class.java)
     }
 }
