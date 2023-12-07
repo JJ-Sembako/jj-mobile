@@ -47,6 +47,11 @@ fun JJSembakoApp() {
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
+            if(token.isNotEmpty()){
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Login.route) { inclusive = true }
+                }
+            }
             LoginScreen(
                 onLoginSuccess = {
                     navController.navigate(Screen.Home.route) {
@@ -98,6 +103,11 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.Home.route) {
+            if(token.isEmpty()){
+                navController.navigate(Screen.Login.route) {
+                    popUpTo(Screen.Home.route) { inclusive = true }
+                }
+            }
             HomeScreen(
                 username = username,
                 onNavigateToCreateOrder = {
