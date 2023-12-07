@@ -29,6 +29,10 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
     private val _username = MutableLiveData<String?>()
     val username: LiveData<String?> = _username
 
+    fun setState(state: StateResponse?) {
+        _state.value = state
+    }
+
     fun handleLogin(username: String, password: String) {
         viewModelScope.launch {
             loginUseCase.handleLogin(username, password).collect {

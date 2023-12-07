@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_auth.presentation.login
 
+import android.util.Log
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,9 +27,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -61,7 +62,6 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidPassword
 import com.dr.jjsembako.core.utils.isValidUsername
 import com.dr.jjsembako.core.utils.rememberImeState
-import kotlinx.coroutines.coroutineScope
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -73,11 +73,11 @@ fun LoginScreen(
     modifier: Modifier = Modifier
 ) {
     val loginViewModel: LoginViewModel = hiltViewModel()
-    val state by rememberUpdatedState(newValue = loginViewModel.state.value)
-    val statusCode by rememberUpdatedState(newValue = loginViewModel.statusCode.value)
-    val token by rememberUpdatedState(newValue = loginViewModel.token.value)
-    val message by rememberUpdatedState(newValue = loginViewModel.message.value)
-    val trueUsername by rememberUpdatedState(newValue = loginViewModel.username.value)
+    val state = loginViewModel.state.observeAsState().value
+    val statusCode = loginViewModel.statusCode.observeAsState().value
+    val token = loginViewModel.token.observeAsState().value
+    val message = loginViewModel.message.observeAsState().value
+    val trueUsername = loginViewModel.username.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -115,6 +115,38 @@ fun LoginScreen(
         if (imeState.value) {
             scrollState.animateScrollTo(scrollState.maxValue, tween(300))
         }
+    }
+
+    when (state) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("LoginScreen", "Error")
+            Log.e("LoginScreen", "state: $state")
+            Log.e("LoginScreen", "Error: $message")
+            Log.e("LoginScreen", "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            loginViewModel.setState(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            if (statusCode == 200) {
+                showLoadingDialog.value = false
+                showErrorDialog.value = false
+                setUsername(trueUsername!!)
+                setToken(token!!)
+                onLoginSuccess()
+            } else {
+                showLoadingDialog.value = false
+                showErrorDialog.value = true
+                loginViewModel.setState(null)
+            }
+        }
+
+        else -> {}
     }
 
     Column(
@@ -227,33 +259,6 @@ fun LoginScreen(
             onClick = {
                 keyboardController?.hide()
                 loginViewModel.handleLogin(username, password)
-
-                when (state) {
-                    StateResponse.LOADING -> {
-                        showLoadingDialog.value = true
-                    }
-
-                    StateResponse.ERROR -> {
-                        showLoadingDialog.value = false
-                        showErrorDialog.value = true
-                    }
-
-                    StateResponse.SUCCESS -> {
-                        if(statusCode == 200){
-                            showLoadingDialog.value = false
-                            showErrorDialog.value = false
-                            setUsername(trueUsername!!)
-                            setToken(token!!)
-                            onLoginSuccess()
-                        }else {
-                            showLoadingDialog.value = false
-                            showErrorDialog.value = true
-                        }
-                    }
-
-                    else -> {}
-                }
-
             },
             enabled = isValidUsername.value && isValidPassword.value,
             modifier = modifier
