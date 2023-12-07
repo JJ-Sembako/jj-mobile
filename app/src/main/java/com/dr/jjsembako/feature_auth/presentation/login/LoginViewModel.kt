@@ -48,7 +48,7 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
                             _username.value = data.username
                         } else {
                             _state.value = StateResponse.ERROR
-                            _message.value = "Akses ditolak!\n Aplikasi ini khusus untuk SALES."
+                            _message.value = "Akses ditolak!\n Aplikasi ini khusus untuk SALES"
                         }
                     }
 
