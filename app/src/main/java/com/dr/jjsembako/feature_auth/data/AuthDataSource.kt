@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -24,6 +25,9 @@ class AuthDataSource @Inject constructor(private val accountApiService: AccountA
             emit(Resource.Success(response.data, response.message, response.statusCode))
         } catch (e: CancellationException) {
             // Do nothing, the flow is cancelled
+        } catch (e: IOException) {
+            // Handle IOException (connection issues, timeout, etc.)
+            emit(Resource.Error("Masalah jaringan koneksi internet", 408, null))
         } catch (e: Exception) {
             if (e is HttpException) {
                 val errorResponse = e.response()?.errorBody()?.string()
