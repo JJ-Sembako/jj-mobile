@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
@@ -45,30 +43,36 @@ fun JJSembakoApp() {
     val username by tokenViewModel.username.collectAsState()
     val context = LocalContext.current
     val navController = rememberNavController()
-    var startDestination = if(token.isEmpty()) Screen.Login.route else Screen.Home.route
+    var startDestination = if (token.isEmpty()) Screen.Login.route else Screen.Home.route
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
-            LoginScreen(
-                onLoginSuccess = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
-                    }
-                },
-                onNavigateToCheckUsername = {
-                    navController.navigate(Screen.PengecekanUsername.route) {
-                        launchSingleTop = true
-                    }
-                },
-                setToken = { newToken ->
-                    tokenViewModel.setToken(newToken)
-                    tokenViewModel.updateStateToken()
-                },
-                setUsername = { username ->
-                    tokenViewModel.setUsername(username)
-                    tokenViewModel.updateStateUsername()
+            if (token.isNotEmpty()) {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Login.route) { inclusive = true }
                 }
-            )
+            } else {
+                LoginScreen(
+                    onLoginSuccess = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Login.route) { inclusive = true }
+                        }
+                    },
+                    onNavigateToCheckUsername = {
+                        navController.navigate(Screen.PengecekanUsername.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    setToken = { newToken ->
+                        tokenViewModel.setToken(newToken)
+                        tokenViewModel.updateStateToken()
+                    },
+                    setUsername = { username ->
+                        tokenViewModel.setUsername(username)
+                        tokenViewModel.updateStateUsername()
+                    }
+                )
+            }
         }
 
         composable(Screen.PengecekanUsername.route) {
@@ -102,69 +106,53 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.Home.route) {
-            // Middleware untuk memeriksa token
-            DisposableEffect(navController) {
-                val callback = rememberUpdatedState(token) {
-                    NavController.OnDestinationChangedListener { _, _, _ ->
-                        // Pemeriksaan token di sini
-                        if (token.isEmpty()) {
-                            navController.navigate(Screen.Login.route) {
-                                popUpTo(Screen.Home.route) { inclusive = true }
-                            }
+            if (token.isEmpty()) {
+                navController.navigate(Screen.Login.route) {
+                    popUpTo(Screen.Home.route) { inclusive = true }
+                }
+            } else {
+                HomeScreen(
+                    username = username,
+                    onNavigateToCreateOrder = {
+                        navController.navigate(Screen.BuatPesanan.route) {
+                            launchSingleTop = true
                         }
-                    }
-                }
-
-                // Tambahkan listener ke navController
-                navController.addOnDestinationChangedListener(callback)
-
-                // Cleanup saat komposable dihancurkan
-                onDispose {
-                    navController.removeOnDestinationChangedListener(callback)
-                }
+                    },
+                    onNavigateToWarehouse = {
+                        navController.navigate(Screen.Gudang.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToCustomer = {
+                        navController.navigate(Screen.Pelanggan.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToHistory = {
+                        navController.navigate(Screen.Riwayat.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToPerformance = {
+                        navController.navigate(Screen.Performa.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToSetting = {
+                        navController.navigate(Screen.Pengaturan.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onLogout = {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
+                        tokenViewModel.setToken("")
+                        tokenViewModel.setUsername("username")
+                        tokenViewModel.updateStateToken()
+                        tokenViewModel.updateStateUsername()
+                    })
             }
-
-            HomeScreen(
-                username = username,
-                onNavigateToCreateOrder = {
-                    navController.navigate(Screen.BuatPesanan.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToWarehouse = {
-                    navController.navigate(Screen.Gudang.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCustomer = {
-                    navController.navigate(Screen.Pelanggan.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToHistory = {
-                    navController.navigate(Screen.Riwayat.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToPerformance = {
-                    navController.navigate(Screen.Performa.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToSetting = {
-                    navController.navigate(Screen.Pengaturan.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onLogout = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Home.route) { inclusive = true }
-                    }
-                    tokenViewModel.setToken("")
-                    tokenViewModel.setUsername("username")
-                    tokenViewModel.updateStateToken()
-                    tokenViewModel.updateStateUsername()
-                })
         }
 
         composable(Screen.BuatPesanan.route) {
