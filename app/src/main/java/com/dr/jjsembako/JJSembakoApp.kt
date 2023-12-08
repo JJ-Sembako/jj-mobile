@@ -1,5 +1,6 @@
 package com.dr.jjsembako
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
@@ -8,6 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,8 +44,9 @@ fun JJSembakoApp() {
     val token by tokenViewModel.token.collectAsState()
     val username by tokenViewModel.username.collectAsState()
     val context = LocalContext.current
+    val activity = (LocalLifecycleOwner.current as ComponentActivity)
     val navController = rememberNavController()
-    var startDestination = if (token.isEmpty()) Screen.Login.route else Screen.Home.route
+    val startDestination = if (token.isEmpty()) Screen.Login.route else Screen.Home.route
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
@@ -151,7 +154,9 @@ fun JJSembakoApp() {
                         tokenViewModel.setUsername("username")
                         tokenViewModel.updateStateToken()
                         tokenViewModel.updateStateUsername()
-                    })
+                    },
+                    backHandler = {activity.finish()}
+                )
             }
         }
 

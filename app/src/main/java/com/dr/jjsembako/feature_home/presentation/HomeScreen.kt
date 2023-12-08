@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_home.presentation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     username: String = "username",
     onNavigateToCreateOrder: () -> Unit,
     onNavigateToWarehouse: () -> Unit,
@@ -37,8 +39,10 @@ fun HomeScreen(
     onNavigateToPerformance: () -> Unit,
     onNavigateToSetting: () -> Unit,
     onLogout: () -> Unit,
-    modifier: Modifier = Modifier
+    backHandler: () -> Unit
 ) {
+    BackHandler {backHandler()}
+
     var omzet by rememberSaveable { mutableStateOf(0L) }
     var totalPesanan by rememberSaveable { mutableStateOf(0) }
     var totalBarang by rememberSaveable { mutableStateOf(0) }
@@ -98,7 +102,8 @@ fun LoginScreenPreview() {
             onNavigateToHistory = {},
             onNavigateToPerformance = {},
             onNavigateToSetting = {},
-            onLogout = {}
+            onLogout = {},
+            backHandler = {}
         )
     }
 }
