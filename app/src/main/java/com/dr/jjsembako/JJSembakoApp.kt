@@ -1,56 +1,81 @@
 package com.dr.jjsembako
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.TokenViewModel
 import com.dr.jjsembako.core.utils.call
 import com.dr.jjsembako.core.utils.chatWA
 import com.dr.jjsembako.core.utils.getAppVersion
 import com.dr.jjsembako.core.utils.openMaps
+import com.dr.jjsembako.feature_auth.presentation.check_username.PengecekanUsernameScreen
+import com.dr.jjsembako.feature_auth.presentation.login.LoginScreen
+import com.dr.jjsembako.feature_auth.presentation.password_recovery.PemulihanKataSandiScreen
+import com.dr.jjsembako.feature_auth.presentation.recovery_question.PertanyaanPemulihanScreen
+import com.dr.jjsembako.feature_customer.presentation.add.TambahPelangganScreen
+import com.dr.jjsembako.feature_customer.presentation.detail.DetailPelangganScreen
+import com.dr.jjsembako.feature_customer.presentation.edit.EditPelangganScreen
+import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
+import com.dr.jjsembako.feature_home.presentation.HomeScreen
+import com.dr.jjsembako.feature_setting.presentation.change_password.GantiKataSandiScreen
+import com.dr.jjsembako.feature_setting.presentation.recovery.PemulihanAkunScreen
+import com.dr.jjsembako.feature_setting.presentation.setting.PengaturanScreen
 import com.dr.jjsembako.navigation.Screen
-import com.dr.jjsembako.ui.feature_auth.check_username.PengecekanUsernameScreen
-import com.dr.jjsembako.ui.feature_auth.login.LoginScreen
-import com.dr.jjsembako.ui.feature_auth.password_recovery.PemulihanKataSandiScreen
-import com.dr.jjsembako.ui.feature_auth.recovery_question.PertanyaanPemulihanScreen
-import com.dr.jjsembako.ui.feature_customer.add.TambahPelangganScreen
-import com.dr.jjsembako.ui.feature_customer.detail.DetailPelangganScreen
-import com.dr.jjsembako.ui.feature_customer.edit.EditPelangganScreen
-import com.dr.jjsembako.ui.feature_customer.list.PelangganScreen
-import com.dr.jjsembako.ui.feature_home.HomeScreen
-import com.dr.jjsembako.ui.feature_setting.change_password.GantiKataSandiScreen
-import com.dr.jjsembako.ui.feature_setting.recovery.PemulihanAkunScreen
-import com.dr.jjsembako.ui.feature_setting.setting.PengaturanScreen
-import com.dr.jjsembako.ui.theme.JJSembakoTheme
 
 @Composable
 fun JJSembakoApp() {
+    val tokenViewModel: TokenViewModel = hiltViewModel()
+    val token by tokenViewModel.token.collectAsState()
+    val username by tokenViewModel.username.collectAsState()
     val context = LocalContext.current
+    val activity = (LocalLifecycleOwner.current as ComponentActivity)
     val navController = rememberNavController()
-    val startDestination = Screen.Login.route
+    val startDestination = if (token.isEmpty()) Screen.Login.route else Screen.Home.route
+
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
-            LoginScreen(
-                onLoginSuccess = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
-                    }
-                },
-                onNavigateToCheckUsername = {
-                    navController.navigate(Screen.PengecekanUsername.route) {
-                        launchSingleTop = true
-                    }
+            if (token.isNotEmpty()) {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Login.route) { inclusive = true }
                 }
-            )
+            } else {
+                LoginScreen(
+                    onLoginSuccess = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Login.route) { inclusive = true }
+                        }
+                    },
+                    onNavigateToCheckUsername = {
+                        navController.navigate(Screen.PengecekanUsername.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    setToken = { newToken ->
+                        tokenViewModel.setToken(newToken)
+                        tokenViewModel.updateStateToken()
+                    },
+                    setUsername = { username ->
+                        tokenViewModel.setUsername(username)
+                        tokenViewModel.updateStateUsername()
+                    }
+                )
+            }
         }
 
         composable(Screen.PengecekanUsername.route) {
@@ -84,42 +109,55 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.Home.route) {
-            HomeScreen(
-                onNavigateToCreateOrder = {
-                    navController.navigate(Screen.BuatPesanan.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToWarehouse = {
-                    navController.navigate(Screen.Gudang.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToCustomer = {
-                    navController.navigate(Screen.Pelanggan.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToHistory = {
-                    navController.navigate(Screen.Riwayat.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToPerformance = {
-                    navController.navigate(Screen.Performa.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateToSetting = {
-                    navController.navigate(Screen.Pengaturan.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onLogout = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Home.route) { inclusive = true }
-                    }
-                })
+            if (token.isEmpty()) {
+                navController.navigate(Screen.Login.route) {
+                    popUpTo(Screen.Home.route) { inclusive = true }
+                }
+            } else {
+                HomeScreen(
+                    username = username,
+                    onNavigateToCreateOrder = {
+                        navController.navigate(Screen.BuatPesanan.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToWarehouse = {
+                        navController.navigate(Screen.Gudang.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToCustomer = {
+                        navController.navigate(Screen.Pelanggan.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToHistory = {
+                        navController.navigate(Screen.Riwayat.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToPerformance = {
+                        navController.navigate(Screen.Performa.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToSetting = {
+                        navController.navigate(Screen.Pengaturan.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onLogout = {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
+                        tokenViewModel.setToken("")
+                        tokenViewModel.setUsername("username")
+                        tokenViewModel.updateStateToken()
+                        tokenViewModel.updateStateUsername()
+                    },
+                    backHandler = {activity.finish()}
+                )
+            }
         }
 
         composable(Screen.BuatPesanan.route) {
@@ -176,7 +214,7 @@ fun JJSembakoApp() {
             DetailPelangganScreen(
                 idCust = id,
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToEditCust = { id ->
+                onNavigateToEditCust = {
                     navController.navigate(Screen.EditPelanggan.createRoute(id)) {
                         launchSingleTop = true
                     }
@@ -218,10 +256,15 @@ fun JJSembakoApp() {
 
         composable(Screen.Pengaturan.route) {
             PengaturanScreen(
+                username = username,
                 onLogout = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
                     }
+                    tokenViewModel.setToken("")
+                    tokenViewModel.setUsername("username")
+                    tokenViewModel.updateStateToken()
+                    tokenViewModel.updateStateUsername()
                 },
                 onNavigateToChangePassword = {
                     navController.navigate(Screen.GantiKataSandi.route) {

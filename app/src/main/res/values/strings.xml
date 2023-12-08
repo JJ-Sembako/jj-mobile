@@ -20,10 +20,14 @@
     <string name="content_del">Aksi ini akan menghapus data secara permanen dan tidak dapat dipulihkan kembali.</string>
     <string name="delete">Hapus</string>
     <string name="yes_delete">Ya, Hapus!</string>
+    <string name="ok">Ok</string>
     <string name="cancel">Batal</string>
     <string name="menu">Menu</string>
     <string name="alert">Peringatan</string>
+    <string name="on_progress">Dalam Proses</string>
+    <string name="please_wait">Mohon bersabar</string>
     <string name="error">Terjadi Kesalahan</string>
+    <string name="error_msg_default">Kesalahan sistem terjadi.</string>
     <string name="err_input_empty">Inputan Wajib diisi!</string>
     <string name="err_username">Username minimal 5 karakter diawali huruf diikuti karakter huruf, angka, underscore, atau strip!</string>
     <string name="err_pass_min">Password minimal 8 karakter!</string>
