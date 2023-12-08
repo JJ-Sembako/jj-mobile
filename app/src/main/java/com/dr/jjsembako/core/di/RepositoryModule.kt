@@ -3,6 +3,8 @@ package com.dr.jjsembako.core.di
 import com.dr.jjsembako.feature_auth.data.AuthRepository
 import com.dr.jjsembako.feature_auth.domain.repository.IAuthRepository
 import com.dr.jjsembako.feature_customer.domain.repository.ICustomerRepository
+import com.dr.jjsembako.feature_setting.data.SettingRepository
+import com.dr.jjsembako.feature_setting.domain.repository.ISettingRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,6 +16,7 @@ abstract class RepositoryModule {
     @Binds
     abstract fun provideRepositoryAuth(authRepository: AuthRepository): IAuthRepository
 
-//    @Binds
-//    abstract fun provideRepositoryCustomer(): ICustomerRepository
+    @Binds
+    abstract fun provideRepositorySetting(settingRepository: SettingRepository): ISettingRepository
+
 }

@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_setting.presentation.change_password
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -31,6 +32,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,7 +54,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.LoadingDialog
 import com.dr.jjsembako.core.utils.isDifferentPassword
 import com.dr.jjsembako.core.utils.isValidNewPassword
 import com.dr.jjsembako.core.utils.isValidPassword
@@ -65,11 +71,19 @@ fun GantiKataSandiScreen(
     onNavigateToSetting: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val gantiKataSandiViewModel: GantiKataSandiViewModel = hiltViewModel()
+    val state = gantiKataSandiViewModel.state.observeAsState().value
+    val statusCode = gantiKataSandiViewModel.statusCode.observeAsState().value
+    val message = gantiKataSandiViewModel.message.observeAsState().value
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
+
+    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var oldPassword by rememberSaveable { mutableStateOf("") }
     var newPassword by rememberSaveable { mutableStateOf("") }
@@ -109,6 +123,37 @@ fun GantiKataSandiScreen(
         coroutineScope.launch {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
+    }
+
+    when (state) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("LoginScreen", "Error")
+            Log.e("LoginScreen", "state: $state")
+            Log.e("LoginScreen", "Error: $message")
+            Log.e("LoginScreen", "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            gantiKataSandiViewModel.setState(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            gantiKataSandiViewModel.setState(null)
+            if (statusCode == 200) {
+                showLoadingDialog.value = false
+                showErrorDialog.value = false
+                onNavigateToSetting()
+            } else {
+                showLoadingDialog.value = false
+                showErrorDialog.value = true
+                gantiKataSandiViewModel.setState(null)
+            }
+        }
+
+        else -> {}
     }
 
     Scaffold(
@@ -312,9 +357,13 @@ fun GantiKataSandiScreen(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    onNavigateToSetting()
+                    gantiKataSandiViewModel.handleChangePassword(
+                        oldPassword,
+                        newPassword,
+                        confNewPassword
+                    )
                 },
-                enabled = isValidOldPassword.value && isValidNewPassword.value && isValidConfNewPassword.value,
+                enabled = isValidOldPassword.value && isValidNewPassword.value && isValidConfNewPassword.value && state != StateResponse.LOADING,
                 modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
@@ -322,6 +371,17 @@ fun GantiKataSandiScreen(
                 Text(stringResource(R.string.change))
             }
 
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
+
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: stringResource(id = R.string.error_msg_default),
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
         }
     }
 }

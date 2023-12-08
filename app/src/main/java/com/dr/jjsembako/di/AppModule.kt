@@ -2,6 +2,8 @@ package com.dr.jjsembako.di
 
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginInteractor
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginUseCase
+import com.dr.jjsembako.feature_setting.domain.usecase.ChangePasswordInteractor
+import com.dr.jjsembako.feature_setting.domain.usecase.ChangePasswordUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,4 +20,8 @@ abstract class AppModule {
     @Binds
     @ViewModelScoped
     abstract fun provideLoginUseCase(loginInteractor: LoginInteractor): LoginUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideChangePasswordUseCase(changePasswordInteractor: ChangePasswordInteractor): ChangePasswordUseCase
 }
