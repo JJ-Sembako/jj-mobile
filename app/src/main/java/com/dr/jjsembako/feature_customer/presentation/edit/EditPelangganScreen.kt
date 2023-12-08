@@ -79,7 +79,7 @@ fun EditPelangganScreen(
             modifier = modifier
         )
     } else {
-        ErrorScreen(onNavigateBack = { onNavigateToDetailCust() }, modifier = modifier)
+        ErrorScreen(onNavigateBack = { onNavigateToDetailCust() }, onReload = {}, modifier = modifier)
     }
 }
 
