@@ -131,10 +131,10 @@ fun GantiKataSandiScreen(
         }
 
         StateResponse.ERROR -> {
-            Log.e("LoginScreen", "Error")
-            Log.e("LoginScreen", "state: $state")
-            Log.e("LoginScreen", "Error: $message")
-            Log.e("LoginScreen", "statusCode: $statusCode")
+            Log.e("GantiKataSandiScreen", "Error")
+            Log.e("GantiKataSandiScreen", "state: $state")
+            Log.e("GantiKataSandiScreen", "Error: $message")
+            Log.e("GantiKataSandiScreen", "statusCode: $statusCode")
             showLoadingDialog.value = false
             showErrorDialog.value = true
             gantiKataSandiViewModel.setState(null)

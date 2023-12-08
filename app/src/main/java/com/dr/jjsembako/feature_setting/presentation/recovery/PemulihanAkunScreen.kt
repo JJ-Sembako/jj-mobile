@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_setting.presentation.recovery
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -39,6 +40,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -60,15 +62,48 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.DropDownOption
 import com.dr.jjsembako.core.utils.isValidAnswer
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PemulihanAkunScreen(
+    onNavigateToSetting: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val pemulihanAkunViewModel: PemulihanAkunViewModel = hiltViewModel()
+    val stateFirst = pemulihanAkunViewModel.stateFirst.observeAsState().value
+    val stateSecond = pemulihanAkunViewModel.stateSecond.observeAsState().value
+    val statusCode = pemulihanAkunViewModel.statusCode.observeAsState().value
+    val message = pemulihanAkunViewModel.message.observeAsState().value
+
+    when (stateFirst) {
+        StateResponse.LOADING -> {
+
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("LoginScreen", "Error")
+            Log.e("LoginScreen", "state: $stateFirst")
+            Log.e("LoginScreen", "Error: $message")
+            Log.e("LoginScreen", "statusCode: $statusCode")
+        }
+
+        StateResponse.SUCCESS -> {
+
+        }
+
+        else -> {}
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun PemulihanAkunContent(
     onNavigateToSetting: () -> Unit,
     modifier: Modifier = Modifier
 ) {
