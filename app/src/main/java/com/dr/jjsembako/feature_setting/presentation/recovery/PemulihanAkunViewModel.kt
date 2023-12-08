@@ -29,6 +29,9 @@ class PemulihanAkunViewModel @Inject constructor(
     private val _stateSecond = MutableLiveData<StateResponse?>()
     val stateSecond: LiveData<StateResponse?> = _stateSecond
 
+    private val _stateThird = MutableLiveData<StateResponse?>()
+    val stateThird: LiveData<StateResponse?> = _stateThird
+
     private val _statusCode = MutableLiveData<Int?>()
     val statusCode: LiveData<Int?> = _statusCode
 
@@ -36,7 +39,7 @@ class PemulihanAkunViewModel @Inject constructor(
     val message: LiveData<String?> = _message
 
     private val _questionList = MutableLiveData<List<DataRecoveryQuestion?>?>()
-    val questionList: List<DataRecoveryQuestion?>? get() = _questionList.value
+    val questionList: LiveData<List<DataRecoveryQuestion?>?> = _questionList
 
     private val _isActive = MutableLiveData<Boolean?>()
     val isActive: Boolean? get() = _isActive.value
@@ -53,6 +56,10 @@ class PemulihanAkunViewModel @Inject constructor(
 
     fun setStateSecond(state: StateResponse?) {
         _stateSecond.value = state
+    }
+
+    fun setStateThird(state: StateResponse?) {
+        _stateThird.value = state
     }
 
     fun fetchAccountRecoveryQuestions() {
@@ -110,15 +117,15 @@ class PemulihanAkunViewModel @Inject constructor(
             activateAccountRecoveryUseCase.handleActivateAccountRecovery(idQuestion, answer)
                 .collect {
                     when (it) {
-                        is Resource.Loading -> _stateSecond.value = StateResponse.LOADING
+                        is Resource.Loading -> _stateThird.value = StateResponse.LOADING
                         is Resource.Success -> {
-                            _stateSecond.value = StateResponse.SUCCESS
+                            _stateThird.value = StateResponse.SUCCESS
                             _message.value = it.message
                             _statusCode.value = it.status
                         }
 
                         is Resource.Error -> {
-                            _stateSecond.value = StateResponse.ERROR
+                            _stateThird.value = StateResponse.ERROR
                             _message.value = it.message
                             _statusCode.value = it.status
                         }
@@ -133,15 +140,15 @@ class PemulihanAkunViewModel @Inject constructor(
         viewModelScope.launch {
             deactivateAccountRecoveryUseCase.handleDeactivateAccountRecovery().collect {
                 when (it) {
-                    is Resource.Loading -> _stateSecond.value = StateResponse.LOADING
+                    is Resource.Loading -> _stateThird.value = StateResponse.LOADING
                     is Resource.Success -> {
-                        _stateSecond.value = StateResponse.SUCCESS
+                        _stateThird.value = StateResponse.SUCCESS
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
 
                     is Resource.Error -> {
-                        _stateSecond.value = StateResponse.ERROR
+                        _stateThird.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
                     }

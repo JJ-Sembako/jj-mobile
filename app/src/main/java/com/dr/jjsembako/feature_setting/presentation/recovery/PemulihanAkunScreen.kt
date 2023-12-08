@@ -66,6 +66,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.DropDownOption
+import com.dr.jjsembako.core.data.remote.response.account.DataRecoveryQuestion
+import com.dr.jjsembako.core.presentation.components.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.utils.isValidAnswer
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
@@ -80,33 +83,99 @@ fun PemulihanAkunScreen(
     val stateSecond = pemulihanAkunViewModel.stateSecond.observeAsState().value
     val statusCode = pemulihanAkunViewModel.statusCode.observeAsState().value
     val message = pemulihanAkunViewModel.message.observeAsState().value
+    val questionList = pemulihanAkunViewModel.questionList.observeAsState().value
+
+    pemulihanAkunViewModel.fetchAccountRecoveryQuestions()
 
     when (stateFirst) {
         StateResponse.LOADING -> {
-
+            LoadingScreen(modifier = modifier)
         }
 
         StateResponse.ERROR -> {
-            Log.e("LoginScreen", "Error")
-            Log.e("LoginScreen", "state: $stateFirst")
-            Log.e("LoginScreen", "Error: $message")
-            Log.e("LoginScreen", "statusCode: $statusCode")
+            Log.e("PemulihanAkunScreen", "Error")
+            Log.e("PemulihanAkunScreen", "state: $stateFirst")
+            Log.e("PemulihanAkunScreen", "Error: $message")
+            Log.e("PemulihanAkunScreen", "statusCode: $statusCode")
+            ErrorScreen(
+                onNavigateBack = { onNavigateToSetting() },
+                onReload = { pemulihanAkunViewModel.fetchAccountRecoveryQuestions() },
+                message = message ?: "Unknown error",
+                modifier = modifier
+            )
+            pemulihanAkunViewModel.setStateFirst(null)
         }
 
         StateResponse.SUCCESS -> {
-
+            if (questionList.isNullOrEmpty()) {
+                ErrorScreen(
+                    onNavigateBack = { onNavigateToSetting() },
+                    onReload = { pemulihanAkunViewModel.fetchAccountRecoveryQuestions() },
+                    message = "Server Error",
+                    modifier = modifier
+                )
+                pemulihanAkunViewModel.setStateFirst(null)
+            } else {
+                pemulihanAkunViewModel.fetchAccountRecovery()
+            }
+            pemulihanAkunViewModel.setStateFirst(null)
         }
 
         else -> {}
     }
+
+    when (stateSecond) {
+        StateResponse.LOADING -> {
+            LoadingScreen(modifier = modifier)
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("PemulihanAkunScreen", "Error")
+            Log.e("PemulihanAkunScreen", "state: $stateFirst")
+            Log.e("PemulihanAkunScreen", "Error: $message")
+            Log.e("PemulihanAkunScreen", "statusCode: $statusCode")
+            ErrorScreen(
+                onNavigateBack = { onNavigateToSetting() },
+                onReload = { pemulihanAkunViewModel.fetchAccountRecovery() },
+                message = message ?: "Unknown error",
+                modifier = modifier
+            )
+            pemulihanAkunViewModel.setStateSecond(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            PemulihanAkunContent(
+                onNavigateToSetting = { onNavigateToSetting() },
+                questionList = questionList,
+                recoveryIsActive = pemulihanAkunViewModel.isActive ?: false,
+                recoveryIdQuestion = pemulihanAkunViewModel.idQuestion ?: "",
+                recoveryAnswer = pemulihanAkunViewModel.answer ?: "",
+                pemulihanAkunViewModel = pemulihanAkunViewModel,
+                modifier = modifier
+            )
+            pemulihanAkunViewModel.setStateSecond(null)
+        }
+
+        else -> {}
+    }
+
 }
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PemulihanAkunContent(
     onNavigateToSetting: () -> Unit,
+    questionList: List<DataRecoveryQuestion?>?,
+    recoveryIsActive: Boolean,
+    recoveryIdQuestion: String,
+    recoveryAnswer: String,
+    pemulihanAkunViewModel: PemulihanAkunViewModel,
     modifier: Modifier = Modifier
 ) {
+    val stateThird = pemulihanAkunViewModel.stateThird.observeAsState().value
+    val statusCode = pemulihanAkunViewModel.statusCode.observeAsState().value
+    val message = pemulihanAkunViewModel.message.observeAsState().value
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
