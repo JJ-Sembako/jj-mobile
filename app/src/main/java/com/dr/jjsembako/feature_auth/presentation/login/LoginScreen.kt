@@ -261,7 +261,7 @@ fun LoginScreen(
                 keyboardController?.hide()
                 loginViewModel.handleLogin(username, password)
             },
-            enabled = isValidUsername.value && isValidPassword.value,
+            enabled = isValidUsername.value && isValidPassword.value && state != StateResponse.LOADING,
             modifier = modifier
                 .fillMaxWidth()
                 .height(56.dp)
