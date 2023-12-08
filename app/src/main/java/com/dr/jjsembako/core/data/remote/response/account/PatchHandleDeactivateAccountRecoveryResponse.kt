@@ -2,7 +2,7 @@ package com.dr.jjsembako.core.data.remote.response.account
 
 import com.google.gson.annotations.SerializedName
 
-data class PostHandleDeactivateAccountRecoveryResponse(
+data class PatchHandleDeactivateAccountRecoveryResponse(
 
 	@field:SerializedName("message")
 	val message: String,
