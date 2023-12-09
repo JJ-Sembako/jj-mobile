@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_auth.presentation.password_recovery
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -31,6 +32,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,7 +54,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.LoadingDialog
 import com.dr.jjsembako.core.utils.isValidNewPassword
 import com.dr.jjsembako.core.utils.isValidPassword
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -66,11 +72,19 @@ fun PemulihanKataSandiScreen(
     onNavigateToLogin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val pemulihanKataSandiViewModel: PemulihanKataSandiViewModel = hiltViewModel()
+    val state = pemulihanKataSandiViewModel.state.observeAsState().value
+    val statusCode = pemulihanKataSandiViewModel.statusCode.observeAsState().value
+    val message = pemulihanKataSandiViewModel.message.observeAsState().value
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
+
+    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var newPassword by rememberSaveable { mutableStateOf("") }
     var confNewPassword by rememberSaveable { mutableStateOf("") }
@@ -101,6 +115,31 @@ fun PemulihanKataSandiScreen(
         coroutineScope.launch {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
+    }
+
+    when (state) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("PemulihanKataSandi", "Error")
+            Log.e("PemulihanKataSandi", "state: $state")
+            Log.e("PemulihanKataSandi", "Error: $message")
+            Log.e("PemulihanKataSandi", "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            pemulihanKataSandiViewModel.setState(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            pemulihanKataSandiViewModel.setState(null)
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            onNavigateToLogin()
+        }
+
+        else -> {}
     }
 
     Scaffold(
@@ -248,7 +287,11 @@ fun PemulihanKataSandiScreen(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    onNavigateToLogin()
+                    pemulihanKataSandiViewModel.handleUpdatePasswordFromRecovery(
+                        username,
+                        newPassword,
+                        confNewPassword
+                    )
                 },
                 enabled = isValidNewPassword.value && isValidConfNewPassword.value,
                 modifier = modifier
@@ -257,7 +300,19 @@ fun PemulihanKataSandiScreen(
             ) {
                 Text(stringResource(R.string.update))
             }
+            Spacer(modifier = modifier.height(128.dp))
 
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
+
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: stringResource(id = R.string.error_msg_default),
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
         }
     }
 }
