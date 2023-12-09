@@ -203,6 +203,13 @@ fun PemulihanAkunContent(
         }
     }
 
+    if (recoveryIdQuestion.isNotEmpty()) {
+        val selectedQuestion = questionList?.find { it?.id == recoveryIdQuestion }
+        if (selectedQuestion != null) {
+            selectedOption = selectedQuestion
+        }
+    }
+
     when (stateThird) {
         StateResponse.LOADING -> {
             showLoadingDialog.value = true
@@ -313,8 +320,8 @@ fun PemulihanAkunContent(
                         expanded = isExpanded,
                         onDismissRequest = { isExpanded = false }
                     ) {
-                        if(questionList.isNullOrEmpty()){
-                            questionList?.forEach { option ->
+                        if(questionList?.isNotEmpty() == true){
+                            questionList.forEach { option ->
                                 DropdownMenuItem(
                                     text = { Text(text = option?.question ?: "") },
                                     onClick = {
