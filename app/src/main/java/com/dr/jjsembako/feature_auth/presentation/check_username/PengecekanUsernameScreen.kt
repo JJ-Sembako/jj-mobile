@@ -148,7 +148,10 @@ fun PengecekanUsernameScreen(
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = { keyboardController?.hide() })
+                    onClick = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                    })
                 .padding(contentPadding)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -200,6 +203,7 @@ fun PengecekanUsernameScreen(
             ) {
                 Text(stringResource(R.string.check))
             }
+            Spacer(modifier = modifier.height(128.dp))
 
             if (showLoadingDialog.value) {
                 LoadingDialog(showLoadingDialog, modifier)

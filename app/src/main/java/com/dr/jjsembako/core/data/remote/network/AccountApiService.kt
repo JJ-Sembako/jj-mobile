@@ -50,7 +50,7 @@ interface AccountApiService {
     @PATCH("account/recovery/deactivate")
     suspend fun handleDeactivateAccountRecovery(): PatchHandleDeactivateAccountRecoveryResponse
 
-    @GET("account/recovery/activate/{username}")
+    @GET("account/recovery/active/{username}")
     suspend fun checkAccountRecoveryActivation(
         @Path("username") username: String
     ): GetCheckAccountRecoveryActivationResponse
