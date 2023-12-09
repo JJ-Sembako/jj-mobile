@@ -5,7 +5,7 @@ import com.dr.jjsembako.core.data.remote.response.account.GetFetchAccountRecover
 import com.dr.jjsembako.core.data.remote.response.account.GetFetchAccountRecoveryQuestionsResponse
 import com.dr.jjsembako.core.data.remote.response.account.GetFetchAccountRecoveryResponse
 import com.dr.jjsembako.core.data.remote.response.account.PatchHandleDeactivateAccountRecoveryResponse
-import com.dr.jjsembako.core.data.remote.response.account.PatchHandleUpdatePasswordFormRecoveryResponse
+import com.dr.jjsembako.core.data.remote.response.account.PatchHandleUpdatePasswordFromRecoveryResponse
 import com.dr.jjsembako.core.data.remote.response.account.PatchHandleUpdateSelfPasswordResponse
 import com.dr.jjsembako.core.data.remote.response.account.PostCheckAccountRecoveryAnswerResponse
 import com.dr.jjsembako.core.data.remote.response.account.PostHandleActivateAccountRecoveryResponse
@@ -73,5 +73,5 @@ interface AccountApiService {
         @Path("username") username: String,
         @Field("newPassword") newPassword: String,
         @Field("confirmationPassword") confirmationPassword: String
-    ): PatchHandleUpdatePasswordFormRecoveryResponse
+    ): PatchHandleUpdatePasswordFromRecoveryResponse
 }

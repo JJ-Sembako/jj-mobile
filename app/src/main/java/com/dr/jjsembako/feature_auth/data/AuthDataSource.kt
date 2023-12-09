@@ -6,7 +6,7 @@ import com.dr.jjsembako.core.data.remote.response.account.DataAccountRecoveryQue
 import com.dr.jjsembako.core.data.remote.response.account.DataCheckAccountRecoveryActivation
 import com.dr.jjsembako.core.data.remote.response.account.DataCheckAccountRecoveryAnswer
 import com.dr.jjsembako.core.data.remote.response.account.DataHandleLogin
-import com.dr.jjsembako.core.data.remote.response.account.PatchHandleUpdatePasswordFormRecoveryResponse
+import com.dr.jjsembako.core.data.remote.response.account.PatchHandleUpdatePasswordFromRecoveryResponse
 import com.dr.jjsembako.core.data.remote.response.account.PostHandleLoginResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
@@ -144,7 +144,7 @@ class AuthDataSource @Inject constructor(private val accountApiService: AccountA
         username: String,
         newPassword: String,
         confNewPassword: String
-    ): Flow<Resource<out PatchHandleUpdatePasswordFormRecoveryResponse>> = flow {
+    ): Flow<Resource<out PatchHandleUpdatePasswordFromRecoveryResponse>> = flow {
         try {
             val response = accountApiService.handleUpdatePasswordFromRecovery(
                 username,

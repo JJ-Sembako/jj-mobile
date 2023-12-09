@@ -5,7 +5,7 @@ import com.dr.jjsembako.core.data.remote.response.account.DataAccountRecoveryQue
 import com.dr.jjsembako.core.data.remote.response.account.DataCheckAccountRecoveryActivation
 import com.dr.jjsembako.core.data.remote.response.account.DataCheckAccountRecoveryAnswer
 import com.dr.jjsembako.core.data.remote.response.account.DataHandleLogin
-import com.dr.jjsembako.core.data.remote.response.account.PatchHandleUpdatePasswordFormRecoveryResponse
+import com.dr.jjsembako.core.data.remote.response.account.PatchHandleUpdatePasswordFromRecoveryResponse
 import com.dr.jjsembako.core.data.remote.response.account.PostHandleLoginResponse
 import com.dr.jjsembako.feature_auth.domain.repository.IAuthRepository
 import com.dr.jjsembako.feature_auth.domain.repository.IForgetPasswordRepository
@@ -220,7 +220,7 @@ class AuthRepository @Inject constructor(private val authDataSource: AuthDataSou
         username: String,
         newPassword: String,
         confNewPassword: String
-    ): Flow<Resource<out PatchHandleUpdatePasswordFormRecoveryResponse>> = flow {
+    ): Flow<Resource<out PatchHandleUpdatePasswordFromRecoveryResponse>> = flow {
         emit(Resource.Loading())
         try {
             val response = authDataSource.handleUpdatePasswordFromRecovery(
