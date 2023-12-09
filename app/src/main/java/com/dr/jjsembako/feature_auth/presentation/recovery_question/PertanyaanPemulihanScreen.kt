@@ -57,8 +57,8 @@ import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
-import com.dr.jjsembako.core.utils.isValidAnswer
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.isValidAnswer
 import kotlinx.coroutines.launch
 
 @Composable
@@ -102,7 +102,7 @@ fun PertanyaanPemulihanScreen(
         }
 
         StateResponse.SUCCESS -> {
-            if (question?.isNotEmpty() == true) {
+            if (question?.isEmpty() == true) {
                 ErrorScreen(
                     onNavigateBack = { onNavigateBack() },
                     onReload = {
