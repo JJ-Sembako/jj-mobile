@@ -67,7 +67,7 @@ fun PertanyaanPemulihanScreen(
     onNavigateBack: () -> Unit,
     onNavigateToChangePassword: (String) -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     val pertanyaanPemulihanViewModel: PertanyaanPemulihanViewModel = hiltViewModel()
     val stateFirst = pertanyaanPemulihanViewModel.stateFirst.observeAsState().value
     val statusCode = pertanyaanPemulihanViewModel.statusCode.observeAsState().value
@@ -91,7 +91,11 @@ fun PertanyaanPemulihanScreen(
             Log.e("pertanyaanPemulihan", "statusCode: $statusCode")
             ErrorScreen(
                 onNavigateBack = { onNavigateBack() },
-                onReload = { pertanyaanPemulihanViewModel.fetchAccountRecoveryQuestionByUsername(username) },
+                onReload = {
+                    pertanyaanPemulihanViewModel.fetchAccountRecoveryQuestionByUsername(
+                        username
+                    )
+                },
                 message = message ?: "Unknown error",
                 modifier = modifier
             )
@@ -101,14 +105,18 @@ fun PertanyaanPemulihanScreen(
             if (question?.isNotEmpty() == true) {
                 ErrorScreen(
                     onNavigateBack = { onNavigateBack() },
-                    onReload = { pertanyaanPemulihanViewModel.fetchAccountRecoveryQuestionByUsername(username) },
+                    onReload = {
+                        pertanyaanPemulihanViewModel.fetchAccountRecoveryQuestionByUsername(
+                            username
+                        )
+                    },
                     message = "Server Error",
                     modifier = modifier
                 )
             } else {
                 PertanyaanPemulihanContent(
                     username = username,
-                    question = question ?: "",
+                    recoveryQuestion = question ?: "",
                     pertanyaanPemulihanViewModel = pertanyaanPemulihanViewModel,
                     onNavigateBack = onNavigateBack,
                     onNavigateToChangePassword = onNavigateToChangePassword,
@@ -126,7 +134,7 @@ fun PertanyaanPemulihanScreen(
 @Composable
 fun PertanyaanPemulihanContent(
     username: String,
-    question: String,
+    recoveryQuestion: String,
     pertanyaanPemulihanViewModel: PertanyaanPemulihanViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToChangePassword: (String) -> Unit,
@@ -145,7 +153,7 @@ fun PertanyaanPemulihanContent(
     var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     var showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
-    var question by rememberSaveable { mutableStateOf(question) }
+    var question by rememberSaveable { mutableStateOf(recoveryQuestion) }
     var answer by rememberSaveable { mutableStateOf("") }
     var isValidAnswer = rememberSaveable { mutableStateOf(false) }
     var errMsgAnswer = rememberSaveable { mutableStateOf("") }
