@@ -286,6 +286,7 @@ fun PertanyaanPemulihanContent(
             ) {
                 Text(stringResource(R.string.verification))
             }
+            Spacer(modifier = modifier.height(128.dp))
 
             if (showLoadingDialog.value) {
                 LoadingDialog(showLoadingDialog, modifier)
