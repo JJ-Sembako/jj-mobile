@@ -67,7 +67,9 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.DropDownOption
 import com.dr.jjsembako.core.data.remote.response.account.DataRecoveryQuestion
+import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.utils.isValidAnswer
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -84,8 +86,6 @@ fun PemulihanAkunScreen(
     val statusCode = pemulihanAkunViewModel.statusCode.observeAsState().value
     val message = pemulihanAkunViewModel.message.observeAsState().value
     val questionList = pemulihanAkunViewModel.questionList.observeAsState().value
-
-    pemulihanAkunViewModel.fetchAccountRecoveryQuestions()
 
     when (stateFirst) {
         StateResponse.LOADING -> {
@@ -114,46 +114,41 @@ fun PemulihanAkunScreen(
                     message = "Server Error",
                     modifier = modifier
                 )
-                pemulihanAkunViewModel.setStateFirst(null)
             } else {
-                pemulihanAkunViewModel.fetchAccountRecovery()
+                when (stateSecond) {
+                    StateResponse.LOADING -> {
+                        LoadingScreen(modifier = modifier)
+                    }
+
+                    StateResponse.ERROR -> {
+                        Log.e("PemulihanAkunScreen", "Error")
+                        Log.e("PemulihanAkunScreen", "state: $stateSecond")
+                        Log.e("PemulihanAkunScreen", "Error: $message")
+                        Log.e("PemulihanAkunScreen", "statusCode: $statusCode")
+                        ErrorScreen(
+                            onNavigateBack = { onNavigateToSetting() },
+                            onReload = { pemulihanAkunViewModel.fetchAccountRecovery() },
+                            message = message ?: "Unknown error",
+                            modifier = modifier
+                        )
+                        pemulihanAkunViewModel.setStateSecond(null)
+                    }
+
+                    StateResponse.SUCCESS -> {
+                        PemulihanAkunContent(
+                            onNavigateToSetting = { onNavigateToSetting() },
+                            questionList = questionList,
+                            recoveryIsActive = pemulihanAkunViewModel.isActive ?: false,
+                            recoveryIdQuestion = pemulihanAkunViewModel.idQuestion ?: "",
+                            recoveryAnswer = pemulihanAkunViewModel.answer ?: "",
+                            pemulihanAkunViewModel = pemulihanAkunViewModel,
+                            modifier = modifier
+                        )
+                    }
+
+                    else -> {}
+                }
             }
-            pemulihanAkunViewModel.setStateFirst(null)
-        }
-
-        else -> {}
-    }
-
-    when (stateSecond) {
-        StateResponse.LOADING -> {
-            LoadingScreen(modifier = modifier)
-        }
-
-        StateResponse.ERROR -> {
-            Log.e("PemulihanAkunScreen", "Error")
-            Log.e("PemulihanAkunScreen", "state: $stateFirst")
-            Log.e("PemulihanAkunScreen", "Error: $message")
-            Log.e("PemulihanAkunScreen", "statusCode: $statusCode")
-            ErrorScreen(
-                onNavigateBack = { onNavigateToSetting() },
-                onReload = { pemulihanAkunViewModel.fetchAccountRecovery() },
-                message = message ?: "Unknown error",
-                modifier = modifier
-            )
-            pemulihanAkunViewModel.setStateSecond(null)
-        }
-
-        StateResponse.SUCCESS -> {
-            PemulihanAkunContent(
-                onNavigateToSetting = { onNavigateToSetting() },
-                questionList = questionList,
-                recoveryIsActive = pemulihanAkunViewModel.isActive ?: false,
-                recoveryIdQuestion = pemulihanAkunViewModel.idQuestion ?: "",
-                recoveryAnswer = pemulihanAkunViewModel.answer ?: "",
-                pemulihanAkunViewModel = pemulihanAkunViewModel,
-                modifier = modifier
-            )
-            pemulihanAkunViewModel.setStateSecond(null)
         }
 
         else -> {}
@@ -182,12 +177,15 @@ fun PemulihanAkunContent(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    var isExpanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf<DropDownOption?>(null) }
-    var isActive by rememberSaveable { mutableStateOf(false) }
+    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
-    var questionId by rememberSaveable { mutableStateOf("") }
-    var answer by rememberSaveable { mutableStateOf("") }
+    var isExpanded by remember { mutableStateOf(false) }
+    var selectedOption by remember { mutableStateOf<DataRecoveryQuestion?>(null) }
+    var isActive by rememberSaveable { mutableStateOf(recoveryIsActive) }
+
+    var questionId by rememberSaveable { mutableStateOf(recoveryIdQuestion) }
+    var answer by rememberSaveable { mutableStateOf(recoveryAnswer) }
     var answerVisibility by remember { mutableStateOf(false) }
 
     var isValidAnswer = rememberSaveable { mutableStateOf(false) }
@@ -203,6 +201,31 @@ fun PemulihanAkunContent(
         coroutineScope.launch {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
+    }
+
+    when (stateThird) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("PemulihanAkunScreen", "Error")
+            Log.e("PemulihanAkunScreen", "state: $stateThird")
+            Log.e("PemulihanAkunScreen", "Error: $message")
+            Log.e("PemulihanAkunScreen", "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            pemulihanAkunViewModel.setStateThird(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            pemulihanAkunViewModel.setStateThird(null)
+            onNavigateToSetting()
+        }
+
+        else -> {}
     }
 
     Scaffold(
@@ -277,7 +300,7 @@ fun PemulihanAkunContent(
                 ) {
                     TextField(
                         placeholder = { Text(text = stringResource(R.string.choose_question)) },
-                        value = selectedOption?.option ?: stringResource(R.string.choose_question),
+                        value = selectedOption?.question ?: stringResource(R.string.choose_question),
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
@@ -290,15 +313,17 @@ fun PemulihanAkunContent(
                         expanded = isExpanded,
                         onDismissRequest = { isExpanded = false }
                     ) {
-                        dropDownOption.forEach { option ->
-                            DropdownMenuItem(
-                                text = { Text(text = option.option) },
-                                onClick = {
-                                    selectedOption = option
-                                    questionId = option.value
-                                    isExpanded = false
-                                }
-                            )
+                        if(questionList.isNullOrEmpty()){
+                            questionList?.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(text = option?.question ?: "") },
+                                    onClick = {
+                                        selectedOption = option
+                                        questionId = option?.id ?: ""
+                                        isExpanded = false
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -350,24 +375,32 @@ fun PemulihanAkunContent(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    onNavigateToSetting()
+                    if(isActive) pemulihanAkunViewModel.handleActivateAccountRecovery(questionId, answer)
+                    else pemulihanAkunViewModel.handleDeactivateAccountRecovery()
                 },
-                enabled = if (isActive) isValidAnswer.value && questionId.isNotEmpty() else true,
+                enabled = (if (isActive) isValidAnswer.value && questionId.isNotEmpty() else true) && stateThird != StateResponse.LOADING,
                 modifier = modifier
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
                 Text(stringResource(R.string.save))
             }
+
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
+
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: stringResource(id = R.string.error_msg_default),
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
         }
 
     }
 }
-
-private val dropDownOption = listOf(
-    DropDownOption("Siapa nama kamu?", "abcd-1234-1"),
-    DropDownOption("Siapa nama peliharaanmu?", "wxyz-4567-1")
-)
 
 @Preview(showBackground = true)
 @Composable
