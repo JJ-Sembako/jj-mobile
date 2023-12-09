@@ -58,7 +58,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun PengecekanUsernameScreen(
     onNavigateToLogin: () -> Unit,
-    onNavigateToCheckAnswer: () -> Unit,
+    onNavigateToCheckAnswer: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -152,7 +152,7 @@ fun PengecekanUsernameScreen(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    onNavigateToCheckAnswer()
+                    onNavigateToCheckAnswer(username)
                 },
                 enabled = isValidUsername.value,
                 modifier = modifier

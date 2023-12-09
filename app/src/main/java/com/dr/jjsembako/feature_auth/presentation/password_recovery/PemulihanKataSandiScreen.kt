@@ -61,6 +61,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PemulihanKataSandiScreen(
+    username: String,
     onNavigateBack: () -> Unit,
     onNavigateToLogin: () -> Unit,
     modifier: Modifier = Modifier
@@ -266,6 +267,7 @@ fun PemulihanKataSandiScreen(
 fun PemulihanKataSandiScreenPreview() {
     JJSembakoTheme {
         PemulihanKataSandiScreen(
+            username = "",
             onNavigateBack = {},
             onNavigateToLogin = {}
         )

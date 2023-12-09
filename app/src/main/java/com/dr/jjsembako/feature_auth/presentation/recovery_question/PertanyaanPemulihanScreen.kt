@@ -56,8 +56,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PertanyaanPemulihanScreen(
+    username: String,
     onNavigateBack: () -> Unit,
-    onNavigateToChangePassword: () -> Unit,
+    onNavigateToChangePassword: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -165,7 +166,7 @@ fun PertanyaanPemulihanScreen(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    onNavigateToChangePassword()
+                    onNavigateToChangePassword(username)
                 },
                 enabled = isValidAnswer.value,
                 modifier = modifier
@@ -183,6 +184,7 @@ fun PertanyaanPemulihanScreen(
 fun PertanyaanPemulihanScreenPreview() {
     JJSembakoTheme {
         PertanyaanPemulihanScreen(
+            username = "",
             onNavigateBack = {},
             onNavigateToChangePassword = {}
         )
