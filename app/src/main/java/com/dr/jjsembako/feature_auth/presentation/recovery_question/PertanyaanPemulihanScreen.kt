@@ -108,6 +108,7 @@ fun PertanyaanPemulihanScreen(
             } else {
                 PertanyaanPemulihanContent(
                     username = username,
+                    question = question ?: "",
                     pertanyaanPemulihanViewModel = pertanyaanPemulihanViewModel,
                     onNavigateBack = onNavigateBack,
                     onNavigateToChangePassword = onNavigateToChangePassword,
@@ -125,6 +126,7 @@ fun PertanyaanPemulihanScreen(
 @Composable
 fun PertanyaanPemulihanContent(
     username: String,
+    question: String,
     pertanyaanPemulihanViewModel: PertanyaanPemulihanViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToChangePassword: (String) -> Unit,
@@ -143,7 +145,7 @@ fun PertanyaanPemulihanContent(
     var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     var showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
-    var question by rememberSaveable { mutableStateOf("") }
+    var question by rememberSaveable { mutableStateOf(question) }
     var answer by rememberSaveable { mutableStateOf("") }
     var isValidAnswer = rememberSaveable { mutableStateOf(false) }
     var errMsgAnswer = rememberSaveable { mutableStateOf("") }
