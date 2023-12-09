@@ -103,7 +103,6 @@ fun PemulihanAkunScreen(
                 message = message ?: "Unknown error",
                 modifier = modifier
             )
-            pemulihanAkunViewModel.setStateFirst(null)
         }
 
         StateResponse.SUCCESS -> {
@@ -131,7 +130,6 @@ fun PemulihanAkunScreen(
                             message = message ?: "Unknown error",
                             modifier = modifier
                         )
-                        pemulihanAkunViewModel.setStateSecond(null)
                     }
 
                     StateResponse.SUCCESS -> {
