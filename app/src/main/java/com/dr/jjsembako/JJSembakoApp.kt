@@ -281,11 +281,19 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.GantiKataSandi.route) {
-            GantiKataSandiScreen(onNavigateToSetting = { navController.popBackStack() })
+            GantiKataSandiScreen(onNavigateToSetting = {
+                navController.navigate(Screen.Pengaturan.route) {
+                    popUpTo(Screen.Pengaturan.route) { inclusive = true }
+                }
+            })
         }
 
         composable(Screen.PemulihanAkun.route) {
-            PemulihanAkunScreen(onNavigateToSetting = { navController.popBackStack() })
+            PemulihanAkunScreen(onNavigateToSetting = {
+                navController.navigate(Screen.Pengaturan.route) {
+                    popUpTo(Screen.Pengaturan.route) { inclusive = true }
+                }
+            })
         }
     }
 }

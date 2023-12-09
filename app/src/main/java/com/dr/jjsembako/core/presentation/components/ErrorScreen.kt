@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -34,8 +35,10 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 @Composable
 fun ErrorScreen(
     onNavigateBack: () -> Unit,
+    onReload: () -> Unit,
     message: String = "",
-    showButton: Boolean = true,
+    showButtonBack: Boolean = true,
+    showButtonReload: Boolean = true,
     modifier: Modifier,
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_warning))
@@ -80,15 +83,27 @@ fun ErrorScreen(
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            if(showButton){
+            if (showButtonBack) {
                 Button(
                     onClick = { onNavigateBack() },
                     modifier = modifier
-                        .height(56.dp)
+                        .height(56.dp).width(150.dp)
                 ) {
                     Text(stringResource(R.string.back))
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (showButtonReload) {
+                Button(
+                    onClick = { onReload() },
+                    modifier = modifier
+                        .height(56.dp).width(150.dp)
+                ) {
+                    Text(stringResource(R.string.reload))
                 }
             }
         }
@@ -99,6 +114,11 @@ fun ErrorScreen(
 @Preview(showBackground = true)
 fun ErrorScreenPreview() {
     JJSembakoTheme {
-        ErrorScreen(onNavigateBack = {}, message = "Data tidak ditemukan.", modifier = Modifier)
+        ErrorScreen(
+            onNavigateBack = {},
+            onReload = {},
+            message = "Data tidak ditemukan.",
+            modifier = Modifier
+        )
     }
 }

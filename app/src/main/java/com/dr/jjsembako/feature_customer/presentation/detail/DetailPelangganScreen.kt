@@ -86,7 +86,7 @@ fun DetailPelangganScreen(
             modifier = modifier
         )
     } else {
-        ErrorScreen(onNavigateBack = { onNavigateBack() }, modifier = modifier)
+        ErrorScreen(onNavigateBack = { onNavigateBack() }, onReload = {}, modifier = modifier)
     }
 }
 
