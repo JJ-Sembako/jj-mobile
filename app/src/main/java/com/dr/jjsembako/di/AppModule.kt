@@ -6,6 +6,7 @@ import com.dr.jjsembako.feature_auth.domain.usecase.CheckAccountRecoveryAnswerIn
 import com.dr.jjsembako.feature_auth.domain.usecase.CheckAccountRecoveryAnswerUseCase
 import com.dr.jjsembako.feature_auth.domain.usecase.FetchAccountRecoveryQuestionByUsernameInteractor
 import com.dr.jjsembako.feature_auth.domain.usecase.FetchAccountRecoveryQuestionByUsernameUseCase
+import com.dr.jjsembako.feature_auth.domain.usecase.HandleUpdatePasswordFromRecoveryInteractor
 import com.dr.jjsembako.feature_auth.domain.usecase.HandleUpdatePasswordFromRecoveryUseCase
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginInteractor
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginUseCase
@@ -75,6 +76,6 @@ abstract class AppModule {
     @Binds
     @ViewModelScoped
     abstract fun provideHandleUpdatePasswordFromRecoveryUseCase(
-        hanldeUpdatePasswordFromRecoveryInteractor: DeactivateAccountRecoveryInteractor
+        hanldeUpdatePasswordFromRecoveryInteractor: HandleUpdatePasswordFromRecoveryInteractor
     ): HandleUpdatePasswordFromRecoveryUseCase
 }
