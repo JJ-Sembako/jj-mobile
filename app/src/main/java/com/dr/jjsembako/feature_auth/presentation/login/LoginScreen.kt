@@ -134,17 +134,11 @@ fun LoginScreen(
 
         StateResponse.SUCCESS -> {
             loginViewModel.setState(null)
-            if (statusCode == 200) {
-                showLoadingDialog.value = false
-                showErrorDialog.value = false
-                setUsername(trueUsername!!)
-                setToken(token!!)
-                onLoginSuccess()
-            } else {
-                showLoadingDialog.value = false
-                showErrorDialog.value = true
-                loginViewModel.setState(null)
-            }
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            setUsername(trueUsername!!)
+            setToken(token!!)
+            onLoginSuccess()
         }
 
         else -> {}

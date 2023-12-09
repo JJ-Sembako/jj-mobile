@@ -1,5 +1,13 @@
 package com.dr.jjsembako.di
 
+import com.dr.jjsembako.feature_auth.domain.usecase.CheckAccountRecoveryActivationInteractor
+import com.dr.jjsembako.feature_auth.domain.usecase.CheckAccountRecoveryActivationUseCase
+import com.dr.jjsembako.feature_auth.domain.usecase.CheckAccountRecoveryAnswerInteractor
+import com.dr.jjsembako.feature_auth.domain.usecase.CheckAccountRecoveryAnswerUseCase
+import com.dr.jjsembako.feature_auth.domain.usecase.FetchAccountRecoveryQuestionByUsernameInteractor
+import com.dr.jjsembako.feature_auth.domain.usecase.FetchAccountRecoveryQuestionByUsernameUseCase
+import com.dr.jjsembako.feature_auth.domain.usecase.HandleUpdatePasswordFromRecoveryInteractor
+import com.dr.jjsembako.feature_auth.domain.usecase.HandleUpdatePasswordFromRecoveryUseCase
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginInteractor
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryInteractor
@@ -48,4 +56,26 @@ abstract class AppModule {
     @Binds
     @ViewModelScoped
     abstract fun provideDeactivateAccountRecoveryUseCase(deactivateAccountRecoveryInteractor: DeactivateAccountRecoveryInteractor): DeactivateAccountRecoveryUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideCheckAccountRecoveryActivationUseCase(
+        checkAccountRecoveryActivationInteractor: CheckAccountRecoveryActivationInteractor
+    ): CheckAccountRecoveryActivationUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchAccountRecoveryQuestionByUsernameUseCase(
+        fetchAccountRecoveryQuestionByUsernameInteractor: FetchAccountRecoveryQuestionByUsernameInteractor
+    ): FetchAccountRecoveryQuestionByUsernameUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideCheckAccountRecoveryAnswerUseCase(checkAccountRecoveryAnswerInteractor: CheckAccountRecoveryAnswerInteractor): CheckAccountRecoveryAnswerUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleUpdatePasswordFromRecoveryUseCase(
+        hanldeUpdatePasswordFromRecoveryInteractor: HandleUpdatePasswordFromRecoveryInteractor
+    ): HandleUpdatePasswordFromRecoveryUseCase
 }

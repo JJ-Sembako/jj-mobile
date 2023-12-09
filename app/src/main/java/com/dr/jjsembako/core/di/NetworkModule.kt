@@ -43,7 +43,7 @@ class NetworkModule {
             .setLenient()
             .create()
         return Retrofit.Builder()
-            .baseUrl("http://54.251.20.182:3000/")
+            .baseUrl("http://54.251.20.182/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()

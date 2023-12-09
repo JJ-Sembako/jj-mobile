@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_auth.presentation.recovery_question
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -30,6 +31,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -48,25 +50,110 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.utils.isValidAnswer
+import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.isValidAnswer
 import kotlinx.coroutines.launch
+
+@Composable
+fun PertanyaanPemulihanScreen(
+    username: String,
+    onNavigateBack: () -> Unit,
+    onNavigateToChangePassword: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val pertanyaanPemulihanViewModel: PertanyaanPemulihanViewModel = hiltViewModel()
+    val stateFirst = pertanyaanPemulihanViewModel.stateFirst.observeAsState().value
+    val statusCode = pertanyaanPemulihanViewModel.statusCode.observeAsState().value
+    val message = pertanyaanPemulihanViewModel.message.observeAsState().value
+    val question = pertanyaanPemulihanViewModel.question
+
+    // Set username for the first time Composable is rendered
+    LaunchedEffect(username) {
+        pertanyaanPemulihanViewModel.setUsername(username)
+    }
+
+    when (stateFirst) {
+        StateResponse.LOADING -> {
+            LoadingScreen(modifier = modifier)
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("pertanyaanPemulihan", "Error")
+            Log.e("pertanyaanPemulihan", "state: $stateFirst")
+            Log.e("pertanyaanPemulihan", "Error: $message")
+            Log.e("pertanyaanPemulihan", "statusCode: $statusCode")
+            ErrorScreen(
+                onNavigateBack = { onNavigateBack() },
+                onReload = {
+                    pertanyaanPemulihanViewModel.fetchAccountRecoveryQuestionByUsername(
+                        username
+                    )
+                },
+                message = message ?: "Unknown error",
+                modifier = modifier
+            )
+        }
+
+        StateResponse.SUCCESS -> {
+            if (question?.isEmpty() == true) {
+                ErrorScreen(
+                    onNavigateBack = { onNavigateBack() },
+                    onReload = {
+                        pertanyaanPemulihanViewModel.fetchAccountRecoveryQuestionByUsername(
+                            username
+                        )
+                    },
+                    message = "Server Error",
+                    modifier = modifier
+                )
+            } else {
+                PertanyaanPemulihanContent(
+                    username = username,
+                    recoveryQuestion = question ?: "",
+                    pertanyaanPemulihanViewModel = pertanyaanPemulihanViewModel,
+                    onNavigateBack = onNavigateBack,
+                    onNavigateToChangePassword = onNavigateToChangePassword,
+                    modifier = modifier
+                )
+            }
+        }
+
+        else -> {}
+    }
+
+}
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun PertanyaanPemulihanScreen(
+fun PertanyaanPemulihanContent(
+    username: String,
+    recoveryQuestion: String,
+    pertanyaanPemulihanViewModel: PertanyaanPemulihanViewModel,
     onNavigateBack: () -> Unit,
-    onNavigateToChangePassword: () -> Unit,
+    onNavigateToChangePassword: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val stateSecond = pertanyaanPemulihanViewModel.stateSecond.observeAsState().value
+    val statusCode = pertanyaanPemulihanViewModel.statusCode.observeAsState().value
+    val message = pertanyaanPemulihanViewModel.message.observeAsState().value
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    var question by rememberSaveable { mutableStateOf("") }
+    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
+
+    var question by rememberSaveable { mutableStateOf(recoveryQuestion) }
     var answer by rememberSaveable { mutableStateOf("") }
     var isValidAnswer = rememberSaveable { mutableStateOf(false) }
     var errMsgAnswer = rememberSaveable { mutableStateOf("") }
@@ -78,6 +165,31 @@ fun PertanyaanPemulihanScreen(
         coroutineScope.launch {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
+    }
+
+    when (stateSecond) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("PemulihanAkunScreen", "Error")
+            Log.e("PemulihanAkunScreen", "state: $stateSecond")
+            Log.e("PemulihanAkunScreen", "Error: $message")
+            Log.e("PemulihanAkunScreen", "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            pertanyaanPemulihanViewModel.setStateSecond(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            pertanyaanPemulihanViewModel.setStateSecond(null)
+            onNavigateToChangePassword(username)
+        }
+
+        else -> {}
     }
 
     Scaffold(
@@ -165,7 +277,7 @@ fun PertanyaanPemulihanScreen(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    onNavigateToChangePassword()
+                    pertanyaanPemulihanViewModel.checkAccountRecoveryAnswer(username, answer)
                 },
                 enabled = isValidAnswer.value,
                 modifier = modifier
@@ -173,6 +285,19 @@ fun PertanyaanPemulihanScreen(
                     .height(56.dp)
             ) {
                 Text(stringResource(R.string.verification))
+            }
+            Spacer(modifier = modifier.height(128.dp))
+
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
+
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: stringResource(id = R.string.error_msg_default),
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
             }
         }
     }
@@ -183,6 +308,7 @@ fun PertanyaanPemulihanScreen(
 fun PertanyaanPemulihanScreenPreview() {
     JJSembakoTheme {
         PertanyaanPemulihanScreen(
+            username = "",
             onNavigateBack = {},
             onNavigateToChangePassword = {}
         )

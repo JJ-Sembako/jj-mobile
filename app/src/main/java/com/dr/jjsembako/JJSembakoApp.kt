@@ -81,25 +81,35 @@ fun JJSembakoApp() {
         composable(Screen.PengecekanUsername.route) {
             PengecekanUsernameScreen(
                 onNavigateToLogin = { navController.popBackStack() },
-                onNavigateToCheckAnswer = {
-                    navController.navigate(Screen.PertanyaanPemulihan.route) {
+                onNavigateToCheckAnswer = { username ->
+                    navController.navigate(Screen.PertanyaanPemulihan.createRoute(username)) {
                         launchSingleTop = true
                     }
                 })
         }
 
-        composable(Screen.PertanyaanPemulihan.route) {
+        composable(
+            route = Screen.PertanyaanPemulihan.route,
+            arguments = listOf(navArgument("username") { type = NavType.StringType })
+        ) {
+            val recoveryUsername = it.arguments?.getString("username") ?: ""
             PertanyaanPemulihanScreen(
+                username = recoveryUsername,
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToChangePassword = {
-                    navController.navigate(Screen.PemulihanKataSandi.route) {
+                onNavigateToChangePassword = { username ->
+                    navController.navigate(Screen.PemulihanKataSandi.createRoute(username)) {
                         launchSingleTop = true
                     }
                 })
         }
 
-        composable(Screen.PemulihanKataSandi.route) {
+        composable(
+            route = Screen.PemulihanKataSandi.route,
+            arguments = listOf(navArgument("username") { type = NavType.StringType })
+        ) {
+            val recoveryUsername = it.arguments?.getString("username") ?: ""
             PemulihanKataSandiScreen(
+                username = recoveryUsername,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToLogin = {
                     navController.navigate(Screen.Login.route) {

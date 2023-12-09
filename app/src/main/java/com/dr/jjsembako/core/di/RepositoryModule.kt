@@ -2,6 +2,7 @@ package com.dr.jjsembako.core.di
 
 import com.dr.jjsembako.feature_auth.data.AuthRepository
 import com.dr.jjsembako.feature_auth.domain.repository.IAuthRepository
+import com.dr.jjsembako.feature_auth.domain.repository.IForgetPasswordRepository
 import com.dr.jjsembako.feature_customer.domain.repository.ICustomerRepository
 import com.dr.jjsembako.feature_setting.data.SettingRepository
 import com.dr.jjsembako.feature_setting.domain.repository.IRecoveryRepository
@@ -16,6 +17,9 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
     @Binds
     abstract fun provideRepositoryAuth(authRepository: AuthRepository): IAuthRepository
+
+    @Binds
+    abstract fun provideRepositoryForgetPassword(authRepository: AuthRepository): IForgetPasswordRepository
 
     @Binds
     abstract fun provideRepositorySetting(settingRepository: SettingRepository): ISettingRepository
