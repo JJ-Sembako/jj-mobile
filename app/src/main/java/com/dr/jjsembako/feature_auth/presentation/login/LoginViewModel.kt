@@ -39,11 +39,11 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
                 when (it) {
                     is Resource.Loading -> _state.value = StateResponse.LOADING
                     is Resource.Success -> {
-                        _state.value = StateResponse.SUCCESS
                         _message.value = it.message
                         _statusCode.value = it.status
                         val data = it.data
                         if (data != null && data.role == "SALES") {
+                            _state.value = StateResponse.SUCCESS
                             _token.value = data.token
                             _username.value = data.username
                         } else {
