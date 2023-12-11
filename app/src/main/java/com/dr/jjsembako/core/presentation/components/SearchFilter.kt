@@ -90,6 +90,7 @@ fun SearchFilter(
                         modifier = modifier.clickable {
                             if (searchQuery.value.isNotEmpty()) {
                                 searchQuery.value = ""
+                                searchFunction()
                             } else {
                                 activeSearch.value = false
                                 keyboardController?.hide()
