@@ -484,16 +484,6 @@ private fun EditPelangganContent(
     }
 }
 
-private val dummy = Customer(
-    "abcd-123",
-    "Bambang",
-    "Toko Makmur",
-    "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
-    "https://maps.app.goo.gl/MQBEcptYvdYfBaNc9",
-    "081234567890",
-    1_500_000L
-)
-
 @Composable
 @Preview(showBackground = true)
 fun EditPelangganScreenPreview() {
