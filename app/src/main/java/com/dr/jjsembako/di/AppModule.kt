@@ -98,7 +98,7 @@ abstract class AppModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun provideFetchDetailCustomerUseCase(fetchDetailCustomersInteractor: FetchDetailCustomerInteractor): FetchDetailCustomerUseCase
+    abstract fun provideFetchDetailCustomerUseCase(fetchDetailCustomerInteractor: FetchDetailCustomerInteractor): FetchDetailCustomerUseCase
 
     @Binds
     @ViewModelScoped
