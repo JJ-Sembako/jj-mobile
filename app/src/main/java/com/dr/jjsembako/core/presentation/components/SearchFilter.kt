@@ -66,6 +66,7 @@ fun SearchFilter(
             onQueryChange = {
                 searchQuery.value = it
                 activeSearch.value = searchQuery.value != ""
+                searchFunction()
             },
             onSearch = {
                 keyboardController?.hide()
@@ -76,7 +77,6 @@ fun SearchFilter(
             active = false,
             onActiveChange = {
                 activeSearch.value = it
-                searchFunction()
             },
             placeholder = {
                 Text(text = placeholder)

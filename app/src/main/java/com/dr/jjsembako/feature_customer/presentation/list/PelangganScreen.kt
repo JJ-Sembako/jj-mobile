@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -37,8 +38,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -188,23 +192,30 @@ fun PelangganScreen(
                                     }
                                 })
                             }
-                        }
-                    } else {
-                        Spacer(modifier = modifier.height(16.dp))
-                        Column(
-                            modifier = modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            LottieAnimation(
-                                enableMergePaths = true,
-                                composition = composition,
-                                progress = { progress },
-                                modifier = modifier.size(150.dp)
-                            )
+                        } else {
                             Spacer(modifier = modifier.height(48.dp))
+                            Column(
+                                modifier = modifier.fillMaxWidth(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                LottieAnimation(
+                                    enableMergePaths = true,
+                                    composition = composition,
+                                    progress = { progress },
+                                    modifier = modifier.size(150.dp)
+                                )
+                                Spacer(modifier = modifier.height(16.dp))
+                                Text(
+                                    text = stringResource(R.string.not_found),
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 14.sp,
+                                    textAlign = TextAlign.Center,
+                                    modifier = modifier.wrapContentSize(Alignment.Center)
+                                )
+                            }
+                            Spacer(modifier = modifier.height(16.dp))
                         }
-                        Spacer(modifier = modifier.height(16.dp))
                     }
                 }
 

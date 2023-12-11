@@ -26,6 +26,7 @@
     <string name="menu">Menu</string>
     <string name="alert">Peringatan</string>
     <string name="on_progress">Dalam Proses</string>
+    <string name="not_found">Data tidak ditemukan</string>
     <string name="please_wait">Mohon bersabar</string>
     <string name="error">Terjadi Kesalahan</string>
     <string name="error_msg_default">Kesalahan sistem terjadi.</string>
