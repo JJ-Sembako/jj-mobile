@@ -45,8 +45,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -61,15 +59,14 @@ import com.dr.jjsembako.core.presentation.components.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.navigation.Screen
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PelangganScreen(
-    navController: NavHostController,
+    keyword: String,
     onNavigateBack: () -> Unit,
-    onNavigateToDetailCust: (String) -> Unit,
-    onNavigateToAddCust: () -> Unit,
+    onNavigateToDetailCust: (String, String) -> Unit,
+    onNavigateToAddCust: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pelangganViewModel: PelangganViewModel = hiltViewModel()
@@ -91,10 +88,11 @@ fun PelangganScreen(
         iterations = LottieConstants.IterateForever,
     )
 
-    LaunchedEffect(Unit) {
-        if (navController.currentBackStackEntry?.destination?.route == Screen.DetailPelanggan.route) {
-            pelangganViewModel.fetchCustomers(search = searchQuery.value)
-        }
+    // Set keyword for the first time Composable is rendered
+    LaunchedEffect(keyword) {
+        searchQuery.value = keyword
+        if (keyword.isEmpty()) pelangganViewModel.fetchCustomers()
+        else pelangganViewModel.fetchCustomers(search = keyword)
     }
 
     Scaffold(
@@ -122,7 +120,7 @@ fun PelangganScreen(
         floatingActionButton = {
             if (!activeSearch.value) {
                 FloatingActionButton(
-                    onClick = { onNavigateToAddCust() },
+                    onClick = { onNavigateToAddCust(searchQuery.value) },
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Icon(
@@ -195,7 +193,12 @@ fun PelangganScreen(
                                 items(items = customerList, itemContent = { cust ->
                                     if (cust != null) {
                                         CustomerInfo(
-                                            onNavigateToDetailCust = { onNavigateToDetailCust(cust.id) },
+                                            onNavigateToDetailCust = {
+                                                onNavigateToDetailCust(
+                                                    cust.id,
+                                                    searchQuery.value
+                                                )
+                                            },
                                             customer = cust,
                                             modifier = modifier
                                         )
@@ -256,9 +259,9 @@ private val radioOptions = listOf(
 fun PelangganScreenPreview() {
     JJSembakoTheme {
         PelangganScreen(
-            navController = rememberNavController(),
+            keyword = "",
             onNavigateBack = {},
-            onNavigateToDetailCust = {},
+            onNavigateToDetailCust = { id, keyword -> ({ id + keyword }) },
             onNavigateToAddCust = {},
             modifier = Modifier
         )

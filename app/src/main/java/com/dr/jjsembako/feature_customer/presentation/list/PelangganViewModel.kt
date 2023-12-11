@@ -16,10 +16,6 @@ import javax.inject.Inject
 class PelangganViewModel @Inject constructor(private val fetchCustomersUseCase: FetchCustomersUseCase) :
     ViewModel() {
 
-    init {
-        fetchCustomers()
-    }
-
     private val _state = MutableLiveData<StateResponse?>()
     val state: LiveData<StateResponse?> = _state
 
