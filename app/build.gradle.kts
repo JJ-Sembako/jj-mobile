@@ -96,6 +96,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
+    //paging3
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+    implementation("androidx.paging:paging-compose:3.2.1")
+
     //coil
     implementation("io.coil-kt:coil:2.5.0")
     implementation("io.coil-kt:coil-compose:2.5.0")
