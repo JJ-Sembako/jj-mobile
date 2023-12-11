@@ -7,6 +7,7 @@ import com.dr.jjsembako.core.data.remote.response.customer.PostHandleCreateCusto
 import com.dr.jjsembako.core.data.remote.response.customer.PutHandleUpdateCustomerResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -22,6 +23,7 @@ interface CustomerApiService {
         @Query("limit") limit: Int? = null
     ): GetFetchCustomersResponse
 
+    @FormUrlEncoded
     @POST("customer")
     suspend fun handleCreateCustomer(
         @Field("name") name: String,
@@ -36,6 +38,7 @@ interface CustomerApiService {
         @Path("id") id: String
     ): GetFetchDetailCustomerResponse
 
+    @FormUrlEncoded
     @PUT("customer/{id}")
     suspend fun handleUpdateCustomer(
         @Path("id") id: String,
