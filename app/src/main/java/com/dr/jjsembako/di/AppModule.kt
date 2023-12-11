@@ -10,6 +10,15 @@ import com.dr.jjsembako.feature_auth.domain.usecase.HandleUpdatePasswordFromReco
 import com.dr.jjsembako.feature_auth.domain.usecase.HandleUpdatePasswordFromRecoveryUseCase
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginInteractor
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginUseCase
+import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustomersInteractor
+import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustomersUseCase
+import com.dr.jjsembako.feature_customer.domain.usecase.FetchDetailCustomerUseCase
+import com.dr.jjsembako.feature_customer.domain.usecase.HandleCreateCustomerInteractor
+import com.dr.jjsembako.feature_customer.domain.usecase.HandleCreateCustomerUseCase
+import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerInteractor
+import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerUseCase
+import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerInteractor
+import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryInteractor
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.ChangePasswordInteractor
@@ -78,4 +87,27 @@ abstract class AppModule {
     abstract fun provideHandleUpdatePasswordFromRecoveryUseCase(
         hanldeUpdatePasswordFromRecoveryInteractor: HandleUpdatePasswordFromRecoveryInteractor
     ): HandleUpdatePasswordFromRecoveryUseCase
+
+    /****************************
+     * Customer
+     ***************************/
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchCustomersUseCase(fetchCustomersInteractor: FetchCustomersInteractor): FetchCustomersUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchDetailCustomerUseCase(fetchDetailCustomersInteractor: FetchCustomersInteractor): FetchDetailCustomerUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleCreateCustomerUseCase(handleCreateCustomerInteractor: HandleCreateCustomerInteractor): HandleCreateCustomerUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleUpdateCustomerUseCase(handleUpdateCustomerInteractor: HandleUpdateCustomerInteractor): HandleUpdateCustomerUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleDeleteCustomerUseCase(handleDeleteCustomerInteractor: HandleDeleteCustomerInteractor): HandleDeleteCustomerUseCase
 }
