@@ -66,7 +66,6 @@ import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidLinkMaps
 import com.dr.jjsembako.core.utils.isValidPhoneNumber
-import com.dr.jjsembako.feature_customer.domain.model.Customer
 import kotlinx.coroutines.launch
 
 @Composable
@@ -413,7 +412,7 @@ private fun EditPelangganContent(
                     keyboardController?.hide()
                     openMaps(mapsLink)
                 },
-                enabled = isValidMapsLink.value,
+                enabled = isValidMapsLink.value && stateSecond != StateResponse.LOADING,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 modifier = modifier
                     .height(56.dp)
@@ -460,7 +459,7 @@ private fun EditPelangganContent(
                             phoneNumber
                         )
                     },
-                    enabled = isValidName.value && isValidShopName.value && isValidPhoneNumber.value && isValidAddress.value && isValidMapsLink.value,
+                    enabled = isValidName.value && isValidShopName.value && isValidPhoneNumber.value && isValidAddress.value && isValidMapsLink.value && stateSecond != StateResponse.LOADING,
                     modifier = modifier
                         .width(120.dp)
                         .height(56.dp)

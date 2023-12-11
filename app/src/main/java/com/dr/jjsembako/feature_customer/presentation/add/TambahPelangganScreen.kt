@@ -348,7 +348,7 @@ fun TambahPelangganScreen(
                     keyboardController?.hide()
                     openMaps(mapsLink)
                 },
-                enabled = isValidMapsLink.value,
+                enabled = isValidMapsLink.value && state != StateResponse.LOADING,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 modifier = modifier
                     .height(56.dp)
@@ -394,7 +394,7 @@ fun TambahPelangganScreen(
                             phoneNumber
                         )
                     },
-                    enabled = isValidName.value && isValidShopName.value && isValidPhoneNumber.value && isValidAddress.value && isValidMapsLink.value,
+                    enabled = isValidName.value && isValidShopName.value && isValidPhoneNumber.value && isValidAddress.value && isValidMapsLink.value && state != StateResponse.LOADING,
                     modifier = modifier
                         .width(120.dp)
                         .height(56.dp)
