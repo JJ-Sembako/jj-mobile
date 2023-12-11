@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +45,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -58,10 +61,12 @@ import com.dr.jjsembako.core.presentation.components.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.navigation.Screen
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PelangganScreen(
+    navController: NavHostController,
     onNavigateBack: () -> Unit,
     onNavigateToDetailCust: (String) -> Unit,
     onNavigateToAddCust: () -> Unit,
@@ -85,6 +90,12 @@ fun PelangganScreen(
         composition,
         iterations = LottieConstants.IterateForever,
     )
+
+    LaunchedEffect(Unit) {
+        if (navController.currentBackStackEntry?.destination?.route == Screen.DetailPelanggan.route) {
+            pelangganViewModel.fetchCustomers(search = searchQuery.value)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -245,6 +256,7 @@ private val radioOptions = listOf(
 fun PelangganScreenPreview() {
     JJSembakoTheme {
         PelangganScreen(
+            navController = rememberNavController(),
             onNavigateBack = {},
             onNavigateToDetailCust = {},
             onNavigateToAddCust = {},

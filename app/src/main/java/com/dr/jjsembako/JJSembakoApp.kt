@@ -190,6 +190,7 @@ fun JJSembakoApp() {
 
         composable(Screen.Pelanggan.route) {
             PelangganScreen(
+                navController = navController,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToDetailCust = { id ->
                     navController.navigate(Screen.DetailPelanggan.createRoute(id)) {
