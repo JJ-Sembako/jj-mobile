@@ -294,6 +294,7 @@ private fun DetailPelangganContent(
                 placeholder = stringResource(R.string.search_cust),
                 activeSearch,
                 searchQuery,
+                searchFunction = {},
                 openFilter = { showSheet.value = !showSheet.value },
                 modifier = modifier
             )
