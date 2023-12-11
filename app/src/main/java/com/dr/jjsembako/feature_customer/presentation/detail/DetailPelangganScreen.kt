@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_customer.presentation.detail
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -30,9 +31,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -45,23 +48,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
-import com.dr.jjsembako.feature_customer.domain.model.Customer
+import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
+import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.presentation.components.AlertDeleteDialog
+import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.BottomSheetOrder
 import com.dr.jjsembako.core.presentation.components.CustomerInfo
 import com.dr.jjsembako.core.presentation.components.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
-import com.dr.jjsembako.feature_customer.presentation.components.CustomerButtonInfo
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_customer.presentation.components.CustomerButtonInfo
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 @Composable
 fun DetailPelangganScreen(
@@ -73,27 +80,68 @@ fun DetailPelangganScreen(
     chatWA: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isRandomTrue = Random.nextBoolean()
+    val detailPelangganViewModel: DetailPelangganViewModel = hiltViewModel()
+    val stateFirst = detailPelangganViewModel.stateFirst.observeAsState().value
+    val statusCode = detailPelangganViewModel.statusCode.observeAsState().value
+    val message = detailPelangganViewModel.message.observeAsState().value
+    val customerData = detailPelangganViewModel.customerData
 
-    if (isRandomTrue) {
-        DetailPelangganContent(
-            cust = dummy,
-            onNavigateBack = { onNavigateBack() },
-            onNavigateToEditCust = { onNavigateToEditCust() },
-            openMaps = { url -> openMaps(url) },
-            call = { uri -> call(uri) },
-            chatWA = { url -> chatWA(url) },
-            modifier = modifier
-        )
-    } else {
-        ErrorScreen(onNavigateBack = { onNavigateBack() }, onReload = {}, modifier = modifier)
+    // Set id for the first time Composable is rendered
+    LaunchedEffect(idCust) {
+        detailPelangganViewModel.setId(idCust)
+    }
+
+    when (stateFirst) {
+        StateResponse.LOADING -> {
+            LoadingScreen(modifier = modifier)
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("DetailPelanggan", "Error")
+            Log.e("DetailPelanggan", "state: $stateFirst")
+            Log.e("DetailPelanggan", "Error: $message")
+            Log.e("DetailPelanggan", "statusCode: $statusCode")
+            ErrorScreen(
+                onNavigateBack = { onNavigateBack() },
+                onReload = {
+                    detailPelangganViewModel.fetchDetailCustomer(idCust)
+                },
+                message = message ?: "Unknown error",
+                modifier = modifier
+            )
+        }
+
+        StateResponse.SUCCESS -> {
+            if (customerData == null) {
+                ErrorScreen(
+                    onNavigateBack = { onNavigateBack() },
+                    onReload = { detailPelangganViewModel.fetchDetailCustomer(idCust) },
+                    message = "Server Error",
+                    modifier = modifier
+                )
+            } else {
+                DetailPelangganContent(
+                    cust = customerData,
+                    detailPelangganViewModel = detailPelangganViewModel,
+                    onNavigateBack = { onNavigateBack() },
+                    onNavigateToEditCust = { onNavigateToEditCust() },
+                    openMaps = { url -> openMaps(url) },
+                    call = { uri -> call(uri) },
+                    chatWA = { url -> chatWA(url) },
+                    modifier = modifier
+                )
+            }
+        }
+
+        else -> {}
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailPelangganContent(
-    cust: Customer,
+    cust: DataCustomer,
+    detailPelangganViewModel: DetailPelangganViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToEditCust: () -> Unit,
     openMaps: (String) -> Unit,
@@ -101,11 +149,18 @@ private fun DetailPelangganContent(
     chatWA: (String) -> Unit,
     modifier: Modifier
 ) {
+    val stateSecond = detailPelangganViewModel.stateSecond.observeAsState().value
+    val statusCode = detailPelangganViewModel.statusCode.observeAsState().value
+    val message = detailPelangganViewModel.message.observeAsState().value
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
+
+    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var menuExpanded by remember { mutableStateOf(false) }
     var showDialog = remember { mutableStateOf(false) }
@@ -129,6 +184,31 @@ private fun DetailPelangganContent(
         coroutineScope.launch {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
+    }
+
+    when (stateSecond) {
+        StateResponse.LOADING -> {
+            LoadingScreen(modifier = modifier)
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("DetailPelanggan", "Error")
+            Log.e("DetailPelanggan", "state: $stateSecond")
+            Log.e("DetailPelanggan", "Error: $message")
+            Log.e("DetailPelanggan", "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            detailPelangganViewModel.setStateSecond(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            detailPelangganViewModel.setStateSecond(null)
+            onNavigateBack()
+        }
+
+        else -> {}
     }
 
     Scaffold(
@@ -240,23 +320,26 @@ private fun DetailPelangganContent(
             if (showDialog.value) {
                 AlertDeleteDialog(
                     onNavigateBack = { onNavigateBack() },
+                    onDelete = { detailPelangganViewModel.handleDeleteCustomer(cust.id) },
                     showDialog = showDialog,
+                    modifier = modifier
+                )
+            }
+
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
+
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: stringResource(id = R.string.error_msg_default),
+                    showDialog = showErrorDialog,
                     modifier = modifier
                 )
             }
         }
     }
 }
-
-private val dummy = Customer(
-    "abcd-123",
-    "Bambang",
-    "Toko Makmur",
-    "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
-    "https://maps.app.goo.gl/MQBEcptYvdYfBaNc9",
-    "081234567890",
-    1_500_000L
-)
 
 private val radioOptionsPayment = listOf(
     FilterOption("Semua", "semua"),
