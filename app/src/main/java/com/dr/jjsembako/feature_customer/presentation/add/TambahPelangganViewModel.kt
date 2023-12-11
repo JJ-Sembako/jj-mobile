@@ -24,7 +24,7 @@ class TambahPelangganViewModel @Inject constructor(private val handleCreateCusto
     private val _message = MutableLiveData<String?>()
     val message: LiveData<String?> = _message
 
-    fun setStateFirst(state: StateResponse?) {
+    fun setState(state: StateResponse?) {
         _state.value = state
     }
 
