@@ -12,6 +12,7 @@ import com.dr.jjsembako.feature_auth.domain.usecase.LoginInteractor
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustomersInteractor
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustomersUseCase
+import com.dr.jjsembako.feature_customer.domain.usecase.FetchDetailCustomerInteractor
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchDetailCustomerUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleCreateCustomerInteractor
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleCreateCustomerUseCase
@@ -97,7 +98,7 @@ abstract class AppModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun provideFetchDetailCustomerUseCase(fetchDetailCustomersInteractor: FetchCustomersInteractor): FetchDetailCustomerUseCase
+    abstract fun provideFetchDetailCustomerUseCase(fetchDetailCustomersInteractor: FetchDetailCustomerInteractor): FetchDetailCustomerUseCase
 
     @Binds
     @ViewModelScoped
