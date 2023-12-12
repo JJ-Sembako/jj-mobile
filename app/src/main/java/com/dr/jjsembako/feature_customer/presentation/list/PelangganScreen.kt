@@ -1,15 +1,18 @@
 package com.dr.jjsembako.feature_customer.presentation.list
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -24,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,30 +37,62 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
-import com.dr.jjsembako.feature_customer.domain.model.Customer
 import com.dr.jjsembako.core.data.model.FilterOption
+import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.presentation.components.BottomSheetCustomer
 import com.dr.jjsembako.core.presentation.components.CustomerInfo
+import com.dr.jjsembako.core.presentation.components.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PelangganScreen(
+    keyword: String,
     onNavigateBack: () -> Unit,
-    onNavigateToDetailCust: (String) -> Unit,
-    onNavigateToAddCust: () -> Unit,
+    onNavigateToDetailCust: (String, String) -> Unit,
+    onNavigateToAddCust: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val pelangganViewModel: PelangganViewModel = hiltViewModel()
+    val customerPagingItems: LazyPagingItems<DataCustomer> =
+        pelangganViewModel.customerState.collectAsLazyPagingItems()
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     var showSheet = remember { mutableStateOf(false) }
     var (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
     var searchQuery = remember { mutableStateOf("") }
     var activeSearch = remember { mutableStateOf(false) }
+
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
+    val progress by animateLottieCompositionAsState(
+        composition,
+        iterations = LottieConstants.IterateForever,
+    )
+
+    // Set keyword for the first time Composable is rendered
+    LaunchedEffect(keyword) {
+        searchQuery.value = keyword
+        if (keyword.isEmpty()) pelangganViewModel.fetchCustomers()
+        else pelangganViewModel.fetchCustomers(keyword)
+    }
 
     Scaffold(
         topBar = {
@@ -82,7 +119,7 @@ fun PelangganScreen(
         floatingActionButton = {
             if (!activeSearch.value) {
                 FloatingActionButton(
-                    onClick = { onNavigateToAddCust() },
+                    onClick = { onNavigateToAddCust(searchQuery.value) },
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Icon(
@@ -113,23 +150,83 @@ fun PelangganScreen(
                 placeholder = stringResource(R.string.search_cust),
                 activeSearch,
                 searchQuery,
+                searchFunction = {
+                    if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
+                    else pelangganViewModel.fetchCustomers(searchQuery.value)
+
+                },
                 openFilter = { showSheet.value = !showSheet.value },
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
-            LazyColumn(
-                modifier = modifier
-                    .fillMaxWidth()
-            ) {
-                items(items = custList, itemContent = { cust ->
-                    CustomerInfo(
-                        onNavigateToDetailCust = { onNavigateToDetailCust(cust.id) },
-                        customer = cust,
+
+            when (customerPagingItems.loadState.refresh) {
+                LoadState.Loading -> {
+                    LoadingScreen(modifier = modifier)
+                }
+
+                is LoadState.Error -> {
+                    val error = customerPagingItems.loadState.refresh as LoadState.Error
+                    Log.e("PelangganScreen", "Error")
+                    ErrorScreen(
+                        onNavigateBack = { },
+                        onReload = {
+                            if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
+                            else pelangganViewModel.fetchCustomers(searchQuery.value)
+                        },
+                        message = error.error.localizedMessage ?: "Unknown error",
+                        showButtonBack = false,
                         modifier = modifier
                     )
-                    Spacer(modifier = modifier.height(8.dp))
-                })
+                }
+
+                else -> {
+                    if (customerPagingItems.itemCount > 0) {
+                        LazyColumn(
+                            modifier = modifier
+                                .fillMaxWidth()
+                        ) {
+                            items(customerPagingItems.itemCount) { index ->
+                                CustomerInfo(
+                                    onNavigateToDetailCust = {
+                                        onNavigateToDetailCust(
+                                            customerPagingItems[index]!!.id,
+                                            searchQuery.value
+                                        )
+                                    },
+                                    customer = customerPagingItems[index]!!,
+                                    modifier = modifier
+                                )
+                                Spacer(modifier = modifier.height(8.dp))
+                            }
+                        }
+                    } else {
+                        Spacer(modifier = modifier.height(48.dp))
+                        Column(
+                            modifier = modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            LottieAnimation(
+                                enableMergePaths = true,
+                                composition = composition,
+                                progress = { progress },
+                                modifier = modifier.size(150.dp)
+                            )
+                            Spacer(modifier = modifier.height(16.dp))
+                            Text(
+                                text = stringResource(R.string.not_found),
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 14.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = modifier.wrapContentSize(Alignment.Center)
+                            )
+                        }
+                        Spacer(modifier = modifier.height(16.dp))
+                    }
+                }
             }
+
             if (showSheet.value) {
                 BottomSheetCustomer(
                     optionList = radioOptions,
@@ -143,81 +240,6 @@ fun PelangganScreen(
     }
 }
 
-private val custList = listOf(
-    Customer(
-        "abcd-123",
-        "Bambang",
-        "Toko Makmur",
-        "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
-        "https://gmaps.com/123123",
-        "081234567890",
-        1_500_000L
-    ),
-    Customer(
-        "wxyz-456",
-        "Budiono",
-        "Toko Murah",
-        "Jl. Kalibata Raya No. 5 Gang Cenderawasih, Sapi, Gajah, Harimau, Mamalia, Hewan",
-        "https://gmaps.com/123123",
-        "081234567890",
-        0L
-    ),
-    Customer(
-        "bcde-123",
-        "Yulianti",
-        "Warung Sejahter",
-        "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
-        "https://gmaps.com/123123",
-        "081234567890",
-        500_000L
-    ),
-    Customer(
-        "klmn-456",
-        "Susi",
-        "Toko Susi",
-        "Jl. Kalibata Raya No. 5 Gang Cenderawasih, Sapi, Gajah, Harimau, Mamalia, Hewan",
-        "https://gmaps.com/123123",
-        "081234567890",
-        0L
-    ),
-    Customer(
-        "rasa-123",
-        "Dewi",
-        "Toko Dewi Pojok",
-        "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
-        "https://gmaps.com/123123",
-        "081234567890",
-        300_000L
-    ),
-    Customer(
-        "kjas-456",
-        "Tukimin",
-        "Toko Min Jo",
-        "Jl. Kalibata Raya No. 5 Gang Cenderawasih, Sapi, Gajah, Harimau, Mamalia, Hewan",
-        "https://gmaps.com/123123",
-        "081234567890",
-        0L
-    ),
-    Customer(
-        "asad-123",
-        "Heru",
-        "Warung Pojok",
-        "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
-        "https://gmaps.com/123123",
-        "081234567890",
-        500_000L
-    ),
-    Customer(
-        "pqrs-456",
-        "Sulistiati",
-        "Toko Sulis",
-        "Jl. Kalibata Raya No. 5 Gang Cenderawasih, Sapi, Gajah, Harimau, Mamalia, Hewan",
-        "https://gmaps.com/123123",
-        "081234567890",
-        0L
-    ),
-)
-
 private val radioOptions = listOf(
     FilterOption("Semua Pelanggan", "semua"),
     FilterOption("Pelanggan Saya", "pelangganku")
@@ -228,8 +250,9 @@ private val radioOptions = listOf(
 fun PelangganScreenPreview() {
     JJSembakoTheme {
         PelangganScreen(
+            keyword = "",
             onNavigateBack = {},
-            onNavigateToDetailCust = {},
+            onNavigateToDetailCust = { id, keyword -> ({ id + keyword }) },
             onNavigateToAddCust = {},
             modifier = Modifier
         )

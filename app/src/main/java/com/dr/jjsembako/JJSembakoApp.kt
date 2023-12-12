@@ -137,7 +137,7 @@ fun JJSembakoApp() {
                         }
                     },
                     onNavigateToCustomer = {
-                        navController.navigate(Screen.Pelanggan.route) {
+                        navController.navigate(Screen.Pelanggan.createRoute("")) {
                             launchSingleTop = true
                         }
                     },
@@ -165,7 +165,7 @@ fun JJSembakoApp() {
                         tokenViewModel.updateStateToken()
                         tokenViewModel.updateStateUsername()
                     },
-                    backHandler = {activity.finish()}
+                    backHandler = { activity.finish() }
                 )
             }
         }
@@ -188,27 +188,40 @@ fun JJSembakoApp() {
             }
         }
 
-        composable(Screen.Pelanggan.route) {
+        composable(
+            route = Screen.Pelanggan.route,
+            arguments = listOf(navArgument("keyword") {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) {
+            val keyword = it.arguments?.getString("keyword") ?: ""
             PelangganScreen(
+                keyword = keyword,
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToDetailCust = { id ->
-                    navController.navigate(Screen.DetailPelanggan.createRoute(id)) {
+                onNavigateToDetailCust = { id, latestKeyword ->
+                    navController.navigate(Screen.DetailPelanggan.createRoute(id, latestKeyword)) {
                         launchSingleTop = true
                     }
                 },
-                onNavigateToAddCust = {
-                    navController.navigate(Screen.TambahPelanggan.route) {
+                onNavigateToAddCust = { latestKeyword ->
+                    navController.navigate(Screen.TambahPelanggan.createRoute(latestKeyword)) {
                         launchSingleTop = true
                     }
                 }
             )
         }
 
-        composable(Screen.TambahPelanggan.route) {
+        composable(
+            route = Screen.TambahPelanggan.route,
+            arguments = listOf(navArgument("keyword") { type = NavType.StringType })
+        ) {
+            val keyword = it.arguments?.getString("keyword") ?: ""
             TambahPelangganScreen(
                 onNavigateToPelangganScreen = {
-                    navController.navigate(Screen.Pelanggan.route) {
+                    navController.navigate(Screen.Pelanggan.createRoute(keyword)) {
                         popUpTo(Screen.Pelanggan.route) { inclusive = true }
+                        launchSingleTop = true
                     }
                 },
                 openMaps = { url ->
@@ -218,12 +231,21 @@ fun JJSembakoApp() {
 
         composable(
             route = Screen.DetailPelanggan.route,
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
+            arguments = listOf(
+                navArgument("id") { type = NavType.StringType },
+                navArgument("keyword") { type = NavType.StringType }
+            )
         ) {
             val id = it.arguments?.getString("id") ?: ""
+            val keyword = it.arguments?.getString("keyword") ?: ""
             DetailPelangganScreen(
                 idCust = id,
-                onNavigateBack = { navController.popBackStack() },
+                onNavigateBack = {
+                    navController.navigate(Screen.Pelanggan.createRoute(keyword)) {
+                        popUpTo(Screen.Pelanggan.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
                 onNavigateToEditCust = {
                     navController.navigate(Screen.EditPelanggan.createRoute(id)) {
                         launchSingleTop = true

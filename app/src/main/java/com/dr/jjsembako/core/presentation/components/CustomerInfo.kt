@@ -18,12 +18,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.feature_customer.domain.model.Customer
-import com.dr.jjsembako.core.utils.formatRupiah
+import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
-fun CustomerInfo(onNavigateToDetailCust: (String) -> Unit, customer: Customer, modifier: Modifier) {
+fun CustomerInfo(
+    onNavigateToDetailCust: (String) -> Unit,
+    customer: DataCustomer,
+    modifier: Modifier
+) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -49,7 +53,7 @@ fun CustomerInfo(onNavigateToDetailCust: (String) -> Unit, customer: Customer, m
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = stringResource(R.string.total_debt, formatRupiah(customer.debt)),
+                text = stringResource(R.string.total_debt, formatRupiah(customer.debt ?: 0)),
                 fontSize = 12.sp
             )
         }
@@ -62,7 +66,7 @@ fun CustomerInfoPreview() {
     JJSembakoTheme {
         CustomerInfo(
             onNavigateToDetailCust = {},
-            Customer(
+            DataCustomer(
                 "abcd-123",
                 "Bambang",
                 "Toko Makmur",

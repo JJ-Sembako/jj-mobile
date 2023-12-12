@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_customer.presentation.add
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -35,6 +36,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,10 +55,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.LoadingScreen
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidLinkMaps
 import com.dr.jjsembako.core.utils.isValidPhoneNumber
-import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -66,11 +73,19 @@ fun TambahPelangganScreen(
     openMaps: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val tambahPelangganViewModel: TambahPelangganViewModel = hiltViewModel()
+    val state = tambahPelangganViewModel.state.observeAsState().value
+    val statusCode = tambahPelangganViewModel.statusCode.observeAsState().value
+    val message = tambahPelangganViewModel.message.observeAsState().value
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
+
+    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var name by rememberSaveable { mutableStateOf("") }
     var shopName by rememberSaveable { mutableStateOf("") }
@@ -98,6 +113,31 @@ fun TambahPelangganScreen(
         coroutineScope.launch {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
+    }
+
+    when (state) {
+        StateResponse.LOADING -> {
+            LoadingScreen(modifier = modifier)
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("DetailPelanggan", "Error")
+            Log.e("DetailPelanggan", "state: $state")
+            Log.e("DetailPelanggan", "Error: $message")
+            Log.e("DetailPelanggan", "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            tambahPelangganViewModel.setState(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            tambahPelangganViewModel.setState(null)
+            onNavigateToPelangganScreen()
+        }
+
+        else -> {}
     }
 
     Scaffold(
@@ -308,7 +348,7 @@ fun TambahPelangganScreen(
                     keyboardController?.hide()
                     openMaps(mapsLink)
                 },
-                enabled = isValidMapsLink.value,
+                enabled = isValidMapsLink.value && state != StateResponse.LOADING,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 modifier = modifier
                     .height(56.dp)
@@ -346,15 +386,33 @@ fun TambahPelangganScreen(
                 Button(
                     onClick = {
                         keyboardController?.hide()
-                        onNavigateToPelangganScreen()
+                        tambahPelangganViewModel.handleCreateCustomer(
+                            name,
+                            shopName,
+                            address,
+                            mapsLink,
+                            phoneNumber
+                        )
                     },
-                    enabled = isValidName.value && isValidShopName.value && isValidPhoneNumber.value && isValidAddress.value && isValidMapsLink.value,
+                    enabled = isValidName.value && isValidShopName.value && isValidPhoneNumber.value && isValidAddress.value && isValidMapsLink.value && state != StateResponse.LOADING,
                     modifier = modifier
                         .width(120.dp)
                         .height(56.dp)
                 ) {
                     Text(stringResource(R.string.save))
                 }
+            }
+
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
+
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: stringResource(id = R.string.error_msg_default),
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
             }
         }
     }

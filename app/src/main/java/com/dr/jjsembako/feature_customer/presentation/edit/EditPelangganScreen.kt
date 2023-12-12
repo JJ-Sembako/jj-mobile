@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_customer.presentation.edit
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -35,6 +36,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,14 +55,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
-import com.dr.jjsembako.feature_customer.domain.model.Customer
+import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.LoadingScreen
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidLinkMaps
 import com.dr.jjsembako.core.utils.isValidPhoneNumber
-import com.dr.jjsembako.core.presentation.components.ErrorScreen
-import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 @Composable
 fun EditPelangganScreen(
@@ -69,33 +75,81 @@ fun EditPelangganScreen(
     openMaps: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isRandomTrue = Random.nextBoolean()
+    val editPelangganViewModel: EditPelangganViewModel = hiltViewModel()
+    val stateFirst = editPelangganViewModel.stateFirst.observeAsState().value
+    val statusCode = editPelangganViewModel.statusCode.observeAsState().value
+    val message = editPelangganViewModel.message.observeAsState().value
+    val customerData = editPelangganViewModel.customerData
 
-    if (isRandomTrue) {
-        EditPelangganContent(
-            cust = dummy,
-            onNavigateToDetailCust = { onNavigateToDetailCust() },
-            openMaps = { url -> openMaps(url) },
-            modifier = modifier
-        )
-    } else {
-        ErrorScreen(onNavigateBack = { onNavigateToDetailCust() }, onReload = {}, modifier = modifier)
+    // Set id for the first time Composable is rendered
+    LaunchedEffect(idCust) {
+        editPelangganViewModel.setId(idCust)
+    }
+
+    when (stateFirst) {
+        StateResponse.LOADING -> {
+            LoadingScreen(modifier = modifier)
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("EditPelanggan", "Error")
+            Log.e("EditPelanggan", "state: $stateFirst")
+            Log.e("EditPelanggan", "Error: $message")
+            Log.e("EditPelanggan", "statusCode: $statusCode")
+            ErrorScreen(
+                onNavigateBack = { onNavigateToDetailCust() },
+                onReload = {
+                    editPelangganViewModel.fetchDetailCustomer(idCust)
+                },
+                message = message ?: "Unknown error",
+                modifier = modifier
+            )
+        }
+
+        StateResponse.SUCCESS -> {
+            if (customerData == null) {
+                ErrorScreen(
+                    onNavigateBack = { onNavigateToDetailCust() },
+                    onReload = { editPelangganViewModel.fetchDetailCustomer(idCust) },
+                    message = "Server Error",
+                    modifier = modifier
+                )
+            } else {
+                EditPelangganContent(
+                    cust = customerData,
+                    editPelangganViewModel = editPelangganViewModel,
+                    onNavigateToDetailCust = { onNavigateToDetailCust() },
+                    openMaps = { url -> openMaps(url) },
+                    modifier = modifier
+                )
+            }
+        }
+
+        else -> {}
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun EditPelangganContent(
-    cust: Customer,
+    cust: DataCustomer,
+    editPelangganViewModel: EditPelangganViewModel,
     onNavigateToDetailCust: () -> Unit,
     openMaps: (String) -> Unit,
     modifier: Modifier
 ) {
+    val stateSecond = editPelangganViewModel.stateSecond.observeAsState().value
+    val statusCode = editPelangganViewModel.statusCode.observeAsState().value
+    val message = editPelangganViewModel.message.observeAsState().value
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
+
+    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var name by rememberSaveable { mutableStateOf(cust.name) }
     var shopName by rememberSaveable { mutableStateOf(cust.shopName) }
@@ -123,6 +177,31 @@ private fun EditPelangganContent(
         coroutineScope.launch {
             scrollState.scrollBy(keyboardHeight.toFloat())
         }
+    }
+
+    when (stateSecond) {
+        StateResponse.LOADING -> {
+            LoadingScreen(modifier = modifier)
+        }
+
+        StateResponse.ERROR -> {
+            Log.e("EditPelanggan", "Error")
+            Log.e("EditPelanggan", "state: $stateSecond")
+            Log.e("EditPelanggan", "Error: $message")
+            Log.e("EditPelanggan", "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            editPelangganViewModel.setStateSecond(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            editPelangganViewModel.setStateSecond(null)
+            onNavigateToDetailCust()
+        }
+
+        else -> {}
     }
 
     Scaffold(
@@ -333,7 +412,7 @@ private fun EditPelangganContent(
                     keyboardController?.hide()
                     openMaps(mapsLink)
                 },
-                enabled = isValidMapsLink.value,
+                enabled = isValidMapsLink.value && stateSecond != StateResponse.LOADING,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 modifier = modifier
                     .height(56.dp)
@@ -371,9 +450,16 @@ private fun EditPelangganContent(
                 Button(
                     onClick = {
                         keyboardController?.hide()
-                        onNavigateToDetailCust()
+                        editPelangganViewModel.handleUpdateCustomer(
+                            cust.id,
+                            name,
+                            shopName,
+                            address,
+                            mapsLink,
+                            phoneNumber
+                        )
                     },
-                    enabled = isValidName.value && isValidShopName.value && isValidPhoneNumber.value && isValidAddress.value && isValidMapsLink.value,
+                    enabled = isValidName.value && isValidShopName.value && isValidPhoneNumber.value && isValidAddress.value && isValidMapsLink.value && stateSecond != StateResponse.LOADING,
                     modifier = modifier
                         .width(120.dp)
                         .height(56.dp)
@@ -381,19 +467,21 @@ private fun EditPelangganContent(
                     Text(stringResource(R.string.save))
                 }
             }
+
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
+
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: stringResource(id = R.string.error_msg_default),
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
         }
     }
 }
-
-private val dummy = Customer(
-    "abcd-123",
-    "Bambang",
-    "Toko Makmur",
-    "Jl. Nusa Indah 3, Belimbing, Jambu, Sayuran, Tumbuhan",
-    "https://maps.app.goo.gl/MQBEcptYvdYfBaNc9",
-    "081234567890",
-    1_500_000L
-)
 
 @Composable
 @Preview(showBackground = true)

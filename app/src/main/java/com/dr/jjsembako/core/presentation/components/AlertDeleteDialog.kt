@@ -28,6 +28,7 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 @Composable
 fun AlertDeleteDialog(
     onNavigateBack: () -> Unit,
+    onDelete: () -> Unit,
     showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
@@ -63,7 +64,7 @@ fun AlertDeleteDialog(
             Button(
                 onClick = {
                     showDialog.value = false
-                    onNavigateBack()
+                    onDelete()
                 },
                 colors = ButtonDefaults.buttonColors(
                     contentColor = Color.Red,
@@ -89,6 +90,7 @@ fun AlertDeleteDialogPreview() {
     JJSembakoTheme {
         AlertDeleteDialog(
             onNavigateBack = {},
+            onDelete = {},
             showDialog = remember { mutableStateOf(true) },
             modifier = Modifier
         )

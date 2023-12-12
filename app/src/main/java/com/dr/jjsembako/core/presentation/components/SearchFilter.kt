@@ -45,6 +45,7 @@ fun SearchFilter(
     placeholder: String,
     activeSearch: MutableState<Boolean>,
     searchQuery: MutableState<String>,
+    searchFunction: () -> Unit,
     openFilter: () -> Unit,
     modifier: Modifier
 ) {
@@ -65,11 +66,13 @@ fun SearchFilter(
             onQueryChange = {
                 searchQuery.value = it
                 activeSearch.value = searchQuery.value != ""
+                searchFunction()
             },
             onSearch = {
                 keyboardController?.hide()
                 focusManager.clearFocus()
                 activeSearch.value = false
+                searchFunction()
             },
             active = false,
             onActiveChange = {
@@ -87,6 +90,7 @@ fun SearchFilter(
                         modifier = modifier.clickable {
                             if (searchQuery.value.isNotEmpty()) {
                                 searchQuery.value = ""
+                                searchFunction()
                             } else {
                                 activeSearch.value = false
                                 keyboardController?.hide()
@@ -134,6 +138,7 @@ fun SearchFilterPreview() {
             placeholder = stringResource(R.string.search_cust),
             activeSearch = remember { mutableStateOf(false) },
             searchQuery = remember { mutableStateOf("") },
+            searchFunction = {},
             openFilter = {},
             modifier = Modifier
         )

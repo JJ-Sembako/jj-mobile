@@ -2,6 +2,7 @@ package com.dr.jjsembako.core.di
 
 import android.content.SharedPreferences
 import com.dr.jjsembako.core.data.remote.network.AccountApiService
+import com.dr.jjsembako.core.data.remote.network.CustomerApiService
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -37,6 +38,7 @@ class NetworkModule {
             .readTimeout(120, TimeUnit.SECONDS)
             .build()
     }
+
     @Provides
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         val gson = GsonBuilder()
@@ -52,5 +54,10 @@ class NetworkModule {
     @Provides
     fun provideAccountService(retrofit: Retrofit): AccountApiService {
         return retrofit.create(AccountApiService::class.java)
+    }
+
+    @Provides
+    fun provideCustomerService(retrofit: Retrofit): CustomerApiService {
+        return retrofit.create(CustomerApiService::class.java)
     }
 }

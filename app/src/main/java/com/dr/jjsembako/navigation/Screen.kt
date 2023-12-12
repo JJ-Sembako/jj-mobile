@@ -4,23 +4,30 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Home : Screen("home")
 
-    object PemulihanAkun: Screen("pemulihan")
-    object PengecekanUsername: Screen("pemulihan/cek-username")
-    object PertanyaanPemulihan: Screen("pemulihan/pertanyaan/{username}") {
+    object PemulihanAkun : Screen("pemulihan")
+    object PengecekanUsername : Screen("pemulihan/cek-username")
+    object PertanyaanPemulihan : Screen("pemulihan/pertanyaan/{username}") {
         fun createRoute(username: String) = "pemulihan/pertanyaan/$username"
     }
-    object PemulihanKataSandi: Screen("pemulihan/ganti-kata-sandi/{username}") {
+
+    object PemulihanKataSandi : Screen("pemulihan/ganti-kata-sandi/{username}") {
         fun createRoute(username: String) = "pemulihan/ganti-kata-sandi/$username"
     }
 
     object BuatPesanan : Screen("buatpesanan")
     object Gudang : Screen("gudang")
 
-    object Pelanggan : Screen("pelanggan")
-    object TambahPelanggan : Screen("pelanggan/add")
-    object DetailPelanggan : Screen("pelanggan/detail/{id}") {
-        fun createRoute(id: String) = "pelanggan/detail/$id"
+    object Pelanggan : Screen("pelanggan/?keyword={keyword}") {
+        fun createRoute(keyword: String) = "pelanggan/?keyword=$keyword"
     }
+
+    object TambahPelanggan : Screen("pelanggan/add?keyword={keyword}")  {
+        fun createRoute(keyword: String) = "pelanggan/add?keyword=$keyword"
+    }
+    object DetailPelanggan : Screen("pelanggan/detail/{id}?keyword={keyword}") {
+        fun createRoute(id: String, keyword: String) = "pelanggan/detail/$id?keyword=$keyword"
+    }
+
     object EditPelanggan : Screen("pelanggan/edit/{id}") {
         fun createRoute(id: String) = "pelanggan/edit/$id"
     }
