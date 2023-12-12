@@ -24,62 +24,12 @@ class CustomerRepository @Inject constructor(
     private val customerPagingSource: CustomerPagingSource
 ) : ICustomerRepository {
 
-    override suspend fun getPager(searchQuery: String): Flow<PagingData<DataCustomer>> {
+    override suspend fun fetchCustomers(searchQuery: String): Flow<PagingData<DataCustomer>> {
         return Pager(
             config = PagingConfig(pageSize = 5),
             pagingSourceFactory = { customerPagingSource.apply { setSearchQuery(searchQuery) } }
         ).flow
     }
-
-    override suspend fun fetchCustomers(
-        search: String?,
-        page: Int?,
-        limit: Int?
-    ): Flow<Resource<out List<DataCustomer?>>> = flow {
-        emit(Resource.Loading())
-        try {
-            val response = customerDataSource.fetchCustomers(search, page, limit).first()
-
-            when (response.status) {
-                200 -> {
-                    val data = response.data
-                    emit(
-                        Resource.Success(
-                            data,
-                            response.message ?: "Unknown error",
-                            response.status
-                        )
-                    )
-                }
-
-                else -> {
-                    // Meneruskan pesan dan status code dari respon error
-                    emit(
-                        Resource.Error(
-                            response.message ?: "Unknown error",
-                            response.status ?: 400
-                        )
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            if (e is HttpException) {
-                val errorResponse = e.response()?.errorBody()?.string()
-                val statusCode = e.code()
-                val errorMessage = e.message()
-
-                if (errorResponse != null) {
-                    val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
-                    emit(Resource.Error(errorResponseObj.message, statusCode, null))
-                } else {
-                    emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
-                }
-            } else {
-                emit(Resource.Error(e.message ?: "Unknown error", 400, null))
-            }
-        }
-    }.flowOn(Dispatchers.IO)
 
     override suspend fun handleCreateCustomer(
         name: String,

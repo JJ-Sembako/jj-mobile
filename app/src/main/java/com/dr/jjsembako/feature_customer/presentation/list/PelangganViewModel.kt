@@ -18,58 +18,15 @@ import javax.inject.Inject
 class PelangganViewModel @Inject constructor(private val fetchCustomersUseCase: FetchCustomersUseCase) :
     ViewModel() {
 
-    private val _state = MutableLiveData<StateResponse?>()
-    val state: LiveData<StateResponse?> = _state
-
-    private val _statusCode = MutableLiveData<Int?>()
-    val statusCode: LiveData<Int?> = _statusCode
-
-    private val _message = MutableLiveData<String?>()
-    val message: LiveData<String?> = _message
-
-    private val _customerList = MutableLiveData<List<DataCustomer?>?>()
-    val customerList: LiveData<List<DataCustomer?>?> = _customerList
-
     private val _customerState: MutableStateFlow<PagingData<DataCustomer>> = MutableStateFlow(value = PagingData.empty())
     val customerState: MutableStateFlow<PagingData<DataCustomer>> get() = _customerState
 
-    fun setState(state: StateResponse?) {
-        _state.value = state
-    }
-
-    fun getPager(searchQuery: String = "") {
+    fun fetchCustomers(searchQuery: String = "") {
         viewModelScope.launch {
-            fetchCustomersUseCase.getPager(searchQuery).collect {
+            fetchCustomersUseCase.fetchCustomers(searchQuery).collect {
                 _customerState.value = it
             }
         }
     }
 
-    fun fetchCustomers(
-        search: String? = null,
-        page: Int? = null,
-        limit: Int? = null
-    ) {
-        viewModelScope.launch {
-            fetchCustomersUseCase.fetchCustomers(search, page, limit).collect {
-                when (it) {
-                    is Resource.Loading -> _state.value = StateResponse.LOADING
-                    is Resource.Success -> {
-                        _state.value = StateResponse.SUCCESS
-                        _message.value = it.message
-                        _statusCode.value = it.status
-                        _customerList.value = it.data
-                    }
-
-                    is Resource.Error -> {
-                        _state.value = StateResponse.ERROR
-                        _message.value = it.message
-                        _statusCode.value = it.status
-                    }
-
-                    else -> {}
-                }
-            }
-        }
-    }
 }

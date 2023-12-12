@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -30,7 +29,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -46,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.airbnb.lottie.compose.LottieAnimation
@@ -55,7 +52,6 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.presentation.components.BottomSheetCustomer
@@ -75,11 +71,8 @@ fun PelangganScreen(
     modifier: Modifier = Modifier
 ) {
     val pelangganViewModel: PelangganViewModel = hiltViewModel()
-    val state = pelangganViewModel.state.observeAsState().value
-    val statusCode = pelangganViewModel.statusCode.observeAsState().value
-    val message = pelangganViewModel.message.observeAsState().value
-    val customerList = pelangganViewModel.customerList.observeAsState().value
-    val customerPagingItems: LazyPagingItems<DataCustomer> = pelangganViewModel.customerState.collectAsLazyPagingItems()
+    val customerPagingItems: LazyPagingItems<DataCustomer> =
+        pelangganViewModel.customerState.collectAsLazyPagingItems()
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -97,10 +90,8 @@ fun PelangganScreen(
     // Set keyword for the first time Composable is rendered
     LaunchedEffect(keyword) {
         searchQuery.value = keyword
-//        if (keyword.isEmpty()) pelangganViewModel.fetchCustomers()
-//        else pelangganViewModel.fetchCustomers(search = keyword)
-        if (keyword.isEmpty()) pelangganViewModel.getPager()
-        else pelangganViewModel.getPager(keyword)
+        if (keyword.isEmpty()) pelangganViewModel.fetchCustomers()
+        else pelangganViewModel.fetchCustomers(keyword)
     }
 
     Scaffold(
@@ -160,8 +151,8 @@ fun PelangganScreen(
                 activeSearch,
                 searchQuery,
                 searchFunction = {
-                    if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
-                    else pelangganViewModel.fetchCustomers(search = searchQuery.value)
+                    if (keyword.isEmpty()) pelangganViewModel.fetchCustomers()
+                    else pelangganViewModel.fetchCustomers(keyword)
 
                 },
                 openFilter = { showSheet.value = !showSheet.value },
@@ -169,38 +160,40 @@ fun PelangganScreen(
             )
             Spacer(modifier = modifier.height(16.dp))
 
-            when(customerPagingItems.loadState.refresh) {
+            when (customerPagingItems.loadState.refresh) {
                 LoadState.Loading -> {
                     LoadingScreen(modifier = modifier)
                 }
+
                 is LoadState.Error -> {
                     val error = customerPagingItems.loadState.refresh as LoadState.Error
                     Log.e("PelangganScreen", "Error")
                     ErrorScreen(
                         onNavigateBack = { },
                         onReload = {
-                            if (searchQuery.value.isEmpty()) pelangganViewModel.getPager()
-                            else pelangganViewModel.getPager(searchQuery.value)
+                            if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
+                            else pelangganViewModel.fetchCustomers(searchQuery.value)
                         },
                         message = error.error.localizedMessage ?: "Unknown error",
                         showButtonBack = false,
                         modifier = modifier
                     )
                 }
+
                 else -> {
-                    if(customerPagingItems.itemCount > 0){
+                    if (customerPagingItems.itemCount > 0) {
                         LazyColumn(
                             modifier = modifier
                                 .fillMaxWidth()
                         ) {
                             items(customerPagingItems.itemCount) { index ->
                                 CustomerInfo(
-                                        onNavigateToDetailCust = {
-                                            onNavigateToDetailCust(
-                                                customerPagingItems[index]!!.id,
-                                                searchQuery.value
-                                            )
-                                        },
+                                    onNavigateToDetailCust = {
+                                        onNavigateToDetailCust(
+                                            customerPagingItems[index]!!.id,
+                                            searchQuery.value
+                                        )
+                                    },
                                     customer = customerPagingItems[index]!!,
                                     modifier = modifier
                                 )
@@ -232,81 +225,6 @@ fun PelangganScreen(
                         Spacer(modifier = modifier.height(16.dp))
                     }
                 }
-            }
-
-            when (state) {
-                StateResponse.LOADING -> {
-                    LoadingScreen(modifier = modifier)
-                }
-
-                StateResponse.ERROR -> {
-                    Log.e("PelangganScreen", "Error")
-                    Log.e("PelangganScreen", "state: $state")
-                    Log.e("PelangganScreen", "Error: $message")
-                    Log.e("PelangganScreen", "statusCode: $statusCode")
-                    ErrorScreen(
-                        onNavigateBack = { },
-                        onReload = {
-                            if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
-                            else pelangganViewModel.fetchCustomers(search = searchQuery.value)
-                        },
-                        message = message ?: "Unknown error",
-                        showButtonBack = false,
-                        modifier = modifier
-                    )
-                }
-
-                StateResponse.SUCCESS -> {
-                    if (customerList != null) {
-                        if (customerList.isNotEmpty()) {
-                            LazyColumn(
-                                modifier = modifier
-                                    .fillMaxWidth()
-                            ) {
-                                items(items = customerList, itemContent = { cust ->
-                                    if (cust != null) {
-                                        CustomerInfo(
-                                            onNavigateToDetailCust = {
-                                                onNavigateToDetailCust(
-                                                    cust.id,
-                                                    searchQuery.value
-                                                )
-                                            },
-                                            customer = cust,
-                                            modifier = modifier
-                                        )
-                                        Spacer(modifier = modifier.height(8.dp))
-                                    }
-                                })
-                            }
-                        } else {
-                            Spacer(modifier = modifier.height(48.dp))
-                            Column(
-                                modifier = modifier.fillMaxWidth(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                LottieAnimation(
-                                    enableMergePaths = true,
-                                    composition = composition,
-                                    progress = { progress },
-                                    modifier = modifier.size(150.dp)
-                                )
-                                Spacer(modifier = modifier.height(16.dp))
-                                Text(
-                                    text = stringResource(R.string.not_found),
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 14.sp,
-                                    textAlign = TextAlign.Center,
-                                    modifier = modifier.wrapContentSize(Alignment.Center)
-                                )
-                            }
-                            Spacer(modifier = modifier.height(16.dp))
-                        }
-                    }
-                }
-
-                else -> {}
             }
 
             if (showSheet.value) {
