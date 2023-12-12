@@ -1,5 +1,8 @@
 package com.dr.jjsembako.feature_customer.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.response.account.PostHandleLoginResponse
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
@@ -16,8 +19,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CustomerRepository @Inject constructor(private val customerDataSource: CustomerDataSource) :
-    ICustomerRepository {
+class CustomerRepository @Inject constructor(
+    private val customerDataSource: CustomerDataSource,
+    private val customerPagingSource: CustomerPagingSource
+) : ICustomerRepository {
+
+    override suspend fun getPager(searchQuery: String): Flow<PagingData<DataCustomer>> {
+        return Pager(
+            config = PagingConfig(pageSize = 5),
+            pagingSourceFactory = { customerPagingSource.apply { setSearchQuery(searchQuery) } }
+        ).flow
+    }
 
     override suspend fun fetchCustomers(
         search: String?,

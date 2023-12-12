@@ -4,11 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustomersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,8 +30,19 @@ class PelangganViewModel @Inject constructor(private val fetchCustomersUseCase: 
     private val _customerList = MutableLiveData<List<DataCustomer?>?>()
     val customerList: LiveData<List<DataCustomer?>?> = _customerList
 
+    private val _customerState: MutableStateFlow<PagingData<DataCustomer>> = MutableStateFlow(value = PagingData.empty())
+    val customerState: MutableStateFlow<PagingData<DataCustomer>> get() = _customerState
+
     fun setState(state: StateResponse?) {
         _state.value = state
+    }
+
+    fun getPager(searchQuery: String = "") {
+        viewModelScope.launch {
+            fetchCustomersUseCase.getPager(searchQuery).collect {
+                _customerState.value = it
+            }
+        }
     }
 
     fun fetchCustomers(

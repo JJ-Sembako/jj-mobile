@@ -45,6 +45,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -53,6 +57,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
+import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.presentation.components.BottomSheetCustomer
 import com.dr.jjsembako.core.presentation.components.CustomerInfo
 import com.dr.jjsembako.core.presentation.components.ErrorScreen
@@ -74,6 +79,7 @@ fun PelangganScreen(
     val statusCode = pelangganViewModel.statusCode.observeAsState().value
     val message = pelangganViewModel.message.observeAsState().value
     val customerList = pelangganViewModel.customerList.observeAsState().value
+    val customerPagingItems: LazyPagingItems<DataCustomer> = pelangganViewModel.customerState.collectAsLazyPagingItems()
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -91,8 +97,10 @@ fun PelangganScreen(
     // Set keyword for the first time Composable is rendered
     LaunchedEffect(keyword) {
         searchQuery.value = keyword
-        if (keyword.isEmpty()) pelangganViewModel.fetchCustomers()
-        else pelangganViewModel.fetchCustomers(search = keyword)
+//        if (keyword.isEmpty()) pelangganViewModel.fetchCustomers()
+//        else pelangganViewModel.fetchCustomers(search = keyword)
+        if (keyword.isEmpty()) pelangganViewModel.getPager()
+        else pelangganViewModel.getPager(keyword)
     }
 
     Scaffold(
@@ -160,6 +168,71 @@ fun PelangganScreen(
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
+
+            when(customerPagingItems.loadState.refresh) {
+                LoadState.Loading -> {
+                    LoadingScreen(modifier = modifier)
+                }
+                is LoadState.Error -> {
+                    val error = customerPagingItems.loadState.refresh as LoadState.Error
+                    Log.e("PelangganScreen", "Error")
+                    ErrorScreen(
+                        onNavigateBack = { },
+                        onReload = {
+                            if (searchQuery.value.isEmpty()) pelangganViewModel.getPager()
+                            else pelangganViewModel.getPager(searchQuery.value)
+                        },
+                        message = error.error.localizedMessage ?: "Unknown error",
+                        showButtonBack = false,
+                        modifier = modifier
+                    )
+                }
+                else -> {
+                    if(customerPagingItems.itemCount > 0){
+                        LazyColumn(
+                            modifier = modifier
+                                .fillMaxWidth()
+                        ) {
+                            items(customerPagingItems.itemCount) { index ->
+                                CustomerInfo(
+                                        onNavigateToDetailCust = {
+                                            onNavigateToDetailCust(
+                                                customerPagingItems[index]!!.id,
+                                                searchQuery.value
+                                            )
+                                        },
+                                    customer = customerPagingItems[index]!!,
+                                    modifier = modifier
+                                )
+                                Spacer(modifier = modifier.height(8.dp))
+                            }
+                        }
+                    } else {
+                        Spacer(modifier = modifier.height(48.dp))
+                        Column(
+                            modifier = modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            LottieAnimation(
+                                enableMergePaths = true,
+                                composition = composition,
+                                progress = { progress },
+                                modifier = modifier.size(150.dp)
+                            )
+                            Spacer(modifier = modifier.height(16.dp))
+                            Text(
+                                text = stringResource(R.string.not_found),
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 14.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = modifier.wrapContentSize(Alignment.Center)
+                            )
+                        }
+                        Spacer(modifier = modifier.height(16.dp))
+                    }
+                }
+            }
 
             when (state) {
                 StateResponse.LOADING -> {
