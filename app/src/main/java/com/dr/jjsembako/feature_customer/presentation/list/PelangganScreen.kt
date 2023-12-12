@@ -151,8 +151,8 @@ fun PelangganScreen(
                 activeSearch,
                 searchQuery,
                 searchFunction = {
-                    if (keyword.isEmpty()) pelangganViewModel.fetchCustomers()
-                    else pelangganViewModel.fetchCustomers(keyword)
+                    if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
+                    else pelangganViewModel.fetchCustomers(searchQuery.value)
 
                 },
                 openFilter = { showSheet.value = !showSheet.value },
