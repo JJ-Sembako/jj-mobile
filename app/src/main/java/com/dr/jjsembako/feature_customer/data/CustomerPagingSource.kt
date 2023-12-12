@@ -12,51 +12,61 @@ class CustomerPagingSource @Inject constructor(private val customerApiService: C
     PagingSource<Int, DataCustomer>() {
 
     private var searchQuery : String  = ""
+    private var currentPage = 0
+    private var totalData = 0
 
     override fun getRefreshKey(state: PagingState<Int, DataCustomer>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+            val closestPage = state.closestPageToPosition(anchorPosition)
+            if (closestPage != null && closestPage.prevKey != null) {
+                closestPage.prevKey
+            } else if (closestPage != null && closestPage.nextKey != null && currentPage < totalData) {
+                closestPage.nextKey
+            } else {
+                null
+            }
         }
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DataCustomer> {
         try {
             // Mendapatkan nomor halaman yang diminta
-            val page = params.key ?: 1
+            currentPage = params.key ?: 1
 
             // Mendapatkan data dari API
             if(searchQuery != "") {
                 val response = customerApiService.fetchCustomers(
                         search = searchQuery,
-                page = page,
+                page = currentPage,
                 limit = params.loadSize
                 )
 
                 // Check jika response berhasil
                 if (response.statusCode == 200) {
+                    totalData = response.count ?: 0
                     val data = response.data ?: emptyList()
                     return LoadResult.Page(
                         data = data,
-                        prevKey = if (page == 1) null else page - 1,
-                        nextKey = if (data.isEmpty()) null else page + 1
+                        prevKey = if (currentPage == 1) null else currentPage - 1,
+                        nextKey = if (data.isEmpty() || currentPage >= totalData / params.loadSize + 1) null else currentPage + 1
                     )
                 } else {
                     return LoadResult.Error(Throwable(response.message))
                 }
             } else {
                 val response = customerApiService.fetchCustomers(
-                    page = page,
+                    page = currentPage,
                     limit = params.loadSize
                 )
 
                 // Check jika response berhasil
                 if (response.statusCode == 200) {
+                    totalData = response.count ?: 0
                     val data = response.data ?: emptyList()
                     return LoadResult.Page(
                         data = data,
-                        prevKey = if (page == 1) null else page - 1,
-                        nextKey = if (data.isEmpty()) null else page + 1
+                        prevKey = if (currentPage == 1) null else currentPage - 1,
+                        nextKey = if (data.isEmpty() || currentPage >= totalData / params.loadSize + 1) null else currentPage + 1
                     )
                 } else {
                     return LoadResult.Error(Throwable(response.message))
