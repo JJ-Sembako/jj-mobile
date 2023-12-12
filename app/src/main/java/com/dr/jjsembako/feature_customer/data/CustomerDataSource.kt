@@ -17,38 +17,6 @@ import javax.inject.Inject
 
 class CustomerDataSource @Inject constructor(private val customerApiService: CustomerApiService) {
 
-    suspend fun fetchCustomers(
-        search: String? = null,
-        page: Int? = null,
-        limit: Int? = null
-    ): Flow<Resource<out List<DataCustomer?>>> = flow {
-        try {
-            val response = customerApiService.fetchCustomers(search, page, limit)
-            emit(Resource.Success(response.data, response.message, response.statusCode))
-        } catch (e: CancellationException) {
-            // Do nothing, the flow is cancelled
-        } catch (e: IOException) {
-            // Handle IOException (connection issues, timeout, etc.)
-            emit(Resource.Error("Masalah jaringan koneksi internet", 408, null))
-        } catch (e: Exception) {
-            if (e is HttpException) {
-                val errorResponse = e.response()?.errorBody()?.string()
-                val statusCode = e.code()
-                val errorMessage = e.message()
-
-                if (errorResponse != null) {
-                    val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
-                    emit(Resource.Error(errorResponseObj.message, statusCode, null))
-                } else {
-                    emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
-                }
-            } else {
-                emit(Resource.Error(e.message ?: "Unknown error", 400, null))
-            }
-        }
-    }.flowOn(Dispatchers.IO)
-
     suspend fun handleCreateCustomer(
         name: String,
         shopName: String,
