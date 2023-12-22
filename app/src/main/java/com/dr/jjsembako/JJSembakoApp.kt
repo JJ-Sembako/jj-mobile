@@ -36,6 +36,7 @@ import com.dr.jjsembako.feature_home.presentation.HomeScreen
 import com.dr.jjsembako.feature_setting.presentation.change_password.GantiKataSandiScreen
 import com.dr.jjsembako.feature_setting.presentation.recovery.PemulihanAkunScreen
 import com.dr.jjsembako.feature_setting.presentation.setting.PengaturanScreen
+import com.dr.jjsembako.feature_warehouse.presentation.GudangScreen
 import com.dr.jjsembako.navigation.Screen
 
 @Composable
@@ -184,7 +185,7 @@ fun JJSembakoApp() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Gudang")
+                GudangScreen(onNavigateBack = { navController.popBackStack() })
             }
         }
 
