@@ -22,6 +22,7 @@
     <string name="delete">Hapus</string>
     <string name="yes_delete">Ya, Hapus!</string>
     <string name="ok">Ok</string>
+    <string name="close">Tutup</string>
     <string name="cancel">Batal</string>
     <string name="menu">Menu</string>
     <string name="alert">Peringatan</string>
@@ -86,4 +87,6 @@
     <string name="payment_status">Status Pembayaran</string>
     <string name="order_status">Status Pesanan</string>
     <string name="search_order">Cari pesanan</string>
+
+    <string name="warehouse">Gudang</string>
 </resources>
