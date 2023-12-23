@@ -103,7 +103,7 @@ fun BottomSheetCustomer(
                         .fillMaxWidth()
                         .height(56.dp)
                 ) {
-                    Text(stringResource(R.string.change))
+                    Text(stringResource(R.string.close))
                 }
                 Spacer(modifier = modifier.height(32.dp))
             }
