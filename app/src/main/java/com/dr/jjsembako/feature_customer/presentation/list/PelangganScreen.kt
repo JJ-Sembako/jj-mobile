@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -78,7 +79,7 @@ fun PelangganScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     var showSheet = remember { mutableStateOf(false) }
     var (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
-    var searchQuery = remember { mutableStateOf("") }
+    var searchQuery = rememberSaveable { mutableStateOf("") }
     var activeSearch = remember { mutableStateOf(false) }
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
