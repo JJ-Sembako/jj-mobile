@@ -5,8 +5,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,6 +41,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.FilterOption
+import com.dr.jjsembako.core.data.model.Product
 import com.dr.jjsembako.core.presentation.components.BottomSheetProduct
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -110,6 +114,16 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
             )
             Spacer(modifier = modifier.height(16.dp))
 
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxWidth()
+            ){
+                items(items = dataDummy, itemContent = { product ->
+                    Text(text = product.name)
+                    Spacer(modifier = modifier.height(8.dp))
+                })
+            }
+
             if (showSheet.value) {
                 BottomSheetProduct(
                     optionList = option,
@@ -127,6 +141,30 @@ private val option = listOf(
     FilterOption("Beras", "beras"),
     FilterOption("Minyak", "minyak"),
     FilterOption("Gula", "gula")
+)
+
+private val dataDummy = listOf(
+    Product(
+        id = "1",
+        name = "Beras",
+        category = "beras",
+        stock = 10,
+        image = ""
+    ),
+    Product(
+        id = "2",
+        name = "Minyak",
+        category = "minyak",
+        stock = 10,
+        image = ""
+    ),
+    Product(
+        id = "3",
+        name = "Gula",
+        category = "gula",
+        stock = 10,
+        image = ""
+    )
 )
 
 @Preview(showBackground = true)
