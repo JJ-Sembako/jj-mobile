@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -48,11 +49,11 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     var showSheet = remember { mutableStateOf(false) }
-    val checkBoxResult = remember { mutableStateListOf<String>() }
-    val checkBoxStates = remember { mutableStateMapOf<String, Boolean>() }
+    val checkBoxResult = rememberSaveable { mutableStateListOf<String>() }
+    val checkBoxStates = rememberSaveable { mutableStateMapOf<String, Boolean>() }
     checkBoxResult.addAll(option.map { it.value })
     checkBoxStates.putAll(option.map { it.value to true })
-    var searchQuery = remember { mutableStateOf("") }
+    var searchQuery = rememberSaveable { mutableStateOf("") }
     var activeSearch = remember { mutableStateOf(false) }
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
