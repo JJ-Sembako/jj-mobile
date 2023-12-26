@@ -89,4 +89,5 @@
     <string name="search_order">Cari pesanan</string>
 
     <string name="warehouse">Gudang</string>
+    <string name="stock">Stok: %1$s</string>
 </resources>

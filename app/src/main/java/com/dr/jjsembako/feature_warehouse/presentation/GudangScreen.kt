@@ -145,25 +145,34 @@ private val option = listOf(
 
 private val dataDummy = listOf(
     Product(
-        id = "1",
-        name = "Beras",
-        category = "beras",
-        stock = 10,
-        image = ""
+        id = "bc3bbd9e",
+        name = "Air Cahaya",
+        stock = 256,
+        standardPrice = 55000,
+        amountPerUnit = 16,
+        image = "",
+        unit = "karton",
+        category = "Air Mineral"
     ),
     Product(
-        id = "2",
-        name = "Minyak",
-        category = "minyak",
-        stock = 10,
-        image = ""
+        id = "aezakmi",
+        name = "Gula Sahara",
+        stock = 180,
+        standardPrice = 32000,
+        amountPerUnit = 10,
+        image = "",
+        unit = "karung",
+        category = "Gula"
     ),
     Product(
-        id = "3",
-        name = "Gula",
-        category = "gula",
-        stock = 10,
-        image = ""
+        id = "sasacz21",
+        name = "Minyak Kita",
+        stock = 136,
+        standardPrice = 75000,
+        amountPerUnit = 12,
+        image = "",
+        unit = "karton",
+        category = "Minyak Goreng"
     )
 )
 
