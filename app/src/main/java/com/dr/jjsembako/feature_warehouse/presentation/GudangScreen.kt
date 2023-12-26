@@ -45,6 +45,7 @@ import com.dr.jjsembako.core.data.model.Product
 import com.dr.jjsembako.core.presentation.components.BottomSheetProduct
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_warehouse.presentation.components.ProductOnWarehouseInfo
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -53,8 +54,8 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     var showSheet = remember { mutableStateOf(false) }
-    val checkBoxResult = rememberSaveable { mutableStateListOf<String>() }
-    val checkBoxStates = rememberSaveable { mutableStateMapOf<String, Boolean>() }
+    val checkBoxResult = remember { mutableStateListOf<String>() }
+    val checkBoxStates = remember { mutableStateMapOf<String, Boolean>() }
     checkBoxResult.addAll(option.map { it.value })
     checkBoxStates.putAll(option.map { it.value to true })
     var searchQuery = rememberSaveable { mutableStateOf("") }
@@ -105,7 +106,7 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SearchFilter(
-                placeholder = stringResource(R.string.search_cust),
+                placeholder = stringResource(R.string.search_product),
                 activeSearch,
                 searchQuery,
                 searchFunction = { },
@@ -119,7 +120,7 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
                     .fillMaxWidth()
             ){
                 items(items = dataDummy, key = { product -> product.id }, itemContent = { product ->
-                    Text(text = product.name)
+                    ProductOnWarehouseInfo(product = product, modifier = modifier)
                     Spacer(modifier = modifier.height(8.dp))
                 })
             }
