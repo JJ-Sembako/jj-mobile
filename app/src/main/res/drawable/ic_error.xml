@@ -1,16 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:bottom="0dp"
-        android:drawable="@color/placeholder"
-        android:left="0dp"
-        android:right="0dp"
-        android:top="0dp" />
-
-    <item
-        android:bottom="20dp"
-        android:drawable="@drawable/ic_broken_image"
-        android:left="20dp"
-        android:right="20dp"
-        android:top="20dp" />
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="75dp"
+    android:height="100dp"
+    android:viewportWidth="75"
+    android:viewportHeight="100">
+  <path
+      android:pathData="M0,0h75v100h-75z"
+      android:fillColor="#D9D9D9"/>
+  <path
+      android:pathData="M49,40.67V49.45L45,45.44L39.67,50.79L34.33,45.45L29,50.79L25,46.77V40.67C25,39.2 26.2,38 27.67,38H46.33C47.8,38 49,39.2 49,40.67ZM45,49.23L49,53.24V59.33C49,60.8 47.8,62 46.33,62H27.67C26.2,62 25,60.8 25,59.33V50.56L29,54.55L34.33,49.21L39.67,54.55L45,49.23Z"
+      android:fillColor="#ffffff"/>
+</vector>

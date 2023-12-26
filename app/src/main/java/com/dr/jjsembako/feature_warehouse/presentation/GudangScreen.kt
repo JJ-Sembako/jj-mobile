@@ -118,7 +118,7 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
                 modifier = modifier
                     .fillMaxWidth()
             ){
-                items(items = dataDummy, itemContent = { product ->
+                items(items = dataDummy, key = { product -> product.id }, itemContent = { product ->
                     Text(text = product.name)
                     Spacer(modifier = modifier.height(8.dp))
                 })

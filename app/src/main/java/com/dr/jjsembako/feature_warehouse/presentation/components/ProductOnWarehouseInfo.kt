@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_warehouse.presentation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -58,31 +59,29 @@ private fun ProductImage(
     product: Product,
     modifier: Modifier
 ) {
-    Column {
-        if(product.image.isEmpty()){
-            AsyncImage(
-                model = painterResource(id = R.drawable.ic_default),
-                contentDescription = stringResource(R.string.product_description, product.name),
-                contentScale = ContentScale.Crop,
-                modifier = modifier
-                    .padding(8.dp)
-                    .width(60.dp)
-                    .height(80.dp)
-                    .clip(CircleShape)
-            )
-        }else {
-            AsyncImage(
-                model = product.image,
-                contentDescription = stringResource(R.string.product_description, product.name),
-                contentScale = ContentScale.Crop,
-                error = painterResource(id = R.drawable.ic_error),
-                modifier = modifier
-                    .padding(8.dp)
-                    .width(60.dp)
-                    .height(80.dp)
-                    .clip(CircleShape)
-            )
-        }
+    if(product.image.isEmpty()){
+        Image(
+            painter = painterResource(id = R.drawable.ic_default),
+            contentDescription = stringResource(R.string.product_description, product.name),
+            contentScale = ContentScale.Crop,
+            modifier = modifier
+                .padding(8.dp)
+                .width(60.dp)
+                .height(80.dp)
+                .clip(RoundedCornerShape(16.dp))
+        )
+    }else {
+        AsyncImage(
+            model = product.image,
+            contentDescription = stringResource(R.string.product_description, product.name),
+            contentScale = ContentScale.Crop,
+            error = painterResource(id = R.drawable.ic_error),
+            modifier = modifier
+                .padding(8.dp)
+                .width(60.dp)
+                .height(80.dp)
+                .clip(RoundedCornerShape(16.dp))
+        )
     }
 }
 
