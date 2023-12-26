@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -49,7 +48,7 @@ fun ProductOnWarehouseInfo(
         ) {
             ProductImage(product = product, modifier = modifier)
             Spacer(modifier = modifier.width(16.dp))
-            ProductInfo(product = product)
+            ProductInfo(product = product, modifier = modifier)
         }
     }
 }
@@ -59,7 +58,7 @@ private fun ProductImage(
     product: Product,
     modifier: Modifier
 ) {
-    if(product.image.isEmpty()){
+    if (product.image.isEmpty()) {
         Image(
             painter = painterResource(id = R.drawable.ic_default),
             contentDescription = stringResource(R.string.product_description, product.name),
@@ -70,7 +69,7 @@ private fun ProductImage(
                 .height(80.dp)
                 .clip(RoundedCornerShape(16.dp))
         )
-    }else {
+    } else {
         AsyncImage(
             model = product.image,
             contentDescription = stringResource(R.string.product_description, product.name),
@@ -87,28 +86,39 @@ private fun ProductImage(
 
 @Composable
 private fun ProductInfo(
-    product: Product
+    product: Product,
+    modifier: Modifier
 ) {
     Column {
         Text(
             text = product.name, fontWeight = FontWeight.Bold, fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.standard_price),
+                fontSize = 12.sp
+            )
+            Spacer(modifier = modifier.width(2.dp))
+            Text(
+                text = formatRupiah(product.standardPrice),
+                fontSize = 12.sp, fontWeight = FontWeight.Bold
+            )
+        }
         Text(
-            text = stringResource(R.string.standard_price, formatRupiah(product.standardPrice)),
-            fontWeight = FontWeight.Medium, fontSize = 12.sp
-        )
-        Text(
-            text = stringResource(R.string.stock, product.stock),
+            text = stringResource(R.string.stock, product.stock, product.unit.lowercase()),
             fontSize = 12.sp
         )
         Text(
-            text = stringResource(R.string.unit, product.unit),
-            fontSize = 12.sp
-        )
-        Text(
-            text = stringResource(R.string.amount_per_unit, product.amountPerUnit),
-            fontSize = 12.sp
+            text = stringResource(
+                R.string.info_unit,
+                product.unit.lowercase(),
+                product.amountPerUnit
+            ),
+            fontSize = 12.sp,
+            style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
     }
 }
