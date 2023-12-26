@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
@@ -58,16 +59,30 @@ private fun ProductImage(
     modifier: Modifier
 ) {
     Column {
-        AsyncImage(
-            model = product.image,
-            contentDescription = stringResource(R.string.product_description, product.name),
-            contentScale = ContentScale.Crop,
-            modifier = modifier
-                .padding(8.dp)
-                .width(60.dp)
-                .height(80.dp)
-                .clip(CircleShape)
-        )
+        if(product.image.isEmpty()){
+            AsyncImage(
+                model = painterResource(id = R.drawable.ic_default),
+                contentDescription = stringResource(R.string.product_description, product.name),
+                contentScale = ContentScale.Crop,
+                modifier = modifier
+                    .padding(8.dp)
+                    .width(60.dp)
+                    .height(80.dp)
+                    .clip(CircleShape)
+            )
+        }else {
+            AsyncImage(
+                model = product.image,
+                contentDescription = stringResource(R.string.product_description, product.name),
+                contentScale = ContentScale.Crop,
+                error = painterResource(id = R.drawable.ic_error),
+                modifier = modifier
+                    .padding(8.dp)
+                    .width(60.dp)
+                    .height(80.dp)
+                    .clip(CircleShape)
+            )
+        }
     }
 }
 
