@@ -4,14 +4,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
@@ -19,9 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.Product
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
 fun ProductOnWarehouseInfo(
@@ -36,7 +42,8 @@ fun ProductOnWarehouseInfo(
     ) {
         Row(
             modifier = modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             ProductImage(product = product, modifier = modifier)
             Spacer(modifier = modifier.width(16.dp))
@@ -51,7 +58,16 @@ private fun ProductImage(
     modifier: Modifier
 ) {
     Column {
-
+        AsyncImage(
+            model = product.image,
+            contentDescription = stringResource(R.string.product_description, product.name),
+            contentScale = ContentScale.Crop,
+            modifier = modifier
+                .padding(8.dp)
+                .width(60.dp)
+                .height(80.dp)
+                .clip(CircleShape)
+        )
     }
 }
 
@@ -65,7 +81,19 @@ private fun ProductInfo(
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
         Text(
+            text = stringResource(R.string.standard_price, formatRupiah(product.standardPrice)),
+            fontWeight = FontWeight.Medium, fontSize = 12.sp
+        )
+        Text(
             text = stringResource(R.string.stock, product.stock),
+            fontSize = 12.sp
+        )
+        Text(
+            text = stringResource(R.string.unit, product.unit),
+            fontSize = 12.sp
+        )
+        Text(
+            text = stringResource(R.string.amount_per_unit, product.amountPerUnit),
             fontSize = 12.sp
         )
     }

@@ -93,4 +93,5 @@
     <string name="standard_price">Harga patokan: %1$s</string>
     <string name="unit">Satuan pembelian: %1$s</string>
     <string name="amount_per_unit">Isi persatuan: %1$d pcs</string>
+    <string name="product_description">Foto dari produk %1$s</string>
 </resources>
