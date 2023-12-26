@@ -65,7 +65,7 @@ private fun ProductInfo(
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
         Text(
-            text = stringResource(R.string.stock, product.stock.toString()),
+            text = stringResource(R.string.stock, product.stock),
             fontSize = 12.sp
         )
     }

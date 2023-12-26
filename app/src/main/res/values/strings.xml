@@ -89,5 +89,8 @@
     <string name="search_order">Cari pesanan</string>
 
     <string name="warehouse">Gudang</string>
-    <string name="stock">Stok: %1$s</string>
+    <string name="stock">Stok: %1$d</string>
+    <string name="standard_price">Harga patokan: %1$s</string>
+    <string name="unit">Satuan pembelian: %1$s</string>
+    <string name="amount_per_unit">Isi persatuan: %1$d pcs</string>
 </resources>
