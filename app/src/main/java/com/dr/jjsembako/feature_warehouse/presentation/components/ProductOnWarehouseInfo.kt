@@ -117,7 +117,7 @@ private fun ProductInfo(
                 product.unit.lowercase(),
                 product.amountPerUnit
             ),
-            fontSize = 12.sp,
+            fontSize = 11.sp, fontWeight = FontWeight.Light,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
     }
