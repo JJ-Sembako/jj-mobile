@@ -94,4 +94,6 @@
     <string name="standard_price">Harga patokan:</string>
     <string name="info_unit">Beli 1 %1$s isi %2$d pcs</string>
     <string name="product_description">Foto dari produk %1$s</string>
+
+    <string name="create_order">Buat Pesanan</string>
 </resources>
