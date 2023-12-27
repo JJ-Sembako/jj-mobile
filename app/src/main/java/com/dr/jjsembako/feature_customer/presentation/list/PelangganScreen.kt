@@ -90,9 +90,16 @@ fun PelangganScreen(
 
     // Set keyword for the first time Composable is rendered
     LaunchedEffect(keyword) {
-        searchQuery.value = keyword
-        if (keyword.isEmpty()) pelangganViewModel.fetchCustomers()
-        else pelangganViewModel.fetchCustomers(keyword)
+        if(keyword.isEmpty()){
+            if(searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
+            else pelangganViewModel.fetchCustomers(searchQuery.value)
+        } else {
+            if(searchQuery.value.isEmpty()) {
+                searchQuery.value = keyword
+                pelangganViewModel.fetchCustomers(keyword)
+            }
+            else pelangganViewModel.fetchCustomers(searchQuery.value)
+        }
     }
 
     Scaffold(
