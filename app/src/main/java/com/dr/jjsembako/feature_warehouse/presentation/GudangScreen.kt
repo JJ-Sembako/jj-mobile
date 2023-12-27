@@ -112,7 +112,7 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
                 activeSearch,
                 searchQuery,
                 searchFunction = { },
-                openFilter = { },
+                openFilter = { showSheet.value = !showSheet.value },
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
