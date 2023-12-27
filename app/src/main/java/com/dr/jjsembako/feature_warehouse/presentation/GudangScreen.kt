@@ -46,6 +46,7 @@ import com.dr.jjsembako.core.presentation.components.BottomSheetProduct
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.rememberMutableStateListOf
+import com.dr.jjsembako.core.utils.rememberMutableStateMapOf
 import com.dr.jjsembako.feature_warehouse.presentation.components.ProductOnWarehouseInfo
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -56,7 +57,7 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
 
     var showSheet = remember { mutableStateOf(false) }
     val checkBoxResult = rememberMutableStateListOf<String>()
-    val checkBoxStates = remember { mutableStateMapOf<String, Boolean>() }
+    val checkBoxStates = rememberMutableStateMapOf<String, Boolean>()
     checkBoxResult.addAll(option.map { it.value })
     checkBoxStates.putAll(option.map { it.value to true })
     var searchQuery = rememberSaveable { mutableStateOf("") }

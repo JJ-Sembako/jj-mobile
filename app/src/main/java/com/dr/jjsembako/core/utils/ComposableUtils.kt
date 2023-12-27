@@ -39,14 +39,15 @@ fun <K, V> rememberMutableStateMapOf(vararg pairs: Pair<K, V>)  =
         pairs.toList().toMutableStateMap()
     }
 
-@Composable
-fun <K, V> rememberMutableStateMapOf(defaultValue: V, vararg inputs: Any?)  =
-    rememberSaveable(
-        inputs = inputs,
-        saver = listSaver(
-            save = { it.toList() },
-            restore = { it.toMutableStateMap().withDefault { defaultValue } }
-        )
-    ) {
-        mutableStateMapOf<K, V>().withDefault { defaultValue }
-    }
+// Currently not needed, but might be in the future
+//@Composable
+//fun <K, V> rememberMutableStateMapOf(defaultValue: V, vararg inputs: Any?)  =
+//    rememberSaveable(
+//        inputs = inputs,
+//        saver = listSaver(
+//            save = { it.toList() },
+//            restore = { it.toMutableStateMap().withDefault { defaultValue } }
+//        )
+//    ) {
+//        mutableStateMapOf<K, V>().withDefault { defaultValue }
+//    }
