@@ -38,13 +38,13 @@ fun SelectCustomer(
             .fillMaxWidth()
             .padding(top = 16.dp, bottom = 16.dp)
     ) {
-        SelectCustomerArrow(onSelectCustomer, modifier)
-        CustomerInfoCard(customer, modifier)
+        SelectCustomerHeader(onSelectCustomer, modifier)
+        SelectCustomerContent(customer, modifier)
     }
 }
 
 @Composable
-private fun SelectCustomerArrow(onSelectCustomer: () -> Unit, modifier: Modifier) {
+private fun SelectCustomerHeader(onSelectCustomer: () -> Unit, modifier: Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -68,7 +68,7 @@ private fun SelectCustomerArrow(onSelectCustomer: () -> Unit, modifier: Modifier
 }
 
 @Composable
-private fun CustomerInfoCard(customer: DataCustomer?, modifier: Modifier) {
+private fun SelectCustomerContent(customer: DataCustomer?, modifier: Modifier) {
     if (customer != null) {
         Spacer(modifier = modifier.height(16.dp))
         CustomerInfo(onNavigateToDetailCust = {}, customer = customer, modifier = modifier)
