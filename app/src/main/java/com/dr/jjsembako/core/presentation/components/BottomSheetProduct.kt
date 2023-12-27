@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -58,6 +59,7 @@ fun BottomSheetProduct(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
+                    .heightIn(max = 640.dp)
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -71,7 +73,8 @@ fun BottomSheetProduct(
                 Spacer(modifier = modifier.height(8.dp))
                 LazyColumn(
                     modifier = modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .weight(1f),
                 ) {
                     items(items = optionList, itemContent = { filter ->
                         Row(
@@ -83,7 +86,7 @@ fun BottomSheetProduct(
                                         checkBoxStates[filter.value] = it
                                         if (it) checkBoxResult.add(filter.value)
                                         else checkBoxResult.remove(filter.value)
-                                        if(checkBoxResult.isEmpty()){
+                                        if (checkBoxResult.isEmpty()) {
                                             checkBoxResult.addAll(optionList.map { it2 -> it2.value })
                                             checkBoxStates.putAll(optionList.map { it2 -> it2.value to true })
                                         }
@@ -97,7 +100,7 @@ fun BottomSheetProduct(
                                     checkBoxStates[filter.value] = it
                                     if (it) checkBoxResult.add(filter.value)
                                     else checkBoxResult.remove(filter.value)
-                                    if(checkBoxResult.isEmpty()){
+                                    if (checkBoxResult.isEmpty()) {
                                         checkBoxResult.addAll(optionList.map { it2 -> it2.value })
                                         checkBoxStates.putAll(optionList.map { it2 -> it2.value to true })
                                     }
