@@ -96,4 +96,5 @@
     <string name="product_description">Foto dari produk %1$s</string>
 
     <string name="create_order">Buat Pesanan</string>
+    <string name="select_cust">Pilih Pelanggan</string>
 </resources>
