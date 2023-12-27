@@ -1,10 +1,12 @@
 package com.dr.jjsembako.core.utils
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.toMutableStateMap
 
 @Composable
 fun <T : Any> rememberMutableStateListOf(vararg elements: T): SnapshotStateList<T> {
@@ -25,3 +27,26 @@ fun <T : Any> rememberMutableStateListOf(vararg elements: T): SnapshotStateList<
         elements.toList().toMutableStateList()
     }
 }
+
+@Composable
+fun <K, V> rememberMutableStateMapOf(vararg pairs: Pair<K, V>)  =
+    rememberSaveable(
+        saver = listSaver(
+            save = { it.toList() },
+            restore = { it.toMutableStateMap() }
+        )
+    ) {
+        pairs.toList().toMutableStateMap()
+    }
+
+@Composable
+fun <K, V> rememberMutableStateMapOf(defaultValue: V, vararg inputs: Any?)  =
+    rememberSaveable(
+        inputs = inputs,
+        saver = listSaver(
+            save = { it.toList() },
+            restore = { it.toMutableStateMap().withDefault { defaultValue } }
+        )
+    ) {
+        mutableStateMapOf<K, V>().withDefault { defaultValue }
+    }
