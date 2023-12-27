@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -58,8 +59,6 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     var showSheet = remember { mutableStateOf(false) }
     val checkBoxResult = rememberMutableStateListOf<String>()
     val checkBoxStates = rememberMutableStateMapOf<String, Boolean>()
-    checkBoxResult.addAll(option.map { it.value })
-    checkBoxStates.putAll(option.map { it.value to true })
     var searchQuery = rememberSaveable { mutableStateOf("") }
     var activeSearch = remember { mutableStateOf(false) }
 
@@ -68,6 +67,13 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
         composition,
         iterations = LottieConstants.IterateForever,
     )
+
+    LaunchedEffect(Unit){
+        if(checkBoxResult.isEmpty()){
+            checkBoxResult.addAll(option.map { it.value })
+            checkBoxStates.putAll(option.map { it.value to true })
+        }
+    }
 
     Scaffold(
         topBar = {
