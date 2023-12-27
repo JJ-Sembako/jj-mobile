@@ -149,7 +149,10 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
 private val option = listOf(
     FilterOption("Beras", "beras"),
     FilterOption("Minyak", "minyak"),
-    FilterOption("Gula", "gula")
+    FilterOption("Gula", "gula"),
+    FilterOption("Kerupuk", "kerupuk"),
+    FilterOption("Air Mineral", "air mineral"),
+    FilterOption("Tepung", "tepung")
 )
 
 private val dataDummy = listOf(
