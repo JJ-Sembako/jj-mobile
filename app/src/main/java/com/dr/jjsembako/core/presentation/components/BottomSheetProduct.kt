@@ -83,6 +83,10 @@ fun BottomSheetProduct(
                                         checkBoxStates[filter.value] = it
                                         if (it) checkBoxResult.add(filter.value)
                                         else checkBoxResult.remove(filter.value)
+                                        if(checkBoxResult.isEmpty()){
+                                            checkBoxResult.addAll(optionList.map { it2 -> it2.value })
+                                            checkBoxStates.putAll(optionList.map { it2 -> it2.value to true })
+                                        }
                                     }
                                 ),
                             verticalAlignment = Alignment.CenterVertically
@@ -93,6 +97,10 @@ fun BottomSheetProduct(
                                     checkBoxStates[filter.value] = it
                                     if (it) checkBoxResult.add(filter.value)
                                     else checkBoxResult.remove(filter.value)
+                                    if(checkBoxResult.isEmpty()){
+                                        checkBoxResult.addAll(optionList.map { it2 -> it2.value })
+                                        checkBoxStates.putAll(optionList.map { it2 -> it2.value to true })
+                                    }
                                 },
                                 modifier = modifier.padding(all = Dp(value = 8F))
                             )
