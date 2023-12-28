@@ -33,6 +33,7 @@ import com.dr.jjsembako.feature_customer.presentation.detail.DetailPelangganScre
 import com.dr.jjsembako.feature_customer.presentation.edit.EditPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
 import com.dr.jjsembako.feature_home.presentation.HomeScreen
+import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananScreen
 import com.dr.jjsembako.feature_setting.presentation.change_password.GantiKataSandiScreen
 import com.dr.jjsembako.feature_setting.presentation.recovery.PemulihanAkunScreen
 import com.dr.jjsembako.feature_setting.presentation.setting.PengaturanScreen
@@ -176,7 +177,7 @@ fun JJSembakoApp() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Buat Pesanan")
+                BuatPesananScreen()
             }
         }
 
