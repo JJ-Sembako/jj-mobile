@@ -39,11 +39,17 @@ fun SelectProduct(onSelectProduct: () -> Unit, modifier: Modifier) {
 
 @Composable
 private fun SelectProductHeader(onSelectProduct: () -> Unit, modifier: Modifier) {
+    Divider(
+        modifier = modifier
+            .padding(bottom = 8.dp)
+            .fillMaxWidth()
+            .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+    )
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onSelectProduct() }
-            .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
