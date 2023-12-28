@@ -62,7 +62,7 @@ fun CustomerInfo(
 
 @Composable
 @Preview(showBackground = true)
-fun CustomerInfoPreview() {
+private fun CustomerInfoPreview() {
     JJSembakoTheme {
         CustomerInfo(
             onNavigateToDetailCust = {},

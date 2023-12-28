@@ -134,7 +134,7 @@ fun BottomSheetProduct(
 
 @Composable
 @Preview(showBackground = true)
-fun BottomSheetProductPreview() {
+private fun BottomSheetProductPreview() {
     JJSembakoTheme {
         val option = listOf(
             FilterOption("Beras", "beras"),

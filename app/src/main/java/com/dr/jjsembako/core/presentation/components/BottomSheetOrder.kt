@@ -157,7 +157,7 @@ fun BottomSheetOrder(
 
 @Composable
 @Preview(showBackground = true)
-fun BottomSheetOrderPreview() {
+private fun BottomSheetOrderPreview() {
     JJSembakoTheme {
         BottomSheetOrder(
             optionListPayment = listOf(

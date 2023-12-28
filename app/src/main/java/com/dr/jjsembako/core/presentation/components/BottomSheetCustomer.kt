@@ -113,7 +113,7 @@ fun BottomSheetCustomer(
 
 @Composable
 @Preview(showBackground = true)
-fun BottomSheetCustomerPreview() {
+private fun BottomSheetCustomerPreview() {
     JJSembakoTheme {
         BottomSheetCustomer(
             optionList = listOf(

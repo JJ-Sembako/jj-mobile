@@ -86,7 +86,7 @@ fun AlertDeleteDialog(
 
 @Composable
 @Preview(showBackground = true)
-fun AlertDeleteDialogPreview() {
+private fun AlertDeleteDialogPreview() {
     JJSembakoTheme {
         AlertDeleteDialog(
             onNavigateBack = {},
