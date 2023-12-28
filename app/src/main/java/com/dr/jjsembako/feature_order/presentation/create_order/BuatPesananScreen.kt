@@ -95,13 +95,17 @@ fun BuatPesananScreen(
                 .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SelectCustomer(customer = null, onSelectCustomer = {}, modifier = modifier)
+            SelectCustomer(
+                customer = null,
+                onSelectCustomer = { onNavigateToSelectCustomer() },
+                modifier = modifier
+            )
             SelectPayment(
                 selectedOption = FilterOption("Tempo", "tempo"),
                 onOptionSelected = {},
                 modifier = modifier
             )
-            SelectProduct(onSelectProduct = {}, modifier = modifier)
+            SelectProduct(onSelectProduct = { onNavigateToSelectProduct() }, modifier = modifier)
             TotalPayment(totalPrice = 1525750, modifier = modifier)
             Spacer(modifier = modifier.height(32.dp))
         }
