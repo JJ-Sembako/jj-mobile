@@ -71,7 +71,7 @@ private fun StatisticCard(total: Int, isPesanan: Boolean, modifier: Modifier) {
 
 @Composable
 @Preview(showBackground = true)
-fun StatisticCardPesananPreview() {
+private fun StatisticCardPesananPreview() {
     JJSembakoTheme {
         StatisticCard(1813, true, modifier = Modifier)
     }
@@ -79,7 +79,7 @@ fun StatisticCardPesananPreview() {
 
 @Composable
 @Preview(showBackground = true)
-fun StatisticCardBarangPreview() {
+private fun StatisticCardBarangPreview() {
     JJSembakoTheme {
         StatisticCard(12345, false, modifier = Modifier)
     }
@@ -87,7 +87,7 @@ fun StatisticCardBarangPreview() {
 
 @Composable
 @Preview(showBackground = true)
-fun StatisticSectionPreview() {
+private fun StatisticSectionPreview() {
     JJSembakoTheme {
         StatisticSection(1813, 12345, modifier = Modifier)
     }

@@ -162,7 +162,7 @@ private val menuList = listOf(
 
 @Composable
 @Preview(showBackground = true)
-fun MenuItemPreview() {
+private fun MenuItemPreview() {
     JJSembakoTheme {
         MenuItem(
             menuList[0],
@@ -179,7 +179,7 @@ fun MenuItemPreview() {
 
 @Composable
 @Preview(showBackground = true)
-fun MenuSectionPreview() {
+private fun MenuSectionPreview() {
     JJSembakoTheme {
         MenuSection(
             onNavigateToCreateOrder = {},
