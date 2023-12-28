@@ -90,7 +90,7 @@
     <string name="search_order">Cari pesanan</string>
 
     <string name="warehouse">Gudang</string>
-    <string name="search_product">Cari produk</string>
+    <string name="search_product">Cari barang</string>
     <string name="stock">Stok: %1$d %2$s</string>
     <string name="standard_price">Harga patokan:</string>
     <string name="info_unit">Beli 1 %1$s isi %2$d pcs</string>
@@ -99,6 +99,6 @@
     <string name="create_order">Buat Pesanan</string>
     <string name="select_cust">Pilih Pelanggan</string>
     <string name="select_payment">Pilih Metode Pembayaran</string>
-    <string name="select_product">Pilih Produk</string>
+    <string name="select_product">Pilih Barang</string>
     <string name="total_payment">Total Biaya Pesanan</string>
 </resources>
