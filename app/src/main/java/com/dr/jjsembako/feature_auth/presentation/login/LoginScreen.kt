@@ -294,7 +294,7 @@ fun LoginScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
+private fun LoginScreenPreview() {
     JJSembakoTheme {
         LoginScreen(
             onLoginSuccess = {},

@@ -305,7 +305,7 @@ fun PertanyaanPemulihanContent(
 
 @Preview(showBackground = true)
 @Composable
-fun PertanyaanPemulihanScreenPreview() {
+private fun PertanyaanPemulihanScreenPreview() {
     JJSembakoTheme {
         PertanyaanPemulihanScreen(
             username = "",
