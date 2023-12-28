@@ -49,7 +49,7 @@ private fun SelectProductHeader(onSelectProduct: () -> Unit, modifier: Modifier)
         modifier = modifier
             .fillMaxWidth()
             .clickable { onSelectProduct() }
-            .padding(horizontal = 8.dp),
+            .padding(start = 8.dp, end = 8.dp, top = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
