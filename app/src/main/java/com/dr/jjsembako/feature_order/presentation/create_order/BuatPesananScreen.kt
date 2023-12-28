@@ -27,7 +27,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_order.presentation.components.SelectCustomer
+import com.dr.jjsembako.feature_order.presentation.components.SelectPayment
+import com.dr.jjsembako.feature_order.presentation.components.SelectProduct
+import com.dr.jjsembako.feature_order.presentation.components.TotalPayment
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -76,11 +81,17 @@ fun BuatPesananScreen(modifier: Modifier = Modifier) {
                         keyboardController?.hide()
                         focusManager.clearFocus()
                     })
-                .padding(contentPadding)
-                .padding(16.dp),
+                .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
+            SelectCustomer(customer = null, onSelectCustomer = {}, modifier = modifier)
+            SelectPayment(
+                selectedOption = FilterOption("Tempo", "tempo"),
+                onOptionSelected = {},
+                modifier = modifier
+            )
+            SelectProduct(onSelectProduct = {}, modifier = modifier)
+            TotalPayment(totalPrice = 1525750, modifier = modifier)
         }
     }
 }
