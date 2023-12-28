@@ -357,7 +357,7 @@ private val radioOptionsOrder = listOf(
 
 @Composable
 @Preview(showBackground = true)
-fun DetailPelangganScreenPreview() {
+private fun DetailPelangganScreenPreview() {
     JJSembakoTheme {
         DetailPelangganScreen(
             idCust = "",

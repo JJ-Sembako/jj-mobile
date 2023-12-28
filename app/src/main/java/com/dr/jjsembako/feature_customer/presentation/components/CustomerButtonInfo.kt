@@ -135,7 +135,7 @@ fun CustomerButtonInfo(
 
 @Composable
 @Preview(showBackground = true)
-fun CustomerButtonInfoScreenPreview() {
+private fun CustomerButtonInfoScreenPreview() {
     JJSembakoTheme {
         CustomerButtonInfo(
             cust = DataCustomer(

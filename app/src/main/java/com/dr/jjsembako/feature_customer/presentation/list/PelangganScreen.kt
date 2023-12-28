@@ -255,7 +255,7 @@ private val radioOptions = listOf(
 
 @Composable
 @Preview(showBackground = true)
-fun PelangganScreenPreview() {
+private fun PelangganScreenPreview() {
     JJSembakoTheme {
         PelangganScreen(
             keyword = "",
