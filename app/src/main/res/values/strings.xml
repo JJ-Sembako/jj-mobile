@@ -98,5 +98,6 @@
     <string name="create_order">Buat Pesanan</string>
     <string name="select_cust">Pilih Pelanggan</string>
     <string name="select_payment">Pilih Metode Pembayaran</string>
+    <string name="select_product">Pilih Produk</string>
     <string name="total_payment">Total Biaya Pesanan</string>
 </resources>
