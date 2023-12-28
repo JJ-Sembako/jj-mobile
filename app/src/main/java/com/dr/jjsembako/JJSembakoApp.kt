@@ -176,6 +176,7 @@ fun JJSembakoApp() {
 
         composable(Screen.BuatPesanan.route) {
             BuatPesananScreen(
+                onNavigateBack = { navController.popBackStack() },
                 onNavigateToSelectCustomer = {
                     navController.navigate(Screen.BuatPesananPilihPelangan.route) {
                         launchSingleTop = true

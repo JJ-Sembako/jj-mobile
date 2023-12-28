@@ -39,8 +39,9 @@ import com.dr.jjsembako.feature_order.presentation.components.TotalPayment
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun BuatPesananScreen(
-    onNavigateToSelectCustomer : () -> Unit,
-    onNavigateToSelectProduct : () -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToSelectCustomer: () -> Unit,
+    onNavigateToSelectProduct: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -56,6 +57,7 @@ fun BuatPesananScreen(
                 title = { Text(stringResource(R.string.create_order)) },
                 navigationIcon = {
                     IconButton(onClick = {
+                        onNavigateBack()
                         keyboardController?.hide()
                     }) {
                         Icon(
@@ -66,7 +68,10 @@ fun BuatPesananScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        onNavigateBack()
+                        keyboardController?.hide()
+                    }) {
                         Icon(
                             Icons.Default.Check,
                             stringResource(R.string.finish),
@@ -108,6 +113,7 @@ fun BuatPesananScreen(
 private fun BuatPesananScreenPreview() {
     JJSembakoTheme {
         BuatPesananScreen(
+            onNavigateBack = {},
             onNavigateToSelectCustomer = {},
             onNavigateToSelectProduct = {}
         )
