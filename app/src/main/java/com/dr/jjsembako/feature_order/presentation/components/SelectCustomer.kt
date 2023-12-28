@@ -45,11 +45,17 @@ fun SelectCustomer(
 
 @Composable
 private fun SelectCustomerHeader(onSelectCustomer: () -> Unit, modifier: Modifier) {
+    Divider(
+        modifier = modifier
+            .padding(bottom = 8.dp)
+            .fillMaxWidth()
+            .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+    )
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onSelectCustomer() }
-            .padding(horizontal = 8.dp),
+            .padding(start = 8.dp, end = 8.dp, top = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
