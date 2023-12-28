@@ -320,7 +320,6 @@ private fun DetailPelangganContent(
             }
             if (showDialog.value) {
                 AlertDeleteDialog(
-                    onNavigateBack = { onNavigateBack() },
                     onDelete = { detailPelangganViewModel.handleDeleteCustomer(cust.id) },
                     showDialog = showDialog,
                     modifier = modifier

@@ -27,7 +27,6 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun AlertDeleteDialog(
-    onNavigateBack: () -> Unit,
     onDelete: () -> Unit,
     showDialog: MutableState<Boolean>,
     modifier: Modifier
@@ -89,7 +88,6 @@ fun AlertDeleteDialog(
 private fun AlertDeleteDialogPreview() {
     JJSembakoTheme {
         AlertDeleteDialog(
-            onNavigateBack = {},
             onDelete = {},
             showDialog = remember { mutableStateOf(true) },
             modifier = Modifier
