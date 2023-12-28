@@ -173,21 +173,11 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.BuatPesanan.route) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                BuatPesananScreen()
-            }
+            BuatPesananScreen()
         }
 
         composable(Screen.Gudang.route) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                GudangScreen(onNavigateBack = { navController.popBackStack() })
-            }
+            GudangScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable(
