@@ -125,7 +125,7 @@ private fun ProductInfo(
 
 @Composable
 @Preview(showBackground = true)
-fun ProductOnWarehouseInfoPreview() {
+private fun ProductOnWarehouseInfoPreview() {
     JJSembakoTheme {
         ProductOnWarehouseInfo(
             product = Product(

@@ -190,7 +190,7 @@ private val dataDummy = listOf(
 
 @Preview(showBackground = true)
 @Composable
-fun GudangScreenPreview() {
+private fun GudangScreenPreview() {
     JJSembakoTheme {
         GudangScreen(
             onNavigateBack = {}
