@@ -25,6 +25,8 @@
     <string name="ok">Ok</string>
     <string name="close">Tutup</string>
     <string name="cancel">Batal</string>
+    <string name="clear">Kosongkan</string>
+    <string name="clear_data">Kosongkan data</string>
     <string name="menu">Menu</string>
     <string name="alert">Peringatan</string>
     <string name="on_progress">Dalam Proses</string>
