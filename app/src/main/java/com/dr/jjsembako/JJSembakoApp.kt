@@ -333,7 +333,7 @@ fun JJSembakoApp() {
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
-fun JJSembakoAppPreview() {
+private fun JJSembakoAppPreview() {
     JJSembakoTheme {
         JJSembakoApp()
     }
