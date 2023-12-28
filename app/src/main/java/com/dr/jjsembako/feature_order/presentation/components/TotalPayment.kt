@@ -71,7 +71,7 @@ fun TotalPaymentContent(totalPrice: Long = 0, modifier: Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun STotalPaymentPreview() {
+fun TotalPaymentPreview() {
     JJSembakoTheme {
         TotalPayment(totalPrice = 175500, modifier = Modifier)
     }
