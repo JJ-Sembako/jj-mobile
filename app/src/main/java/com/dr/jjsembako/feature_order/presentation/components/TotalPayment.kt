@@ -33,7 +33,7 @@ fun TotalPayment(totalPrice: Long = 0, modifier: Modifier) {
 }
 
 @Composable
-fun TotalPaymentHeader(modifier: Modifier) {
+private fun TotalPaymentHeader(modifier: Modifier) {
     Divider(
         modifier = modifier
             .padding(bottom = 8.dp)
@@ -54,7 +54,7 @@ fun TotalPaymentHeader(modifier: Modifier) {
 }
 
 @Composable
-fun TotalPaymentContent(totalPrice: Long = 0, modifier: Modifier) {
+private fun TotalPaymentContent(totalPrice: Long = 0, modifier: Modifier) {
     Spacer(modifier = modifier.height(32.dp))
     Column(modifier = modifier.padding(start = 16.dp)) {
         Text(
@@ -71,7 +71,7 @@ fun TotalPaymentContent(totalPrice: Long = 0, modifier: Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun TotalPaymentPreview() {
+private fun TotalPaymentPreview() {
     JJSembakoTheme {
         TotalPayment(totalPrice = 175500, modifier = Modifier)
     }

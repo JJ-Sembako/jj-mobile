@@ -80,7 +80,7 @@ private fun SelectProductContent(modifier: Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun SelectProductPreview() {
+private fun SelectProductPreview() {
     JJSembakoTheme {
         SelectProduct(
             onSelectProduct = {},

@@ -91,7 +91,7 @@ private fun SelectCustomerContent(customer: DataCustomer?, modifier: Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun SelectCustomer1Preview() {
+private fun SelectCustomer1Preview() {
     JJSembakoTheme {
         SelectCustomer(
             customer = null,
@@ -103,7 +103,7 @@ fun SelectCustomer1Preview() {
 
 @Preview(showBackground = true)
 @Composable
-fun SelectCustomer2Preview() {
+private fun SelectCustomer2Preview() {
     JJSembakoTheme {
         SelectCustomer(
             customer = DataCustomer(

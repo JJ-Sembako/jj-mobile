@@ -101,7 +101,7 @@ fun BuatPesananScreen(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun BuatPesananScreenPreview() {
+private fun BuatPesananScreenPreview() {
     JJSembakoTheme {
         BuatPesananScreen()
     }

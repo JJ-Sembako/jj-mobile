@@ -65,7 +65,7 @@ private fun SelectPaymentHeader(modifier: Modifier) {
 }
 
 @Composable
-fun SelectPaymentContent(
+private fun SelectPaymentContent(
     selectedOption: FilterOption,
     onOptionSelected: (FilterOption) -> Unit,
     modifier: Modifier
@@ -110,7 +110,7 @@ private val paymentList = listOf(
 
 @Preview(showBackground = true)
 @Composable
-fun SelectPaymentPreview() {
+private fun SelectPaymentPreview() {
     JJSembakoTheme {
         SelectPayment(
             selectedOption = FilterOption("Tempo", "tempo"),
