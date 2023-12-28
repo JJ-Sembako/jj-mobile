@@ -106,7 +106,7 @@ fun PilihPelangganScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
-                title = { Text(stringResource(R.string.cust)) },
+                title = { Text(stringResource(R.string.select_cust)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         keyboardController?.hide()
