@@ -3,7 +3,9 @@ package com.dr.jjsembako.feature_order.presentation.create_order
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -92,6 +94,7 @@ fun BuatPesananScreen(modifier: Modifier = Modifier) {
             )
             SelectProduct(onSelectProduct = {}, modifier = modifier)
             TotalPayment(totalPrice = 1525750, modifier = modifier)
+            Spacer(modifier = modifier.height(32.dp))
         }
     }
 }
