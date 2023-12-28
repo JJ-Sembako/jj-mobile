@@ -46,7 +46,7 @@ import com.dr.jjsembako.core.utils.rememberMutableStateMapOf
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun PilihBarangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
+fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -79,7 +79,7 @@ fun PilihBarangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier)
                 navigationIcon = {
                     IconButton(onClick = {
                         keyboardController?.hide()
-                        onNavigateBack()
+                        onNavigateToMainOrderScreen()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -175,7 +175,7 @@ private val dataDummy = listOf(
 private fun PilihBarangPreview() {
     JJSembakoTheme {
         PilihBarangScreen(
-            onNavigateBack = {}
+            onNavigateToMainOrderScreen = {}
         )
     }
 }

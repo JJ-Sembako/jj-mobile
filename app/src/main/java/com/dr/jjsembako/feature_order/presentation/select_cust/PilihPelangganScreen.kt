@@ -64,7 +64,6 @@ import com.dr.jjsembako.feature_customer.presentation.list.PelangganViewModel
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PilihPelangganScreen(
-    keyword: String,
     onNavigateToMainOrderScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -87,16 +86,9 @@ fun PilihPelangganScreen(
     )
 
     // Set keyword for the first time Composable is rendered
-    LaunchedEffect(keyword) {
-        if (keyword.isEmpty()) {
-            if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
-            else pelangganViewModel.fetchCustomers(searchQuery.value)
-        } else {
-            if (searchQuery.value.isEmpty()) {
-                searchQuery.value = keyword
-                pelangganViewModel.fetchCustomers(keyword)
-            } else pelangganViewModel.fetchCustomers(searchQuery.value)
-        }
+    LaunchedEffect(Unit) {
+        if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
+        else pelangganViewModel.fetchCustomers(searchQuery.value)
     }
 
     Scaffold(
@@ -249,7 +241,6 @@ private val radioOptions = listOf(
 private fun PilihPelangganScreenPreview() {
     JJSembakoTheme {
         PilihPelangganScreen(
-            keyword = "",
             onNavigateToMainOrderScreen = {},
             modifier = Modifier
         )
