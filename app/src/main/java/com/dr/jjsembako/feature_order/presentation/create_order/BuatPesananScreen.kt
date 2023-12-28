@@ -38,7 +38,11 @@ import com.dr.jjsembako.feature_order.presentation.components.TotalPayment
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun BuatPesananScreen(modifier: Modifier = Modifier) {
+fun BuatPesananScreen(
+    onNavigateToSelectCustomer : () -> Unit,
+    onNavigateToSelectProduct : () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -103,6 +107,9 @@ fun BuatPesananScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun BuatPesananScreenPreview() {
     JJSembakoTheme {
-        BuatPesananScreen()
+        BuatPesananScreen(
+            onNavigateToSelectCustomer = {},
+            onNavigateToSelectProduct = {}
+        )
     }
 }

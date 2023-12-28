@@ -175,7 +175,17 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.BuatPesanan.route) {
-            BuatPesananScreen()
+            BuatPesananScreen(
+                onNavigateToSelectCustomer = {
+                    navController.navigate(Screen.BuatPesananPilihPelangan.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToSelectProduct = {
+                    navController.navigate(Screen.BuatPesananPilihBarang.route) {
+                        launchSingleTop = true
+                    }
+                })
         }
 
         composable(Screen.BuatPesananPilihPelangan.route) {
