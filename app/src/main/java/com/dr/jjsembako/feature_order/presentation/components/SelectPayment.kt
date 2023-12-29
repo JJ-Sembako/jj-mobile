@@ -47,18 +47,16 @@ fun SelectPayment(
 private fun SelectPaymentHeader(modifier: Modifier) {
     Divider(
         modifier = modifier
-            .padding(bottom = 8.dp)
             .fillMaxWidth()
             .width(1.dp), color = MaterialTheme.colorScheme.tertiary
     )
-    Column(modifier = modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)) {
+    Column(modifier = modifier.padding(horizontal = 8.dp, vertical = 16.dp)) {
         Text(
             text = stringResource(id = R.string.select_payment), fontSize = 14.sp
         )
     }
     Divider(
         modifier = modifier
-            .padding(top = 8.dp)
             .fillMaxWidth()
             .width(1.dp), color = MaterialTheme.colorScheme.tertiary
     )

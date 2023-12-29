@@ -116,7 +116,7 @@ fun BuatPesananScreen(
                 Row(
                     modifier = modifier
                         .clickable {}
-                        .padding(8.dp),
+                        .padding(horizontal = 8.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End
                 ) {

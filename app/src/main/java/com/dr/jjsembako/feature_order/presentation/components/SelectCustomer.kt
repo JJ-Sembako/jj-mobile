@@ -36,7 +36,7 @@ fun SelectCustomer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 16.dp)
+            .padding(bottom = 16.dp)
     ) {
         SelectCustomerHeader(onSelectCustomer, modifier)
         SelectCustomerContent(customer, modifier)
@@ -47,7 +47,6 @@ fun SelectCustomer(
 private fun SelectCustomerHeader(onSelectCustomer: () -> Unit, modifier: Modifier) {
     Divider(
         modifier = modifier
-            .padding(bottom = 8.dp)
             .fillMaxWidth()
             .width(1.dp), color = MaterialTheme.colorScheme.tertiary
     )
@@ -55,7 +54,7 @@ private fun SelectCustomerHeader(onSelectCustomer: () -> Unit, modifier: Modifie
         modifier = modifier
             .fillMaxWidth()
             .clickable { onSelectCustomer() }
-            .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            .padding(horizontal = 8.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -67,7 +66,6 @@ private fun SelectCustomerHeader(onSelectCustomer: () -> Unit, modifier: Modifie
     }
     Divider(
         modifier = modifier
-            .padding(top = 8.dp)
             .fillMaxWidth()
             .width(1.dp), color = MaterialTheme.colorScheme.tertiary
     )
