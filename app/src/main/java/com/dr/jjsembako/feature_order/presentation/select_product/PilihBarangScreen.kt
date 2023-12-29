@@ -75,7 +75,7 @@ fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifie
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
-                title = { Text(stringResource(R.string.warehouse)) },
+                title = { Text(stringResource(R.string.select_product)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         keyboardController?.hide()
