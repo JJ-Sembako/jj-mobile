@@ -32,6 +32,7 @@ import com.dr.jjsembako.feature_customer.presentation.add.TambahPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.detail.DetailPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.edit.EditPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
+import com.dr.jjsembako.feature_history.presentation.list.RiwayatScreen
 import com.dr.jjsembako.feature_home.presentation.HomeScreen
 import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananScreen
 import com.dr.jjsembako.feature_order.presentation.select_cust.PilihPelangganScreen
@@ -290,12 +291,7 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.Riwayat.route) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Riwayat")
-            }
+            RiwayatScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable(Screen.Performa.route) {
