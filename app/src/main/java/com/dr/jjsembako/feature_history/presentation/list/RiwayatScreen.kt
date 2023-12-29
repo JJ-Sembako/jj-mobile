@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +38,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.initializeDateValues
 import com.dr.jjsembako.feature_history.presentation.components.BottomSheetHistory
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -57,6 +59,10 @@ fun RiwayatScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
         composition,
         iterations = LottieConstants.IterateForever,
     )
+
+    LaunchedEffect(Unit){
+        initializeDateValues(fromDate, untilDate)
+    }
 
     Scaffold(
         topBar = {

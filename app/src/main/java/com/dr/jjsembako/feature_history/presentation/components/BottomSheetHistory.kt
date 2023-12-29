@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.initializeDateValues
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -132,20 +133,7 @@ private fun SwitchFilter(
         Switch(checked = isFilterOn.value, onCheckedChange = {
             isFilterOn.value = it
             if (isFilterOn.value) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    fromDate.value = LocalDate.now().withDayOfMonth(1)
-                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                    untilDate.value =
-                        LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                } else {
-                    val calendar = Calendar.getInstance()
-                    calendar.set(Calendar.DAY_OF_MONTH, 1)
-                    val firstDayOfMonth = calendar.time
-                    fromDate.value =
-                        SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(firstDayOfMonth)
-                    untilDate.value =
-                        SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
-                }
+                initializeDateValues(fromDate, untilDate)
             }
         })
     }
