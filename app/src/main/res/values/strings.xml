@@ -108,4 +108,5 @@
     <string name="search_transaction">Cari transaksi</string>
     <string name="from_date">Dari tanggal</string>
     <string name="until_date">Sampai tanggal</string>
+    <string name="activate_filter">Aktifkan filter</string>
 </resources>

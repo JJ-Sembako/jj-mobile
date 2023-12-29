@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -129,7 +130,8 @@ private fun SwitchFilter(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(stringResource(id = R.string.activate_account_recovery))
+        Text(stringResource(id = R.string.activate_filter))
+        Spacer(modifier = modifier.width(8.dp))
         Switch(checked = isFilterOn.value, onCheckedChange = {
             isFilterOn.value = it
             if (isFilterOn.value) {
