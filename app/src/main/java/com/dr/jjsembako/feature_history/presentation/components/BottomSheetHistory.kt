@@ -232,7 +232,7 @@ private fun DateFilter(
         ) {
             OutlinedTextField(
                 value = fromDate.value,
-                enabled = false,
+                readOnly = true,
                 label = { Text(stringResource(R.string.from_date)) },
                 onValueChange = { fromDate.value = it },
                 singleLine = true,
@@ -243,7 +243,7 @@ private fun DateFilter(
             )
             OutlinedTextField(
                 value = untilDate.value,
-                enabled = false,
+                readOnly = true,
                 label = { Text(stringResource(R.string.until_date)) },
                 onValueChange = { untilDate.value = it },
                 singleLine = true,
