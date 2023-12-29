@@ -28,7 +28,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -57,7 +56,8 @@ fun BuatPesananScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val (selectedOption, onOptionSelected) = rememberSaveable { mutableStateOf(paymentList[0]) }
+    // TODO: Perlu buat custom rememberSaveable FilterOption
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(paymentList[0]) }
 
     Scaffold(
         topBar = {
