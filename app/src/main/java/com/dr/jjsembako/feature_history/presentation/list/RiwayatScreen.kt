@@ -37,6 +37,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_history.presentation.components.BottomSheetHistory
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -44,9 +45,12 @@ fun RiwayatScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    var showSheet = remember { mutableStateOf(false) }
-    var searchQuery = rememberSaveable { mutableStateOf("") }
-    var activeSearch = remember { mutableStateOf(false) }
+    val showSheet = remember { mutableStateOf(false) }
+    val isFilterOn = rememberSaveable { mutableStateOf(false) }
+    val searchQuery = rememberSaveable { mutableStateOf("") }
+    val activeSearch = remember { mutableStateOf(false) }
+    val fromDate = rememberSaveable { mutableStateOf("") }
+    val untilDate = rememberSaveable { mutableStateOf("") }
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
     val progress by animateLottieCompositionAsState(
@@ -101,6 +105,16 @@ fun RiwayatScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
+
+            if (showSheet.value) {
+                BottomSheetHistory(
+                    fromDate = fromDate,
+                    untilDate = untilDate,
+                    isFilterOn = isFilterOn,
+                    showSheet = showSheet,
+                    modifier = modifier
+                )
+            }
         }
     }
 }
