@@ -109,25 +109,29 @@ fun BuatPesananScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(end = 8.dp, top = 8.dp),
+                modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
-                Text(
-                    text = stringResource(id = R.string.clear),
-                    color = Color.Red,
-                    fontSize = 14.sp,
-                    modifier = modifier.clickable {}
-                )
-                Spacer(modifier = modifier.width(16.dp))
-                Icon(
-                    Icons.Default.DeleteSweep,
-                    contentDescription = stringResource(R.string.clear_data),
-                    tint = Color.Red,
-                    modifier = modifier.clickable {}
-                )
+                Row(
+                    modifier = modifier
+                        .clickable {}
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.clear),
+                        color = Color.Red,
+                        fontSize = 14.sp
+                    )
+                    Spacer(modifier = modifier.width(16.dp))
+                    Icon(
+                        Icons.Default.DeleteSweep,
+                        contentDescription = stringResource(R.string.clear_data),
+                        tint = Color.Red
+                    )
+                }
             }
             SelectCustomer(
                 customer = null,
