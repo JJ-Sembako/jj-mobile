@@ -106,4 +106,6 @@
 
     <string name="history">Riwayat</string>
     <string name="search_transaction">Cari transaksi</string>
+    <string name="from_date">Dari tanggal</string>
+    <string name="until_date">Sampai tanggal</string>
 </resources>
