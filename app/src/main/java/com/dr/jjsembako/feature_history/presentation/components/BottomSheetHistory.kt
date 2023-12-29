@@ -54,6 +54,8 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetHistory(
+    fromDate: MutableState<String>,
+    untilDate: MutableState<String>,
     isFilterOn: MutableState<Boolean>,
     showSheet: MutableState<Boolean>,
     modifier: Modifier
@@ -80,7 +82,18 @@ fun BottomSheetHistory(
                 )
                 Divider(color = MaterialTheme.colorScheme.tertiary, thickness = 1.dp)
                 Spacer(modifier = modifier.height(8.dp))
-                //TODO: Add filter date
+                SwitchFilter(
+                    fromDate = fromDate,
+                    untilDate = untilDate,
+                    isFilterOn = isFilterOn,
+                    modifier = modifier
+                )
+                DateFilter(
+                    fromDate = fromDate,
+                    untilDate = untilDate,
+                    isFilterOn = isFilterOn,
+                    modifier = modifier
+                )
                 Spacer(modifier = modifier.height(32.dp))
                 Button(
                     onClick = {
@@ -342,6 +355,8 @@ private fun DateFilter(
 private fun BottomSheetCustomerPreview() {
     JJSembakoTheme {
         BottomSheetHistory(
+            fromDate = remember { mutableStateOf("10-12-2023") },
+            untilDate = remember { mutableStateOf("12-12-2023") },
             isFilterOn = remember { mutableStateOf(false) },
             showSheet = remember { mutableStateOf(true) },
             modifier = Modifier
