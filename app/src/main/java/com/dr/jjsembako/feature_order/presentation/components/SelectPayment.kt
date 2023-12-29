@@ -72,12 +72,12 @@ private fun SelectPaymentContent(
     modifier: Modifier
 ) {
     Spacer(modifier = modifier.height(16.dp))
-    LazyColumn(
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 16.dp),
+            .padding(start = 16.dp)
     ) {
-        items(items = paymentList, itemContent = { payment ->
+        paymentList.forEach { payment ->
             Row(
                 modifier = modifier
                     .fillMaxWidth()
@@ -98,7 +98,7 @@ private fun SelectPaymentContent(
                     modifier = modifier.padding(start = 8.dp)
                 )
             }
-        })
+        }
     }
     Divider(
         modifier = modifier
