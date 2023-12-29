@@ -26,7 +26,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -55,6 +57,7 @@ fun BuatPesananScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val (selectedOption, onOptionSelected) = rememberSaveable { mutableStateOf(paymentList[0]) }
 
     Scaffold(
         topBar = {
@@ -132,8 +135,9 @@ fun BuatPesananScreen(
                 modifier = modifier
             )
             SelectPayment(
-                selectedOption = FilterOption("Tempo", "tempo"),
-                onOptionSelected = {},
+                paymentList = paymentList,
+                selectedOption = selectedOption,
+                onOptionSelected = onOptionSelected,
                 modifier = modifier
             )
             SelectProduct(onSelectProduct = { onNavigateToSelectProduct() }, modifier = modifier)
@@ -142,6 +146,11 @@ fun BuatPesananScreen(
         }
     }
 }
+
+private val paymentList = listOf(
+    FilterOption("Tempo", "tempo"),
+    FilterOption("Tunai", "tunai")
+)
 
 @Preview(showBackground = true)
 @Composable

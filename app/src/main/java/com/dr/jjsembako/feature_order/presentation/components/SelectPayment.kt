@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,6 +28,7 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun SelectPayment(
+    paymentList: List<FilterOption>,
     selectedOption: FilterOption,
     onOptionSelected: (FilterOption) -> Unit,
     modifier: Modifier
@@ -39,7 +39,7 @@ fun SelectPayment(
             .padding(bottom = 16.dp)
     ) {
         SelectPaymentHeader(modifier)
-        SelectPaymentContent(selectedOption, onOptionSelected, modifier)
+        SelectPaymentContent(paymentList, selectedOption, onOptionSelected, modifier)
     }
 }
 
@@ -51,7 +51,7 @@ private fun SelectPaymentHeader(modifier: Modifier) {
             .fillMaxWidth()
             .width(1.dp), color = MaterialTheme.colorScheme.tertiary
     )
-    Column(modifier = modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)){
+    Column(modifier = modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)) {
         Text(
             text = stringResource(id = R.string.select_payment), fontSize = 14.sp
         )
@@ -66,6 +66,7 @@ private fun SelectPaymentHeader(modifier: Modifier) {
 
 @Composable
 private fun SelectPaymentContent(
+    paymentList: List<FilterOption>,
     selectedOption: FilterOption,
     onOptionSelected: (FilterOption) -> Unit,
     modifier: Modifier
@@ -91,7 +92,11 @@ private fun SelectPaymentContent(
                     onClick = { onOptionSelected(payment) },
                     modifier = modifier.padding(all = Dp(value = 8F))
                 )
-                Text(text = payment.name, fontSize = 14.sp, modifier = modifier.padding(start = 8.dp))
+                Text(
+                    text = payment.name,
+                    fontSize = 14.sp,
+                    modifier = modifier.padding(start = 8.dp)
+                )
             }
         })
     }
@@ -103,16 +108,15 @@ private fun SelectPaymentContent(
     )
 }
 
-private val paymentList = listOf(
-    FilterOption("Tempo", "tempo"),
-    FilterOption("Tunai", "tunai")
-)
-
 @Preview(showBackground = true)
 @Composable
 private fun SelectPaymentPreview() {
     JJSembakoTheme {
         SelectPayment(
+            paymentList = listOf(
+                FilterOption("Tempo", "tempo"),
+                FilterOption("Tunai", "tunai")
+            ),
             selectedOption = FilterOption("Tempo", "tempo"),
             onOptionSelected = {},
             modifier = Modifier
