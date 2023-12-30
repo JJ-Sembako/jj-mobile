@@ -255,6 +255,9 @@ private fun DateFilter(
         ) {
             DatePicker(
                 state = datePickerStateFromDate,
+                dateValidator = { date ->
+                    date <= calendarUntilDate.timeInMillis
+                }
             )
         }
     }
@@ -282,7 +285,10 @@ private fun DateFilter(
             }
         ) {
             DatePicker(
-                state = datePickerStateUntilDate
+                state = datePickerStateUntilDate,
+                dateValidator = { date ->
+                    date >= calendarFromDate.timeInMillis
+                }
             )
         }
     }
