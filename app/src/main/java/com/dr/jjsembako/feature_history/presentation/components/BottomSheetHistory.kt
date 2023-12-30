@@ -1,7 +1,5 @@
 package com.dr.jjsembako.feature_history.presentation.components
 
-import android.os.Build
-import android.util.Log
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -42,19 +40,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.convertDateStringToCalendar
 import com.dr.jjsembako.core.utils.convertMillisToDate
 import com.dr.jjsembako.core.utils.initializeDateValues
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,12 +85,13 @@ fun BottomSheetHistory(
                     isFilterOn = isFilterOn,
                     modifier = modifier
                 )
-                DateFilter(
-                    fromDate = fromDate,
-                    untilDate = untilDate,
-                    isFilterOn = isFilterOn,
-                    modifier = modifier
-                )
+                if (isFilterOn.value) {
+                    DateFilter(
+                        fromDate = fromDate,
+                        untilDate = untilDate,
+                        modifier = modifier
+                    )
+                }
                 Spacer(modifier = modifier.height(32.dp))
                 Button(
                     onClick = {
@@ -149,35 +142,13 @@ private fun SwitchFilter(
 private fun DateFilter(
     fromDate: MutableState<String>,
     untilDate: MutableState<String>,
-    isFilterOn: MutableState<Boolean>,
     modifier: Modifier
 ) {
     val calendarFromDate = Calendar.getInstance()
     val calendarUntilDate = Calendar.getInstance()
 
     // convert date string to calendar
-    try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val fromDateLocalDate =
-                LocalDate.parse(fromDate.value, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-            val untilDateLocalDate =
-                LocalDate.parse(untilDate.value, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-            calendarFromDate.time =
-                Date.from(fromDateLocalDate.atStartOfDay(ZoneId.of("UTC")).toInstant())
-            calendarUntilDate.time =
-                Date.from(untilDateLocalDate.atStartOfDay(ZoneId.of("UTC")).toInstant())
-            Log.e("Calendar From Date", "Calendar From Date: ${calendarFromDate.time}")
-        } else {
-            val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).apply {
-                timeZone = TimeZone.getTimeZone("UTC")
-            }
-            dateFormat.isLenient = false
-            calendarFromDate.time = dateFormat.parse(fromDate.value)!!
-            calendarUntilDate.time = dateFormat.parse(untilDate.value)!!
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+    convertDateStringToCalendar(fromDate, untilDate, calendarFromDate, calendarUntilDate)
 
     // set the initial date
     val datePickerStateFromDate =
@@ -230,90 +201,89 @@ private fun DateFilter(
             }
         }
     }
-    if (isFilterOn.value) {
-        Column(
-            modifier = modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            OutlinedTextField(
-                value = fromDate.value,
-                readOnly = true,
-                label = { Text(stringResource(R.string.from_date)) },
-                onValueChange = { fromDate.value = it },
-                singleLine = true,
-                interactionSource = interactionSourceFromDate,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-            )
-            OutlinedTextField(
-                value = untilDate.value,
-                readOnly = true,
-                label = { Text(stringResource(R.string.until_date)) },
-                onValueChange = { untilDate.value = it },
-                singleLine = true,
-                interactionSource = interactionSourceUntilDate,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-            )
-        }
-        if (showDatePickerFromDate) {
-            DatePickerDialog(
-                onDismissRequest = {
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        OutlinedTextField(
+            value = fromDate.value,
+            readOnly = true,
+            label = { Text(stringResource(R.string.from_date)) },
+            onValueChange = { fromDate.value = it },
+            singleLine = true,
+            interactionSource = interactionSourceFromDate,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+        )
+        OutlinedTextField(
+            value = untilDate.value,
+            readOnly = true,
+            label = { Text(stringResource(R.string.until_date)) },
+            onValueChange = { untilDate.value = it },
+            singleLine = true,
+            interactionSource = interactionSourceUntilDate,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+        )
+    }
+    if (showDatePickerFromDate) {
+        DatePickerDialog(
+            onDismissRequest = {
+                showDatePickerFromDate = false
+            },
+            confirmButton = {
+                TextButton(onClick = {
                     showDatePickerFromDate = false
-                },
-                confirmButton = {
-                    TextButton(onClick = {
-                        showDatePickerFromDate = false
-                        fromDate.value = datePickerStateFromDate.selectedDateMillis?.let {
-                            convertMillisToDate(it)
-                        }.toString()
-                    }) {
-                        Text(text = stringResource(id = R.string.save))
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = {
-                        showDatePickerFromDate = false
-                    }) {
-                        Text(text = stringResource(id = R.string.cancel))
-                    }
+                    fromDate.value = datePickerStateFromDate.selectedDateMillis?.let {
+                        convertMillisToDate(it)
+                    }.toString()
+                }) {
+                    Text(text = stringResource(id = R.string.save))
                 }
-            ) {
-                DatePicker(
-                    state = datePickerStateFromDate,
-                )
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showDatePickerFromDate = false
+                }) {
+                    Text(text = stringResource(id = R.string.cancel))
+                }
             }
+        ) {
+            DatePicker(
+                state = datePickerStateFromDate,
+            )
         }
-        if (showDatePickerUntilDate) {
-            DatePickerDialog(
-                onDismissRequest = {
+    }
+    if (showDatePickerUntilDate) {
+        DatePickerDialog(
+            onDismissRequest = {
+                showDatePickerUntilDate = false
+            },
+            confirmButton = {
+                TextButton(onClick = {
                     showDatePickerUntilDate = false
-                },
-                confirmButton = {
-                    TextButton(onClick = {
-                        showDatePickerUntilDate = false
-                        untilDate.value = datePickerStateUntilDate.selectedDateMillis?.let {
-                            convertMillisToDate(it)
-                        }.toString()
-                    }) {
-                        Text(text = stringResource(id = R.string.save))
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = {
-                        showDatePickerUntilDate = false
-                    }) {
-                        Text(text = stringResource(id = R.string.cancel))
-                    }
+                    untilDate.value = datePickerStateUntilDate.selectedDateMillis?.let {
+                        convertMillisToDate(it)
+                    }.toString()
+                }) {
+                    Text(text = stringResource(id = R.string.save))
                 }
-            ) {
-                DatePicker(
-                    state = datePickerStateUntilDate
-                )
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showDatePickerUntilDate = false
+                }) {
+                    Text(text = stringResource(id = R.string.cancel))
+                }
             }
+        ) {
+            DatePicker(
+                state = datePickerStateUntilDate
+            )
         }
     }
 }

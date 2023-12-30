@@ -175,3 +175,32 @@ fun convertMillisToDate(millis: Long): String {
         formatter.format(Date(millis))
     }
 }
+
+fun convertDateStringToCalendar(
+    fromDate: MutableState<String>,
+    untilDate: MutableState<String>,
+    calendarFromDate: Calendar,
+    calendarUntilDate: Calendar,
+) {
+    try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val fromDateLocalDate =
+                LocalDate.parse(fromDate.value, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+            val untilDateLocalDate =
+                LocalDate.parse(untilDate.value, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+            calendarFromDate.time =
+                Date.from(fromDateLocalDate.atStartOfDay(ZoneId.of("UTC")).toInstant())
+            calendarUntilDate.time =
+                Date.from(untilDateLocalDate.atStartOfDay(ZoneId.of("UTC")).toInstant())
+        } else {
+            val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).apply {
+                timeZone = TimeZone.getTimeZone("UTC")
+            }
+            dateFormat.isLenient = false
+            calendarFromDate.time = dateFormat.parse(fromDate.value)!!
+            calendarUntilDate.time = dateFormat.parse(untilDate.value)!!
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
