@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 /**
  * Toolkits Sistem
@@ -168,7 +169,9 @@ fun convertMillisToDate(millis: Long): String {
             .toLocalDate()
         selectedLocalDate.format(formatter)
     } else {
-        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
         formatter.format(Date(millis))
     }
 }

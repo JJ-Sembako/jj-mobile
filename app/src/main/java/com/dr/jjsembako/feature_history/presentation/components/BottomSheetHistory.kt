@@ -1,6 +1,7 @@
 package com.dr.jjsembako.feature_history.presentation.components
 
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -53,6 +54,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,11 +163,14 @@ private fun DateFilter(
             val untilDateLocalDate =
                 LocalDate.parse(untilDate.value, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
             calendarFromDate.time =
-                Date.from(fromDateLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+                Date.from(fromDateLocalDate.atStartOfDay(ZoneId.of("UTC")).toInstant())
             calendarUntilDate.time =
-                Date.from(untilDateLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+                Date.from(untilDateLocalDate.atStartOfDay(ZoneId.of("UTC")).toInstant())
+            Log.e("Calendar From Date", "Calendar From Date: ${calendarFromDate.time}")
         } else {
-            val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+            val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).apply {
+                timeZone = TimeZone.getTimeZone("UTC")
+            }
             dateFormat.isLenient = false
             calendarFromDate.time = dateFormat.parse(fromDate.value)!!
             calendarUntilDate.time = dateFormat.parse(untilDate.value)!!
@@ -278,7 +283,7 @@ private fun DateFilter(
                 }
             ) {
                 DatePicker(
-                    state = datePickerStateFromDate
+                    state = datePickerStateFromDate,
                 )
             }
         }
