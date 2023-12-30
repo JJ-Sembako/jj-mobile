@@ -9,7 +9,9 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
@@ -156,5 +158,17 @@ fun initializeDateValues(fromDate: MutableState<String>, untilDate: MutableState
             SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(firstDayOfMonth)
         untilDate.value =
             SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
+    }
+}
+
+fun convertMillisToDate(millis: Long): String {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val selectedLocalDate = Instant.ofEpochMilli(millis).atZone(ZoneId.of("UTC"))
+            .toLocalDate()
+        selectedLocalDate.format(formatter)
+    } else {
+        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        formatter.format(Date(millis))
     }
 }

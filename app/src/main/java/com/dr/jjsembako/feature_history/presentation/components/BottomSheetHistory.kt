@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.convertMillisToDate
 import com.dr.jjsembako.core.utils.initializeDateValues
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -261,23 +262,9 @@ private fun DateFilter(
                 confirmButton = {
                     TextButton(onClick = {
                         showDatePickerFromDate = false
-                        try {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                val localDate = LocalDate.parse(
-                                    datePickerStateFromDate.selectedDateMillis!!.toString(),
-                                    DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                                )
-                                fromDate.value =
-                                    localDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                            } else {
-                                fromDate.value =
-                                    SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(
-                                        datePickerStateFromDate.selectedDateMillis!!
-                                    )
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+                        fromDate.value = datePickerStateFromDate.selectedDateMillis?.let {
+                            convertMillisToDate(it)
+                        }.toString()
                     }) {
                         Text(text = stringResource(id = R.string.save))
                     }
@@ -303,23 +290,9 @@ private fun DateFilter(
                 confirmButton = {
                     TextButton(onClick = {
                         showDatePickerUntilDate = false
-                        try {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                val localDate = LocalDate.parse(
-                                    datePickerStateUntilDate.selectedDateMillis!!.toString(),
-                                    DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                                )
-                                fromDate.value =
-                                    localDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                            } else {
-                                fromDate.value =
-                                    SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(
-                                        datePickerStateUntilDate.selectedDateMillis!!
-                                    )
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+                        untilDate.value = datePickerStateUntilDate.selectedDateMillis?.let {
+                            convertMillisToDate(it)
+                        }.toString()
                     }) {
                         Text(text = stringResource(id = R.string.save))
                     }
