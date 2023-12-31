@@ -222,7 +222,7 @@ fun PengecekanUsernameScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PengecekanUsernameScreenPreview() {
+private fun PengecekanUsernameScreenPreview() {
     JJSembakoTheme {
         PengecekanUsernameScreen(onNavigateToLogin = {}, onNavigateToCheckAnswer = {})
     }

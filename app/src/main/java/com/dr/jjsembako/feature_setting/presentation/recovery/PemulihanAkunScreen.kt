@@ -156,7 +156,7 @@ fun PemulihanAkunScreen(
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun PemulihanAkunContent(
+private fun PemulihanAkunContent(
     onNavigateToSetting: () -> Unit,
     questionList: List<DataRecoveryQuestion?>?,
     recoveryIsActive: Boolean,
@@ -409,7 +409,7 @@ fun PemulihanAkunContent(
 
 @Preview(showBackground = true)
 @Composable
-fun PemulihanAkunScreenPreview() {
+private fun PemulihanAkunScreenPreview() {
     JJSembakoTheme {
         PemulihanAkunScreen(onNavigateToSetting = {})
     }

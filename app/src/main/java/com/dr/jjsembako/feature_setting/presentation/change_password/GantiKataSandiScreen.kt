@@ -388,7 +388,7 @@ fun GantiKataSandiScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun GantiKataSandiScreenPreview() {
+private fun GantiKataSandiScreenPreview() {
     JJSembakoTheme {
         GantiKataSandiScreen(onNavigateToSetting = {})
     }

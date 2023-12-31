@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_customer.presentation.list
+package com.dr.jjsembako.feature_order.presentation.select_cust
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -61,16 +59,15 @@ import com.dr.jjsembako.core.presentation.components.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_customer.presentation.list.PelangganViewModel
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun PelangganScreen(
-    keyword: String,
-    onNavigateBack: () -> Unit,
-    onNavigateToDetailCust: (String, String) -> Unit,
-    onNavigateToAddCust: (String) -> Unit,
+fun PilihPelangganScreen(
+    onNavigateToMainOrderScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // TODO: Ganti ViewModel dan Repository khusus feature_order
     val pelangganViewModel: PelangganViewModel = hiltViewModel()
     val customerPagingItems: LazyPagingItems<DataCustomer> =
         pelangganViewModel.customerState.collectAsLazyPagingItems()
@@ -89,17 +86,9 @@ fun PelangganScreen(
     )
 
     // Set keyword for the first time Composable is rendered
-    LaunchedEffect(keyword) {
-        if(keyword.isEmpty()){
-            if(searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
-            else pelangganViewModel.fetchCustomers(searchQuery.value)
-        } else {
-            if(searchQuery.value.isEmpty()) {
-                searchQuery.value = keyword
-                pelangganViewModel.fetchCustomers(keyword)
-            }
-            else pelangganViewModel.fetchCustomers(searchQuery.value)
-        }
+    LaunchedEffect(Unit) {
+        if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
+        else pelangganViewModel.fetchCustomers(searchQuery.value)
     }
 
     Scaffold(
@@ -109,11 +98,11 @@ fun PelangganScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
-                title = { Text(stringResource(R.string.cust)) },
+                title = { Text(stringResource(R.string.select_cust)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         keyboardController?.hide()
-                        onNavigateBack()
+                        onNavigateToMainOrderScreen()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -121,23 +110,21 @@ fun PelangganScreen(
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        keyboardController?.hide()
+                        onNavigateToMainOrderScreen()
+                    }) {
+                        Icon(
+                            Icons.Default.Check,
+                            stringResource(R.string.finish),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
             )
-        },
-        floatingActionButton = {
-            if (!activeSearch.value) {
-                FloatingActionButton(
-                    onClick = { onNavigateToAddCust(searchQuery.value) },
-                    containerColor = MaterialTheme.colorScheme.primary
-                ) {
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = stringResource(R.string.add_new_cust)
-                    )
-                }
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
+        }
     ) { contentPadding ->
         Column(
             modifier = modifier
@@ -195,13 +182,9 @@ fun PelangganScreen(
                                 .fillMaxWidth()
                         ) {
                             items(customerPagingItems.itemCount) { index ->
+                                //TODO: Ganti CustomerInfo khusus feature_order
                                 CustomerInfo(
-                                    onNavigateToDetailCust = {
-                                        onNavigateToDetailCust(
-                                            customerPagingItems[index]!!.id,
-                                            searchQuery.value
-                                        )
-                                    },
+                                    onNavigateToDetailCust = {},
                                     customer = customerPagingItems[index]!!,
                                     modifier = modifier
                                 )
@@ -255,13 +238,10 @@ private val radioOptions = listOf(
 
 @Composable
 @Preview(showBackground = true)
-private fun PelangganScreenPreview() {
+private fun PilihPelangganScreenPreview() {
     JJSembakoTheme {
-        PelangganScreen(
-            keyword = "",
-            onNavigateBack = {},
-            onNavigateToDetailCust = { id, keyword -> ({ id + keyword }) },
-            onNavigateToAddCust = {},
+        PilihPelangganScreen(
+            onNavigateToMainOrderScreen = {},
             modifier = Modifier
         )
     }

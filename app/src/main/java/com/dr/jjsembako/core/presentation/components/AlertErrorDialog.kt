@@ -108,7 +108,7 @@ fun AlertErrorDialog(
 
 @Composable
 @Preview(showBackground = true)
-fun AlertErrorDialogPreview() {
+private fun AlertErrorDialogPreview() {
     JJSembakoTheme {
         AlertErrorDialog(
             message = "Akun tidak ditemukan.",

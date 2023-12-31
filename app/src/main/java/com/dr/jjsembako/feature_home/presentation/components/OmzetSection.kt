@@ -38,7 +38,7 @@ fun OmzetSection(omzet: Long = 0, modifier: Modifier) {
 
 @Composable
 @Preview(showBackground = true)
-fun OmzetSectionPreview() {
+private fun OmzetSectionPreview() {
     JJSembakoTheme {
         OmzetSection(omzet = 123456789, modifier = Modifier)
     }

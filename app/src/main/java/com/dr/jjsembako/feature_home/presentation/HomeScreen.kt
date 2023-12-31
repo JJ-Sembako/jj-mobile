@@ -93,7 +93,7 @@ fun HomeScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
+private fun LoginScreenPreview() {
     JJSembakoTheme {
         HomeScreen(
             onNavigateToCreateOrder = {},

@@ -72,7 +72,7 @@ private fun Greetings(name: String, modifier: Modifier) {
 
 @Composable
 @Preview(showBackground = true)
-fun WelcomeSectionPreview() {
+private fun WelcomeSectionPreview() {
     JJSembakoTheme {
         WelcomeSection(name = "UsernameIsCool12345678", onLogout = {}, modifier = Modifier)
     }
@@ -80,7 +80,7 @@ fun WelcomeSectionPreview() {
 
 @Composable
 @Preview(showBackground = true)
-fun GreetingsPreview() {
+private fun GreetingsPreview() {
     JJSembakoTheme {
         Greetings(name = "UsernameIsCool12345678", modifier = Modifier)
     }

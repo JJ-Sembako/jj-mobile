@@ -13,6 +13,7 @@
     <string name="visible_pass">Visibilitas password</string>
     <string name="change">Ubah</string>
     <string name="save">Simpan</string>
+    <string name="finish">Selesai</string>
     <string name="update">Perbarui</string>
     <string name="reload">Muat Ulang</string>
     <string name="back">Kembali</string>
@@ -22,7 +23,10 @@
     <string name="delete">Hapus</string>
     <string name="yes_delete">Ya, Hapus!</string>
     <string name="ok">Ok</string>
+    <string name="close">Tutup</string>
     <string name="cancel">Batal</string>
+    <string name="clear">Kosongkan</string>
+    <string name="clear_data">Kosongkan data</string>
     <string name="menu">Menu</string>
     <string name="alert">Peringatan</string>
     <string name="on_progress">Dalam Proses</string>
@@ -86,4 +90,23 @@
     <string name="payment_status">Status Pembayaran</string>
     <string name="order_status">Status Pesanan</string>
     <string name="search_order">Cari pesanan</string>
+
+    <string name="warehouse">Gudang</string>
+    <string name="search_product">Cari barang</string>
+    <string name="stock">Stok: %1$d %2$s</string>
+    <string name="standard_price">Harga patokan:</string>
+    <string name="info_unit">Beli 1 %1$s isi %2$d pcs</string>
+    <string name="product_description">Foto dari produk %1$s</string>
+
+    <string name="create_order">Buat Pesanan</string>
+    <string name="select_cust">Pilih Pelanggan</string>
+    <string name="select_payment">Pilih Metode Pembayaran</string>
+    <string name="select_product">Pilih Barang</string>
+    <string name="total_payment">Total Biaya Pesanan</string>
+
+    <string name="history">Riwayat</string>
+    <string name="search_transaction">Cari transaksi</string>
+    <string name="from_date">Dari tanggal</string>
+    <string name="until_date">Sampai tanggal</string>
+    <string name="activate_filter">Aktifkan filter</string>
 </resources>

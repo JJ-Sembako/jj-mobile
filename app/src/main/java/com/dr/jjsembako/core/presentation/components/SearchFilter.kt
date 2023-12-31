@@ -132,7 +132,7 @@ fun SearchFilter(
 
 @Composable
 @Preview(showBackground = true)
-fun SearchFilterPreview() {
+private fun SearchFilterPreview() {
     JJSembakoTheme {
         SearchFilter(
             placeholder = stringResource(R.string.search_cust),

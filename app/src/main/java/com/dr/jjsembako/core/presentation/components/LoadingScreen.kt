@@ -67,7 +67,7 @@ fun LoadingScreen(
 
 @Composable
 @Preview(showBackground = true)
-fun LoadingScreenPreview() {
+private fun LoadingScreenPreview() {
     JJSembakoTheme {
         LoadingScreen(modifier = Modifier)
     }

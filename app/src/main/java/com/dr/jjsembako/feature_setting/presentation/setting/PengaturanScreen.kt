@@ -137,7 +137,7 @@ fun PengaturanScreen(
 
 @Composable
 @Preview(showBackground = true)
-fun PengaturanScreenPreview() {
+private fun PengaturanScreenPreview() {
     JJSembakoTheme {
         PengaturanScreen(
             onLogout = {},

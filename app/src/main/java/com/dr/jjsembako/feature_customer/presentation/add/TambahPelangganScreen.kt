@@ -420,7 +420,7 @@ fun TambahPelangganScreen(
 
 @Composable
 @Preview(showBackground = true)
-fun TambahPelangganScreenPreview() {
+private fun TambahPelangganScreenPreview() {
     JJSembakoTheme {
         TambahPelangganScreen(onNavigateToPelangganScreen = {}, openMaps = {})
     }

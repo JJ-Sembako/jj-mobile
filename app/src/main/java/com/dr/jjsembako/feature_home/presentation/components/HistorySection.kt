@@ -59,7 +59,7 @@ fun HistorySection(modifier: Modifier) {
 
 @Composable
 @Preview(showBackground = true)
-fun HistorySectionPreview() {
+private fun HistorySectionPreview() {
     JJSembakoTheme {
         HistorySection(modifier = Modifier)
     }

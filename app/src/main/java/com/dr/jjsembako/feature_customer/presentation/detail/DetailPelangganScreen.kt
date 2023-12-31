@@ -320,7 +320,6 @@ private fun DetailPelangganContent(
             }
             if (showDialog.value) {
                 AlertDeleteDialog(
-                    onNavigateBack = { onNavigateBack() },
                     onDelete = { detailPelangganViewModel.handleDeleteCustomer(cust.id) },
                     showDialog = showDialog,
                     modifier = modifier
@@ -358,7 +357,7 @@ private val radioOptionsOrder = listOf(
 
 @Composable
 @Preview(showBackground = true)
-fun DetailPelangganScreenPreview() {
+private fun DetailPelangganScreenPreview() {
     JJSembakoTheme {
         DetailPelangganScreen(
             idCust = "",

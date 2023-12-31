@@ -32,10 +32,15 @@ import com.dr.jjsembako.feature_customer.presentation.add.TambahPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.detail.DetailPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.edit.EditPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
+import com.dr.jjsembako.feature_history.presentation.list.RiwayatScreen
 import com.dr.jjsembako.feature_home.presentation.HomeScreen
+import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananScreen
+import com.dr.jjsembako.feature_order.presentation.select_cust.PilihPelangganScreen
+import com.dr.jjsembako.feature_order.presentation.select_product.PilihBarangScreen
 import com.dr.jjsembako.feature_setting.presentation.change_password.GantiKataSandiScreen
 import com.dr.jjsembako.feature_setting.presentation.recovery.PemulihanAkunScreen
 import com.dr.jjsembako.feature_setting.presentation.setting.PengaturanScreen
+import com.dr.jjsembako.feature_warehouse.presentation.GudangScreen
 import com.dr.jjsembako.navigation.Screen
 
 @Composable
@@ -171,21 +176,38 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.BuatPesanan.route) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Buat Pesanan")
-            }
+            BuatPesananScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToSelectCustomer = {
+                    navController.navigate(Screen.BuatPesananPilihPelangan.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToSelectProduct = {
+                    navController.navigate(Screen.BuatPesananPilihBarang.route) {
+                        launchSingleTop = true
+                    }
+                })
+        }
+
+        composable(Screen.BuatPesananPilihPelangan.route) {
+            PilihPelangganScreen(onNavigateToMainOrderScreen = {
+                navController.navigate(Screen.BuatPesanan.route) {
+                    popUpTo(Screen.BuatPesanan.route) { inclusive = true }
+                }
+            })
+        }
+
+        composable(Screen.BuatPesananPilihBarang.route) {
+            PilihBarangScreen(onNavigateToMainOrderScreen = {
+                navController.navigate(Screen.BuatPesanan.route) {
+                    popUpTo(Screen.BuatPesanan.route) { inclusive = true }
+                }
+            })
         }
 
         composable(Screen.Gudang.route) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Gudang")
-            }
+            GudangScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable(
@@ -269,12 +291,7 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.Riwayat.route) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Riwayat")
-            }
+            RiwayatScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable(Screen.Performa.route) {
@@ -332,7 +349,7 @@ fun JJSembakoApp() {
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
-fun JJSembakoAppPreview() {
+private fun JJSembakoAppPreview() {
     JJSembakoTheme {
         JJSembakoApp()
     }

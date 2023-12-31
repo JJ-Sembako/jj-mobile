@@ -319,7 +319,7 @@ fun PemulihanKataSandiScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PemulihanKataSandiScreenPreview() {
+private fun PemulihanKataSandiScreenPreview() {
     JJSembakoTheme {
         PemulihanKataSandiScreen(
             username = "",

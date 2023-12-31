@@ -6,8 +6,17 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 /**
  * Toolkits Sistem
@@ -131,4 +140,67 @@ fun call(context: Context, uri: String) {
         Uri.parse("tel: $uri")
     )
     context.startActivity(callIntent)
+}
+
+/**
+ * Toolkits Riwayat
+ */
+fun initializeDateValues(fromDate: MutableState<String>, untilDate: MutableState<String>) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        fromDate.value = LocalDate.now().withDayOfMonth(1)
+            .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+        untilDate.value =
+            LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+    } else {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        val firstDayOfMonth = calendar.time
+        fromDate.value =
+            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(firstDayOfMonth)
+        untilDate.value =
+            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
+    }
+}
+
+fun convertMillisToDate(millis: Long): String {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val selectedLocalDate = Instant.ofEpochMilli(millis).atZone(ZoneId.of("UTC"))
+            .toLocalDate()
+        selectedLocalDate.format(formatter)
+    } else {
+        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+        formatter.format(Date(millis))
+    }
+}
+
+fun convertDateStringToCalendar(
+    fromDate: MutableState<String>,
+    untilDate: MutableState<String>,
+    calendarFromDate: Calendar,
+    calendarUntilDate: Calendar,
+) {
+    try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val fromDateLocalDate =
+                LocalDate.parse(fromDate.value, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+            val untilDateLocalDate =
+                LocalDate.parse(untilDate.value, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+            calendarFromDate.time =
+                Date.from(fromDateLocalDate.atStartOfDay(ZoneId.of("UTC")).toInstant())
+            calendarUntilDate.time =
+                Date.from(untilDateLocalDate.atStartOfDay(ZoneId.of("UTC")).toInstant())
+        } else {
+            val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).apply {
+                timeZone = TimeZone.getTimeZone("UTC")
+            }
+            dateFormat.isLenient = false
+            calendarFromDate.time = dateFormat.parse(fromDate.value)!!
+            calendarUntilDate.time = dateFormat.parse(untilDate.value)!!
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 }

@@ -485,7 +485,7 @@ private fun EditPelangganContent(
 
 @Composable
 @Preview(showBackground = true)
-fun EditPelangganScreenPreview() {
+private fun EditPelangganScreenPreview() {
     JJSembakoTheme {
         EditPelangganScreen(idCust = "", onNavigateToDetailCust = {}, openMaps = {})
     }

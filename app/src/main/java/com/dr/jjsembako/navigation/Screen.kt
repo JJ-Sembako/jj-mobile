@@ -15,6 +15,9 @@ sealed class Screen(val route: String) {
     }
 
     object BuatPesanan : Screen("buatpesanan")
+    object BuatPesananPilihPelangan : Screen("buatpesanan/pilih-pelanggan")
+    object BuatPesananPilihBarang : Screen("buatpesanan/pilih-barang")
+
     object Gudang : Screen("gudang")
 
     object Pelanggan : Screen("pelanggan/?keyword={keyword}") {

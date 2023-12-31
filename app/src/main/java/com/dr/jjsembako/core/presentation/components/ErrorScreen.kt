@@ -112,7 +112,7 @@ fun ErrorScreen(
 
 @Composable
 @Preview(showBackground = true)
-fun ErrorScreenPreview() {
+private fun ErrorScreenPreview() {
     JJSembakoTheme {
         ErrorScreen(
             onNavigateBack = {},

@@ -6,21 +6,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,10 +41,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheetCustomer(
+fun BottomSheetProduct(
     optionList: List<FilterOption>,
-    selectedOption: FilterOption,
-    onOptionSelected: (FilterOption) -> Unit,
+    checkBoxResult: MutableList<String>,
+    checkBoxStates: MutableMap<String, Boolean>,
     showSheet: MutableState<Boolean>,
     modifier: Modifier
 ) {
@@ -56,6 +59,7 @@ fun BottomSheetCustomer(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
+                    .heightIn(max = 640.dp)
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -69,21 +73,38 @@ fun BottomSheetCustomer(
                 Spacer(modifier = modifier.height(8.dp))
                 LazyColumn(
                     modifier = modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .weight(1f),
                 ) {
                     items(items = optionList, itemContent = { filter ->
                         Row(
                             modifier = modifier
                                 .fillMaxWidth()
-                                .selectable(
-                                    selected = (filter == selectedOption),
-                                    onClick = { onOptionSelected(filter) }
+                                .toggleable(
+                                    value = checkBoxStates.getValue(filter.value),
+                                    onValueChange = {
+                                        checkBoxStates[filter.value] = it
+                                        if (it) checkBoxResult.add(filter.value)
+                                        else checkBoxResult.remove(filter.value)
+                                        if (checkBoxResult.isEmpty()) {
+                                            checkBoxResult.addAll(optionList.map { it2 -> it2.value })
+                                            checkBoxStates.putAll(optionList.map { it2 -> it2.value to true })
+                                        }
+                                    }
                                 ),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            RadioButton(
-                                selected = (filter == selectedOption),
-                                onClick = { onOptionSelected(filter) },
+                            Checkbox(
+                                checked = checkBoxStates.getValue(filter.value),
+                                onCheckedChange = {
+                                    checkBoxStates[filter.value] = it
+                                    if (it) checkBoxResult.add(filter.value)
+                                    else checkBoxResult.remove(filter.value)
+                                    if (checkBoxResult.isEmpty()) {
+                                        checkBoxResult.addAll(optionList.map { it2 -> it2.value })
+                                        checkBoxStates.putAll(optionList.map { it2 -> it2.value to true })
+                                    }
+                                },
                                 modifier = modifier.padding(all = Dp(value = 8F))
                             )
                             Text(text = filter.name, modifier = modifier.padding(start = 8.dp))
@@ -113,15 +134,22 @@ fun BottomSheetCustomer(
 
 @Composable
 @Preview(showBackground = true)
-private fun BottomSheetCustomerPreview() {
+private fun BottomSheetProductPreview() {
     JJSembakoTheme {
-        BottomSheetCustomer(
-            optionList = listOf(
-                FilterOption("Semua Pelanggan", "semua"),
-                FilterOption("Pelanggan Saya", "pelangganku")
-            ),
-            selectedOption = FilterOption("Semua Pelanggan", "semua"),
-            onOptionSelected = {},
+        val option = listOf(
+            FilterOption("Beras", "beras"),
+            FilterOption("Minyak", "minyak"),
+            FilterOption("Gula", "gula")
+        )
+        val checkBoxResult = remember { mutableStateListOf<String>() }
+        val checkBoxStates = remember { mutableStateMapOf<String, Boolean>() }
+        checkBoxResult.addAll(option.map { it.value })
+        checkBoxStates.putAll(option.map { it.value to true })
+
+        BottomSheetProduct(
+            optionList = option,
+            checkBoxResult = checkBoxResult,
+            checkBoxStates = checkBoxStates,
             showSheet = remember { mutableStateOf(true) },
             modifier = Modifier
         )
