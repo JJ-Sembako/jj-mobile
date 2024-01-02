@@ -1,9 +1,9 @@
 package com.dr.jjsembako.core.di
 
 import android.content.SharedPreferences
+import com.dr.jjsembako.BuildConfig
 import com.dr.jjsembako.core.data.remote.network.AccountApiService
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
-import com.dr.jjsembako.BuildConfig
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -15,17 +15,21 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
+
+    private val loggingInterceptor =
+        HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    private val gson = GsonBuilder().setLenient().create()
+
     @Provides
+    @Singleton
     @Named("primary")
     fun provideOkHttpClient(sharedPreferences: SharedPreferences): OkHttpClient {
-        val loggingInterceptor =
-            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val token = sharedPreferences.getString("token", "")
@@ -43,13 +47,44 @@ class NetworkModule {
     }
 
     @Provides
+    @Singleton
+    @Named("webSocket")
+    fun provideOkhttpWebSocket(sharedPreferences: SharedPreferences): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val token = sharedPreferences.getString("token", "")
+
+                val newRequest = chain.request().newBuilder()
+                    .addHeader("Upgrade", "websocket")
+                    .addHeader("Connection", "Upgrade")
+                    .addHeader("Authorization", "Bearer $token")
+                    .build()
+
+                chain.proceed(newRequest)
+            }
+            .addInterceptor(loggingInterceptor)
+            .connectTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .build()
+    }
+
+    @Provides
+    @Singleton
     @Named("primary")
     fun provideRetrofit(@Named("primary") client: OkHttpClient): Retrofit {
-        val gson = GsonBuilder()
-            .setLenient()
-            .create()
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(client)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("webSocket")
+    fun provideRetrofitWebSocket(@Named("webSocket") client: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.WS_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()
