@@ -3,6 +3,7 @@ package com.dr.jjsembako.core.di
 import android.content.SharedPreferences
 import com.dr.jjsembako.core.data.remote.network.AccountApiService
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
+import com.dr.jjsembako.BuildConfig
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -45,7 +46,7 @@ class NetworkModule {
             .setLenient()
             .create()
         return Retrofit.Builder()
-            .baseUrl("http://54.251.20.182/")
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()
