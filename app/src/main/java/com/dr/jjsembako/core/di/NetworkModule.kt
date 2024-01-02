@@ -14,12 +14,14 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
     @Provides
+    @Named("primary")
     fun provideOkHttpClient(sharedPreferences: SharedPreferences): OkHttpClient {
         val loggingInterceptor =
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -41,7 +43,8 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideRetrofit(client: OkHttpClient): Retrofit {
+    @Named("primary")
+    fun provideRetrofit(@Named("primary") client: OkHttpClient): Retrofit {
         val gson = GsonBuilder()
             .setLenient()
             .create()
@@ -53,12 +56,12 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideAccountService(retrofit: Retrofit): AccountApiService {
+    fun provideAccountService(@Named("primary") retrofit: Retrofit): AccountApiService {
         return retrofit.create(AccountApiService::class.java)
     }
 
     @Provides
-    fun provideCustomerService(retrofit: Retrofit): CustomerApiService {
+    fun provideCustomerService(@Named("primary") retrofit: Retrofit): CustomerApiService {
         return retrofit.create(CustomerApiService::class.java)
     }
 }
