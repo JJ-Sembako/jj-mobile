@@ -23,8 +23,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,13 +35,13 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.FilterOption
-import com.dr.jjsembako.core.data.model.Product
 import com.dr.jjsembako.core.presentation.components.BottomSheetProduct
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -53,6 +52,9 @@ import com.dr.jjsembako.feature_warehouse.presentation.components.ProductOnWareh
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
+    val gudangViewModel: GudangViewModel = hiltViewModel()
+    val dataProducts = gudangViewModel.dataProducts.observeAsState().value
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -68,8 +70,8 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
         iterations = LottieConstants.IterateForever,
     )
 
-    LaunchedEffect(Unit){
-        if(checkBoxResult.isEmpty()){
+    LaunchedEffect(Unit) {
+        if (checkBoxResult.isEmpty()) {
             checkBoxResult.addAll(option.map { it.value })
             checkBoxStates.putAll(option.map { it.value to true })
         }
@@ -126,11 +128,17 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
             LazyColumn(
                 modifier = modifier
                     .fillMaxWidth()
-            ){
-                items(items = dataDummy, key = { product -> product.id }, itemContent = { product ->
-                    ProductOnWarehouseInfo(product = product, modifier = modifier)
-                    Spacer(modifier = modifier.height(8.dp))
-                })
+            ) {
+                if (dataProducts?.isNotEmpty() == true) {
+                    items(items = dataProducts, key = { product ->
+                        product?.id ?: "empty-${System.currentTimeMillis()}"
+                    }, itemContent = { product ->
+                        if (product != null) {
+                            ProductOnWarehouseInfo(product = product, modifier = modifier)
+                        }
+                        Spacer(modifier = modifier.height(8.dp))
+                    })
+                }
             }
 
             if (showSheet.value) {
@@ -153,39 +161,6 @@ private val option = listOf(
     FilterOption("Kerupuk", "kerupuk"),
     FilterOption("Air Mineral", "air mineral"),
     FilterOption("Tepung", "tepung")
-)
-
-private val dataDummy = listOf(
-    Product(
-        id = "bc3bbd9e",
-        name = "Air Cahaya",
-        stock = 256,
-        standardPrice = 55000,
-        amountPerUnit = 16,
-        image = "",
-        unit = "karton",
-        category = "Air Mineral"
-    ),
-    Product(
-        id = "aezakmi",
-        name = "Gula Sahara",
-        stock = 180,
-        standardPrice = 32000,
-        amountPerUnit = 10,
-        image = "",
-        unit = "karung",
-        category = "Gula"
-    ),
-    Product(
-        id = "sasacz21",
-        name = "Minyak Kita",
-        stock = 136,
-        standardPrice = 75000,
-        amountPerUnit = 12,
-        image = "",
-        unit = "karton",
-        category = "Minyak Goreng"
-    )
 )
 
 @Preview(showBackground = true)
