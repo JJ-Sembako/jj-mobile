@@ -4,12 +4,14 @@ import android.content.SharedPreferences
 import com.dr.jjsembako.BuildConfig
 import com.dr.jjsembako.core.data.remote.network.AccountApiService
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
+import com.dr.jjsembako.core.data.remote.network.ProductApiService
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,6 +27,10 @@ class NetworkModule {
     private val loggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     private val gson = GsonBuilder().setLenient().create()
+
+    @Provides
+    @Singleton
+    fun provideGson() = gson
 
     @Provides
     @Singleton
@@ -70,7 +76,6 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    @Named("primary")
     fun provideRetrofit(@Named("primary") client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
@@ -80,23 +85,23 @@ class NetworkModule {
     }
 
     @Provides
-    @Singleton
-    @Named("webSocket")
-    fun provideRetrofitWebSocket(@Named("webSocket") client: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.WS_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(client)
-            .build()
-    }
-
-    @Provides
-    fun provideAccountService(@Named("primary") retrofit: Retrofit): AccountApiService {
+    fun provideAccountService(retrofit: Retrofit): AccountApiService {
         return retrofit.create(AccountApiService::class.java)
     }
 
     @Provides
-    fun provideCustomerService(@Named("primary") retrofit: Retrofit): CustomerApiService {
+    fun provideCustomerService(retrofit: Retrofit): CustomerApiService {
         return retrofit.create(CustomerApiService::class.java)
     }
+
+    @Provides
+    fun provideProductService(retrofit: Retrofit): ProductApiService {
+        return retrofit.create(ProductApiService::class.java)
+    }
+
+    @Provides
+    @Named("wsProduct")
+    fun provideWebSocketProductRequest() = Request.Builder()
+        .url(BuildConfig.WS_URL + "product")
+        .build()
 }
