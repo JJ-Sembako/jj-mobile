@@ -26,6 +26,8 @@ class NetworkModule {
 
     private val loggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    private val loggingInterceptor2 =
+        HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS)
     private val gson = GsonBuilder().setLenient().create()
 
     @Provides
@@ -61,14 +63,15 @@ class NetworkModule {
                 val token = sharedPreferences.getString("token", "")
 
                 val newRequest = chain.request().newBuilder()
-                    .addHeader("Upgrade", "websocket")
-                    .addHeader("Connection", "Upgrade")
+//                    .addHeader("Upgrade", "websocket")
+//                    .addHeader("Connection", "Upgrade")
                     .addHeader("Authorization", "Bearer $token")
                     .build()
 
                 chain.proceed(newRequest)
             }
-            .addInterceptor(loggingInterceptor)
+//            .addInterceptor(loggingInterceptor)
+            .addInterceptor(loggingInterceptor2)
             .connectTimeout(120, TimeUnit.SECONDS)
             .readTimeout(120, TimeUnit.SECONDS)
             .build()
@@ -102,6 +105,7 @@ class NetworkModule {
     @Provides
     @Named("wsProduct")
     fun provideWebSocketProductRequest() = Request.Builder()
-        .url(BuildConfig.WS_URL + "product")
+//        .url(BuildConfig.WS_URL + "product")
+        .url("ws://54.251.20.182:3000/ws/product")
         .build()
 }

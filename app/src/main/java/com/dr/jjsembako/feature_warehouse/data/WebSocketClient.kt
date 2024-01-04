@@ -4,14 +4,15 @@ import android.util.Log
 import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import okhttp3.logging.HttpLoggingInterceptor
+import okio.EOFException
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -38,9 +39,27 @@ class WebSocketClient @Inject constructor(
     var onErrorReceived: ((String) -> Unit)? = null
     var onLoadingState: ((Boolean) -> Unit)? = null
 
+    val request2 = Request.Builder()
+        .url("http://54.251.20.182:3000/ws/product")
+        .addHeader("Origin", "http://54.251.20.182:3000")
+        .addHeader("Connection","keep-alive")
+        .addHeader("Accept", "application/json")
+        .addHeader("Upgrade", "websocket")
+        .addHeader("Connection", "Upgrade")
+        .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNzk2YmE0OC1jNGQ2LTRjZDMtOTE4NS01ZWYzMDI1MzBjMDMiLCJyb2xlIjoiU0FMRVMiLCJpYXQiOjE3MDIxNzE2NDJ9.TRZdIe-zluqrlo-ZZLsoGLNRynFD2nZ9a8SxG1zwrhM")
+        .build()
+
+    val client2 = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
+        .retryOnConnectionFailure(true)
+        .readTimeout(30000, TimeUnit.SECONDS)
+        .writeTimeout(30000, TimeUnit.SECONDS)
+        .build()
+
     fun connect() {
         onLoadingState?.invoke(true)
-        webSocket = client.newWebSocket(request, this)
+//        webSocket = client.newWebSocket(request, this)
+        webSocket = client2.newWebSocket(request2, this)
     }
 
     fun close() {
@@ -89,13 +108,25 @@ class WebSocketClient @Inject constructor(
     }
 
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-        Log.d(TAG, "WebSocket closed")
+        Log.d(TAG, "WebSocket closed with code $code, reason: $reason")
         onLoadingState?.invoke(false)
     }
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-        Log.d(TAG, "WebSocket failure", t)
-        onErrorReceived?.invoke((t.message + "\n" + response?.message))
+        Log.e(TAG, "error with code ${response?.code} because ${response?.message}")
+        Log.e(TAG, "WebSocket failure", t)
+
+        if (t is EOFException) {
+            // Handle unexpected end of stream error
+            onErrorReceived?.invoke("Unexpected end of stream. The connection may have been closed.")
+        } else {
+            // Handle other errors
+            val errorMessage = t.message ?: "Unknown error"
+            val responseMessage = response?.message ?: "No response message"
+            onErrorReceived?.invoke("$errorMessage\n$responseMessage")
+
+        }
+
         onLoadingState?.invoke(false)
     }
 
