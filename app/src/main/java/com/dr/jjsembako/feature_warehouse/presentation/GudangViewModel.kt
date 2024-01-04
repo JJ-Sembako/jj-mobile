@@ -3,10 +3,12 @@ package com.dr.jjsembako.feature_warehouse.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 import com.dr.jjsembako.feature_warehouse.data.SocketWarehouseHandler
 import com.dr.jjsembako.feature_warehouse.data.WebSocketClient
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,40 +37,52 @@ class GudangViewModel @Inject constructor(
 
         // Set up callbacks for Socket events
         socketWarehouseHandler.onProductsReceived = { products ->
-            _dataProducts.value = products
-            _loadingState.value = false
+            viewModelScope.launch {
+                _dataProducts.value = products
+                _loadingState.value = false
+            }
         }
 
         socketWarehouseHandler.onNewProductReceived = { newProduct ->
-            val currentList = _dataProducts.value.orEmpty().toMutableList()
-            currentList.add(0, newProduct)
-            _dataProducts.value = currentList
+            viewModelScope.launch {
+                val currentList = _dataProducts.value.orEmpty().toMutableList()
+                currentList.add(0, newProduct)
+                _dataProducts.value = currentList
+            }
         }
 
         socketWarehouseHandler.onUpdateProductReceived = { updatedProducts ->
-            val currentList = _dataProducts.value.orEmpty().toMutableList()
-            for (updatedProduct in updatedProducts) {
-                val index = currentList.indexOfFirst { it?.id == updatedProduct.id }
-                if (index != -1) {
-                    currentList[index] = updatedProduct
+            viewModelScope.launch {
+                val currentList = _dataProducts.value.orEmpty().toMutableList()
+                for (updatedProduct in updatedProducts) {
+                    val index = currentList.indexOfFirst { it?.id == updatedProduct.id }
+                    if (index != -1) {
+                        currentList[index] = updatedProduct
+                    }
                 }
+                _dataProducts.value = currentList
             }
-            _dataProducts.value = currentList
         }
 
         socketWarehouseHandler.onDeleteProductReceived = { deletedProductId ->
-            val currentList = _dataProducts.value.orEmpty().toMutableList()
-            currentList.removeAll { it?.id == deletedProductId }
-            _dataProducts.value = currentList
+            viewModelScope.launch {
+                val currentList = _dataProducts.value.orEmpty().toMutableList()
+                currentList.removeAll { it?.id == deletedProductId }
+                _dataProducts.value = currentList
+            }
         }
 
         socketWarehouseHandler.onErrorReceived = { error ->
-            _loadingState.value = false
-            _errorState.value = error
+            viewModelScope.launch {
+                _loadingState.value = false
+                _errorState.value = error
+            }
         }
 
         socketWarehouseHandler.onLoadingState= { it ->
-            _loadingState.value = it
+            viewModelScope.launch {
+                _loadingState.value = it
+            }
         }
     }
 
