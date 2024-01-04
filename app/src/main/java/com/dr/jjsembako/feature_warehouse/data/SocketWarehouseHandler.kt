@@ -34,7 +34,7 @@ class SocketWarehouseHandler @Inject constructor(
         val token = sharedPreferences.getString("token", "")
         val options = IO.Options().apply {
             extraHeaders = mapOf("Authorization" to listOf("Bearer $token"))
-            path = "product"
+            path = "/product"
             transports = arrayOf("websocket")
             reconnection = true
             reconnectionDelay = 1000
