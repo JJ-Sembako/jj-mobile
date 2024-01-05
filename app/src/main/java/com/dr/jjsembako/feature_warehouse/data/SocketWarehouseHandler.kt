@@ -34,14 +34,14 @@ class SocketWarehouseHandler @Inject constructor(
         val token = sharedPreferences.getString("token", "")
         val options = IO.Options().apply {
             extraHeaders = mapOf("Authorization" to listOf("Bearer $token"))
-            path = "/product"
+            path = "/ws/product"
             transports = arrayOf("websocket")
             reconnection = true
             reconnectionDelay = 1000
             reconnectionDelayMax = Integer.MAX_VALUE.toLong()
             reconnectionAttempts = 99999
         }
-        val socket = IO.socket(BuildConfig.WS_URL, options)
+        val socket = IO.socket("http://54.251.20.182:3000", options)
 
         socket.on(Socket.EVENT_CONNECT) {
             Log.d(TAG, "Socket connected")
@@ -50,6 +50,7 @@ class SocketWarehouseHandler @Inject constructor(
 
         socket.on(Socket.EVENT_CONNECT_ERROR) {
             Log.e(TAG, "Socket connection error")
+            Log.e(TAG, "Cause error: ${it[0]}")
             onErrorReceived?.invoke("Gagal terhubung ke server!")
             onLoadingState?.invoke(false)
         }
