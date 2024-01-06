@@ -10,13 +10,13 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.engineio.client.transports.WebSocket
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class SocketWarehouseHandler @Inject constructor(
+    @Named("webSocket") private val client: OkHttpClient,
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson
 ) {
@@ -33,12 +33,6 @@ class SocketWarehouseHandler @Inject constructor(
     var onDeleteProductReceived: ((String) -> Unit)? = null
     var onErrorReceived: ((String) -> Unit)? = null
     var onLoadingState: ((Boolean) -> Unit)? = null
-
-    private val client = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
-        .readTimeout(5000, TimeUnit.SECONDS)
-        .writeTimeout(5000, TimeUnit.SECONDS)
-        .build()
 
     fun connect() {
         val token = sharedPreferences.getString("token", "")

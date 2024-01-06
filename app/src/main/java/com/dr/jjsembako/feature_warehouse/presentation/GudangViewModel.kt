@@ -6,14 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 import com.dr.jjsembako.feature_warehouse.data.SocketWarehouseHandler
-import com.dr.jjsembako.feature_warehouse.data.WebSocketClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class GudangViewModel @Inject constructor(
-//    private val webSocketClient: WebSocketClient,
     private val socketWarehouseHandler: SocketWarehouseHandler
 ) : ViewModel() {
 
@@ -28,7 +26,6 @@ class GudangViewModel @Inject constructor(
 
     init {
         initSocket()
-//        initWebSocket()
     }
 
     private fun initSocket() {
@@ -79,60 +76,14 @@ class GudangViewModel @Inject constructor(
             }
         }
 
-        socketWarehouseHandler.onLoadingState= { it ->
+        socketWarehouseHandler.onLoadingState = { it ->
             viewModelScope.launch {
                 _loadingState.value = it
             }
         }
     }
 
-//    private fun initWebSocket() {
-//        // Connect to WebSocket
-//        webSocketClient.connect()
-//
-//        // Set up callbacks for WebSocket events
-//        webSocketClient.onProductsReceived = { products ->
-//            _dataProducts.value = products
-//            _loadingState.value = false
-//        }
-//
-//        webSocketClient.onNewProductReceived = { newProduct ->
-//            val currentList = _dataProducts.value.orEmpty().toMutableList()
-//            currentList.add(0, newProduct)
-//            _dataProducts.value = currentList
-//        }
-//
-//        webSocketClient.onUpdateProductReceived = { updatedProducts ->
-//            val currentList = _dataProducts.value.orEmpty().toMutableList()
-//            for (updatedProduct in updatedProducts) {
-//                val index = currentList.indexOfFirst { it?.id == updatedProduct.id }
-//                if (index != -1) {
-//                    currentList[index] = updatedProduct
-//                }
-//            }
-//            _dataProducts.value = currentList
-//        }
-//
-//        webSocketClient.onDeleteProductReceived = { deletedProductId ->
-//            val currentList = _dataProducts.value.orEmpty().toMutableList()
-//            currentList.removeAll { it?.id == deletedProductId }
-//            _dataProducts.value = currentList
-//        }
-//
-//        webSocketClient.onErrorReceived = { error ->
-//            _loadingState.value = false
-//            _errorState.value = error
-//        }
-//
-//        webSocketClient.onLoadingState= { it ->
-//            _loadingState.value = it
-//        }
-//    }
-
     override fun onCleared() {
-        // Disconnect WebSocket when ViewModel is cleared
-//        webSocketClient.close()
-
         // Disconnect Socket when ViewModel is cleared
         socketWarehouseHandler.disconnect()
         super.onCleared()
