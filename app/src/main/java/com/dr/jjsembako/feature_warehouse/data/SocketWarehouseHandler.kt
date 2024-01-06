@@ -8,13 +8,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.socket.client.IO
 import io.socket.client.Socket
-import io.socket.engineio.client.transports.Polling
 import io.socket.engineio.client.transports.WebSocket
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
-import java.util.logging.Level
-import java.util.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,7 +44,6 @@ class SocketWarehouseHandler @Inject constructor(
         val token = sharedPreferences.getString("token", "")
         val options = IO.Options().apply {
             extraHeaders = mapOf("Authorization" to listOf("Bearer $token"))
-//            path = "/ws/product"
             transports = arrayOf(WebSocket.NAME)
             reconnection = true
             reconnectionDelay = 1000
@@ -58,7 +54,7 @@ class SocketWarehouseHandler @Inject constructor(
             IO.setDefaultOkHttpWebSocketFactory(client)
             IO.setDefaultOkHttpCallFactory(client)
 
-            val socket = IO.socket("http://54.251.20.182:3000/ws/product", options)
+            val socket = IO.socket(BuildConfig.WS_URL + "product", options)
             this.socket = socket
             socket.connect()
 
@@ -74,7 +70,6 @@ class SocketWarehouseHandler @Inject constructor(
         socket.on(Socket.EVENT_CONNECT_ERROR) {
             Log.e(TAG, "Socket connection error")
             Log.e(TAG, "Cause error: ${it[0]}")
-            Log.e(TAG, "Detail error: ${it.contentToString()}")
             onErrorReceived?.invoke("Gagal terhubung ke server!")
             onLoadingState?.invoke(false)
         }
@@ -90,12 +85,14 @@ class SocketWarehouseHandler @Inject constructor(
                 args[0].toString(),
                 object : TypeToken<List<DataProduct>>() {}.type
             )
+            Log.d(TAG, "Get all data, total: ${products.size}")
             onProductsReceived?.invoke(products)
             onLoadingState?.invoke(false)
         }
 
         socket.on("new-product") { args ->
-            val product = gson.fromJson<DataProduct>(args[0].toString(), DataProduct::class.java)
+            val product = gson.fromJson(args[0].toString(), DataProduct::class.java)
+            Log.d(TAG, "Get new product with name: ${product.name}")
             onNewProductReceived?.invoke(product)
         }
 
@@ -104,11 +101,14 @@ class SocketWarehouseHandler @Inject constructor(
                 args[0].toString(),
                 object : TypeToken<List<DataProduct>>() {}.type
             )
+            Log.d(TAG, "Get updated product, total: ${products.size}")
             onUpdateProductReceived?.invoke(products)
         }
 
         socket.on("delete-product") { args ->
-            val productId = args[0].toString()
+            val product = gson.fromJson(args[0].toString(), DataProduct::class.java)
+            val productId = product.id
+            Log.d(TAG, "Delete product ${product.name} with id: $productId")
             onDeleteProductReceived?.invoke(productId)
         }
     }
