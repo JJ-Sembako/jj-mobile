@@ -43,6 +43,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.presentation.components.BottomSheetProduct
+import com.dr.jjsembako.core.presentation.components.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.rememberMutableStateListOf
@@ -54,7 +55,6 @@ import com.dr.jjsembako.feature_warehouse.presentation.components.ProductOnWareh
 fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     val gudangViewModel: GudangViewModel = hiltViewModel()
     val dataProducts = gudangViewModel.dataProducts.observeAsState().value
-    val dataRawCategory = gudangViewModel.dataRawCategories.observeAsState().value
     val option = gudangViewModel.dataCategories.observeAsState().value
 
     val focusManager = LocalFocusManager.current
@@ -129,19 +129,30 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
             )
             Spacer(modifier = modifier.height(16.dp))
 
-            LazyColumn(
-                modifier = modifier
-                    .fillMaxWidth()
-            ) {
-                if (dataProducts?.isNotEmpty() == true) {
-                    items(items = dataProducts, key = { product ->
-                        product?.id ?: "empty-${System.currentTimeMillis()}"
-                    }, itemContent = { product ->
-                        if (product != null) {
-                            ProductOnWarehouseInfo(product = product, modifier = modifier)
-                        }
-                        Spacer(modifier = modifier.height(8.dp))
-                    })
+            if(dataProducts.isNullOrEmpty()){
+                NotFoundScreen(modifier = modifier)
+            }else{
+                val filteredProducts = dataProducts.filter { product ->
+                    product!!.name.contains(searchQuery.value, ignoreCase = true) &&
+                            (checkBoxResult.isEmpty() || checkBoxResult.contains(product.category))
+                }
+
+                if (filteredProducts.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = modifier
+                            .fillMaxWidth()
+                    ) {
+                        items(items = filteredProducts, key = { product ->
+                            product?.id ?: "empty-${System.currentTimeMillis()}"
+                        }, itemContent = { product ->
+                            if (product != null) {
+                                ProductOnWarehouseInfo(product = product, modifier = modifier)
+                            }
+                            Spacer(modifier = modifier.height(8.dp))
+                        })
+                    }
+                } else {
+                    NotFoundScreen(modifier = modifier)
                 }
             }
 

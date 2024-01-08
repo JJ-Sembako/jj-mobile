@@ -27,7 +27,7 @@ class GudangViewModel @Inject constructor(
     val dataProducts: LiveData<List<DataProduct?>> get() = _dataProducts
 
     private val _dataRawCategories = MutableLiveData<List<String?>>()
-    val dataRawCategories: LiveData<List<String?>> get() = _dataRawCategories
+    private val dataRawCategories: LiveData<List<String?>> get() = _dataRawCategories
 
     private val _dataCategories = MutableLiveData<List<FilterOption?>>()
     val dataCategories: LiveData<List<FilterOption?>> get() = _dataCategories
