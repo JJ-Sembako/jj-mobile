@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName
 data class GetFetchCategoriesResponse(
 
     @field:SerializedName("statusCode")
-    val statusCode: Int? = null,
+    val statusCode: Int,
 
     @field:SerializedName("message")
-    val message: String? = null,
+    val message: String,
 
     @field:SerializedName("data")
     val data: List<DataCategory?>? = null,
