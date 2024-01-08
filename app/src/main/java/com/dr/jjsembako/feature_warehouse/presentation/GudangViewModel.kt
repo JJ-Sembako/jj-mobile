@@ -4,16 +4,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dr.jjsembako.core.common.Resource
+import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 import com.dr.jjsembako.feature_warehouse.data.SocketWarehouseHandler
+import com.dr.jjsembako.feature_warehouse.domain.usecase.FetchCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class GudangViewModel @Inject constructor(
+    private val fetchCategoriesUseCase: FetchCategoriesUseCase,
     private val socketWarehouseHandler: SocketWarehouseHandler
 ) : ViewModel() {
+
+    private val _stateFirst = MutableLiveData<StateResponse?>()
+    val stateFirst: LiveData<StateResponse?> = _stateFirst
+
+    private val _statusCode = MutableLiveData<Int?>()
+    val statusCode: LiveData<Int?> = _statusCode
+
+    private val _message = MutableLiveData<String?>()
+    val message: LiveData<String?> = _message
 
     private val _loadingState = MutableLiveData<Boolean>()
     val loadingState: LiveData<Boolean> get() = _loadingState
@@ -24,8 +37,35 @@ class GudangViewModel @Inject constructor(
     private val _dataProducts = MutableLiveData<List<DataProduct?>>()
     val dataProducts: LiveData<List<DataProduct?>> get() = _dataProducts
 
+    fun setStateFirst(state: StateResponse?) {
+        _stateFirst.value = state
+    }
+
     init {
         initSocket()
+    }
+    
+    fun fetchCategories() {
+        viewModelScope.launch {
+            fetchCategoriesUseCase.fetchCategories().collect {
+                when (it) {
+                    is Resource.Loading -> _stateFirst.value = StateResponse.LOADING
+                    is Resource.Success -> {
+                        _stateFirst.value = StateResponse.SUCCESS
+                        _message.value = it.message
+                        _statusCode.value = it.status
+                    }
+
+                    is Resource.Error -> {
+                        _stateFirst.value = StateResponse.ERROR
+                        _message.value = it.message
+                        _statusCode.value = it.status
+                    }
+
+                    else -> {}
+                }
+            }
+        }
     }
 
     private fun initSocket() {
