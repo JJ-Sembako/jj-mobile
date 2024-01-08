@@ -22,7 +22,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,12 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.presentation.components.BottomSheetProduct
 import com.dr.jjsembako.core.presentation.components.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
@@ -60,23 +54,29 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    var showSheet = remember { mutableStateOf(false) }
+    val showSheet = remember { mutableStateOf(false) }
     val checkBoxResult = rememberMutableStateListOf<String>()
     val checkBoxStates = rememberMutableStateMapOf<String, Boolean>()
-    var searchQuery = rememberSaveable { mutableStateOf("") }
-    var activeSearch = remember { mutableStateOf(false) }
-
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
-    val progress by animateLottieCompositionAsState(
-        composition,
-        iterations = LottieConstants.IterateForever,
-    )
+    val searchQuery = rememberSaveable { mutableStateOf("") }
+    val activeSearch = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        if(!option.isNullOrEmpty()){
+        if (!option.isNullOrEmpty()) {
             if (checkBoxResult.isEmpty()) {
                 checkBoxResult.addAll(option.map { it!!.value })
                 checkBoxStates.putAll(option.map { it!!.value to true })
+            }
+        }
+    }
+
+    LaunchedEffect(option) {
+        if (!option.isNullOrEmpty()) {
+            if (checkBoxResult.isEmpty()) {
+                checkBoxResult.addAll(option.map { it!!.value })
+                checkBoxStates.putAll(option.map { it!!.value to true })
+            } else {
+                option.map { it!!.value }.filterNot { checkBoxStates.containsKey(it) }
+                    .forEach { checkBoxStates[it] = false }
             }
         }
     }
@@ -129,12 +129,13 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
             )
             Spacer(modifier = modifier.height(16.dp))
 
-            if(dataProducts.isNullOrEmpty()){
+            if (dataProducts.isNullOrEmpty()) {
                 NotFoundScreen(modifier = modifier)
-            }else{
+            } else {
                 val filteredProducts = dataProducts.filter { product ->
                     product!!.name.contains(searchQuery.value, ignoreCase = true) &&
-                            (checkBoxResult.isEmpty() || checkBoxResult.contains(product.category))
+                            checkBoxResult.isNotEmpty()
+                            && checkBoxResult.contains(product.category)
                 }
 
                 if (filteredProducts.isNotEmpty()) {

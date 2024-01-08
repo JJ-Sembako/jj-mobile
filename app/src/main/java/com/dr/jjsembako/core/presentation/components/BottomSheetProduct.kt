@@ -71,7 +71,8 @@ fun BottomSheetProduct(
                 )
                 Divider(color = MaterialTheme.colorScheme.tertiary, thickness = 1.dp)
                 Spacer(modifier = modifier.height(8.dp))
-                if(!optionList.isNullOrEmpty()){
+
+                if (!optionList.isNullOrEmpty()) {
                     LazyColumn(
                         modifier = modifier
                             .fillMaxWidth()
@@ -112,7 +113,10 @@ fun BottomSheetProduct(
                             }
                         })
                     }
+                } else {
+                    Text(text = stringResource(R.string.option_not_available))
                 }
+
                 Spacer(modifier = modifier.height(32.dp))
                 Button(
                     onClick = {
