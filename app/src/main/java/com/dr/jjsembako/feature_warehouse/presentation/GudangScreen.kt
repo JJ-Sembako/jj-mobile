@@ -54,6 +54,8 @@ import com.dr.jjsembako.feature_warehouse.presentation.components.ProductOnWareh
 fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     val gudangViewModel: GudangViewModel = hiltViewModel()
     val dataProducts = gudangViewModel.dataProducts.observeAsState().value
+    val dataRawCategory = gudangViewModel.dataRawCategories.observeAsState().value
+    val option = gudangViewModel.dataCategories.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -71,9 +73,11 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     )
 
     LaunchedEffect(Unit) {
-        if (checkBoxResult.isEmpty()) {
-            checkBoxResult.addAll(option.map { it.value })
-            checkBoxStates.putAll(option.map { it.value to true })
+        if(!option.isNullOrEmpty()){
+            if (checkBoxResult.isEmpty()) {
+                checkBoxResult.addAll(option.map { it!!.value })
+                checkBoxStates.putAll(option.map { it!!.value to true })
+            }
         }
     }
 
@@ -153,15 +157,6 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
         }
     }
 }
-
-private val option = listOf(
-    FilterOption("Beras", "beras"),
-    FilterOption("Minyak", "minyak"),
-    FilterOption("Gula", "gula"),
-    FilterOption("Kerupuk", "kerupuk"),
-    FilterOption("Air Mineral", "air mineral"),
-    FilterOption("Tepung", "tepung")
-)
 
 @Preview(showBackground = true)
 @Composable
