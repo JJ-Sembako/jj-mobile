@@ -4,6 +4,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.network.CategoryApiService
 import com.dr.jjsembako.core.data.remote.response.account.PatchHandleUpdateSelfPasswordResponse
 import com.dr.jjsembako.core.data.remote.response.category.DataCategory
+import com.dr.jjsembako.core.data.remote.response.category.GetFetchCategoriesResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,7 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 class WarehouseDataSource @Inject constructor(private val categoryApiService: CategoryApiService) {
-    suspend fun fetchAccountRecoveryQuestions(): Flow<Resource<out List<DataCategory?>>> =
+    suspend fun fetchCategories(): Flow<Resource<out List<DataCategory?>>> =
         flow {
             try {
                 val response = categoryApiService.fetchCategories()
@@ -35,7 +36,7 @@ class WarehouseDataSource @Inject constructor(private val categoryApiService: Ca
                         val errorResponseObj =
                             Gson().fromJson(
                                 errorResponse,
-                                PatchHandleUpdateSelfPasswordResponse::class.java
+                                GetFetchCategoriesResponse::class.java
                             )
                         emit(Resource.Error(errorResponseObj.message, statusCode, null))
                     } else {
