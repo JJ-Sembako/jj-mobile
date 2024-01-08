@@ -4,14 +4,20 @@ import com.dr.jjsembako.core.data.model.FilterOption
 import java.util.Locale
 
 object DataMapper {
-    fun ListDataCategoryToListFilterOption(data: List<String>): List<FilterOption> {
-        return data.map {
-            FilterOption(
-                name = it.replaceFirstChar { it2 ->
-                    if (it2.isLowerCase()) it2.titlecase(Locale.getDefault()) else it2.toString()
-                },
-                value = it
-            )
+    fun mapListDataCategoryToListFilterOption(data: List<String?>?): List<FilterOption?> {
+        return if (data.isNullOrEmpty()) {
+            emptyList()
+        } else {
+            data.mapNotNull { category ->
+                category?.replaceFirstChar { word ->
+                    if (word.isLowerCase()) word.titlecase(Locale.getDefault()) else word.toString()
+                }?.let { result ->
+                    FilterOption(
+                        name = result,
+                        value = category
+                    )
+                }
+            }
         }
     }
 }

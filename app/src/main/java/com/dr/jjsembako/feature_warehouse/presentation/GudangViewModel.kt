@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.remote.response.product.DataProduct
+import com.dr.jjsembako.core.utils.DataMapper.mapListDataCategoryToListFilterOption
 import com.dr.jjsembako.feature_warehouse.data.SocketWarehouseHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,8 +26,30 @@ class GudangViewModel @Inject constructor(
     private val _dataProducts = MutableLiveData<List<DataProduct?>>()
     val dataProducts: LiveData<List<DataProduct?>> get() = _dataProducts
 
+    private val _dataRawCategories = MutableLiveData<List<String?>>()
+    val dataRawCategories: LiveData<List<String?>> get() = _dataRawCategories
+
+    private val _dataCategories = MutableLiveData<List<FilterOption?>>()
+    val dataCategories: LiveData<List<FilterOption?>> get() = _dataCategories
+
     init {
         initSocket()
+    }
+
+    private fun updateCategories(newProducts: List<DataProduct?>) {
+        viewModelScope.launch {
+            val newCategories = newProducts.mapNotNull { it?.category }.distinct()
+            val currentCategories = _dataRawCategories.value.orEmpty().toMutableSet()
+
+            newCategories.forEach {
+                if (!currentCategories.contains(it)) {
+                    currentCategories.add(it)
+                }
+            }
+
+            _dataRawCategories.value = currentCategories.toList()
+            _dataCategories.value = mapListDataCategoryToListFilterOption(dataRawCategories.value)
+        }
     }
 
     private fun initSocket() {
@@ -37,6 +61,7 @@ class GudangViewModel @Inject constructor(
             viewModelScope.launch {
                 _dataProducts.value = products
                 _loadingState.value = false
+                updateCategories(products)
             }
         }
 
@@ -45,6 +70,7 @@ class GudangViewModel @Inject constructor(
                 val currentList = _dataProducts.value.orEmpty().toMutableList()
                 currentList.add(0, newProduct)
                 _dataProducts.value = currentList
+                updateCategories(listOf(newProduct))
             }
         }
 
@@ -58,6 +84,7 @@ class GudangViewModel @Inject constructor(
                     }
                 }
                 _dataProducts.value = currentList
+                updateCategories(updatedProducts)
             }
         }
 
