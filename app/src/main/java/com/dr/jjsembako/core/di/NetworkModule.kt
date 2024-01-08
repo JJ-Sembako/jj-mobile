@@ -3,6 +3,7 @@ package com.dr.jjsembako.core.di
 import android.content.SharedPreferences
 import com.dr.jjsembako.BuildConfig
 import com.dr.jjsembako.core.data.remote.network.AccountApiService
+import com.dr.jjsembako.core.data.remote.network.CategoryApiService
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
 import com.dr.jjsembako.core.data.remote.network.ProductApiService
 import com.google.gson.Gson
@@ -86,5 +87,10 @@ class NetworkModule {
     @Provides
     fun provideProductService(retrofit: Retrofit): ProductApiService {
         return retrofit.create(ProductApiService::class.java)
+    }
+
+    @Provides
+    fun provideCategoryService(retrofit: Retrofit): CategoryApiService {
+        return retrofit.create(CategoryApiService::class.java)
     }
 }
