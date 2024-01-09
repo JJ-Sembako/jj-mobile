@@ -59,10 +59,10 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.LoadingDialog
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isDifferentPassword
 import com.dr.jjsembako.core.utils.isValidNewPassword
 import com.dr.jjsembako.core.utils.isValidPassword
-import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -82,8 +82,8 @@ fun GantiKataSandiScreen(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
-    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var oldPassword by rememberSaveable { mutableStateOf("") }
     var newPassword by rememberSaveable { mutableStateOf("") }
@@ -93,28 +93,28 @@ fun GantiKataSandiScreen(
     var newPasswordVisibility by remember { mutableStateOf(false) }
     var confNewPasswordVisibility by remember { mutableStateOf(false) }
 
-    var isValidOldPassword = rememberSaveable { mutableStateOf(false) }
-    var isValidNewPassword = rememberSaveable { mutableStateOf(false) }
-    var isValidConfNewPassword = rememberSaveable { mutableStateOf(false) }
+    val isValidOldPassword = rememberSaveable { mutableStateOf(false) }
+    val isValidNewPassword = rememberSaveable { mutableStateOf(false) }
+    val isValidConfNewPassword = rememberSaveable { mutableStateOf(false) }
 
-    var errMsgOldPassword = rememberSaveable { mutableStateOf("") }
-    var errMsgNewPassword = rememberSaveable { mutableStateOf("") }
-    var errMsgConfNewPassword = rememberSaveable { mutableStateOf("") }
+    val errMsgOldPassword = rememberSaveable { mutableStateOf("") }
+    val errMsgNewPassword = rememberSaveable { mutableStateOf("") }
+    val errMsgConfNewPassword = rememberSaveable { mutableStateOf("") }
 
     val errPassMin8Char = stringResource(R.string.err_pass_min)
     val errPassContainWhiteSpace = stringResource(R.string.err_pass_not_whitespace)
     val errConfPassDifferent = stringResource(R.string.err_conf_pass)
     val errNewPassMustDifferent = stringResource(R.string.err_new_pass)
 
-    var iconOldPassword =
+    val iconOldPassword =
         if (oldPasswordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
             id = R.drawable.ic_visibility_off
         )
-    var iconNewPassword =
+    val iconNewPassword =
         if (newPasswordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
             id = R.drawable.ic_visibility_off
         )
-    var iconConfNewPassword =
+    val iconConfNewPassword =
         if (confNewPasswordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
             id = R.drawable.ic_visibility_off
         )
