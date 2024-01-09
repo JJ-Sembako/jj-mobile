@@ -159,20 +159,20 @@ private fun DetailPelangganContent(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
-    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var menuExpanded by remember { mutableStateOf(false) }
-    var showDialog = remember { mutableStateOf(false) }
-    var showSheet = remember { mutableStateOf(false) }
-    var (selectedOptionPayment, onOptionSelectedPayment) = remember {
+    val showDialog = remember { mutableStateOf(false) }
+    val showSheet = remember { mutableStateOf(false) }
+    val (selectedOptionPayment, onOptionSelectedPayment) = remember {
         mutableStateOf(
             radioOptionsPayment[0]
         )
     }
-    var (selectedOptionOrder, onOptionSelectedOrder) = remember { mutableStateOf(radioOptionsOrder[0]) }
-    var searchQuery = remember { mutableStateOf("") }
-    var activeSearch = remember { mutableStateOf(false) }
+    val (selectedOptionOrder, onOptionSelectedOrder) = remember { mutableStateOf(radioOptionsOrder[0]) }
+    val searchQuery = remember { mutableStateOf("") }
+    val activeSearch = remember { mutableStateOf(false) }
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
     val progress by animateLottieCompositionAsState(
