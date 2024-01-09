@@ -26,8 +26,7 @@ import javax.inject.Singleton
 class AuthRepository @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val gson: Gson
-) :
-    IAuthRepository, IForgetPasswordRepository {
+) : IAuthRepository, IForgetPasswordRepository {
 
     override suspend fun handleLogin(
         username: String,
