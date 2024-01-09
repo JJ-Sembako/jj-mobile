@@ -57,8 +57,6 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }

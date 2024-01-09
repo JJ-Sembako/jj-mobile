@@ -84,24 +84,24 @@ fun LoginScreen(
     val imeState = rememberImeState()
     val scrollState = rememberScrollState()
 
-    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
-    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
 
-    var isValidUsername = rememberSaveable { mutableStateOf(false) }
-    var isValidPassword = rememberSaveable { mutableStateOf(false) }
+    val isValidUsername = rememberSaveable { mutableStateOf(false) }
+    val isValidPassword = rememberSaveable { mutableStateOf(false) }
 
-    var errMsgUsername = rememberSaveable { mutableStateOf("") }
-    var errMsgPassword = rememberSaveable { mutableStateOf("") }
+    val errMsgUsername = rememberSaveable { mutableStateOf("") }
+    val errMsgPassword = rememberSaveable { mutableStateOf("") }
 
     val errUsernameConstraint = stringResource(R.string.err_username)
     val errPassMin8Char = stringResource(R.string.err_pass_min)
     val errPassContainWhiteSpace = stringResource(R.string.err_pass_not_whitespace)
 
-    var icon =
+    val icon =
         if (passwordVisibility) painterResource(id = R.drawable.ic_visibility_on) else painterResource(
             id = R.drawable.ic_visibility_off
         )
