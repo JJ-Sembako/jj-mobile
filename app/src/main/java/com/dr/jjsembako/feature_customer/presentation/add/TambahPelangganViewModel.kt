@@ -56,8 +56,6 @@ class TambahPelangganViewModel @Inject constructor(private val handleCreateCusto
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
