@@ -54,14 +54,6 @@ class PemulihanAkunViewModel @Inject constructor(
     private val _idQuestion = MutableLiveData<String?>()
     val idQuestion: String? get() = _idQuestion.value
 
-    fun setStateFirst(state: StateResponse?) {
-        _stateFirst.value = state
-    }
-
-    fun setStateSecond(state: StateResponse?) {
-        _stateSecond.value = state
-    }
-
     fun setStateThird(state: StateResponse?) {
         _stateThird.value = state
     }
@@ -84,8 +76,6 @@ class PemulihanAkunViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
@@ -110,8 +100,6 @@ class PemulihanAkunViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
@@ -134,8 +122,6 @@ class PemulihanAkunViewModel @Inject constructor(
                             _message.value = it.message
                             _statusCode.value = it.status
                         }
-
-                        else -> {}
                     }
                 }
         }
@@ -157,8 +143,6 @@ class PemulihanAkunViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
