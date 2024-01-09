@@ -45,10 +45,6 @@ class EditPelangganViewModel @Inject constructor(
         fetchDetailCustomer(id)
     }
 
-    fun setStateFirst(state: StateResponse?) {
-        _stateFirst.value = state
-    }
-
     fun setStateSecond(state: StateResponse?) {
         _stateSecond.value = state
     }
@@ -70,8 +66,6 @@ class EditPelangganViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
@@ -107,8 +101,6 @@ class EditPelangganViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
