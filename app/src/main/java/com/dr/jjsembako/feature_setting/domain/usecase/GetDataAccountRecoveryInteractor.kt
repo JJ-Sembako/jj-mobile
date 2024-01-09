@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetDataAccountRecoveryInteractor @Inject constructor(private val recoveryRepository: IRecoveryRepository) :
-    GetDataAccountRecoveryUSeCase {
+    GetDataAccountRecoveryUseCase {
     override suspend fun fetchAccountRecovery(): Flow<Resource<out DataAccountRecovery?>> =
         recoveryRepository.fetchAccountRecovery()
 

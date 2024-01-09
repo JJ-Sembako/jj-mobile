@@ -10,7 +10,7 @@ import com.dr.jjsembako.core.data.remote.response.account.DataRecoveryQuestion
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.DeactivateAccountRecoveryUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.GetAllRecoveryQuestionUseCase
-import com.dr.jjsembako.feature_setting.domain.usecase.GetDataAccountRecoveryUSeCase
+import com.dr.jjsembako.feature_setting.domain.usecase.GetDataAccountRecoveryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PemulihanAkunViewModel @Inject constructor(
     private val getAllRecoveryQuestionUseCase: GetAllRecoveryQuestionUseCase,
-    private val getDataAccountRecoveryUSeCase: GetDataAccountRecoveryUSeCase,
+    private val getDataAccountRecoveryUSeCase: GetDataAccountRecoveryUseCase,
     private val activateAccountRecoveryUseCase: ActivateAccountRecoveryUseCase,
     private val deactivateAccountRecoveryUseCase: DeactivateAccountRecoveryUseCase
 ) : ViewModel() {

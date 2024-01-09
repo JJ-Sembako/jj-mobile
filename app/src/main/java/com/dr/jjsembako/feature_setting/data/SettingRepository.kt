@@ -4,9 +4,11 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.response.account.DataAccountRecovery
 import com.dr.jjsembako.core.data.remote.response.account.DataActivateAccountRecovery
 import com.dr.jjsembako.core.data.remote.response.account.DataRecoveryQuestion
+import com.dr.jjsembako.core.data.remote.response.account.GetFetchAccountRecoveryQuestionsResponse
+import com.dr.jjsembako.core.data.remote.response.account.GetFetchAccountRecoveryResponse
 import com.dr.jjsembako.core.data.remote.response.account.PatchHandleDeactivateAccountRecoveryResponse
 import com.dr.jjsembako.core.data.remote.response.account.PatchHandleUpdateSelfPasswordResponse
-import com.dr.jjsembako.core.data.remote.response.account.PostHandleLoginResponse
+import com.dr.jjsembako.core.data.remote.response.account.PostHandleActivateAccountRecoveryResponse
 import com.dr.jjsembako.feature_setting.domain.repository.IRecoveryRepository
 import com.dr.jjsembako.feature_setting.domain.repository.ISettingRepository
 import com.google.gson.Gson
@@ -20,8 +22,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SettingRepository @Inject constructor(private val settingDataSource: SettingDataSource) :
-    ISettingRepository, IRecoveryRepository {
+class SettingRepository @Inject constructor(
+    private val settingDataSource: SettingDataSource,
+    private val gson: Gson
+) : ISettingRepository, IRecoveryRepository {
 
     override suspend fun handleUpdateSelfPassword(
         oldPassword: String,
@@ -65,7 +69,10 @@ class SettingRepository @Inject constructor(private val settingDataSource: Setti
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                        gson.fromJson(
+                            errorResponse,
+                            PatchHandleUpdateSelfPasswordResponse::class.java
+                        )
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -112,7 +119,10 @@ class SettingRepository @Inject constructor(private val settingDataSource: Setti
 
                     if (errorResponse != null) {
                         val errorResponseObj =
-                            Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                            gson.fromJson(
+                                errorResponse,
+                                GetFetchAccountRecoveryQuestionsResponse::class.java
+                            )
                         emit(Resource.Error(errorResponseObj.message, statusCode, null))
                     } else {
                         emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -158,7 +168,7 @@ class SettingRepository @Inject constructor(private val settingDataSource: Setti
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                        gson.fromJson(errorResponse, GetFetchAccountRecoveryResponse::class.java)
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -208,7 +218,10 @@ class SettingRepository @Inject constructor(private val settingDataSource: Setti
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                        gson.fromJson(
+                            errorResponse,
+                            PostHandleActivateAccountRecoveryResponse::class.java
+                        )
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -254,7 +267,10 @@ class SettingRepository @Inject constructor(private val settingDataSource: Setti
 
                     if (errorResponse != null) {
                         val errorResponseObj =
-                            Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                            gson.fromJson(
+                                errorResponse,
+                                PatchHandleDeactivateAccountRecoveryResponse::class.java
+                            )
                         emit(Resource.Error(errorResponseObj.message, statusCode, null))
                     } else {
                         emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))

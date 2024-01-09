@@ -29,7 +29,7 @@ import com.dr.jjsembako.feature_setting.domain.usecase.DeactivateAccountRecovery
 import com.dr.jjsembako.feature_setting.domain.usecase.GetAllRecoveryQuestionInteractor
 import com.dr.jjsembako.feature_setting.domain.usecase.GetAllRecoveryQuestionUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.GetDataAccountRecoveryInteractor
-import com.dr.jjsembako.feature_setting.domain.usecase.GetDataAccountRecoveryUSeCase
+import com.dr.jjsembako.feature_setting.domain.usecase.GetDataAccountRecoveryUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -57,7 +57,7 @@ abstract class AppModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun provideGetDataAccountRecoveryUSeCase(getDataAccountRecoveryInteractor: GetDataAccountRecoveryInteractor): GetDataAccountRecoveryUSeCase
+    abstract fun provideGetDataAccountRecoveryUSeCase(getDataAccountRecoveryInteractor: GetDataAccountRecoveryInteractor): GetDataAccountRecoveryUseCase
 
     @Binds
     @ViewModelScoped
