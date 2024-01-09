@@ -44,10 +44,6 @@ class PertanyaanPemulihanViewModel @Inject constructor(
         fetchAccountRecoveryQuestionByUsername(username)
     }
 
-    fun setStateFirst(state: StateResponse?) {
-        _stateFirst.value = state
-    }
-
     fun setStateSecond(state: StateResponse?) {
         _stateSecond.value = state
     }
@@ -71,8 +67,6 @@ class PertanyaanPemulihanViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
@@ -86,7 +80,7 @@ class PertanyaanPemulihanViewModel @Inject constructor(
                     is Resource.Success -> {
                         _message.value = it.message
                         _statusCode.value = it.status
-                        if(it.data?.isValid == true) _stateSecond.value = StateResponse.SUCCESS
+                        if (it.data?.isValid == true) _stateSecond.value = StateResponse.SUCCESS
                         else {
                             _stateSecond.value = StateResponse.ERROR
                             _message.value = "Jawaban tidak sesuai!"
@@ -98,8 +92,6 @@ class PertanyaanPemulihanViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }

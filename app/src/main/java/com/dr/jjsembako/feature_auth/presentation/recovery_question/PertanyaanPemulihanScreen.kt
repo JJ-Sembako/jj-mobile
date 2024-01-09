@@ -150,13 +150,13 @@ fun PertanyaanPemulihanContent(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
-    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
-    var question by rememberSaveable { mutableStateOf(recoveryQuestion) }
+    val question by rememberSaveable { mutableStateOf(recoveryQuestion) }
     var answer by rememberSaveable { mutableStateOf("") }
-    var isValidAnswer = rememberSaveable { mutableStateOf(false) }
-    var errMsgAnswer = rememberSaveable { mutableStateOf("") }
+    val isValidAnswer = rememberSaveable { mutableStateOf(false) }
+    val errMsgAnswer = rememberSaveable { mutableStateOf("") }
 
     val errQuestionNotFound = stringResource(R.string.err_question_not_found)
     val errAnswerMin3Char = stringResource(R.string.err_answer)
