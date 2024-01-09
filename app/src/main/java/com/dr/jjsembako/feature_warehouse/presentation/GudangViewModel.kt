@@ -17,11 +17,14 @@ class GudangViewModel @Inject constructor(
     private val socketWarehouseHandler: SocketWarehouseHandler
 ) : ViewModel() {
 
-    private val _loadingState = MutableLiveData<Boolean>()
+    private val _loadingState = MutableLiveData(true)
     val loadingState: LiveData<Boolean> get() = _loadingState
 
-    private val _errorState = MutableLiveData<String>()
-    val errorState: LiveData<String> get() = _errorState
+    private val _errorState = MutableLiveData(false)
+    val errorState: LiveData<Boolean> get() = _errorState
+
+    private val _errorMsg = MutableLiveData<String>()
+    val errorMsg: LiveData<String> get() = _errorMsg
 
     private val _dataProducts = MutableLiveData<List<DataProduct?>>()
     val dataProducts: LiveData<List<DataProduct?>> get() = _dataProducts
@@ -98,14 +101,19 @@ class GudangViewModel @Inject constructor(
 
         socketWarehouseHandler.onErrorReceived = { error ->
             viewModelScope.launch {
-                _loadingState.value = false
-                _errorState.value = error
+                _errorMsg.value = error
             }
         }
 
         socketWarehouseHandler.onLoadingState = { it ->
             viewModelScope.launch {
                 _loadingState.value = it
+            }
+        }
+
+        socketWarehouseHandler.onErrorState = { it ->
+            viewModelScope.launch {
+                _errorState.value = it
             }
         }
     }

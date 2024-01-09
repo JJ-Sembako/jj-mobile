@@ -32,6 +32,7 @@ class SocketWarehouseHandler @Inject constructor(
     var onUpdateProductReceived: ((List<DataProduct>) -> Unit)? = null
     var onDeleteProductReceived: ((String) -> Unit)? = null
     var onErrorReceived: ((String) -> Unit)? = null
+    var onErrorState: ((Boolean) -> Unit)? = null
     var onLoadingState: ((Boolean) -> Unit)? = null
 
     fun connect() {
@@ -58,19 +59,21 @@ class SocketWarehouseHandler @Inject constructor(
 
         socket.on(Socket.EVENT_CONNECT) {
             Log.d(TAG, "Socket connected")
+            onErrorState?.invoke(false)
             onLoadingState?.invoke(true)
         }
 
         socket.on(Socket.EVENT_CONNECT_ERROR) {
             Log.e(TAG, "Socket connection error")
             Log.e(TAG, "Cause error: ${it[0]}")
-            onErrorReceived?.invoke("Gagal terhubung ke server!")
+            onErrorReceived?.invoke("Terjadi masalah koneksi ke server!")
+            onErrorState?.invoke(true)
             onLoadingState?.invoke(false)
         }
 
         socket.on(Socket.EVENT_DISCONNECT) {
             Log.d(TAG, "Socket disconnected")
-            onErrorReceived?.invoke("Koneksi ke server terputus!")
+            onErrorState?.invoke(false)
             onLoadingState?.invoke(false)
         }
 
@@ -81,6 +84,7 @@ class SocketWarehouseHandler @Inject constructor(
             )
             Log.d(TAG, "Get all data, total: ${products.size}")
             onProductsReceived?.invoke(products)
+            onErrorState?.invoke(false)
             onLoadingState?.invoke(false)
         }
 
