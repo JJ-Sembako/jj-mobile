@@ -53,8 +53,6 @@ class PengecekanUsernameViewModel @Inject constructor(private val checkAccountRe
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
