@@ -5,13 +5,13 @@ import com.dr.jjsembako.BuildConfig
 import com.dr.jjsembako.core.data.remote.network.AccountApiService
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
 import com.dr.jjsembako.core.data.remote.network.ProductApiService
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,7 +23,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
-
     private val loggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     private val loggingInterceptor2 =
@@ -32,7 +31,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideGson() = gson
+    fun provideGson(): Gson = gson
 
     @Provides
     @Singleton
@@ -57,23 +56,10 @@ class NetworkModule {
     @Provides
     @Singleton
     @Named("webSocket")
-    fun provideOkhttpWebSocket(sharedPreferences: SharedPreferences): OkHttpClient {
+    fun provideOkhttpWebSocket(): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                val token = sharedPreferences.getString("token", "")
-
-                val newRequest = chain.request().newBuilder()
-//                    .addHeader("Upgrade", "websocket")
-//                    .addHeader("Connection", "Upgrade")
-                    .addHeader("Authorization", "Bearer $token")
-                    .build()
-
-                chain.proceed(newRequest)
-            }
-//            .addInterceptor(loggingInterceptor)
             .addInterceptor(loggingInterceptor2)
-            .connectTimeout(120, TimeUnit.SECONDS)
-            .readTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(5000, TimeUnit.SECONDS)
             .build()
     }
 
@@ -101,11 +87,4 @@ class NetworkModule {
     fun provideProductService(retrofit: Retrofit): ProductApiService {
         return retrofit.create(ProductApiService::class.java)
     }
-
-    @Provides
-    @Named("wsProduct")
-    fun provideWebSocketProductRequest() = Request.Builder()
-//        .url(BuildConfig.WS_URL + "product")
-        .url("ws://54.251.20.182:3000/ws/product")
-        .build()
 }

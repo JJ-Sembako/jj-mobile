@@ -58,7 +58,7 @@ private fun ProductImage(
     product: DataProduct,
     modifier: Modifier
 ) {
-    if (product.image.isEmpty()) {
+    if (product.image.isEmpty() || product.image.contains("default")) {
         Image(
             painter = painterResource(id = R.drawable.ic_default),
             contentDescription = stringResource(R.string.product_description, product.name),
@@ -73,7 +73,7 @@ private fun ProductImage(
         AsyncImage(
             model = product.image,
             contentDescription = stringResource(R.string.product_description, product.name),
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
                 .padding(8.dp)

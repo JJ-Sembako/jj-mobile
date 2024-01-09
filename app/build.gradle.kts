@@ -97,6 +97,11 @@ dependencies {
     implementation("com.google.code.gson:gson:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
+    //socket.io
+    implementation("io.socket:socket.io-client:2.1.0"){
+        exclude("org.json", "json")
+    }
+
     //coroutine
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")

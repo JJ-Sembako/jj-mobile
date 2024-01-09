@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetProduct(
-    optionList: List<FilterOption>,
+    optionList: List<FilterOption?>?,
     checkBoxResult: MutableList<String>,
     checkBoxStates: MutableMap<String, Boolean>,
     showSheet: MutableState<Boolean>,
@@ -71,46 +71,52 @@ fun BottomSheetProduct(
                 )
                 Divider(color = MaterialTheme.colorScheme.tertiary, thickness = 1.dp)
                 Spacer(modifier = modifier.height(8.dp))
-                LazyColumn(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                ) {
-                    items(items = optionList, itemContent = { filter ->
-                        Row(
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .toggleable(
-                                    value = checkBoxStates.getValue(filter.value),
-                                    onValueChange = {
+
+                if (!optionList.isNullOrEmpty()) {
+                    LazyColumn(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                    ) {
+                        items(items = optionList, itemContent = { filter ->
+                            Row(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .toggleable(
+                                        value = checkBoxStates.getValue(filter!!.value),
+                                        onValueChange = {
+                                            checkBoxStates[filter.value] = it
+                                            if (it) checkBoxResult.add(filter.value)
+                                            else checkBoxResult.remove(filter.value)
+                                            if (checkBoxResult.isEmpty()) {
+                                                checkBoxResult.addAll(optionList.map { it2 -> it2!!.value })
+                                                checkBoxStates.putAll(optionList.map { it2 -> it2!!.value to true })
+                                            }
+                                        }
+                                    ),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Checkbox(
+                                    checked = checkBoxStates.getValue(filter.value),
+                                    onCheckedChange = {
                                         checkBoxStates[filter.value] = it
                                         if (it) checkBoxResult.add(filter.value)
                                         else checkBoxResult.remove(filter.value)
                                         if (checkBoxResult.isEmpty()) {
-                                            checkBoxResult.addAll(optionList.map { it2 -> it2.value })
-                                            checkBoxStates.putAll(optionList.map { it2 -> it2.value to true })
+                                            checkBoxResult.addAll(optionList.map { it2 -> it2!!.value })
+                                            checkBoxStates.putAll(optionList.map { it2 -> it2!!.value to true })
                                         }
-                                    }
-                                ),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Checkbox(
-                                checked = checkBoxStates.getValue(filter.value),
-                                onCheckedChange = {
-                                    checkBoxStates[filter.value] = it
-                                    if (it) checkBoxResult.add(filter.value)
-                                    else checkBoxResult.remove(filter.value)
-                                    if (checkBoxResult.isEmpty()) {
-                                        checkBoxResult.addAll(optionList.map { it2 -> it2.value })
-                                        checkBoxStates.putAll(optionList.map { it2 -> it2.value to true })
-                                    }
-                                },
-                                modifier = modifier.padding(all = Dp(value = 8F))
-                            )
-                            Text(text = filter.name, modifier = modifier.padding(start = 8.dp))
-                        }
-                    })
+                                    },
+                                    modifier = modifier.padding(all = Dp(value = 8F))
+                                )
+                                Text(text = filter.name, modifier = modifier.padding(start = 8.dp))
+                            }
+                        })
+                    }
+                } else {
+                    Text(text = stringResource(R.string.option_not_available))
                 }
+
                 Spacer(modifier = modifier.height(32.dp))
                 Button(
                     onClick = {

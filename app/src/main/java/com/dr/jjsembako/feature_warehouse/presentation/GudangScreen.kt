@@ -17,12 +17,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,17 +37,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.presentation.components.BottomSheetProduct
+import com.dr.jjsembako.core.presentation.components.LoadingScreen
+import com.dr.jjsembako.core.presentation.components.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.rememberMutableStateListOf
 import com.dr.jjsembako.core.utils.rememberMutableStateMapOf
+import com.dr.jjsembako.feature_warehouse.presentation.components.HeaderError
 import com.dr.jjsembako.feature_warehouse.presentation.components.ProductOnWarehouseInfo
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -54,26 +53,45 @@ import com.dr.jjsembako.feature_warehouse.presentation.components.ProductOnWareh
 fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     val gudangViewModel: GudangViewModel = hiltViewModel()
     val dataProducts = gudangViewModel.dataProducts.observeAsState().value
+    val option = gudangViewModel.dataCategories.observeAsState().value
+    val loadingState = gudangViewModel.loadingState.observeAsState().value
+    val errorState = gudangViewModel.errorState.observeAsState().value
+    val errorMsg = gudangViewModel.errorMsg.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    var showSheet = remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val showSheet = remember { mutableStateOf(false) }
     val checkBoxResult = rememberMutableStateListOf<String>()
     val checkBoxStates = rememberMutableStateMapOf<String, Boolean>()
-    var searchQuery = rememberSaveable { mutableStateOf("") }
-    var activeSearch = remember { mutableStateOf(false) }
+    val searchQuery = rememberSaveable { mutableStateOf("") }
+    val activeSearch = remember { mutableStateOf(false) }
 
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
-    val progress by animateLottieCompositionAsState(
-        composition,
-        iterations = LottieConstants.IterateForever,
-    )
+    LaunchedEffect(errorState) {
+        if (errorState == true && !errorMsg.isNullOrEmpty()) {
+            snackbarHostState.showSnackbar(message = errorMsg)
+        }
+    }
 
     LaunchedEffect(Unit) {
-        if (checkBoxResult.isEmpty()) {
-            checkBoxResult.addAll(option.map { it.value })
-            checkBoxStates.putAll(option.map { it.value to true })
+        if (!option.isNullOrEmpty()) {
+            if (checkBoxResult.isEmpty()) {
+                checkBoxResult.addAll(option.map { it!!.value })
+                checkBoxStates.putAll(option.map { it!!.value to true })
+            }
+        }
+    }
+
+    LaunchedEffect(option) {
+        if (!option.isNullOrEmpty()) {
+            if (checkBoxResult.isEmpty()) {
+                checkBoxResult.addAll(option.map { it!!.value })
+                checkBoxStates.putAll(option.map { it!!.value to true })
+            } else {
+                option.map { it!!.value }.filterNot { checkBoxStates.containsKey(it) }
+                    .forEach { checkBoxStates[it] = false }
+            }
         }
     }
 
@@ -98,7 +116,8 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { contentPadding ->
         Column(
             modifier = modifier
@@ -115,6 +134,10 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (errorState == true && !errorMsg.isNullOrEmpty()) {
+                HeaderError(modifier = modifier, message = errorMsg)
+                Spacer(modifier = modifier.height(16.dp))
+            }
             SearchFilter(
                 placeholder = stringResource(R.string.search_product),
                 activeSearch,
@@ -125,19 +148,35 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
             )
             Spacer(modifier = modifier.height(16.dp))
 
-            LazyColumn(
-                modifier = modifier
-                    .fillMaxWidth()
-            ) {
-                if (dataProducts?.isNotEmpty() == true) {
-                    items(items = dataProducts, key = { product ->
-                        product?.id ?: "empty-${System.currentTimeMillis()}"
-                    }, itemContent = { product ->
-                        if (product != null) {
-                            ProductOnWarehouseInfo(product = product, modifier = modifier)
+            if (loadingState == true) {
+                LoadingScreen(modifier = modifier)
+            } else {
+                if (dataProducts.isNullOrEmpty()) {
+                    NotFoundScreen(modifier = modifier)
+                } else {
+                    val filteredProducts = dataProducts.filter { product ->
+                        product!!.name.contains(searchQuery.value, ignoreCase = true) &&
+                                checkBoxResult.isNotEmpty()
+                                && checkBoxResult.contains(product.category)
+                    }
+
+                    if (filteredProducts.isNotEmpty()) {
+                        LazyColumn(
+                            modifier = modifier
+                                .fillMaxWidth()
+                        ) {
+                            items(items = filteredProducts, key = { product ->
+                                product?.id ?: "empty-${System.currentTimeMillis()}"
+                            }, itemContent = { product ->
+                                if (product != null) {
+                                    ProductOnWarehouseInfo(product = product, modifier = modifier)
+                                }
+                                Spacer(modifier = modifier.height(8.dp))
+                            })
                         }
-                        Spacer(modifier = modifier.height(8.dp))
-                    })
+                    } else {
+                        NotFoundScreen(modifier = modifier)
+                    }
                 }
             }
 
@@ -153,15 +192,6 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
         }
     }
 }
-
-private val option = listOf(
-    FilterOption("Beras", "beras"),
-    FilterOption("Minyak", "minyak"),
-    FilterOption("Gula", "gula"),
-    FilterOption("Kerupuk", "kerupuk"),
-    FilterOption("Air Mineral", "air mineral"),
-    FilterOption("Tepung", "tepung")
-)
 
 @Preview(showBackground = true)
 @Composable

@@ -22,7 +22,7 @@
     <string name="content_del">Aksi ini akan menghapus data secara permanen dan tidak dapat dipulihkan kembali.</string>
     <string name="delete">Hapus</string>
     <string name="yes_delete">Ya, Hapus!</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="close">Tutup</string>
     <string name="cancel">Batal</string>
     <string name="clear">Kosongkan</string>
@@ -31,6 +31,7 @@
     <string name="alert">Peringatan</string>
     <string name="on_progress">Dalam Proses</string>
     <string name="not_found">Data tidak ditemukan</string>
+    <string name="option_not_available">Opsi tidak tersedia</string>
     <string name="please_wait">Mohon bersabar</string>
     <string name="error">Terjadi Kesalahan</string>
     <string name="error_msg_default">Kesalahan sistem terjadi.</string>
