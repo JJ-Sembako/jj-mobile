@@ -89,8 +89,9 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
                 checkBoxResult.addAll(option.map { it!!.value })
                 checkBoxStates.putAll(option.map { it!!.value to true })
             } else {
-                option.map { it!!.value }.filterNot { checkBoxStates.containsKey(it) }
-                    .forEach { checkBoxStates[it] = false }
+                val newOption = option.filterNot { checkBoxResult.contains(it!!.value) }
+                checkBoxResult.addAll(newOption.map { it!!.value })
+                checkBoxStates.putAll(newOption.map { it!!.value to true })
             }
         }
     }
