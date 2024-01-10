@@ -9,13 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun ProductListContent (modifier: Modifier = Modifier) {
+fun ProductListContent (modifier: Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        Text(text = "Product List Content")
+        Text(text = "Catalog Content")
     }
 }

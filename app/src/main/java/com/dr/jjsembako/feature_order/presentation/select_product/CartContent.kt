@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun CartContent (modifier: Modifier = Modifier) {
+fun CartContent (modifier: Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize(),
