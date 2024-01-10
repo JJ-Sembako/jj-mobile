@@ -1,10 +1,14 @@
 package com.dr.jjsembako.feature_order.presentation.select_product
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -33,7 +38,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
@@ -41,6 +49,16 @@ fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifie
 
     var tabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabs = listOf(stringResource(R.string.cart), stringResource(R.string.catalog))
+    val pagerState = rememberPagerState { tabs.size }
+
+    LaunchedEffect(tabIndex) {
+        pagerState.animateScrollToPage(tabIndex)
+    }
+    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+        if (!pagerState.isScrollInProgress) {
+            tabIndex = pagerState.currentPage
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -86,9 +104,16 @@ fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifie
                     )
                 }
             }
-            when (tabIndex) {
-                0 -> CartContent(modifier = modifier)
-                1 -> ProductListContent(modifier = modifier)
+            HorizontalPager(
+                state = pagerState,
+                modifier = modifier
+                    .fillMaxWidth()
+            ) { index ->
+                when (index) {
+                    0 -> CartContent(modifier = modifier)
+                    1 -> ProductListContent(modifier = modifier)
+                    else -> {}
+                }
             }
         }
     }
