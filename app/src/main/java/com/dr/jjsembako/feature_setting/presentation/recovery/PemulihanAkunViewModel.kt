@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PemulihanAkunViewModel @Inject constructor(
     private val getAllRecoveryQuestionUseCase: GetAllRecoveryQuestionUseCase,
-    private val getDataAccountRecoveryUSeCase: GetDataAccountRecoveryUseCase,
+    private val getDataAccountRecoveryUseCase: GetDataAccountRecoveryUseCase,
     private val activateAccountRecoveryUseCase: ActivateAccountRecoveryUseCase,
     private val deactivateAccountRecoveryUseCase: DeactivateAccountRecoveryUseCase
 ) : ViewModel() {
@@ -83,7 +83,7 @@ class PemulihanAkunViewModel @Inject constructor(
 
     fun fetchAccountRecovery() {
         viewModelScope.launch {
-            getDataAccountRecoveryUSeCase.fetchAccountRecovery().collect {
+            getDataAccountRecoveryUseCase.fetchAccountRecovery().collect {
                 when (it) {
                     is Resource.Loading -> _stateSecond.value = StateResponse.LOADING
                     is Resource.Success -> {

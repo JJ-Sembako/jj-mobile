@@ -57,7 +57,7 @@ abstract class AppModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun provideGetDataAccountRecoveryUSeCase(getDataAccountRecoveryInteractor: GetDataAccountRecoveryInteractor): GetDataAccountRecoveryUseCase
+    abstract fun provideGetDataAccountRecoveryUseCase(getDataAccountRecoveryInteractor: GetDataAccountRecoveryInteractor): GetDataAccountRecoveryUseCase
 
     @Binds
     @ViewModelScoped
