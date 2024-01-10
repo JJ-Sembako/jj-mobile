@@ -11,6 +11,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -76,6 +77,18 @@ fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifie
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        onNavigateToMainOrderScreen()
+                        keyboardController?.hide()
+                    }) {
+                        Icon(
+                            Icons.Default.Check,
+                            stringResource(R.string.finish),
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
