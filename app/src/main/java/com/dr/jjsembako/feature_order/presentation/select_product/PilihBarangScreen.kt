@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
@@ -45,6 +46,7 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 )
 @Composable
 fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifier = Modifier) {
+    val pilihBarangViewModel: PilihBarangViewModel = hiltViewModel()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -123,8 +125,8 @@ fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifie
                     .fillMaxWidth()
             ) { index ->
                 when (index) {
-                    0 -> CartContent(modifier = modifier)
-                    1 -> ProductListContent(modifier = modifier)
+                    0 -> CartContent(pilihBarangViewModel, modifier)
+                    1 -> ProductListContent(pilihBarangViewModel, modifier)
                     else -> {}
                 }
             }

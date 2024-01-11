@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_warehouse.presentation.components
+package com.dr.jjsembako.core.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

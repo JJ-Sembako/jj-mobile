@@ -45,7 +45,7 @@ import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.rememberMutableStateListOf
 import com.dr.jjsembako.core.utils.rememberMutableStateMapOf
-import com.dr.jjsembako.feature_warehouse.presentation.components.HeaderError
+import com.dr.jjsembako.core.presentation.components.HeaderError
 import com.dr.jjsembako.feature_warehouse.presentation.components.ProductOnWarehouseInfo
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
