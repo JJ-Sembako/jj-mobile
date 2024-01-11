@@ -71,7 +71,7 @@ fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) 
                 NotFoundScreen(modifier = modifier)
             } else {
                 val filteredProducts = dataProducts.filter { product ->
-                    product!!.isChosen == true
+                    product!!.isChosen
                 }
 
                 if (filteredProducts.isNotEmpty()) {

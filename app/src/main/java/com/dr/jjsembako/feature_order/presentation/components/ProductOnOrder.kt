@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddShoppingCart
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,14 +30,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
@@ -52,6 +56,7 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProductOnOrder(
@@ -147,12 +152,16 @@ private fun ProductInfo(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun OrderContent(
     product: DataProductOrder,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val coroutineScope = rememberCoroutineScope()
+
     var orderQty by rememberSaveable { mutableStateOf("") }
     var orderPrice by rememberSaveable { mutableStateOf("") }
     var orderTotalPrice by rememberSaveable { mutableStateOf("") }
@@ -176,7 +185,13 @@ private fun OrderContent(
     ) {
         if (product.stockInUnit > 0) {
             if (!product.isChosen) {
-                Button(onClick = { enableOrder(product) }) {
+                Button(onClick = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                    coroutineScope.launch {
+                        enableOrder(product)
+                    }
+                }) {
                     Icon(
                         Icons.Default.AddShoppingCart,
                         stringResource(R.string.add_to_cart),
@@ -196,7 +211,13 @@ private fun OrderContent(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = { minusOrderQty(product) }) {
+                    IconButton(onClick = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        coroutineScope.launch {
+                            minusOrderQty(product)
+                        }
+                    }) {
                         Icon(
                             Icons.Default.Remove,
                             stringResource(R.string.minus_order_qty, product.name),
@@ -215,14 +236,22 @@ private fun OrderContent(
                         onValueChange = {
                             val newValue = it.toIntOrNull() ?: 0
                             orderQty = maxOf(newValue, 0).toString()
-                            updateOrderQty(product, orderQty)
+                            coroutineScope.launch {
+                                updateOrderQty(product, orderQty)
+                            }
                         },
                         modifier = modifier
-                            .fillMaxWidth()
+                            .width(88.dp)
                             .padding(start = 8.dp, end = 8.dp, top = 8.dp)
                     )
                     Spacer(modifier = modifier.size(ButtonDefaults.IconSpacing))
-                    IconButton(onClick = { plusOrderQty(product) }) {
+                    IconButton(onClick = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        coroutineScope.launch {
+                            plusOrderQty(product)
+                        }
+                    }) {
                         Icon(
                             Icons.Default.Add,
                             stringResource(R.string.plus_order_qty, product.name),
@@ -241,7 +270,9 @@ private fun OrderContent(
                     onValueChange = {
                         val newValue = it.toIntOrNull() ?: 0
                         orderPrice = maxOf(newValue, 0).toString()
-                        updateOrderPrice(product, orderPrice)
+                        coroutineScope.launch {
+                            updateOrderPrice(product, orderPrice)
+                        }
                     },
                     modifier = modifier
                         .fillMaxWidth()
@@ -258,15 +289,39 @@ private fun OrderContent(
                     onValueChange = {
                         val newValue = it.toIntOrNull() ?: 0
                         orderTotalPrice = maxOf(newValue, 0).toString()
-                        updateOrderTotalPrice(product, orderTotalPrice)
+                        coroutineScope.launch {
+                            updateOrderTotalPrice(product, orderTotalPrice)
+                        }
                     },
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp)
                 )
+                Spacer(modifier = modifier.height(16.dp))
+                Button(
+                    onClick = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        coroutineScope.launch {
+                            disableOrder(product)
+                        }
+                    }, colors = ButtonDefaults.buttonColors(Color.Red)
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        stringResource(R.string.add_to_cart),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Spacer(modifier = modifier.size(ButtonDefaults.IconSpacing))
+                    Text(
+                        text = stringResource(R.string.delete),
+                        style = TextStyle(
+                            platformStyle = PlatformTextStyle(includeFontPadding = false)
+                        )
+                    )
+                }
             }
         } else {
-            disableOrder(product)
             Text(
                 text = stringResource(R.string.stock_empty),
                 fontSize = 12.sp, fontWeight = FontWeight.Normal,
@@ -282,12 +337,8 @@ private fun OrderContent(
 private fun updateOrderTotalPrice(product: DataProductOrder, total: String) {
     if (total.isNotEmpty()) {
         val orderTotalPrice = total.toLong()
-        if (orderTotalPrice > 0) {
-            product.orderTotalPrice = orderTotalPrice
-            product.orderPrice = product.orderTotalPrice / product.orderQty
-        } else {
-            disableOrder(product)
-        }
+        product.orderTotalPrice = orderTotalPrice
+        product.orderPrice = product.orderTotalPrice / product.orderQty
     } else {
         disableOrder(product)
     }
@@ -296,12 +347,8 @@ private fun updateOrderTotalPrice(product: DataProductOrder, total: String) {
 private fun updateOrderPrice(product: DataProductOrder, price: String) {
     if (price.isNotEmpty()) {
         val orderPrice = price.toLong()
-        if (orderPrice > 0) {
-            product.orderPrice = orderPrice
-            product.orderTotalPrice = product.orderQty * product.standardPrice
-        } else {
-            disableOrder(product)
-        }
+        product.orderPrice = orderPrice
+        product.orderTotalPrice = product.orderQty * product.orderPrice
     } else {
         disableOrder(product)
     }
@@ -310,12 +357,8 @@ private fun updateOrderPrice(product: DataProductOrder, price: String) {
 private fun updateOrderQty(product: DataProductOrder, qty: String) {
     if (qty.isNotEmpty()) {
         val orderQty = qty.toInt()
-        if (orderQty > 0) {
-            product.orderQty = orderQty
-            product.orderTotalPrice = product.orderQty * product.standardPrice
-        } else {
-            disableOrder(product)
-        }
+        product.orderQty = orderQty
+        product.orderTotalPrice = product.orderQty * product.orderPrice
     } else {
         disableOrder(product)
     }
@@ -331,7 +374,7 @@ private fun disableOrder(product: DataProductOrder) {
 private fun enableOrder(product: DataProductOrder) {
     product.orderQty = 1
     product.orderPrice = product.standardPrice
-    product.orderTotalPrice = product.orderQty * product.standardPrice
+    product.orderTotalPrice = product.orderQty * product.orderPrice
     product.isChosen = true
 }
 
@@ -339,13 +382,13 @@ private fun minusOrderQty(product: DataProductOrder) {
     if (product.orderQty > 0) {
         product.orderQty -= 1
         if (product.orderQty == 0) disableOrder(product)
-        else product.orderTotalPrice = product.orderQty * product.standardPrice
+        else product.orderTotalPrice = product.orderQty * product.orderPrice
     }
 }
 
 private fun plusOrderQty(product: DataProductOrder) {
     product.orderQty += 1
-    product.orderTotalPrice = product.orderQty * product.standardPrice
+    product.orderTotalPrice = product.orderQty * product.orderPrice
 }
 
 @Composable
