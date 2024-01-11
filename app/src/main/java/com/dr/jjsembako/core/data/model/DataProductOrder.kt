@@ -35,8 +35,8 @@ data class DataProductOrder(
     val stockInPcsRemaining: Int,
     
     // For order purpose
-    val orderQty: Int = 0,
-    val orderPrice: Long = 0,
-    val orderTotalPrice: Long = 0,
-    val isChosen: Boolean = false
+    var orderQty: Int = 0,
+    var orderPrice: Long = standardPrice,
+    var orderTotalPrice: Long = orderPrice * orderQty,
+    var isChosen: Boolean = false
 )

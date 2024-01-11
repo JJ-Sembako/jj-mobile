@@ -107,6 +107,13 @@
 
     <string name="cart">Keranjang</string>
     <string name="catalog">Katalog</string>
+    <string name="stock_empty">Stok habis</string>
+    <string name="add_to_cart">Masukkan keranjang</string>
+    <string name="minus_order_qty">Kurangi jumlah pembelian produk %1$s</string>
+    <string name="plus_order_qty">Tambah jumlah pembelian produk %1$s</string>
+    <string name="qty">Qty</string>
+    <string name="price">Harga Jual</string>
+    <string name="total_price">Total Harga</string>
 
     <string name="history">Riwayat</string>
     <string name="search_transaction">Cari transaksi</string>
