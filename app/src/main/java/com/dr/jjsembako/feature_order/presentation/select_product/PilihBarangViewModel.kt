@@ -87,6 +87,144 @@ class PilihBarangViewModel @Inject constructor(
         }
     }
 
+    fun updateOrderTotalPrice(product: DataProductOrder, total: String) {
+        viewModelScope.launch {
+            val currentList = _dataProducts.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = currentList[productIndex]
+
+                if (total.isNotEmpty()) {
+                    val orderTotalPrice = total.toLong()
+                    existingProduct!!.orderTotalPrice = orderTotalPrice
+                    existingProduct.orderPrice =
+                        existingProduct.orderTotalPrice / existingProduct.orderQty
+                } else {
+                    disableOrder(existingProduct!!)
+                }
+
+                _dataProducts.value = currentList
+            }
+        }
+    }
+
+    fun updateOrderPrice(product: DataProductOrder, price: String) {
+        viewModelScope.launch {
+            val currentList = _dataProducts.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = _dataProducts.value!![productIndex]
+                if (price.isNotEmpty()) {
+                    val orderPrice = price.toLong()
+                    existingProduct!!.orderPrice = orderPrice
+                    existingProduct.orderTotalPrice =
+                        existingProduct.orderQty * existingProduct.orderPrice
+                } else {
+                    disableOrder(existingProduct!!)
+                }
+            }
+
+            _dataProducts.value = currentList
+        }
+    }
+
+    fun updateOrderQty(product: DataProductOrder, qty: String) {
+        viewModelScope.launch {
+            val currentList = _dataProducts.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = _dataProducts.value!![productIndex]
+                if (qty.isNotEmpty()) {
+                    val orderQty = qty.toInt()
+                    existingProduct!!.orderQty = orderQty
+                    existingProduct.orderTotalPrice =
+                        existingProduct.orderQty * existingProduct.orderPrice
+                } else {
+                    disableOrder(existingProduct!!)
+                }
+            }
+
+            _dataProducts.value = currentList
+        }
+    }
+
+    fun minusOrderQty(product: DataProductOrder) {
+        viewModelScope.launch {
+            val currentList = _dataProducts.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = _dataProducts.value!![productIndex]
+                if (existingProduct!!.orderQty > 0) {
+                    existingProduct.orderQty -= 1
+                    if (existingProduct.orderQty == 0) disableOrder(existingProduct)
+                    else existingProduct.orderTotalPrice =
+                        existingProduct.orderQty * existingProduct.orderPrice
+                }
+            }
+
+            _dataProducts.value = currentList
+        }
+    }
+
+    fun plusOrderQty(product: DataProductOrder) {
+        viewModelScope.launch {
+            val currentList = _dataProducts.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = _dataProducts.value!![productIndex]
+                if (existingProduct!!.orderQty > 0) {
+                    existingProduct.orderQty += 1
+                    existingProduct.orderTotalPrice =
+                        existingProduct.orderQty * existingProduct.orderPrice
+                } else {
+                    enableOrder(existingProduct)
+                }
+            }
+
+            _dataProducts.value = currentList
+        }
+    }
+
+    fun enableOrder(product: DataProductOrder) {
+        viewModelScope.launch {
+            val currentList = _dataProducts.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = _dataProducts.value!![productIndex]
+                existingProduct!!.isChosen = true
+                existingProduct.orderQty = 1
+                existingProduct.orderPrice = existingProduct.standardPrice
+                existingProduct.orderTotalPrice =
+                    existingProduct.orderQty * existingProduct.orderPrice
+            }
+
+            _dataProducts.value = currentList
+        }
+    }
+
+    fun disableOrder(product: DataProductOrder) {
+        viewModelScope.launch {
+            val currentList = _dataProducts.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = _dataProducts.value!![productIndex]
+                existingProduct!!.isChosen = false
+                existingProduct.orderQty = 0
+                existingProduct.orderPrice = existingProduct.standardPrice
+                existingProduct.orderTotalPrice = 0
+            }
+
+            _dataProducts.value = currentList
+        }
+    }
+
     private fun initSocket() {
         // Connect to Socket
         socketOrderHandler.connect()

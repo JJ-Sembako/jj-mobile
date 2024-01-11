@@ -30,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,15 +50,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
-import kotlinx.coroutines.launch
+import com.dr.jjsembako.feature_order.presentation.select_product.PilihBarangViewModel
 
 @Composable
 fun ProductOnOrder(
+    pilihBarangViewModel: PilihBarangViewModel,
     product: DataProductOrder,
     modifier: Modifier
 ) {
@@ -78,7 +79,7 @@ fun ProductOnOrder(
             Spacer(modifier = modifier.width(16.dp))
             ProductInfo(product = product, modifier = modifier)
         }
-        OrderContent(product = product, modifier = modifier)
+        OrderContent(pilihBarangViewModel, product, modifier)
     }
 }
 
@@ -155,12 +156,12 @@ private fun ProductInfo(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun OrderContent(
+    pilihBarangViewModel: PilihBarangViewModel,
     product: DataProductOrder,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val coroutineScope = rememberCoroutineScope()
 
     var orderQty by rememberSaveable { mutableStateOf("") }
     var orderPrice by rememberSaveable { mutableStateOf("") }
@@ -188,9 +189,7 @@ private fun OrderContent(
                 Button(onClick = {
                     keyboardController?.hide()
                     focusManager.clearFocus()
-                    coroutineScope.launch {
-                        enableOrder(product)
-                    }
+                    pilihBarangViewModel.enableOrder(product)
                 }) {
                     Icon(
                         Icons.Default.AddShoppingCart,
@@ -214,9 +213,7 @@ private fun OrderContent(
                     IconButton(onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        coroutineScope.launch {
-                            minusOrderQty(product)
-                        }
+                        pilihBarangViewModel.minusOrderQty(product)
                     }) {
                         Icon(
                             Icons.Default.Remove,
@@ -236,9 +233,7 @@ private fun OrderContent(
                         onValueChange = {
                             val newValue = it.toIntOrNull() ?: 0
                             orderQty = maxOf(newValue, 0).toString()
-                            coroutineScope.launch {
-                                updateOrderQty(product, orderQty)
-                            }
+                            pilihBarangViewModel.updateOrderQty(product, orderQty)
                         },
                         modifier = modifier
                             .width(88.dp)
@@ -248,9 +243,7 @@ private fun OrderContent(
                     IconButton(onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        coroutineScope.launch {
-                            plusOrderQty(product)
-                        }
+                        pilihBarangViewModel.plusOrderQty(product)
                     }) {
                         Icon(
                             Icons.Default.Add,
@@ -270,9 +263,7 @@ private fun OrderContent(
                     onValueChange = {
                         val newValue = it.toIntOrNull() ?: 0
                         orderPrice = maxOf(newValue, 0).toString()
-                        coroutineScope.launch {
-                            updateOrderPrice(product, orderPrice)
-                        }
+                        pilihBarangViewModel.updateOrderPrice(product, orderPrice)
                     },
                     modifier = modifier
                         .fillMaxWidth()
@@ -289,9 +280,7 @@ private fun OrderContent(
                     onValueChange = {
                         val newValue = it.toIntOrNull() ?: 0
                         orderTotalPrice = maxOf(newValue, 0).toString()
-                        coroutineScope.launch {
-                            updateOrderTotalPrice(product, orderTotalPrice)
-                        }
+                        pilihBarangViewModel.updateOrderTotalPrice(product, orderTotalPrice)
                     },
                     modifier = modifier
                         .fillMaxWidth()
@@ -302,9 +291,7 @@ private fun OrderContent(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        coroutineScope.launch {
-                            disableOrder(product)
-                        }
+                        pilihBarangViewModel.disableOrder(product)
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(
@@ -334,68 +321,13 @@ private fun OrderContent(
     }
 }
 
-private fun updateOrderTotalPrice(product: DataProductOrder, total: String) {
-    if (total.isNotEmpty()) {
-        val orderTotalPrice = total.toLong()
-        product.orderTotalPrice = orderTotalPrice
-        product.orderPrice = product.orderTotalPrice / product.orderQty
-    } else {
-        disableOrder(product)
-    }
-}
-
-private fun updateOrderPrice(product: DataProductOrder, price: String) {
-    if (price.isNotEmpty()) {
-        val orderPrice = price.toLong()
-        product.orderPrice = orderPrice
-        product.orderTotalPrice = product.orderQty * product.orderPrice
-    } else {
-        disableOrder(product)
-    }
-}
-
-private fun updateOrderQty(product: DataProductOrder, qty: String) {
-    if (qty.isNotEmpty()) {
-        val orderQty = qty.toInt()
-        product.orderQty = orderQty
-        product.orderTotalPrice = product.orderQty * product.orderPrice
-    } else {
-        disableOrder(product)
-    }
-}
-
-private fun disableOrder(product: DataProductOrder) {
-    product.orderQty = 0
-    product.orderPrice = product.standardPrice
-    product.orderTotalPrice = 0
-    product.isChosen = false
-}
-
-private fun enableOrder(product: DataProductOrder) {
-    product.orderQty = 1
-    product.orderPrice = product.standardPrice
-    product.orderTotalPrice = product.orderQty * product.orderPrice
-    product.isChosen = true
-}
-
-private fun minusOrderQty(product: DataProductOrder) {
-    if (product.orderQty > 0) {
-        product.orderQty -= 1
-        if (product.orderQty == 0) disableOrder(product)
-        else product.orderTotalPrice = product.orderQty * product.orderPrice
-    }
-}
-
-private fun plusOrderQty(product: DataProductOrder) {
-    product.orderQty += 1
-    product.orderTotalPrice = product.orderQty * product.orderPrice
-}
-
 @Composable
 @Preview(showBackground = true)
 private fun ProductOnOrderPreview() {
     JJSembakoTheme {
+        val pilihBarangViewModel: PilihBarangViewModel = hiltViewModel()
         ProductOnOrder(
+            pilihBarangViewModel = pilihBarangViewModel,
             product = DataProductOrder(
                 id = "bc3bbd9e",
                 name = "Air Cahaya",

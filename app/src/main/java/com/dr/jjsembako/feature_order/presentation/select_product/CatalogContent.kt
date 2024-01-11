@@ -23,13 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.components.BottomSheetProduct
 import com.dr.jjsembako.core.presentation.components.HeaderError
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.rememberMutableStateListOf
 import com.dr.jjsembako.core.utils.rememberMutableStateMapOf
 import com.dr.jjsembako.feature_order.presentation.components.ProductOnOrder
@@ -130,7 +133,7 @@ fun ProductListContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Mod
                             product?.id ?: "empty-${System.currentTimeMillis()}"
                         }, itemContent = { product ->
                             if (product != null) {
-                                ProductOnOrder(product = product, modifier = modifier)
+                                ProductOnOrder(pilihBarangViewModel, product, modifier)
                             }
                             Spacer(modifier = modifier.height(8.dp))
                         })
@@ -150,5 +153,17 @@ fun ProductListContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Mod
                 modifier = modifier
             )
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun ProductListContentPreview() {
+    JJSembakoTheme {
+        val pilihBarangViewModel: PilihBarangViewModel = hiltViewModel()
+        ProductListContent(
+            pilihBarangViewModel = pilihBarangViewModel,
+            modifier = Modifier
+        )
     }
 }

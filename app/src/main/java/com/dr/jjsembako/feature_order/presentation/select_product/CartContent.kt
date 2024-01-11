@@ -20,10 +20,13 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.core.presentation.components.HeaderError
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.NotFoundScreen
+import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_order.presentation.components.ProductOnOrder
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -83,7 +86,7 @@ fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) 
                             product?.id ?: "empty-${System.currentTimeMillis()}"
                         }, itemContent = { product ->
                             if (product != null) {
-                                ProductOnOrder(product = product, modifier = modifier)
+                                ProductOnOrder(pilihBarangViewModel, product, modifier)
                             }
                             Spacer(modifier = modifier.height(8.dp))
                         })
@@ -93,5 +96,17 @@ fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) 
                 }
             }
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun CartContentPreview() {
+    JJSembakoTheme {
+        val pilihBarangViewModel: PilihBarangViewModel = hiltViewModel()
+        CartContent(
+            pilihBarangViewModel = pilihBarangViewModel,
+            modifier = Modifier
+        )
     }
 }
