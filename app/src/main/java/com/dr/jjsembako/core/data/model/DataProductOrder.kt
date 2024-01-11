@@ -5,34 +5,34 @@ import com.google.gson.annotations.SerializedName
 data class DataProductOrder(
 
     @field:SerializedName("id")
-    val id: String,
+    var id: String,
 
     @field:SerializedName("name")
-    val name: String,
+    var name: String,
 
     @field:SerializedName("image")
-    val image: String = "",
+    var image: String = "",
 
     @field:SerializedName("category")
-    val category: String,
+    var category: String,
 
     @field:SerializedName("unit")
-    val unit: String,
+    var unit: String,
 
     @field:SerializedName("standard_price")
-    val standardPrice: Long,
+    var standardPrice: Long,
 
     @field:SerializedName("amount_per_unit")
-    val amountPerUnit: Int,
+    var amountPerUnit: Int,
 
     @field:SerializedName("stock_in_pcs")
-    val stockInPcs: Int,
+    var stockInPcs: Int,
 
     @field:SerializedName("stock_in_unit")
-    val stockInUnit: Int,
+    var stockInUnit: Int,
 
     @field:SerializedName("stock_in_pcs_remaining")
-    val stockInPcsRemaining: Int,
+    var stockInPcsRemaining: Int,
     
     // For order purpose
     var orderQty: Int = 0,

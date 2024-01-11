@@ -56,6 +56,37 @@ class PilihBarangViewModel @Inject constructor(
         }
     }
 
+    private fun updateProductsWithCheck(updatedProducts: List<DataProductOrder>) {
+        viewModelScope.launch {
+            val currentList = _dataProducts.value.orEmpty().toMutableList()
+
+            for (updatedProduct in updatedProducts) {
+                val index = currentList.indexOfFirst { it?.id == updatedProduct.id }
+
+                if (index != -1) {
+                    val existingProduct = currentList[index]
+
+                    if (existingProduct?.isChosen == true) {
+                        existingProduct.name = updatedProduct.name
+                        existingProduct.image = updatedProduct.image
+                        existingProduct.category = updatedProduct.category
+                        existingProduct.unit = updatedProduct.unit
+                        existingProduct.standardPrice = updatedProduct.standardPrice
+                        existingProduct.amountPerUnit = updatedProduct.amountPerUnit
+                        existingProduct.stockInPcs = updatedProduct.stockInPcs
+                        existingProduct.stockInUnit = updatedProduct.stockInUnit
+                        existingProduct.stockInPcsRemaining = updatedProduct.stockInPcsRemaining
+                    } else {
+                        currentList[index] = updatedProduct
+                    }
+                }
+            }
+
+            _dataProducts.value = currentList
+            updateCategories(updatedProducts)
+        }
+    }
+
     private fun initSocket() {
         // Connect to Socket
         socketOrderHandler.connect()
@@ -80,15 +111,7 @@ class PilihBarangViewModel @Inject constructor(
 
         socketOrderHandler.onUpdateProductReceived = { updatedProducts ->
             viewModelScope.launch {
-                val currentList = _dataProducts.value.orEmpty().toMutableList()
-                for (updatedProduct in updatedProducts) {
-                    val index = currentList.indexOfFirst { it?.id == updatedProduct.id }
-                    if (index != -1) {
-                        currentList[index] = updatedProduct
-                    }
-                }
-                _dataProducts.value = currentList
-                updateCategories(updatedProducts)
+                updateProductsWithCheck(updatedProducts)
             }
         }
 
