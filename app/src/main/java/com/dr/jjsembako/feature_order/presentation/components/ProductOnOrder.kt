@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_order.presentation.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -55,7 +57,9 @@ import coil.compose.AsyncImage
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.RedContainer
 import com.dr.jjsembako.core.utils.formatRupiah
+import com.dr.jjsembako.core.utils.rememberCurrencyVisualTransformation
 import com.dr.jjsembako.feature_order.presentation.select_product.PilihBarangViewModel
 
 @Composable
@@ -64,22 +68,44 @@ fun ProductOnOrder(
     product: DataProductOrder,
     modifier: Modifier
 ) {
-    OutlinedCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .padding(horizontal = 8.dp)
-    ) {
-        Row(
+    if (product.isChosen && (product.orderTotalPrice == 0L || product.orderQty > product.stockInUnit)) {
+        OutlinedCard(
             modifier = modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .padding(horizontal = 8.dp),
+            border = BorderStroke(1.dp, Color.Red),
+            colors = CardDefaults.cardColors(contentColor = RedContainer)
         ) {
-            ProductImage(product = product, modifier = modifier)
-            Spacer(modifier = modifier.width(16.dp))
-            ProductInfo(product = product, modifier = modifier)
+            Row(
+                modifier = modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                ProductImage(product = product, modifier = modifier)
+                Spacer(modifier = modifier.width(16.dp))
+                ProductInfo(product = product, modifier = modifier)
+            }
+            OrderContent(pilihBarangViewModel, product, modifier)
         }
-        OrderContent(pilihBarangViewModel, product, modifier)
+    } else {
+        OutlinedCard(
+            modifier = modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .padding(horizontal = 8.dp)
+        ) {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                ProductImage(product = product, modifier = modifier)
+                Spacer(modifier = modifier.width(16.dp))
+                ProductInfo(product = product, modifier = modifier)
+            }
+            OrderContent(pilihBarangViewModel, product, modifier)
+        }
     }
 }
 
@@ -162,6 +188,7 @@ private fun OrderContent(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "IDR")
 
     var orderQty by rememberSaveable { mutableStateOf(product.orderQty.toString()) }
     var orderPrice by rememberSaveable { mutableStateOf(product.orderPrice.toString()) }
@@ -255,10 +282,19 @@ private fun OrderContent(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
                     ),
+                    visualTransformation = currencyVisualTransformation,
                     value = orderPrice,
                     onValueChange = {
-                        val newValue = it.toIntOrNull() ?: 0
-                        orderPrice = maxOf(newValue, 0).toString()
+                        var newValue =
+                            it.filter { it2 -> it2.isDigit() || it2 == '0' } // Only allow digits and leading zero
+                        newValue = newValue.trimStart('0') // Remove leading zeros
+                        newValue = newValue.trim { it2 -> it2.isDigit().not() } // Remove non-digits
+
+                        // Enforce minimum & maximum value
+                        orderPrice = if (newValue.isEmpty()) "0"
+                        else if ((newValue.toLongOrNull()
+                                ?: 0L) > MAX_VALUE
+                        ) MAX_VALUE.toString() else newValue
                         pilihBarangViewModel.updateOrderPrice(product, orderPrice)
                     },
                     modifier = modifier
@@ -272,10 +308,19 @@ private fun OrderContent(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
                     ),
+                    visualTransformation = currencyVisualTransformation,
                     value = orderTotalPrice,
                     onValueChange = {
-                        val newValue = it.toIntOrNull() ?: 0
-                        orderTotalPrice = maxOf(newValue, 0).toString()
+                        var newValue =
+                            it.filter { it2 -> it2.isDigit() || it2 == '0' } // Only allow digits and leading zero
+                        newValue = newValue.trimStart('0') // Remove leading zeros
+                        newValue = newValue.trim { it2 -> it2.isDigit().not() } // Remove non-digits
+
+                        // Enforce minimum & maximum value
+                        orderTotalPrice = if (newValue.isEmpty()) "0"
+                        else if ((newValue.toLongOrNull()
+                                ?: 0L) > MAX_VALUE
+                        ) MAX_VALUE.toString() else newValue
                         pilihBarangViewModel.updateOrderTotalPrice(product, orderTotalPrice)
                     },
                     modifier = modifier
@@ -316,6 +361,8 @@ private fun OrderContent(
         }
     }
 }
+
+private const val MAX_VALUE = 1_000_000_000L
 
 @Composable
 @Preview(showBackground = true)
