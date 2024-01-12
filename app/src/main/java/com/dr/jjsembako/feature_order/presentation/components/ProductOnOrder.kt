@@ -240,8 +240,7 @@ private fun OrderContent(
                     }) {
                         Icon(
                             Icons.Default.Remove,
-                            stringResource(R.string.minus_order_qty, product.name),
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            stringResource(R.string.minus_order_qty, product.name)
                         )
                     }
                     Spacer(modifier = modifier.size(ButtonDefaults.IconSpacing))
@@ -270,8 +269,7 @@ private fun OrderContent(
                     }) {
                         Icon(
                             Icons.Default.Add,
-                            stringResource(R.string.plus_order_qty, product.name),
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            stringResource(R.string.plus_order_qty, product.name)
                         )
                     }
                 }
