@@ -1,7 +1,6 @@
 package com.dr.jjsembako.core.presentation.theme
 
 import androidx.compose.ui.graphics.Color
-import com.dr.jjsembako.R
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
@@ -18,5 +17,3 @@ val MyGrey = Color(0xFFBDBDBD)
 val DarkOrange = Color(0xFFF28928)
 val DarkOrangeGrey = Color(0xFF685E51)
 val MyDarkGrey = Color(0xFF555555)
-
-val RedContainer = Color(color = R.color.red_container)

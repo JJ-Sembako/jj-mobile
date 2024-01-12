@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -57,7 +56,6 @@ import coil.compose.AsyncImage
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.presentation.theme.RedContainer
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.core.utils.rememberCurrencyVisualTransformation
 import com.dr.jjsembako.feature_order.presentation.select_product.PilihBarangViewModel
@@ -74,8 +72,7 @@ fun ProductOnOrder(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
                 .padding(horizontal = 8.dp),
-            border = BorderStroke(1.dp, Color.Red),
-            colors = CardDefaults.cardColors(contentColor = RedContainer)
+            border = BorderStroke(3.dp, Color.Red)
         ) {
             Row(
                 modifier = modifier
@@ -295,6 +292,7 @@ private fun OrderContent(
                         ) MAX_VALUE.toString() else newValue
                         pilihBarangViewModel.updateOrderPrice(product, orderPrice)
                     },
+                    isError = product.orderPrice == 0L,
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp)
@@ -321,6 +319,7 @@ private fun OrderContent(
                         ) MAX_VALUE.toString() else newValue
                         pilihBarangViewModel.updateOrderTotalPrice(product, orderTotalPrice)
                     },
+                    isError = product.orderTotalPrice == 0L,
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp)
