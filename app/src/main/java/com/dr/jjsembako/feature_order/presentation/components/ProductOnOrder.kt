@@ -163,14 +163,10 @@ private fun OrderContent(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    var orderQty by rememberSaveable { mutableStateOf("") }
-    var orderPrice by rememberSaveable { mutableStateOf("") }
-    var orderTotalPrice by rememberSaveable { mutableStateOf("") }
+    var orderQty by rememberSaveable { mutableStateOf(product.orderQty.toString()) }
+    var orderPrice by rememberSaveable { mutableStateOf(product.orderPrice.toString()) }
+    var orderTotalPrice by rememberSaveable { mutableStateOf(product.orderTotalPrice.toString()) }
 
-    LaunchedEffect(product.isChosen) {
-        orderQty = if (product.isChosen) product.orderQty.toString()
-        else "0"
-    }
     LaunchedEffect(product) {
         orderQty = product.orderQty.toString()
         orderPrice = product.orderPrice.toString()

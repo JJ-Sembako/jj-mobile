@@ -64,21 +64,24 @@ class PilihBarangViewModel @Inject constructor(
                 val index = currentList.indexOfFirst { it?.id == updatedProduct.id }
 
                 if (index != -1) {
-                    val existingProduct = currentList[index]
+                    val existingProduct = currentList[index]!!
 
-                    if (existingProduct?.isChosen == true) {
-                        existingProduct.name = updatedProduct.name
-                        existingProduct.image = updatedProduct.image
-                        existingProduct.category = updatedProduct.category
-                        existingProduct.unit = updatedProduct.unit
-                        existingProduct.standardPrice = updatedProduct.standardPrice
-                        existingProduct.amountPerUnit = updatedProduct.amountPerUnit
-                        existingProduct.stockInPcs = updatedProduct.stockInPcs
-                        existingProduct.stockInUnit = updatedProduct.stockInUnit
-                        existingProduct.stockInPcsRemaining = updatedProduct.stockInPcsRemaining
-                    } else {
-                        currentList[index] = updatedProduct
-                    }
+                    val updatedExistingProduct = existingProduct.copy(
+                        name = updatedProduct.name,
+                        image = updatedProduct.image,
+                        category = updatedProduct.category,
+                        unit = updatedProduct.unit,
+                        standardPrice = updatedProduct.standardPrice,
+                        amountPerUnit = updatedProduct.amountPerUnit,
+                        stockInPcs = updatedProduct.stockInPcs,
+                        stockInUnit = updatedProduct.stockInUnit,
+                        stockInPcsRemaining = updatedProduct.stockInPcsRemaining
+                    )
+
+                    currentList[index] = updatedExistingProduct
+                    currentList.remove(existingProduct)
+                } else {
+                    currentList.add(updatedProduct)
                 }
             }
 
@@ -93,15 +96,18 @@ class PilihBarangViewModel @Inject constructor(
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
 
             if (productIndex != -1) {
-                val existingProduct = currentList[productIndex]
+                val existingProduct = currentList[productIndex]!!
 
                 if (total.isNotEmpty()) {
                     val orderTotalPrice = total.toLong()
-                    existingProduct!!.orderTotalPrice = orderTotalPrice
-                    existingProduct.orderPrice =
-                        existingProduct.orderTotalPrice / existingProduct.orderQty
+                    val updatedExistingProduct = existingProduct.copy(
+                        orderTotalPrice = orderTotalPrice,
+                        orderPrice = orderTotalPrice / existingProduct.orderQty
+                    )
+                    currentList[productIndex] = updatedExistingProduct
+                    currentList.remove(existingProduct)
                 } else {
-                    disableOrder(existingProduct!!)
+                    disableOrder(existingProduct)
                 }
 
                 _dataProducts.value = currentList
@@ -115,14 +121,18 @@ class PilihBarangViewModel @Inject constructor(
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
 
             if (productIndex != -1) {
-                val existingProduct = _dataProducts.value!![productIndex]
+                val existingProduct = currentList[productIndex]!!
+
                 if (price.isNotEmpty()) {
                     val orderPrice = price.toLong()
-                    existingProduct!!.orderPrice = orderPrice
-                    existingProduct.orderTotalPrice =
-                        existingProduct.orderQty * existingProduct.orderPrice
+                    val updatedExistingProduct = existingProduct.copy(
+                        orderPrice = orderPrice,
+                        orderTotalPrice = existingProduct.orderQty * orderPrice
+                    )
+                    currentList[productIndex] = updatedExistingProduct
+                    currentList.remove(existingProduct)
                 } else {
-                    disableOrder(existingProduct!!)
+                    disableOrder(existingProduct)
                 }
             }
 
@@ -136,14 +146,18 @@ class PilihBarangViewModel @Inject constructor(
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
 
             if (productIndex != -1) {
-                val existingProduct = _dataProducts.value!![productIndex]
+                val existingProduct = currentList[productIndex]!!
+
                 if (qty.isNotEmpty()) {
                     val orderQty = qty.toInt()
-                    existingProduct!!.orderQty = orderQty
-                    existingProduct.orderTotalPrice =
-                        existingProduct.orderQty * existingProduct.orderPrice
+                    val updatedExistingProduct = existingProduct.copy(
+                        orderQty = orderQty,
+                        orderTotalPrice = existingProduct.orderPrice * orderQty
+                    )
+                    currentList[productIndex] = updatedExistingProduct
+                    currentList.remove(existingProduct)
                 } else {
-                    disableOrder(existingProduct!!)
+                    disableOrder(existingProduct)
                 }
             }
 
@@ -157,12 +171,18 @@ class PilihBarangViewModel @Inject constructor(
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
 
             if (productIndex != -1) {
-                val existingProduct = _dataProducts.value!![productIndex]
-                if (existingProduct!!.orderQty > 0) {
-                    existingProduct.orderQty -= 1
-                    if (existingProduct.orderQty == 0) disableOrder(existingProduct)
-                    else existingProduct.orderTotalPrice =
-                        existingProduct.orderQty * existingProduct.orderPrice
+                val existingProduct = currentList[productIndex]!!
+
+                if (existingProduct.orderQty > 0) {
+                    val updatedExistingProduct = existingProduct.copy(
+                        orderQty = existingProduct.orderQty - 1,
+                        orderTotalPrice = existingProduct.orderPrice * (existingProduct.orderQty - 1)
+                    )
+                    if (updatedExistingProduct.orderQty == 0) disableOrder(existingProduct)
+                    else {
+                        currentList[productIndex] = updatedExistingProduct
+                        currentList.remove(existingProduct)
+                    }
                 }
             }
 
@@ -176,11 +196,15 @@ class PilihBarangViewModel @Inject constructor(
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
 
             if (productIndex != -1) {
-                val existingProduct = _dataProducts.value!![productIndex]
-                if (existingProduct!!.orderQty > 0) {
-                    existingProduct.orderQty += 1
-                    existingProduct.orderTotalPrice =
-                        existingProduct.orderQty * existingProduct.orderPrice
+                val existingProduct = currentList[productIndex]!!
+
+                if (existingProduct.orderQty > 0) {
+                    val updatedExistingProduct = existingProduct.copy(
+                        orderQty = existingProduct.orderQty + 1,
+                        orderTotalPrice = existingProduct.orderPrice * (existingProduct.orderQty + 1)
+                    )
+                    currentList[productIndex] = updatedExistingProduct
+                    currentList.remove(existingProduct)
                 } else {
                     enableOrder(existingProduct)
                 }
@@ -196,12 +220,18 @@ class PilihBarangViewModel @Inject constructor(
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
 
             if (productIndex != -1) {
-                val existingProduct = _dataProducts.value!![productIndex]
-                existingProduct!!.isChosen = true
-                existingProduct.orderQty = 1
-                existingProduct.orderPrice = existingProduct.standardPrice
-                existingProduct.orderTotalPrice =
-                    existingProduct.orderQty * existingProduct.orderPrice
+                val existingProduct = currentList[productIndex]!!
+
+                if(!existingProduct.isChosen){
+                    val updatedExistingProduct = existingProduct.copy(
+                        isChosen = true,
+                        orderQty = 1,
+                        orderPrice = existingProduct.standardPrice,
+                        orderTotalPrice = existingProduct.standardPrice
+                    )
+                    currentList[productIndex] = updatedExistingProduct
+                    currentList.remove(existingProduct)
+                }
             }
 
             _dataProducts.value = currentList
@@ -214,11 +244,18 @@ class PilihBarangViewModel @Inject constructor(
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
 
             if (productIndex != -1) {
-                val existingProduct = _dataProducts.value!![productIndex]
-                existingProduct!!.isChosen = false
-                existingProduct.orderQty = 0
-                existingProduct.orderPrice = existingProduct.standardPrice
-                existingProduct.orderTotalPrice = 0
+                val existingProduct = currentList[productIndex]!!
+
+                if(existingProduct.isChosen){
+                    val updatedExistingProduct = existingProduct.copy(
+                        isChosen = false,
+                        orderQty = 0,
+                        orderPrice = existingProduct.standardPrice,
+                        orderTotalPrice = 0
+                    )
+                    currentList[productIndex] = updatedExistingProduct
+                    currentList.remove(existingProduct)
+                }
             }
 
             _dataProducts.value = currentList
