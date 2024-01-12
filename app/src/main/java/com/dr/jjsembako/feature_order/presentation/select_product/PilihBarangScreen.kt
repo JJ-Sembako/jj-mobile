@@ -126,7 +126,7 @@ fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifie
             ) { index ->
                 when (index) {
                     0 -> CartContent(pilihBarangViewModel, modifier)
-                    1 -> ProductListContent(pilihBarangViewModel, modifier)
+                    1 -> CatalogContent(pilihBarangViewModel, modifier)
                     else -> {}
                 }
             }

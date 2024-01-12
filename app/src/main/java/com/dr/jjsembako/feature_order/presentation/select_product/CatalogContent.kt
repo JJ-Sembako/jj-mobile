@@ -39,7 +39,7 @@ import com.dr.jjsembako.feature_order.presentation.components.ProductOnOrder
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ProductListContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) {
+fun CatalogContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) {
     val dataProducts = pilihBarangViewModel.dataProducts.observeAsState().value
     val option = pilihBarangViewModel.dataCategories.observeAsState().value
     val loadingState = pilihBarangViewModel.loadingState.observeAsState().value
@@ -161,7 +161,7 @@ fun ProductListContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Mod
 private fun ProductListContentPreview() {
     JJSembakoTheme {
         val pilihBarangViewModel: PilihBarangViewModel = hiltViewModel()
-        ProductListContent(
+        CatalogContent(
             pilihBarangViewModel = pilihBarangViewModel,
             modifier = Modifier
         )
