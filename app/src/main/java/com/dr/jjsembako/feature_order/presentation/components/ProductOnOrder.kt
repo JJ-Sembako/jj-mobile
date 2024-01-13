@@ -233,9 +233,16 @@ private fun OrderContent(
                         ),
                         value = orderQty,
                         onValueChange = {
-                            var newValue = it.toIntOrNull() ?: 0
-                            newValue = if(newValue > QTY_MAX_VALUE) QTY_MAX_VALUE else newValue
-                            orderQty = maxOf(newValue, 0).toString()
+                            var newValue =
+                                it.filter { it2 -> it2.isDigit() || it2 == '0' } // Only allow digits and leading zero
+                            newValue = newValue.trimStart('0') // Remove leading zeros
+                            newValue = newValue.trim { it2 -> it2.isDigit().not() } // Remove non-digits
+
+                            // Enforce minimum & maximum value
+                            orderQty = if (newValue.isEmpty()) "0"
+                            else if ((newValue.toIntOrNull()
+                                    ?: 0) > QTY_MAX_VALUE
+                            ) QTY_MAX_VALUE.toString() else newValue
                             pilihBarangViewModel.updateOrderQty(product, orderQty)
                         },
                         isError = product.orderQty == 0 || (product.orderQty > product.stockInUnit),

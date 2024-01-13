@@ -100,17 +100,19 @@ class PilihBarangViewModel @Inject constructor(
 
                 if (total.isNotEmpty()) {
                     val orderTotalPrice = total.toLong()
-                    val updatedExistingProduct = existingProduct.copy(
-                        orderTotalPrice = orderTotalPrice,
-                        orderPrice = orderTotalPrice / existingProduct.orderQty
-                    )
-                    currentList[productIndex] = updatedExistingProduct
-                    currentList.remove(existingProduct)
+                    if(orderTotalPrice != existingProduct.orderTotalPrice){
+                        val updatedExistingProduct = existingProduct.copy(
+                            orderTotalPrice = orderTotalPrice,
+                            orderPrice = orderTotalPrice / existingProduct.orderQty
+                        )
+                        currentList[productIndex] = updatedExistingProduct
+                        currentList.remove(existingProduct)
+
+                        _dataProducts.value = currentList
+                    }
                 } else {
                     disableOrder(existingProduct)
                 }
-
-                _dataProducts.value = currentList
             }
         }
     }
@@ -125,18 +127,20 @@ class PilihBarangViewModel @Inject constructor(
 
                 if (price.isNotEmpty()) {
                     val orderPrice = price.toLong()
-                    val updatedExistingProduct = existingProduct.copy(
-                        orderPrice = orderPrice,
-                        orderTotalPrice = existingProduct.orderQty * orderPrice
-                    )
-                    currentList[productIndex] = updatedExistingProduct
-                    currentList.remove(existingProduct)
+                    if(orderPrice != existingProduct.orderPrice){
+                        val updatedExistingProduct = existingProduct.copy(
+                            orderPrice = orderPrice,
+                            orderTotalPrice = existingProduct.orderQty * orderPrice
+                        )
+                        currentList[productIndex] = updatedExistingProduct
+                        currentList.remove(existingProduct)
+
+                        _dataProducts.value = currentList
+                    }
                 } else {
                     disableOrder(existingProduct)
                 }
             }
-
-            _dataProducts.value = currentList
         }
     }
 
@@ -150,18 +154,20 @@ class PilihBarangViewModel @Inject constructor(
 
                 if (qty.isNotEmpty()) {
                     val orderQty = qty.toInt()
-                    val updatedExistingProduct = existingProduct.copy(
-                        orderQty = orderQty,
-                        orderTotalPrice = existingProduct.orderPrice * orderQty
-                    )
-                    currentList[productIndex] = updatedExistingProduct
-                    currentList.remove(existingProduct)
+                    if(orderQty != existingProduct.orderQty){
+                        val updatedExistingProduct = existingProduct.copy(
+                            orderQty = orderQty,
+                            orderTotalPrice = existingProduct.orderPrice * orderQty
+                        )
+                        currentList[productIndex] = updatedExistingProduct
+                        currentList.remove(existingProduct)
+
+                        _dataProducts.value = currentList
+                    }
                 } else {
                     disableOrder(existingProduct)
                 }
             }
-
-            _dataProducts.value = currentList
         }
     }
 
@@ -183,10 +189,10 @@ class PilihBarangViewModel @Inject constructor(
                         currentList[productIndex] = updatedExistingProduct
                         currentList.remove(existingProduct)
                     }
+
+                    _dataProducts.value = currentList
                 }
             }
-
-            _dataProducts.value = currentList
         }
     }
 
@@ -198,19 +204,19 @@ class PilihBarangViewModel @Inject constructor(
             if (productIndex != -1) {
                 val existingProduct = currentList[productIndex]!!
 
-                if (existingProduct.orderQty > 0) {
+                if (existingProduct.orderQty in 1..999) {
                     val updatedExistingProduct = existingProduct.copy(
                         orderQty = existingProduct.orderQty + 1,
                         orderTotalPrice = existingProduct.orderPrice * (existingProduct.orderQty + 1)
                     )
                     currentList[productIndex] = updatedExistingProduct
                     currentList.remove(existingProduct)
+
+                    _dataProducts.value = currentList
                 } else {
                     enableOrder(existingProduct)
                 }
             }
-
-            _dataProducts.value = currentList
         }
     }
 
@@ -232,9 +238,9 @@ class PilihBarangViewModel @Inject constructor(
                     currentList[productIndex] = updatedExistingProduct
                     currentList.remove(existingProduct)
                 }
-            }
 
-            _dataProducts.value = currentList
+                _dataProducts.value = currentList
+            }
         }
     }
 
@@ -256,9 +262,9 @@ class PilihBarangViewModel @Inject constructor(
                     currentList[productIndex] = updatedExistingProduct
                     currentList.remove(existingProduct)
                 }
-            }
 
-            _dataProducts.value = currentList
+                _dataProducts.value = currentList
+            }
         }
     }
 
