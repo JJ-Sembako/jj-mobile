@@ -66,20 +66,45 @@ class PilihBarangViewModel @Inject constructor(
                 if (index != -1) {
                     val existingProduct = currentList[index]!!
 
-                    val updatedExistingProduct = existingProduct.copy(
-                        name = updatedProduct.name,
-                        image = updatedProduct.image,
-                        category = updatedProduct.category,
-                        unit = updatedProduct.unit,
-                        standardPrice = updatedProduct.standardPrice,
-                        amountPerUnit = updatedProduct.amountPerUnit,
-                        stockInPcs = updatedProduct.stockInPcs,
-                        stockInUnit = updatedProduct.stockInUnit,
-                        stockInPcsRemaining = updatedProduct.stockInPcsRemaining
-                    )
+                    if(existingProduct.isChosen){
+                        val updatedExistingProduct = existingProduct.copy(
+                            name = updatedProduct.name,
+                            image = updatedProduct.image,
+                            category = updatedProduct.category,
+                            unit = updatedProduct.unit,
+                            standardPrice = updatedProduct.standardPrice,
+                            amountPerUnit = updatedProduct.amountPerUnit,
+                            stockInPcs = updatedProduct.stockInPcs,
+                            stockInUnit = updatedProduct.stockInUnit,
+                            stockInPcsRemaining = updatedProduct.stockInPcsRemaining,
+                            orderQty = existingProduct.orderQty,
+                            orderPrice = existingProduct.orderPrice,
+                            orderTotalPrice = existingProduct.orderTotalPrice,
+                            isChosen = true
+                        )
 
-                    currentList[index] = updatedExistingProduct
-                    currentList.remove(existingProduct)
+                        currentList[index] = updatedExistingProduct
+                        currentList.remove(existingProduct)
+                    } else {
+                        val updatedExistingProduct = existingProduct.copy(
+                            name = updatedProduct.name,
+                            image = updatedProduct.image,
+                            category = updatedProduct.category,
+                            unit = updatedProduct.unit,
+                            standardPrice = updatedProduct.standardPrice,
+                            amountPerUnit = updatedProduct.amountPerUnit,
+                            stockInPcs = updatedProduct.stockInPcs,
+                            stockInUnit = updatedProduct.stockInUnit,
+                            stockInPcsRemaining = updatedProduct.stockInPcsRemaining,
+                            orderQty = 0,
+                            orderPrice = updatedProduct.standardPrice,
+                            orderTotalPrice = 0,
+                            isChosen = false
+                        )
+
+                        currentList[index] = updatedExistingProduct
+                        currentList.remove(existingProduct)
+                    }
                 } else {
                     currentList.add(updatedProduct)
                 }
