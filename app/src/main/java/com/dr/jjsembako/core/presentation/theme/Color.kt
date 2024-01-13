@@ -17,3 +17,9 @@ val MyGrey = Color(0xFFBDBDBD)
 val DarkOrange = Color(0xFFF28928)
 val DarkOrangeGrey = Color(0xFF685E51)
 val MyDarkGrey = Color(0xFF555555)
+
+val CardSelectedLight = Color(0xFFA8F5A6)
+val OnCardSelectedLight = Color(0xFF002105)
+
+val CardSelectedDark = Color(0xFF005318)
+val OnCardSelectedDark = CardSelectedLight
