@@ -5,6 +5,8 @@ import com.dr.jjsembako.feature_auth.domain.repository.IAuthRepository
 import com.dr.jjsembako.feature_auth.domain.repository.IForgetPasswordRepository
 import com.dr.jjsembako.feature_customer.data.CustomerRepository
 import com.dr.jjsembako.feature_customer.domain.repository.ICustomerRepository
+import com.dr.jjsembako.feature_order.data.OrderRepository
+import com.dr.jjsembako.feature_order.domain.repository.ISelectCustRepository
 import com.dr.jjsembako.feature_setting.data.SettingRepository
 import com.dr.jjsembako.feature_setting.domain.repository.IRecoveryRepository
 import com.dr.jjsembako.feature_setting.domain.repository.ISettingRepository
@@ -30,5 +32,8 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun provideCustomerRepository(customerRepository: CustomerRepository): ICustomerRepository
+
+    @Binds
+    abstract fun provideSelectCustomerRepository(orderRepository: OrderRepository): ISelectCustRepository
 
 }
