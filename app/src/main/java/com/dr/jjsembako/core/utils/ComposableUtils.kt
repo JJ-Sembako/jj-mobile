@@ -7,6 +7,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.runtime.toMutableStateMap
+import androidx.compose.ui.Modifier
 
 @Composable
 fun <T : Any> rememberMutableStateListOf(vararg elements: T): SnapshotStateList<T> {
@@ -51,3 +52,11 @@ fun <K, V> rememberMutableStateMapOf(vararg pairs: Pair<K, V>)  =
 //    ) {
 //        mutableStateMapOf<K, V>().withDefault { defaultValue }
 //    }
+
+fun Modifier.conditional(condition : Boolean, modifier : Modifier.() -> Modifier) : Modifier {
+    return if (condition) {
+        then(modifier(Modifier))
+    } else {
+        this
+    }
+}

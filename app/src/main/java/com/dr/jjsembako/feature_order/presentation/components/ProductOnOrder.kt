@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -66,43 +67,25 @@ fun ProductOnOrder(
     product: DataProductOrder,
     modifier: Modifier
 ) {
-    if (product.isChosen && (product.orderTotalPrice == 0L || product.orderQty > product.stockInUnit)) {
-        OutlinedCard(
+    OutlinedCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .padding(horizontal = 8.dp),
+        border = if (product.isChosen && (product.orderTotalPrice == 0L || product.orderQty > product.stockInUnit)) {
+            BorderStroke(3.dp, Color.Red)
+        } else CardDefaults.outlinedCardBorder()
+    ) {
+        Row(
             modifier = modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .padding(horizontal = 8.dp),
-            border = BorderStroke(3.dp, Color.Red)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                ProductImage(product = product, modifier = modifier)
-                Spacer(modifier = modifier.width(16.dp))
-                ProductInfo(product = product, modifier = modifier)
-            }
-            OrderContent(pilihBarangViewModel, product, modifier)
+            ProductImage(product = product, modifier = modifier)
+            Spacer(modifier = modifier.width(16.dp))
+            ProductInfo(product = product, modifier = modifier)
         }
-    } else {
-        OutlinedCard(
-            modifier = modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .padding(horizontal = 8.dp)
-        ) {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                ProductImage(product = product, modifier = modifier)
-                Spacer(modifier = modifier.width(16.dp))
-                ProductInfo(product = product, modifier = modifier)
-            }
-            OrderContent(pilihBarangViewModel, product, modifier)
-        }
+        OrderContent(pilihBarangViewModel, product, modifier)
     }
 }
 
@@ -250,10 +233,12 @@ private fun OrderContent(
                         ),
                         value = orderQty,
                         onValueChange = {
-                            val newValue = it.toIntOrNull() ?: 0
+                            var newValue = it.toIntOrNull() ?: 0
+                            newValue = if(newValue > QTY_MAX_VALUE) QTY_MAX_VALUE else newValue
                             orderQty = maxOf(newValue, 0).toString()
                             pilihBarangViewModel.updateOrderQty(product, orderQty)
                         },
+                        isError = product.orderQty == 0 || (product.orderQty > product.stockInUnit),
                         modifier = modifier
                             .width(88.dp)
                             .padding(start = 8.dp, end = 8.dp, top = 8.dp)
@@ -360,6 +345,7 @@ private fun OrderContent(
 }
 
 private const val MAX_VALUE = 1_000_000_000L
+private const val QTY_MAX_VALUE = 1_000
 
 @Composable
 @Preview(showBackground = true)
