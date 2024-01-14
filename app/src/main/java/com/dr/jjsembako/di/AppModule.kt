@@ -20,6 +20,8 @@ import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerInte
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerInteractor
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerUseCase
+import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustInteractor
+import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustInteractor
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryInteractor
@@ -119,5 +121,10 @@ abstract class AppModule {
      ***************************/
     @Binds
     @ViewModelScoped
-    abstract  fun provideFetchSelectCustUseCase(fetchSelectCustInteractor: FetchSelectCustInteractor): FetchSelectCustUseCase
+    abstract fun provideFetchSelectCustUseCase(fetchSelectCustInteractor: FetchSelectCustInteractor): FetchSelectCustUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchDetailSelectedCustUseCase(fetchDetailSelectedCustInteractor: FetchDetailSelectedCustInteractor): FetchDetailSelectedCustUseCase
+
 }

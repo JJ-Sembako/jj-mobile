@@ -1,13 +1,10 @@
-package com.dr.jjsembako.feature_order.domain.repository
+package com.dr.jjsembako.feature_order.domain.usecase
 
-import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import kotlinx.coroutines.flow.Flow
 
-interface ISelectCustRepository {
-
-    suspend fun fetchCustomers(searchQuery: String = ""): Flow<PagingData<DataCustomer>>
+interface FetchDetailSelectedCustUseCase {
 
     suspend fun fetchDetailCustomer(id: String): Flow<Resource<out DataCustomer?>>
 
