@@ -105,6 +105,7 @@
     <string name="select_product">Pilih Barang</string>
     <string name="total_payment">Total Biaya Pesanan</string>
 
+    <string name="selected_data">Data Terpilih</string>
     <string name="cart">Keranjang</string>
     <string name="catalog">Katalog</string>
     <string name="stock_empty">Stok habis</string>

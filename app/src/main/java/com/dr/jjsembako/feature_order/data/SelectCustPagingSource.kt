@@ -2,21 +2,20 @@ package com.dr.jjsembako.feature_order.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.dr.jjsembako.core.data.model.DataCustomerOrder
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
-import com.dr.jjsembako.core.utils.DataMapper.mapListCustDataToListCustDataOrder
+import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import kotlinx.coroutines.CancellationException
 import okio.IOException
 import javax.inject.Inject
 
 class SelectCustPagingSource @Inject constructor(private val customerApiService: CustomerApiService) :
-    PagingSource<Int, DataCustomerOrder>() {
+    PagingSource<Int, DataCustomer>() {
 
     private var searchQuery: String = ""
     private var currentPage = 0
     private var totalData = 0
 
-    override fun getRefreshKey(state: PagingState<Int, DataCustomerOrder>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, DataCustomer>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val closestPage = state.closestPageToPosition(anchorPosition)
             if (closestPage != null && closestPage.prevKey != null) {
@@ -29,7 +28,7 @@ class SelectCustPagingSource @Inject constructor(private val customerApiService:
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DataCustomerOrder> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DataCustomer> {
         try {
             // Mendapatkan nomor halaman yang diminta
             currentPage = params.key ?: 1
@@ -45,7 +44,7 @@ class SelectCustPagingSource @Inject constructor(private val customerApiService:
                 // Check jika response berhasil
                 if (response.statusCode == 200) {
                     totalData = response.count ?: 0
-                    val data = mapListCustDataToListCustDataOrder(response.data)
+                    val data = response.data ?: emptyList()
                     return LoadResult.Page(
                         data = data,
                         prevKey = if (currentPage == 1) null else currentPage - 1,
@@ -63,7 +62,7 @@ class SelectCustPagingSource @Inject constructor(private val customerApiService:
                 // Check jika response berhasil
                 if (response.statusCode == 200) {
                     totalData = response.count ?: 0
-                    val data = mapListCustDataToListCustDataOrder(response.data)
+                    val data = response.data ?: emptyList()
                     return LoadResult.Page(
                         data = data,
                         prevKey = if (currentPage == 1) null else currentPage - 1,

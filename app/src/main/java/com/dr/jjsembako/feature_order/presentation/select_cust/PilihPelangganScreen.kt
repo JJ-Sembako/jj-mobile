@@ -54,12 +54,11 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.presentation.components.BottomSheetCustomer
-import com.dr.jjsembako.core.presentation.components.CustomerInfo
 import com.dr.jjsembako.core.presentation.components.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.feature_customer.presentation.list.PelangganViewModel
+import com.dr.jjsembako.feature_order.presentation.components.CustomerInfoOrder
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -67,17 +66,17 @@ fun PilihPelangganScreen(
     onNavigateToMainOrderScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // TODO: Ganti ViewModel dan Repository khusus feature_order
-    val pelangganViewModel: PelangganViewModel = hiltViewModel()
+    val pilihPelangganViewModel: PilihPelangganViewModel = hiltViewModel()
     val customerPagingItems: LazyPagingItems<DataCustomer> =
-        pelangganViewModel.customerState.collectAsLazyPagingItems()
+        pilihPelangganViewModel.customerState.collectAsLazyPagingItems()
+    val selectedCust = rememberSaveable { mutableStateOf<DataCustomer?>(null) }
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    var showSheet = remember { mutableStateOf(false) }
-    var (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
-    var searchQuery = rememberSaveable { mutableStateOf("") }
-    var activeSearch = remember { mutableStateOf(false) }
+    val showSheet = remember { mutableStateOf(false) }
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+    val searchQuery = rememberSaveable { mutableStateOf("") }
+    val activeSearch = remember { mutableStateOf(false) }
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
     val progress by animateLottieCompositionAsState(
@@ -87,8 +86,8 @@ fun PilihPelangganScreen(
 
     // Set keyword for the first time Composable is rendered
     LaunchedEffect(Unit) {
-        if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
-        else pelangganViewModel.fetchCustomers(searchQuery.value)
+        if (searchQuery.value.isEmpty()) pilihPelangganViewModel.fetchCustomers()
+        else pilihPelangganViewModel.fetchCustomers(searchQuery.value)
     }
 
     Scaffold(
@@ -141,13 +140,36 @@ fun PilihPelangganScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (selectedCust.value != null) {
+                val data = DataCustomer(
+                    id = selectedCust.value!!.id,
+                    name = selectedCust.value!!.name,
+                    shopName = selectedCust.value!!.shopName,
+                    address = selectedCust.value!!.address,
+                    gmapsLink = selectedCust.value!!.gmapsLink,
+                    phoneNumber = selectedCust.value!!.phoneNumber,
+                    debt = selectedCust.value!!.debt
+                )
+                Text(text = stringResource(R.string.selected_data), fontSize = 12.sp)
+                Spacer(modifier = modifier.height(8.dp))
+                CustomerInfoOrder(
+                    selectedCust = selectedCust,
+                    customer = data,
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(8.dp))
+            } else {
+                Text(text = stringResource(R.string.selected_data), fontSize = 12.sp)
+                Spacer(modifier = modifier.height(80.dp))
+            }
+
             SearchFilter(
                 placeholder = stringResource(R.string.search_cust),
                 activeSearch,
                 searchQuery,
                 searchFunction = {
-                    if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
-                    else pelangganViewModel.fetchCustomers(searchQuery.value)
+                    if (searchQuery.value.isEmpty()) pilihPelangganViewModel.fetchCustomers()
+                    else pilihPelangganViewModel.fetchCustomers(searchQuery.value)
 
                 },
                 openFilter = { showSheet.value = !showSheet.value },
@@ -166,8 +188,8 @@ fun PilihPelangganScreen(
                     ErrorScreen(
                         onNavigateBack = { },
                         onReload = {
-                            if (searchQuery.value.isEmpty()) pelangganViewModel.fetchCustomers()
-                            else pelangganViewModel.fetchCustomers(searchQuery.value)
+                            if (searchQuery.value.isEmpty()) pilihPelangganViewModel.fetchCustomers()
+                            else pilihPelangganViewModel.fetchCustomers(searchQuery.value)
                         },
                         message = error.error.localizedMessage ?: "Unknown error",
                         showButtonBack = false,
@@ -182,9 +204,8 @@ fun PilihPelangganScreen(
                                 .fillMaxWidth()
                         ) {
                             items(customerPagingItems.itemCount) { index ->
-                                //TODO: Ganti CustomerInfo khusus feature_order
-                                CustomerInfo(
-                                    onNavigateToDetailCust = {},
+                                CustomerInfoOrder(
+                                    selectedCust = selectedCust,
                                     customer = customerPagingItems[index]!!,
                                     modifier = modifier
                                 )
