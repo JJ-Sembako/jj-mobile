@@ -3,15 +3,12 @@ package com.dr.jjsembako.feature_order.presentation.select_cust
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -27,6 +24,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -37,7 +35,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,49 +42,130 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.BottomSheetCustomer
+import com.dr.jjsembako.core.presentation.components.CardEmpty
 import com.dr.jjsembako.core.presentation.components.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
+import com.dr.jjsembako.core.presentation.components.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_order.presentation.components.CustomerInfoOrder
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PilihPelangganScreen(
     onNavigateToMainOrderScreen: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    idSelectedCustomer: String = ""
 ) {
+    val tag = "Pilih Pelanggan Screen"
     val pilihPelangganViewModel: PilihPelangganViewModel = hiltViewModel()
+    val state = pilihPelangganViewModel.state.observeAsState().value
+    val message = pilihPelangganViewModel.message.observeAsState().value
+    val statusCode = pilihPelangganViewModel.statusCode.observeAsState().value
+
+    if (idSelectedCustomer.isEmpty()) {
+        PilihPelangganContent(
+            pilihPelangganViewModel = pilihPelangganViewModel,
+            onNavigateToMainOrderScreen = { onNavigateToMainOrderScreen() },
+            modifier = modifier
+        )
+    } else {
+        LaunchedEffect(idSelectedCustomer) {
+            if (idSelectedCustomer.isNotEmpty()) {
+                pilihPelangganViewModel.fetchDetailCustomer(idSelectedCustomer)
+            }
+        }
+        when (state) {
+            StateResponse.LOADING -> {
+                LoadingScreen(modifier = modifier)
+            }
+
+            StateResponse.ERROR -> {
+                Log.e(tag, "Error")
+                Log.e(tag, "state: $state")
+                Log.e(tag, "Error: $message")
+                Log.e(tag, "statusCode: $statusCode")
+                ErrorScreen(
+                    onNavigateBack = { onNavigateToMainOrderScreen() },
+                    onReload = {
+                        pilihPelangganViewModel.fetchDetailCustomer(idSelectedCustomer)
+                    },
+                    message = message ?: "Unknown error",
+                    modifier = modifier
+                )
+            }
+
+            StateResponse.SUCCESS -> {
+                PilihPelangganContent(
+                    pilihPelangganViewModel = pilihPelangganViewModel,
+                    onNavigateToMainOrderScreen = { onNavigateToMainOrderScreen() },
+                    modifier = modifier
+                )
+            }
+
+            else -> {}
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+private fun PilihPelangganContent(
+    pilihPelangganViewModel: PilihPelangganViewModel,
+    onNavigateToMainOrderScreen: () -> Unit,
+    modifier: Modifier
+) {
+    val tag = "Pilih Pelanggan Content"
+    val stateRefresh = pilihPelangganViewModel.stateRefresh.observeAsState().value
+    val message = pilihPelangganViewModel.message.observeAsState().value
+    val statusCode = pilihPelangganViewModel.statusCode.observeAsState().value
+    val selectedCustomer by pilihPelangganViewModel.selectedCustomer.observeAsState()
     val customerPagingItems: LazyPagingItems<DataCustomer> =
         pilihPelangganViewModel.customerState.collectAsLazyPagingItems()
-    val selectedCust = rememberSaveable { mutableStateOf<DataCustomer?>(null) }
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val showSheet = remember { mutableStateOf(false) }
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
     val searchQuery = rememberSaveable { mutableStateOf("") }
     val activeSearch = remember { mutableStateOf(false) }
-
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
-    val progress by animateLottieCompositionAsState(
-        composition,
-        iterations = LottieConstants.IterateForever,
-    )
 
     // Set keyword for the first time Composable is rendered
     LaunchedEffect(Unit) {
         if (searchQuery.value.isEmpty()) pilihPelangganViewModel.fetchCustomers()
         else pilihPelangganViewModel.fetchCustomers(searchQuery.value)
+    }
+
+    when (stateRefresh) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateRefresh")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            pilihPelangganViewModel.setStateRefresh(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            pilihPelangganViewModel.setStateRefresh(null)
+        }
+
+        else -> {}
     }
 
     Scaffold(
@@ -140,27 +218,33 @@ fun PilihPelangganScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (selectedCust.value != null) {
+            Text(
+                text = stringResource(R.string.selected_data),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+            if (!selectedCustomer?.id.isNullOrEmpty()) {
                 val data = DataCustomer(
-                    id = selectedCust.value!!.id,
-                    name = selectedCust.value!!.name,
-                    shopName = selectedCust.value!!.shopName,
-                    address = selectedCust.value!!.address,
-                    gmapsLink = selectedCust.value!!.gmapsLink,
-                    phoneNumber = selectedCust.value!!.phoneNumber,
-                    debt = selectedCust.value!!.debt
+                    id = selectedCustomer!!.id,
+                    name = selectedCustomer!!.name,
+                    shopName = selectedCustomer!!.shopName,
+                    address = selectedCustomer!!.address,
+                    gmapsLink = selectedCustomer!!.gmapsLink,
+                    phoneNumber = selectedCustomer!!.phoneNumber,
+                    debt = selectedCustomer!!.debt
                 )
-                Text(text = stringResource(R.string.selected_data), fontSize = 12.sp)
                 Spacer(modifier = modifier.height(8.dp))
                 CustomerInfoOrder(
-                    selectedCust = selectedCust,
+                    pilihPelangganViewModel = pilihPelangganViewModel,
+                    selectedCust = selectedCustomer,
                     customer = data,
                     modifier = modifier
                 )
-                Spacer(modifier = modifier.height(8.dp))
+                Spacer(modifier = modifier.height(16.dp))
             } else {
-                Text(text = stringResource(R.string.selected_data), fontSize = 12.sp)
-                Spacer(modifier = modifier.height(80.dp))
+                Spacer(modifier = modifier.height(8.dp))
+                CardEmpty(modifier)
+                Spacer(modifier = modifier.height(16.dp))
             }
 
             SearchFilter(
@@ -205,7 +289,8 @@ fun PilihPelangganScreen(
                         ) {
                             items(customerPagingItems.itemCount) { index ->
                                 CustomerInfoOrder(
-                                    selectedCust = selectedCust,
+                                    pilihPelangganViewModel = pilihPelangganViewModel,
+                                    selectedCust = selectedCustomer,
                                     customer = customerPagingItems[index]!!,
                                     modifier = modifier
                                 )
@@ -213,28 +298,7 @@ fun PilihPelangganScreen(
                             }
                         }
                     } else {
-                        Spacer(modifier = modifier.height(48.dp))
-                        Column(
-                            modifier = modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            LottieAnimation(
-                                enableMergePaths = true,
-                                composition = composition,
-                                progress = { progress },
-                                modifier = modifier.size(150.dp)
-                            )
-                            Spacer(modifier = modifier.height(16.dp))
-                            Text(
-                                text = stringResource(R.string.not_found),
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 14.sp,
-                                textAlign = TextAlign.Center,
-                                modifier = modifier.wrapContentSize(Alignment.Center)
-                            )
-                        }
-                        Spacer(modifier = modifier.height(16.dp))
+                        NotFoundScreen(modifier = modifier)
                     }
                 }
             }
@@ -245,6 +309,18 @@ fun PilihPelangganScreen(
                     selectedOption = selectedOption,
                     onOptionSelected = onOptionSelected,
                     showSheet = showSheet,
+                    modifier = modifier
+                )
+            }
+
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
+
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: stringResource(id = R.string.error_msg_default),
+                    showDialog = showErrorDialog,
                     modifier = modifier
                 )
             }

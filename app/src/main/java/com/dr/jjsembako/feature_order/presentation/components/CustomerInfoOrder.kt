@@ -11,9 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -23,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.presentation.theme.CardSelectedDark
@@ -31,10 +29,12 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.presentation.theme.OnCardSelectedDark
 import com.dr.jjsembako.core.presentation.theme.OnCardSelectedLight
 import com.dr.jjsembako.core.utils.formatRupiah
+import com.dr.jjsembako.feature_order.presentation.select_cust.PilihPelangganViewModel
 
 @Composable
 fun CustomerInfoOrder(
-    selectedCust: MutableState<DataCustomer?>,
+    pilihPelangganViewModel: PilihPelangganViewModel,
+    selectedCust: DataCustomer?,
     customer: DataCustomer,
     modifier: Modifier
 ) {
@@ -44,9 +44,9 @@ fun CustomerInfoOrder(
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
             .clickable {
-                if (selectedCust.value?.id != customer.id) selectedCust.value = customer
+                if (selectedCust?.id != customer.id) pilihPelangganViewModel.setSelectedCustomer(customer)
             },
-        colors = if (selectedCust.value?.id == customer.id) {
+        colors = if (selectedCust?.id == customer.id) {
             if (isSystemInDarkTheme()) CardDefaults.cardColors(CardSelectedDark)
             else CardDefaults.cardColors(CardSelectedLight)
         } else CardDefaults.outlinedCardColors()
@@ -59,7 +59,7 @@ fun CustomerInfoOrder(
                 text = customer.shopName, fontWeight = FontWeight.Bold, fontSize = 14.sp,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false),
-                    color = if (selectedCust.value?.id == customer.id) {
+                    color = if (selectedCust?.id == customer.id) {
                         if (isSystemInDarkTheme()) OnCardSelectedDark
                         else OnCardSelectedLight
                     } else MaterialTheme.colorScheme.onSurface
@@ -69,7 +69,7 @@ fun CustomerInfoOrder(
                 text = customer.name, fontSize = 12.sp,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false),
-                    color = if (selectedCust.value?.id == customer.id) {
+                    color = if (selectedCust?.id == customer.id) {
                         if (isSystemInDarkTheme()) OnCardSelectedDark
                         else OnCardSelectedLight
                     } else MaterialTheme.colorScheme.onSurface
@@ -79,7 +79,7 @@ fun CustomerInfoOrder(
                 text = customer.phoneNumber, fontSize = 12.sp,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false),
-                    color = if (selectedCust.value?.id == customer.id) {
+                    color = if (selectedCust?.id == customer.id) {
                         if (isSystemInDarkTheme()) OnCardSelectedDark
                         else OnCardSelectedLight
                     } else MaterialTheme.colorScheme.onSurface
@@ -89,7 +89,7 @@ fun CustomerInfoOrder(
                 text = customer.address, fontSize = 12.sp,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false),
-                    color = if (selectedCust.value?.id == customer.id) {
+                    color = if (selectedCust?.id == customer.id) {
                         if (isSystemInDarkTheme()) OnCardSelectedDark
                         else OnCardSelectedLight
                     } else MaterialTheme.colorScheme.onSurface
@@ -100,7 +100,7 @@ fun CustomerInfoOrder(
                 fontSize = 12.sp,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false),
-                    color = if (selectedCust.value?.id == customer.id) {
+                    color = if (selectedCust?.id == customer.id) {
                         if (isSystemInDarkTheme()) OnCardSelectedDark
                         else OnCardSelectedLight
                     } else MaterialTheme.colorScheme.onSurface
@@ -115,7 +115,8 @@ fun CustomerInfoOrder(
 private fun CustomerInfoOrderPreview() {
     JJSembakoTheme {
         CustomerInfoOrder(
-            selectedCust = remember { mutableStateOf<DataCustomer?>(null) },
+            pilihPelangganViewModel = hiltViewModel(),
+            selectedCust = null,
             DataCustomer(
                 "abcd-123",
                 "Bambang",

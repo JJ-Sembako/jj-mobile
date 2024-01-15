@@ -31,6 +31,7 @@
     <string name="alert">Peringatan</string>
     <string name="on_progress">Dalam Proses</string>
     <string name="not_found">Data tidak ditemukan</string>
+    <string name="empty_data">Data kosong</string>
     <string name="option_not_available">Opsi tidak tersedia</string>
     <string name="please_wait">Mohon bersabar</string>
     <string name="error">Terjadi Kesalahan</string>
