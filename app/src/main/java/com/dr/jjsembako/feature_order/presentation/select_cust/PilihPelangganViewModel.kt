@@ -92,6 +92,9 @@ class PilihPelangganViewModel @Inject constructor(
                         else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
+                        if(statusCode.value!! in intArrayOf(400,401)){
+                            _selectedCustomer.value = null
+                        }
                     }
                 }
             }
