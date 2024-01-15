@@ -12,6 +12,8 @@ import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseC
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +28,9 @@ class PilihPelangganViewModel @Inject constructor(
 
     private val _stateRefresh = MutableLiveData<StateResponse?>()
     val stateRefresh: LiveData<StateResponse?> = _stateRefresh
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
     private val _statusCode = MutableLiveData<Int?>()
     val statusCode: LiveData<Int?> = _statusCode
@@ -58,6 +63,7 @@ class PilihPelangganViewModel @Inject constructor(
             fetchSelectCustUseCase.fetchCustomers(searchQuery).collect {
                 _customerState.value = it
             }
+            _isRefreshing.emit(false)
         }
     }
 
@@ -89,6 +95,7 @@ class PilihPelangganViewModel @Inject constructor(
                     }
                 }
             }
+            _isRefreshing.emit(false)
         }
     }
 }

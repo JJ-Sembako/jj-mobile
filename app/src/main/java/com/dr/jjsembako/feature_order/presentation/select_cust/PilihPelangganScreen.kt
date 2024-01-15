@@ -3,6 +3,7 @@ package com.dr.jjsembako.feature_order.presentation.select_cust
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -56,6 +58,10 @@ import com.dr.jjsembako.core.presentation.components.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_order.presentation.components.CustomerInfoOrder
+import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
+import eu.bambooapps.material3.pullrefresh.pullRefresh
+import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
+import kotlin.math.roundToInt
 
 @Composable
 fun PilihPelangganScreen(
@@ -114,7 +120,9 @@ fun PilihPelangganScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class
+)
 @Composable
 private fun PilihPelangganContent(
     pilihPelangganViewModel: PilihPelangganViewModel,
@@ -122,7 +130,9 @@ private fun PilihPelangganContent(
     modifier: Modifier
 ) {
     val tag = "Pilih Pelanggan Content"
+    val state = pilihPelangganViewModel.state.observeAsState().value
     val stateRefresh = pilihPelangganViewModel.stateRefresh.observeAsState().value
+    val isRefreshing by pilihPelangganViewModel.isRefreshing.collectAsState(initial = false)
     val message = pilihPelangganViewModel.message.observeAsState().value
     val statusCode = pilihPelangganViewModel.statusCode.observeAsState().value
     val selectedCustomer by pilihPelangganViewModel.selectedCustomer.observeAsState()
@@ -138,10 +148,13 @@ private fun PilihPelangganContent(
     val searchQuery = rememberSaveable { mutableStateOf("") }
     val activeSearch = remember { mutableStateOf(false) }
 
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = { pilihPelangganViewModel.refresh(searchQuery.value) })
+
     // Set keyword for the first time Composable is rendered
     LaunchedEffect(Unit) {
-        if (searchQuery.value.isEmpty()) pilihPelangganViewModel.fetchCustomers()
-        else pilihPelangganViewModel.fetchCustomers(searchQuery.value)
+        pilihPelangganViewModel.fetchCustomers(searchQuery.value)
     }
 
     when (stateRefresh) {
@@ -206,6 +219,7 @@ private fun PilihPelangganContent(
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .pullRefresh(pullRefreshState)
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
@@ -218,42 +232,26 @@ private fun PilihPelangganContent(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(R.string.selected_data),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height((pullRefreshState.progress * 100).roundToInt().dp)
             )
-            if (!selectedCustomer?.id.isNullOrEmpty()) {
-                val data = DataCustomer(
-                    id = selectedCustomer!!.id,
-                    name = selectedCustomer!!.name,
-                    shopName = selectedCustomer!!.shopName,
-                    address = selectedCustomer!!.address,
-                    gmapsLink = selectedCustomer!!.gmapsLink,
-                    phoneNumber = selectedCustomer!!.phoneNumber,
-                    debt = selectedCustomer!!.debt
-                )
-                Spacer(modifier = modifier.height(8.dp))
-                CustomerInfoOrder(
-                    pilihPelangganViewModel = pilihPelangganViewModel,
-                    selectedCust = selectedCustomer,
-                    customer = data,
-                    modifier = modifier
-                )
-                Spacer(modifier = modifier.height(16.dp))
-            } else {
-                Spacer(modifier = modifier.height(8.dp))
-                CardEmpty(modifier)
-                Spacer(modifier = modifier.height(16.dp))
-            }
+
+            InfoSelectedCustomer(
+                pilihPelangganViewModel = pilihPelangganViewModel,
+                selectedCustomer = selectedCustomer,
+                modifier = modifier
+            )
 
             SearchFilter(
                 placeholder = stringResource(R.string.search_cust),
                 activeSearch,
                 searchQuery,
                 searchFunction = {
-                    if (searchQuery.value.isEmpty()) pilihPelangganViewModel.fetchCustomers()
-                    else pilihPelangganViewModel.fetchCustomers(searchQuery.value)
+                    pilihPelangganViewModel.fetchCustomers(searchQuery.value)
 
                 },
                 openFilter = { showSheet.value = !showSheet.value },
@@ -272,8 +270,11 @@ private fun PilihPelangganContent(
                     ErrorScreen(
                         onNavigateBack = { },
                         onReload = {
-                            if (searchQuery.value.isEmpty()) pilihPelangganViewModel.fetchCustomers()
-                            else pilihPelangganViewModel.fetchCustomers(searchQuery.value)
+                            if (state != StateResponse.SUCCESS) {
+                                pilihPelangganViewModel.fetchCustomers(searchQuery.value)
+                            } else {
+                                pilihPelangganViewModel.refresh(searchQuery.value)
+                            }
                         },
                         message = error.error.localizedMessage ?: "Unknown error",
                         showButtonBack = false,
@@ -324,6 +325,49 @@ private fun PilihPelangganContent(
                     modifier = modifier
                 )
             }
+        }
+    }
+}
+
+
+@Composable
+private fun InfoSelectedCustomer(
+    pilihPelangganViewModel: PilihPelangganViewModel,
+    selectedCustomer: DataCustomer?,
+    modifier: Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.selected_data),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
+        if (!selectedCustomer?.id.isNullOrEmpty()) {
+            val data = DataCustomer(
+                id = selectedCustomer!!.id,
+                name = selectedCustomer.name,
+                shopName = selectedCustomer.shopName,
+                address = selectedCustomer.address,
+                gmapsLink = selectedCustomer.gmapsLink,
+                phoneNumber = selectedCustomer.phoneNumber,
+                debt = selectedCustomer.debt
+            )
+            Spacer(modifier = modifier.height(8.dp))
+            CustomerInfoOrder(
+                pilihPelangganViewModel = pilihPelangganViewModel,
+                selectedCust = selectedCustomer,
+                customer = data,
+                modifier = modifier
+            )
+            Spacer(modifier = modifier.height(16.dp))
+        } else {
+            Spacer(modifier = modifier.height(8.dp))
+            CardEmpty(modifier)
+            Spacer(modifier = modifier.height(16.dp))
         }
     }
 }
