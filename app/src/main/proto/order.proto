@@ -3,19 +3,13 @@ syntax = "proto3";
 option java_package = "com.dr.jjsembako";
 option java_multiple_files = true;
 
+message ProductOrderList {
+  repeated ProductOrderStore data = 1;
+}
+
 message ProductOrderStore {
   string id = 1;
-  string name = 2;
-  string image = 3;
-  string category = 4;
-  string unit = 5;
-  int64 standard_price = 6;
-  int32 amount_per_unit = 7;
-  int32 stock_in_pcs = 8;
-  int32 stock_in_unit = 9;
-  int32 stock_in_pcs_remaining = 10;
-  int32 order_qty = 11;
-  int64 order_price = 12;
-  int64 order_total_price = 13;
-  bool is_chosen = 14;
+  int32 order_qty = 2;
+  int64 order_price = 3;
+  int64 order_total_price = 4;
 }
