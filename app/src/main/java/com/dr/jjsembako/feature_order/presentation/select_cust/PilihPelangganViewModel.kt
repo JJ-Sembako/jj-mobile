@@ -90,6 +90,12 @@ class PilihPelangganViewModel @Inject constructor(
         }
     }
 
+    fun reset() {
+        viewModelScope.launch {
+            _selectedCustomer.value = null
+        }
+    }
+
     fun refresh(searchQuery: String = "") {
         fetchCustomers(searchQuery)
         if (selectedCustomer.value != null) fetchDetailCustomer(selectedCustomer.value!!.id)
