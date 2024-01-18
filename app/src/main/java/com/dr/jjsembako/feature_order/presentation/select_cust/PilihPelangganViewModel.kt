@@ -1,5 +1,9 @@
 package com.dr.jjsembako.feature_order.presentation.select_cust
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,14 +18,20 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PilihPelangganViewModel @Inject constructor(
+    private val preferencesDataStore: DataStore<Preferences>,
     private val fetchSelectCustUseCase: FetchSelectCustUseCase,
     private val fetchDetailSelectedCustUseCase: FetchDetailSelectedCustUseCase
 ) : ViewModel() {
+
+    private object PreferencesKeys {
+        val ID_CUSTOMER = stringPreferencesKey("id_customer")
+    }
 
     private val _state = MutableLiveData<StateResponse?>()
     val state: LiveData<StateResponse?> = _state
@@ -41,16 +51,43 @@ class PilihPelangganViewModel @Inject constructor(
     private val _selectedCustomer = MutableLiveData<DataCustomer?>()
     val selectedCustomer: LiveData<DataCustomer?> get() = _selectedCustomer
 
+    private val _idSelectedCustomer = MutableStateFlow("")
+    val idSelectedCustomer: StateFlow<String> get() = _idSelectedCustomer
+
     private val _customerState: MutableStateFlow<PagingData<DataCustomer>> =
         MutableStateFlow(value = PagingData.empty())
     val customerState: MutableStateFlow<PagingData<DataCustomer>> get() = _customerState
+
+    init {
+        viewModelScope.launch {
+            _idSelectedCustomer.value = getIdCustomer()
+        }
+    }
 
     fun setStateRefresh(state: StateResponse?) {
         _stateRefresh.value = state
     }
 
+    private suspend fun getIdCustomer(): String {
+        return preferencesDataStore.data.first()[PreferencesKeys.ID_CUSTOMER]
+            ?: ""
+    }
+
+    private suspend fun setIdCustomer(idCustomer: String) {
+        preferencesDataStore.edit { preferences ->
+            preferences[PreferencesKeys.ID_CUSTOMER] = idCustomer
+        }
+        _idSelectedCustomer.value = idCustomer
+    }
+
     fun setSelectedCustomer(dataCustomer: DataCustomer?) {
         _selectedCustomer.value = dataCustomer
+    }
+
+    fun saveIdCustomer() {
+        viewModelScope.launch {
+            setIdCustomer(selectedCustomer.value?.id ?: "")
+        }
     }
 
     fun refresh(searchQuery: String = "") {
@@ -92,8 +129,9 @@ class PilihPelangganViewModel @Inject constructor(
                         else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
-                        if(statusCode.value!! in intArrayOf(400,401)){
+                        if (statusCode.value!! in intArrayOf(400, 401)) {
                             _selectedCustomer.value = null
+                            setIdCustomer("")
                         }
                     }
                 }

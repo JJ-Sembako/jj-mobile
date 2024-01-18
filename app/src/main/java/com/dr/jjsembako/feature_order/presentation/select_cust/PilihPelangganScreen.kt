@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.asLiveData
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -66,14 +67,14 @@ import kotlin.math.roundToInt
 @Composable
 fun PilihPelangganScreen(
     onNavigateToMainOrderScreen: () -> Unit,
-    modifier: Modifier = Modifier,
-    idSelectedCustomer: String = ""
+    modifier: Modifier = Modifier
 ) {
     val tag = "Pilih Pelanggan Screen"
     val pilihPelangganViewModel: PilihPelangganViewModel = hiltViewModel()
     val state = pilihPelangganViewModel.state.observeAsState().value
     val message = pilihPelangganViewModel.message.observeAsState().value
     val statusCode = pilihPelangganViewModel.statusCode.observeAsState().value
+    val idSelectedCustomer = pilihPelangganViewModel.idSelectedCustomer.collectAsState().value
 
     if (idSelectedCustomer.isEmpty()) {
         PilihPelangganContent(
@@ -136,14 +137,18 @@ private fun PilihPelangganContent(
     val message = pilihPelangganViewModel.message.observeAsState().value
     val statusCode = pilihPelangganViewModel.statusCode.observeAsState().value
     val selectedCustomer by pilihPelangganViewModel.selectedCustomer.observeAsState()
+    val idSelectedCustomer =
+        pilihPelangganViewModel.idSelectedCustomer.asLiveData().observeAsState().value
     val customerPagingItems: LazyPagingItems<DataCustomer> =
         pilihPelangganViewModel.customerState.collectAsLazyPagingItems()
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
     val showSheet = remember { mutableStateOf(false) }
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrSave = rememberSaveable { mutableStateOf(false) }
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
     val searchQuery = rememberSaveable { mutableStateOf("") }
     val activeSearch = remember { mutableStateOf(false) }
@@ -155,6 +160,11 @@ private fun PilihPelangganContent(
     // Set keyword for the first time Composable is rendered
     LaunchedEffect(Unit) {
         pilihPelangganViewModel.fetchCustomers(searchQuery.value)
+    }
+
+    // Check id selected customer
+    LaunchedEffect(idSelectedCustomer) {
+        Log.d("DataStore-pilih", "idCust: $idSelectedCustomer")
     }
 
     when (stateRefresh) {
@@ -204,7 +214,13 @@ private fun PilihPelangganContent(
                 actions = {
                     IconButton(onClick = {
                         keyboardController?.hide()
-                        onNavigateToMainOrderScreen()
+                        if (selectedCustomer?.id?.isEmpty() == true || selectedCustomer == null) {
+                            showErrSave.value = true
+                        }
+                        else {
+                            pilihPelangganViewModel.saveIdCustomer()
+                            onNavigateToMainOrderScreen()
+                        }
                     }) {
                         Icon(
                             Icons.Default.Check,
@@ -322,6 +338,14 @@ private fun PilihPelangganContent(
                 AlertErrorDialog(
                     message = message ?: stringResource(id = R.string.error_msg_default),
                     showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
+
+            if (showErrSave.value) {
+                AlertErrorDialog(
+                    message = stringResource(id = R.string.err_not_select_cust),
+                    showDialog = showErrSave,
                     modifier = modifier
                 )
             }

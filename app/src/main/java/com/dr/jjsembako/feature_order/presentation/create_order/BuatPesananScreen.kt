@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_order.presentation.create_order
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,6 +41,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.asLiveData
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -54,10 +59,19 @@ fun BuatPesananScreen(
     onNavigateToSelectProduct: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val buatPesananViewModel: BuatPesananViewModel = hiltViewModel()
+    val idCust = buatPesananViewModel.idCust.observeAsState().value
+    val payment = buatPesananViewModel.payment.asLiveData().observeAsState().value
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     // TODO: Perlu buat custom rememberSaveable FilterOption
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(paymentList[0]) }
+
+    LaunchedEffect(idCust){
+        Log.e("DataStore-buat", "idCust: $idCust")
+        Log.e("DataStore-buat", "payment: $payment")
+    }
 
     Scaffold(
         topBar = {
@@ -115,7 +129,7 @@ fun BuatPesananScreen(
             ) {
                 Row(
                     modifier = modifier
-                        .clickable {}
+                        .clickable { buatPesananViewModel.reset() }
                         .padding(horizontal = 8.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End
