@@ -46,7 +46,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.asLiveData
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -140,8 +139,6 @@ private fun PilihPelangganContent(
     val message = pilihPelangganViewModel.message.observeAsState().value
     val statusCode = pilihPelangganViewModel.statusCode.observeAsState().value
     val selectedCustomer by pilihPelangganViewModel.selectedCustomer.observeAsState()
-    val idSelectedCustomer =
-        pilihPelangganViewModel.idSelectedCustomer.asLiveData().observeAsState().value
     val customerPagingItems: LazyPagingItems<DataCustomer> =
         pilihPelangganViewModel.customerState.collectAsLazyPagingItems()
 
@@ -162,11 +159,6 @@ private fun PilihPelangganContent(
     // Set keyword for the first time Composable is rendered
     LaunchedEffect(Unit) {
         pilihPelangganViewModel.fetchCustomers(searchQuery.value)
-    }
-
-    // Check id selected customer
-    LaunchedEffect(idSelectedCustomer) {
-        Log.d("DataStore-pilih", "idCust: $idSelectedCustomer")
     }
 
     when (stateRefresh) {
