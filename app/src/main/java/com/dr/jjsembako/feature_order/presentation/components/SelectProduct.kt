@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,8 +22,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -84,30 +81,20 @@ private fun SelectProductContent(
 ) {
     val loadingState = buatPesananViewModel.loadingState.observeAsState().value
 
-    if (loadingState == true) {
-        Spacer(modifier = modifier.height(16.dp))
-        CircularProgressIndicator(
-            modifier = modifier.size(48.dp)
-        )
-        Spacer(modifier = modifier.height(16.dp))
-        Text(
-            text = stringResource(R.string.on_progress),
-            fontWeight = FontWeight.Medium,
-            fontSize = 20.sp,
-            textAlign = TextAlign.Center,
-            modifier = modifier.wrapContentSize(Alignment.Center)
-        )
-        Spacer(modifier = modifier.height(16.dp))
-        Text(
-            text = stringResource(R.string.please_wait),
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center,
-            modifier = modifier.wrapContentSize(Alignment.Center)
-        )
-        Spacer(modifier = modifier.height(16.dp))
-    } else {
-        Spacer(modifier = modifier.height(64.dp))
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (loadingState == true) {
+            Spacer(modifier = modifier.height(32.dp))
+            CircularProgressIndicator(
+                modifier = modifier.size(64.dp)
+            )
+            Spacer(modifier = modifier.height(32.dp))
+
+        } else {
+            Spacer(modifier = modifier.height(128.dp))
+        }
     }
 
     Divider(
