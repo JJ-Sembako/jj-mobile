@@ -69,6 +69,7 @@ class BuatPesananViewModel @Inject constructor(
         viewModelScope.launch {
             _idCustomer.value = getIdCustomer()
             _payment.value = getPayment()
+            _productsList.value = getProductsList()
         }
     }
 

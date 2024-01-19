@@ -145,6 +145,11 @@ private fun BuatPesananContent(
     val statusCode = buatPesananViewModel.statusCode.observeAsState().value
     val payment = buatPesananViewModel.payment.asLiveData().observeAsState().value
     val selectedCustomer = buatPesananViewModel.selectedCustomer.observeAsState().value
+    val productsList = buatPesananViewModel. productsList.asLiveData().observeAsState().value
+
+    LaunchedEffect(productsList){
+        Log.e(tag, "productsList with size ${productsList?.serializedSize}: ${productsList?.dataList}")
+    }
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
