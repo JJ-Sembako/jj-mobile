@@ -2,9 +2,7 @@ package com.dr.jjsembako.feature_order.presentation.create_order
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +11,7 @@ import com.dr.jjsembako.ProductOrderList
 import com.dr.jjsembako.ProductOrderStore
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.data.model.PreferencesKeys
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,11 +28,6 @@ class BuatPesananViewModel @Inject constructor(
     private val productsDataStore: DataStore<ProductOrderList>,
     private val fetchDetailSelectedCustUseCase: FetchDetailSelectedCustUseCase
 ) : ViewModel() {
-
-    private object PreferencesKeys {
-        val ID_CUSTOMER = stringPreferencesKey("id_customer")
-        val PAYMENT = booleanPreferencesKey("payment")
-    }
 
     private val _state = MutableLiveData<StateResponse?>()
     val state: LiveData<StateResponse?> = _state
@@ -56,8 +50,8 @@ class BuatPesananViewModel @Inject constructor(
     private val _idCustomer = MutableStateFlow("")
     val idCustomer: StateFlow<String> = _idCustomer
 
-    private val _payment = MutableStateFlow(false)
-    val payment: StateFlow<Boolean> = _payment
+    private val _payment = MutableStateFlow(0)
+    val payment: StateFlow<Int> = _payment
 
     private val _productsList = MutableStateFlow(ProductOrderList.getDefaultInstance())
     val productsList: StateFlow<ProductOrderList> = _productsList
@@ -66,10 +60,10 @@ class BuatPesananViewModel @Inject constructor(
         refresh()
     }
 
-    fun reset(){
+    fun reset() {
         viewModelScope.launch {
             setIdCustomer("")
-            setPayment(false)
+            setPayment(0)
             _selectedCustomer.value = null
         }
     }
@@ -79,7 +73,7 @@ class BuatPesananViewModel @Inject constructor(
             _idCustomer.value = getIdCustomer()
             _payment.value = getPayment()
 
-            if(idCustomer.value.isNotEmpty()) fetchDetailCustomer(idCustomer.value)
+            if (idCustomer.value.isNotEmpty()) fetchDetailCustomer(idCustomer.value)
         }
     }
 
@@ -87,8 +81,8 @@ class BuatPesananViewModel @Inject constructor(
         return preferencesDataStore.data.first()[PreferencesKeys.ID_CUSTOMER] ?: ""
     }
 
-    private suspend fun getPayment(): Boolean {
-        return preferencesDataStore.data.first()[PreferencesKeys.PAYMENT] ?: false
+    private suspend fun getPayment(): Int {
+        return preferencesDataStore.data.first()[PreferencesKeys.PAYMENT] ?: 0
     }
 
     private suspend fun getProductsList(): ProductOrderList {
@@ -102,7 +96,7 @@ class BuatPesananViewModel @Inject constructor(
         _idCustomer.value = idCustomer
     }
 
-    suspend fun setPayment(payment: Boolean) {
+    suspend fun setPayment(payment: Int) {
         preferencesDataStore.edit { preferences ->
             preferences[PreferencesKeys.PAYMENT] = payment
         }

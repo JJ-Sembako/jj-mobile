@@ -5,14 +5,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
-import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.dr.jjsembako.ProductOrderList
+import com.dr.jjsembako.core.data.model.PreferencesKeys
 import com.dr.jjsembako.core.utils.ProductOrderStoreSerializer
 import dagger.Module
 import dagger.Provides
@@ -32,6 +30,7 @@ object DataStoreModule {
 
     private const val ORDER_PREFERENCES = "order_preferences"
     private const val DATA_STORE_FILE_NAME = "ordered_product_prefs.pb"
+
     @Singleton
     @Provides
     fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
@@ -65,9 +64,9 @@ object DataStoreModule {
 
     @Singleton
     @Provides
-    fun providePaymentPreference(dataStore: DataStore<Preferences>): Flow<Boolean> {
+    fun providePaymentPreference(dataStore: DataStore<Preferences>): Flow<Int> {
         return dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.PAYMENT] ?: false
+            preferences[PreferencesKeys.PAYMENT] ?: 0
         }
     }
 
@@ -75,10 +74,5 @@ object DataStoreModule {
     @Provides
     fun provideProductsList(dataStore: DataStore<ProductOrderList>): Flow<ProductOrderList> {
         return dataStore.data
-    }
-
-    private object PreferencesKeys {
-        val ID_CUSTOMER = stringPreferencesKey("id_customer")
-        val PAYMENT = booleanPreferencesKey("payment")
     }
 }

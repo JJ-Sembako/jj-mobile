@@ -3,7 +3,6 @@ package com.dr.jjsembako.feature_order.presentation.select_cust
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.data.model.PreferencesKeys
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustUseCase
@@ -28,10 +28,6 @@ class PilihPelangganViewModel @Inject constructor(
     private val fetchSelectCustUseCase: FetchSelectCustUseCase,
     private val fetchDetailSelectedCustUseCase: FetchDetailSelectedCustUseCase
 ) : ViewModel() {
-
-    private object PreferencesKeys {
-        val ID_CUSTOMER = stringPreferencesKey("id_customer")
-    }
 
     private val _state = MutableLiveData<StateResponse?>()
     val state: LiveData<StateResponse?> = _state
