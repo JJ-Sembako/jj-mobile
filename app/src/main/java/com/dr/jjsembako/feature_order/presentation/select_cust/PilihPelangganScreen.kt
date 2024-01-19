@@ -126,9 +126,7 @@ fun PilihPelangganScreen(
     }
 }
 
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun PilihPelangganContent(
     pilihPelangganViewModel: PilihPelangganViewModel,
