@@ -11,9 +11,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.ProductOrderList
 import com.dr.jjsembako.ProductOrderStore
+import com.dr.jjsembako.core.common.Resource
+import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BuatPesananViewModel @Inject constructor(
     private val preferencesDataStore: DataStore<Preferences>,
-    private val productsDataStore: DataStore<ProductOrderList>
+    private val productsDataStore: DataStore<ProductOrderList>,
+    private val fetchDetailSelectedCustUseCase: FetchDetailSelectedCustUseCase
 ) : ViewModel() {
 
     private object PreferencesKeys {
@@ -29,11 +35,26 @@ class BuatPesananViewModel @Inject constructor(
         val PAYMENT = booleanPreferencesKey("payment")
     }
 
+    private val _state = MutableLiveData<StateResponse?>()
+    val state: LiveData<StateResponse?> = _state
+
+    private val _stateRefresh = MutableLiveData<StateResponse?>()
+    val stateRefresh: LiveData<StateResponse?> = _stateRefresh
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
+
+    private val _statusCode = MutableLiveData<Int?>()
+    val statusCode: LiveData<Int?> = _statusCode
+
+    private val _message = MutableLiveData<String?>()
+    val message: LiveData<String?> = _message
+
+    private val _selectedCustomer = MutableLiveData<DataCustomer?>()
+    val selectedCustomer: LiveData<DataCustomer?> get() = _selectedCustomer
+
     private val _idCustomer = MutableStateFlow("")
     val idCustomer: StateFlow<String> = _idCustomer
-
-    private val _idCust = MutableLiveData<String>("")
-    val idCust: LiveData<String> get() = _idCust
 
     private val _payment = MutableStateFlow(false)
     val payment: StateFlow<Boolean> = _payment
@@ -49,6 +70,7 @@ class BuatPesananViewModel @Inject constructor(
         viewModelScope.launch {
             setIdCustomer("")
             setPayment(false)
+            _selectedCustomer.value = null
         }
     }
 
@@ -56,8 +78,8 @@ class BuatPesananViewModel @Inject constructor(
         viewModelScope.launch {
             _idCustomer.value = getIdCustomer()
             _payment.value = getPayment()
-//            _productsList.value = getProductsList()
-            _idCust.value = idCustomer.value
+
+            if(idCustomer.value.isNotEmpty()) fetchDetailCustomer(idCustomer.value)
         }
     }
 
@@ -96,5 +118,41 @@ class BuatPesananViewModel @Inject constructor(
             }
         }
         _productsList.value = productsDataStore.data.first() // Update UI state
+    }
+
+    fun fetchDetailCustomer(id: String) {
+        viewModelScope.launch {
+            fetchDetailSelectedCustUseCase.fetchDetailCustomer(id).collect {
+                when (it) {
+                    is Resource.Loading -> {
+                        if (selectedCustomer.value?.id.isNullOrEmpty()) _state.value =
+                            StateResponse.LOADING
+                        else _stateRefresh.value = StateResponse.LOADING
+                    }
+
+                    is Resource.Success -> {
+                        if (selectedCustomer.value?.id.isNullOrEmpty()) _state.value =
+                            StateResponse.SUCCESS
+                        else _stateRefresh.value = StateResponse.SUCCESS
+                        _message.value = it.message
+                        _statusCode.value = it.status
+                        _selectedCustomer.value = it.data
+                    }
+
+                    is Resource.Error -> {
+                        if (selectedCustomer.value?.id.isNullOrEmpty()) _state.value =
+                            StateResponse.ERROR
+                        else _stateRefresh.value = StateResponse.ERROR
+                        _message.value = it.message
+                        _statusCode.value = it.status
+                        if (statusCode.value!! in intArrayOf(400, 401)) {
+                            _selectedCustomer.value = null
+                            setIdCustomer("")
+                        }
+                    }
+                }
+            }
+            _isRefreshing.emit(false)
+        }
     }
 }

@@ -28,9 +28,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -50,6 +53,10 @@ import com.dr.jjsembako.feature_order.presentation.components.SelectCustomer
 import com.dr.jjsembako.feature_order.presentation.components.SelectPayment
 import com.dr.jjsembako.feature_order.presentation.components.SelectProduct
 import com.dr.jjsembako.feature_order.presentation.components.TotalPayment
+import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
+import eu.bambooapps.material3.pullrefresh.pullRefresh
+import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -59,17 +66,32 @@ fun BuatPesananScreen(
     onNavigateToSelectProduct: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val tag = "Buat Pesanan Screen"
     val buatPesananViewModel: BuatPesananViewModel = hiltViewModel()
-    val idCust = buatPesananViewModel.idCust.observeAsState().value
+    val state = buatPesananViewModel.state.observeAsState().value
+    val stateRefresh = buatPesananViewModel.stateRefresh.observeAsState().value
+    val isRefreshing by buatPesananViewModel.isRefreshing.collectAsState(initial = false)
+    val message = buatPesananViewModel.message.observeAsState().value
+    val statusCode = buatPesananViewModel.statusCode.observeAsState().value
+    val idCust = buatPesananViewModel.idCustomer.asLiveData().observeAsState().value
     val payment = buatPesananViewModel.payment.asLiveData().observeAsState().value
+    val selectedCustomer = buatPesananViewModel.selectedCustomer.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    // TODO: Perlu buat custom rememberSaveable FilterOption
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(paymentList[0]) }
+//    val selectedOption = rememberSaveable { mutableStateOf(paymentList[0]) }
 
-    LaunchedEffect(idCust){
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
+
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = { buatPesananViewModel.refresh() })
+
+    LaunchedEffect(idCust) {
         Log.e("DataStore-buat", "idCust: $idCust")
+    }
+    LaunchedEffect(payment) {
         Log.e("DataStore-buat", "payment: $payment")
     }
 
@@ -111,6 +133,7 @@ fun BuatPesananScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .pullRefresh(pullRefreshState)
                 .verticalScroll(rememberScrollState())
                 .clickable(
                     indication = null,
@@ -122,6 +145,14 @@ fun BuatPesananScreen(
                 .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height((pullRefreshState.progress * 100).roundToInt().dp)
+            )
+
             Row(
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -148,16 +179,16 @@ fun BuatPesananScreen(
                 }
             }
             SelectCustomer(
-                customer = null,
+                customer = selectedCustomer,
                 onSelectCustomer = { onNavigateToSelectCustomer() },
                 modifier = modifier
             )
-            SelectPayment(
-                paymentList = paymentList,
-                selectedOption = selectedOption,
-                onOptionSelected = onOptionSelected,
-                modifier = modifier
-            )
+//            SelectPayment(
+//                buatPesananViewModel = buatPesananViewModel,
+//                paymentList = paymentList,
+//                selectedOption = selectedOption,
+//                modifier = modifier
+//            )
             SelectProduct(onSelectProduct = { onNavigateToSelectProduct() }, modifier = modifier)
             TotalPayment(totalPrice = 1525750, modifier = modifier)
             Spacer(modifier = modifier.height(32.dp))
