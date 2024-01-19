@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -79,7 +80,7 @@ fun BuatPesananScreen(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-//    val selectedOption = rememberSaveable { mutableStateOf(paymentList[0]) }
+    val selectedOption = rememberSaveable { mutableIntStateOf(payment ?: 0) }
 
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
@@ -183,12 +184,12 @@ fun BuatPesananScreen(
                 onSelectCustomer = { onNavigateToSelectCustomer() },
                 modifier = modifier
             )
-//            SelectPayment(
-//                buatPesananViewModel = buatPesananViewModel,
-//                paymentList = paymentList,
-//                selectedOption = selectedOption,
-//                modifier = modifier
-//            )
+            SelectPayment(
+                buatPesananViewModel = buatPesananViewModel,
+                paymentList = paymentList,
+                selectedOption = selectedOption,
+                modifier = modifier
+            )
             SelectProduct(onSelectProduct = { onNavigateToSelectProduct() }, modifier = modifier)
             TotalPayment(totalPrice = 1525750, modifier = modifier)
             Spacer(modifier = modifier.height(32.dp))
@@ -197,8 +198,8 @@ fun BuatPesananScreen(
 }
 
 private val paymentList = listOf(
-    FilterOption("Tempo", "tempo"),
-    FilterOption("Tunai", "tunai")
+    FilterOption("Tempo", "0"),
+    FilterOption("Tunai", "1")
 )
 
 @Preview(showBackground = true)

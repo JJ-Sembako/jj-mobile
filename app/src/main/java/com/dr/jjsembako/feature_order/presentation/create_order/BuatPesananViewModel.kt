@@ -50,7 +50,7 @@ class BuatPesananViewModel @Inject constructor(
     private val _idCustomer = MutableStateFlow("")
     val idCustomer: StateFlow<String> = _idCustomer
 
-    private val _payment = MutableStateFlow(0)
+    private val _payment = MutableStateFlow<Int>(0)
     val payment: StateFlow<Int> = _payment
 
     private val _productsList = MutableStateFlow(ProductOrderList.getDefaultInstance())
@@ -89,7 +89,7 @@ class BuatPesananViewModel @Inject constructor(
         return productsDataStore.data.first()
     }
 
-    suspend fun setIdCustomer(idCustomer: String) {
+    private suspend fun setIdCustomer(idCustomer: String) {
         preferencesDataStore.edit { preferences ->
             preferences[PreferencesKeys.ID_CUSTOMER] = idCustomer
         }
