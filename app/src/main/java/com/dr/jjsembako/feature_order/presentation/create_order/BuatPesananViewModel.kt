@@ -50,14 +50,17 @@ class BuatPesananViewModel @Inject constructor(
     private val _idCustomer = MutableStateFlow("")
     val idCustomer: StateFlow<String> = _idCustomer
 
-    private val _payment = MutableStateFlow<Int>(0)
+    private val _payment = MutableStateFlow(0)
     val payment: StateFlow<Int> = _payment
 
     private val _productsList = MutableStateFlow(ProductOrderList.getDefaultInstance())
     val productsList: StateFlow<ProductOrderList> = _productsList
 
     init {
-        refresh()
+        viewModelScope.launch {
+            _idCustomer.value = getIdCustomer()
+            _payment.value = getPayment()
+        }
     }
 
     fun reset() {
@@ -75,6 +78,10 @@ class BuatPesananViewModel @Inject constructor(
 
             if (idCustomer.value.isNotEmpty()) fetchDetailCustomer(idCustomer.value)
         }
+    }
+
+    fun setStateRefresh(state: StateResponse?) {
+        _stateRefresh.value = state
     }
 
     private suspend fun getIdCustomer(): String {

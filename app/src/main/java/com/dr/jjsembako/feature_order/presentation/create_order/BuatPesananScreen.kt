@@ -48,7 +48,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.asLiveData
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
+import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_order.presentation.components.SelectCustomer
 import com.dr.jjsembako.feature_order.presentation.components.SelectPayment
@@ -59,7 +64,6 @@ import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun BuatPesananScreen(
     onNavigateBack: () -> Unit,
@@ -70,11 +74,72 @@ fun BuatPesananScreen(
     val tag = "Buat Pesanan Screen"
     val buatPesananViewModel: BuatPesananViewModel = hiltViewModel()
     val state = buatPesananViewModel.state.observeAsState().value
+    val message = buatPesananViewModel.message.observeAsState().value
+    val statusCode = buatPesananViewModel.statusCode.observeAsState().value
+    val idCust = buatPesananViewModel.idCustomer.collectAsState().value
+
+    if (idCust.isEmpty()) {
+        BuatPesananContent(
+            buatPesananViewModel = buatPesananViewModel,
+            onNavigateBack = { onNavigateBack() },
+            onNavigateToSelectCustomer = { onNavigateToSelectCustomer() },
+            onNavigateToSelectProduct = { onNavigateToSelectProduct() }
+        )
+    } else {
+        LaunchedEffect(idCust) {
+            if (idCust.isNotEmpty()) {
+                buatPesananViewModel.fetchDetailCustomer(idCust)
+            }
+        }
+        when (state) {
+            StateResponse.LOADING -> {
+                LoadingScreen(modifier = modifier)
+            }
+
+            StateResponse.ERROR -> {
+                Log.e(tag, "Error")
+                Log.e(tag, "state: $state")
+                Log.e(tag, "Error: $message")
+                Log.e(tag, "statusCode: $statusCode")
+                ErrorScreen(
+                    onNavigateBack = { onNavigateBack() },
+                    onReload = {
+                        buatPesananViewModel.fetchDetailCustomer(idCust)
+                    },
+                    message = message ?: "Unknown error",
+                    modifier = modifier
+                )
+            }
+
+            StateResponse.SUCCESS -> {
+                BuatPesananContent(
+                    buatPesananViewModel = buatPesananViewModel,
+                    onNavigateBack = { onNavigateBack() },
+                    onNavigateToSelectCustomer = { onNavigateToSelectCustomer() },
+                    onNavigateToSelectProduct = { onNavigateToSelectProduct() }
+                )
+            }
+
+            else -> {}
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+private fun BuatPesananContent(
+    buatPesananViewModel: BuatPesananViewModel,
+    onNavigateBack: () -> Unit,
+    onNavigateToSelectCustomer: () -> Unit,
+    onNavigateToSelectProduct: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val tag = "Buat Pesanan Content"
     val stateRefresh = buatPesananViewModel.stateRefresh.observeAsState().value
     val isRefreshing by buatPesananViewModel.isRefreshing.collectAsState(initial = false)
     val message = buatPesananViewModel.message.observeAsState().value
     val statusCode = buatPesananViewModel.statusCode.observeAsState().value
-    val idCust = buatPesananViewModel.idCustomer.asLiveData().observeAsState().value
     val payment = buatPesananViewModel.payment.asLiveData().observeAsState().value
     val selectedCustomer = buatPesananViewModel.selectedCustomer.observeAsState().value
 
@@ -89,11 +154,28 @@ fun BuatPesananScreen(
         refreshing = isRefreshing,
         onRefresh = { buatPesananViewModel.refresh() })
 
-    LaunchedEffect(idCust) {
-        Log.e("DataStore-buat", "idCust: $idCust")
-    }
-    LaunchedEffect(payment) {
-        Log.e("DataStore-buat", "payment: $payment")
+    when (stateRefresh) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateRefresh")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            buatPesananViewModel.setStateRefresh(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            buatPesananViewModel.setStateRefresh(null)
+        }
+
+        else -> {}
     }
 
     Scaffold(
@@ -193,6 +275,18 @@ fun BuatPesananScreen(
             SelectProduct(onSelectProduct = { onNavigateToSelectProduct() }, modifier = modifier)
             TotalPayment(totalPrice = 1525750, modifier = modifier)
             Spacer(modifier = modifier.height(32.dp))
+
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
+
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: stringResource(id = R.string.error_msg_default),
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
         }
     }
 }
