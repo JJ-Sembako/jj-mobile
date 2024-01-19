@@ -35,6 +35,15 @@ class BuatPesananViewModel @Inject constructor(
     private val _stateRefresh = MutableLiveData<StateResponse?>()
     val stateRefresh: LiveData<StateResponse?> = _stateRefresh
 
+    private val _loadingState = MutableLiveData(true)
+    val loadingState: LiveData<Boolean> get() = _loadingState
+
+    private val _errorState = MutableLiveData(false)
+    val errorState: LiveData<Boolean> get() = _errorState
+
+    private val _errorMsg = MutableLiveData<String>()
+    val errorMsg: LiveData<String> get() = _errorMsg
+
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 

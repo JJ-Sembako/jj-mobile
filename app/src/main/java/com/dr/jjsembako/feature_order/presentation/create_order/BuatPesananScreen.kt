@@ -52,6 +52,7 @@ import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.HeaderError
 import com.dr.jjsembako.core.presentation.components.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -137,6 +138,8 @@ private fun BuatPesananContent(
 ) {
     val tag = "Buat Pesanan Content"
     val stateRefresh = buatPesananViewModel.stateRefresh.observeAsState().value
+    val errorState =  buatPesananViewModel.errorState.observeAsState().value
+    val errorMsg =  buatPesananViewModel.errorMsg.observeAsState().value
     val isRefreshing by buatPesananViewModel.isRefreshing.collectAsState(initial = false)
     val message = buatPesananViewModel.message.observeAsState().value
     val statusCode = buatPesananViewModel.statusCode.observeAsState().value
@@ -236,6 +239,11 @@ private fun BuatPesananContent(
                     .height((pullRefreshState.progress * 100).roundToInt().dp)
             )
 
+            if (errorState == true && !errorMsg.isNullOrEmpty()) {
+                HeaderError(modifier = modifier, message = errorMsg)
+                Spacer(modifier = modifier.height(16.dp))
+            }
+
             Row(
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -272,7 +280,11 @@ private fun BuatPesananContent(
                 selectedOption = selectedOption,
                 modifier = modifier
             )
-            SelectProduct(onSelectProduct = { onNavigateToSelectProduct() }, modifier = modifier)
+            SelectProduct(
+                buatPesananViewModel = buatPesananViewModel,
+                onSelectProduct = { onNavigateToSelectProduct() },
+                modifier = modifier
+            )
             TotalPayment(totalPrice = 1525750, modifier = modifier)
             Spacer(modifier = modifier.height(32.dp))
 
