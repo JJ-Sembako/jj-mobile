@@ -1,19 +1,26 @@
 package com.dr.jjsembako.feature_order.presentation.select_product
 
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dr.jjsembako.ProductOrderList
+import com.dr.jjsembako.ProductOrderStore
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.utils.DataMapper
 import com.dr.jjsembako.feature_order.data.SocketOrderHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PilihBarangViewModel @Inject constructor(
+    private val productsDataStore: DataStore<ProductOrderList>,
     private val socketOrderHandler: SocketOrderHandler
 ) : ViewModel() {
 
@@ -35,8 +42,64 @@ class PilihBarangViewModel @Inject constructor(
     private val _dataCategories = MutableLiveData<List<FilterOption?>>()
     val dataCategories: LiveData<List<FilterOption?>> get() = _dataCategories
 
+    private val _orderList = MutableStateFlow(ProductOrderList.getDefaultInstance())
+    val orderList: StateFlow<ProductOrderList> = _orderList
+
     init {
         initSocket()
+        viewModelScope.launch {
+            _orderList.value = getProductsList()
+        }
+    }
+
+    private suspend fun recoveryOrderData() {
+        val currentList = _dataProducts.value.orEmpty().toMutableList()
+        val currentOrderList = _orderList.value.dataList
+
+        if (currentOrderList.isNotEmpty() && currentList.isNotEmpty()) {
+            for (orderItem in currentOrderList) {
+                val index = currentList.indexOfFirst { it?.id == orderItem.id }
+                if (index != -1) {
+                    val existingProduct = currentList[index]!!
+                    if(existingProduct.amountPerUnit != 0){
+                        val updatedExistingProduct = existingProduct.copy(
+                            orderQty = orderItem.orderQty,
+                            orderPrice = orderItem.orderPrice,
+                            orderTotalPrice = orderItem.orderTotalPrice,
+                            isChosen = true
+                        )
+                        currentList[index] = updatedExistingProduct
+                        currentList.remove(existingProduct)
+
+                        _dataProducts.value = currentList
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun saveData() {
+        val currentList = _dataProducts.value.orEmpty().toMutableList()
+        if(currentList.isEmpty()){
+            setProductsList()
+        } else {
+            val selectedProduct = currentList.filter { product -> product!!.isChosen }
+        }
+    }
+
+    private suspend fun getProductsList(): ProductOrderList {
+        return productsDataStore.data.first()
+    }
+
+    private suspend fun setProductsList(orderList: List<ProductOrderStore> = emptyList()) {
+        productsDataStore.updateData {
+            if(orderList.isEmpty()){
+                ProductOrderList.getDefaultInstance()
+            } else {
+                ProductOrderList.newBuilder().addAllData(orderList).build()
+            }
+        }
+        _orderList.value = productsDataStore.data.first() // Update UI state
     }
 
     private fun updateCategories(newProducts: List<DataProductOrder?>) {

@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_order.presentation.select_product
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.asLiveData
 import com.dr.jjsembako.core.presentation.components.HeaderError
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.NotFoundScreen
@@ -32,15 +34,21 @@ import com.dr.jjsembako.feature_order.presentation.components.ProductOnOrder
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) {
+    val tag = "Cart Content"
     val dataProducts = pilihBarangViewModel.dataProducts.observeAsState().value
     val loadingState = pilihBarangViewModel.loadingState.observeAsState().value
     val errorState = pilihBarangViewModel.errorState.observeAsState().value
     val errorMsg = pilihBarangViewModel.errorMsg.observeAsState().value
+    val productsList = pilihBarangViewModel.productsList.asLiveData().observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(productsList){
+        Log.e(tag, "productsList with size ${productsList?.serializedSize}: ${productsList?.dataList}")
+    }
 
     LaunchedEffect(errorState) {
         if (errorState == true && !errorMsg.isNullOrEmpty()) {
