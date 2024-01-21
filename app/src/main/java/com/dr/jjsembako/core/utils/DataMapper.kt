@@ -22,14 +22,26 @@ object DataMapper {
         }
     }
 
-    fun mapListDataProductOrderToListProductOrderStore(data: List<DataProductOrder>) : List<ProductOrderStore> {
-        return data.mapNotNull { product ->
-            if(product.isChosen && product.orderQty != 0){
-                ProductOrderStore(
-                    id = product.id,
-                    orderQty = product.orderQty,
-                )
-            } else null
+    fun mapListDataProductOrderToListProductOrderStore(data: List<DataProductOrder?>) : List<ProductOrderStore> {
+        return if(data.isEmpty()){
+            emptyList()
+        } else {
+            data.mapNotNull { product ->
+                if(product != null && product.isChosen && product.orderQty != 0){
+                    val productOrderStoreBuilder = ProductOrderStore.newBuilder()
+                    productOrderStoreBuilder
+                        .setId(product.id)
+                        .setOrderQty(product.orderQty)
+                        .setOrderPrice(product.orderPrice)
+                        .orderTotalPrice = product.orderTotalPrice
+
+                    val productOrderStore = productOrderStoreBuilder.build()
+
+                    // return value
+                    productOrderStore
+
+                } else null
+            }
         }
     }
 }

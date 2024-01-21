@@ -10,6 +10,7 @@ import com.dr.jjsembako.ProductOrderStore
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.utils.DataMapper
+import com.dr.jjsembako.core.utils.DataMapper.mapListDataProductOrderToListProductOrderStore
 import com.dr.jjsembako.feature_order.data.SocketOrderHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,38 +53,13 @@ class PilihBarangViewModel @Inject constructor(
         }
     }
 
-    private suspend fun recoveryOrderData() {
-        val currentList = _dataProducts.value.orEmpty().toMutableList()
-        val currentOrderList = _orderList.value.dataList
-
-        if (currentOrderList.isNotEmpty() && currentList.isNotEmpty()) {
-            for (orderItem in currentOrderList) {
-                val index = currentList.indexOfFirst { it?.id == orderItem.id }
-                if (index != -1) {
-                    val existingProduct = currentList[index]!!
-                    if(existingProduct.amountPerUnit != 0){
-                        val updatedExistingProduct = existingProduct.copy(
-                            orderQty = orderItem.orderQty,
-                            orderPrice = orderItem.orderPrice,
-                            orderTotalPrice = orderItem.orderTotalPrice,
-                            isChosen = true
-                        )
-                        currentList[index] = updatedExistingProduct
-                        currentList.remove(existingProduct)
-
-                        _dataProducts.value = currentList
-                    }
-                }
-            }
-        }
-    }
-
     suspend fun saveData() {
         val currentList = _dataProducts.value.orEmpty().toMutableList()
-        if(currentList.isEmpty()){
+        if (currentList.isEmpty()) {
             setProductsList()
         } else {
             val selectedProduct = currentList.filter { product -> product!!.isChosen }
+            setProductsList(mapListDataProductOrderToListProductOrderStore(selectedProduct))
         }
     }
 
@@ -93,13 +69,41 @@ class PilihBarangViewModel @Inject constructor(
 
     private suspend fun setProductsList(orderList: List<ProductOrderStore> = emptyList()) {
         productsDataStore.updateData {
-            if(orderList.isEmpty()){
+            if (orderList.isEmpty()) {
                 ProductOrderList.getDefaultInstance()
             } else {
                 ProductOrderList.newBuilder().addAllData(orderList).build()
             }
         }
         _orderList.value = productsDataStore.data.first() // Update UI state
+    }
+
+    private fun recoveryOrderData() {
+        viewModelScope.launch {
+            val currentList = _dataProducts.value.orEmpty().toMutableList()
+            val currentOrderList = _orderList.value.dataList
+
+            if (currentOrderList.isNotEmpty() && currentList.isNotEmpty()) {
+                for (orderItem in currentOrderList) {
+                    val index = currentList.indexOfFirst { it?.id == orderItem.id }
+                    if (index != -1) {
+                        val existingProduct = currentList[index]!!
+                        if (existingProduct.amountPerUnit != 0) {
+                            val updatedExistingProduct = existingProduct.copy(
+                                orderQty = orderItem.orderQty,
+                                orderPrice = orderItem.orderPrice,
+                                orderTotalPrice = orderItem.orderTotalPrice,
+                                isChosen = true
+                            )
+                            currentList[index] = updatedExistingProduct
+                            currentList.remove(existingProduct)
+
+                            _dataProducts.value = currentList
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun updateCategories(newProducts: List<DataProductOrder?>) {
@@ -129,7 +133,7 @@ class PilihBarangViewModel @Inject constructor(
                 if (index != -1) {
                     val existingProduct = currentList[index]!!
 
-                    if(existingProduct.isChosen){
+                    if (existingProduct.isChosen) {
                         val updatedExistingProduct = existingProduct.copy(
                             name = updatedProduct.name,
                             image = updatedProduct.image,
@@ -188,7 +192,7 @@ class PilihBarangViewModel @Inject constructor(
 
                 if (total.isNotEmpty()) {
                     val orderTotalPrice = total.toLong()
-                    if(orderTotalPrice != existingProduct.orderTotalPrice){
+                    if (orderTotalPrice != existingProduct.orderTotalPrice) {
                         val updatedExistingProduct = existingProduct.copy(
                             orderTotalPrice = orderTotalPrice,
                             orderPrice = orderTotalPrice / existingProduct.orderQty
@@ -215,7 +219,7 @@ class PilihBarangViewModel @Inject constructor(
 
                 if (price.isNotEmpty()) {
                     val orderPrice = price.toLong()
-                    if(orderPrice != existingProduct.orderPrice){
+                    if (orderPrice != existingProduct.orderPrice) {
                         val updatedExistingProduct = existingProduct.copy(
                             orderPrice = orderPrice,
                             orderTotalPrice = existingProduct.orderQty * orderPrice
@@ -242,7 +246,7 @@ class PilihBarangViewModel @Inject constructor(
 
                 if (qty.isNotEmpty()) {
                     val orderQty = qty.toInt()
-                    if(orderQty != existingProduct.orderQty){
+                    if (orderQty != existingProduct.orderQty) {
                         val updatedExistingProduct = existingProduct.copy(
                             orderQty = orderQty,
                             orderTotalPrice = existingProduct.orderPrice * orderQty
@@ -316,7 +320,7 @@ class PilihBarangViewModel @Inject constructor(
             if (productIndex != -1) {
                 val existingProduct = currentList[productIndex]!!
 
-                if(!existingProduct.isChosen){
+                if (!existingProduct.isChosen) {
                     val updatedExistingProduct = existingProduct.copy(
                         isChosen = true,
                         orderQty = 1,
@@ -340,7 +344,7 @@ class PilihBarangViewModel @Inject constructor(
             if (productIndex != -1) {
                 val existingProduct = currentList[productIndex]!!
 
-                if(existingProduct.isChosen){
+                if (existingProduct.isChosen) {
                     val updatedExistingProduct = existingProduct.copy(
                         isChosen = false,
                         orderQty = 0,
@@ -366,6 +370,7 @@ class PilihBarangViewModel @Inject constructor(
                 _dataProducts.value = products
                 _loadingState.value = false
                 updateCategories(products)
+                recoveryOrderData()
             }
         }
 

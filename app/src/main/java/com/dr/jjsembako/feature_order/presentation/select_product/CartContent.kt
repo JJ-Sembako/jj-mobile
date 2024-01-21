@@ -39,15 +39,15 @@ fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) 
     val loadingState = pilihBarangViewModel.loadingState.observeAsState().value
     val errorState = pilihBarangViewModel.errorState.observeAsState().value
     val errorMsg = pilihBarangViewModel.errorMsg.observeAsState().value
-    val productsList = pilihBarangViewModel.productsList.asLiveData().observeAsState().value
+    val orderList = pilihBarangViewModel.orderList.asLiveData().observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(productsList){
-        Log.e(tag, "productsList with size ${productsList?.serializedSize}: ${productsList?.dataList}")
+    LaunchedEffect(orderList){
+        Log.e(tag, "productsList with size ${orderList?.serializedSize}: ${orderList?.dataList}")
     }
 
     LaunchedEffect(errorState) {
