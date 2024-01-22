@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.CircularProgressIndicator
@@ -79,6 +81,7 @@ private fun SelectProductContent(
     buatPesananViewModel: BuatPesananViewModel,
     modifier: Modifier
 ) {
+    val dataProducts = buatPesananViewModel.dataProducts.observeAsState().value
     val loadingState = buatPesananViewModel.loadingState.observeAsState().value
 
     Column(
@@ -93,7 +96,31 @@ private fun SelectProductContent(
             Spacer(modifier = modifier.height(32.dp))
 
         } else {
-            Spacer(modifier = modifier.height(128.dp))
+            if (dataProducts.isNullOrEmpty()) {
+                Spacer(modifier = modifier.height(128.dp))
+            } else {
+                val filteredProducts = dataProducts.filter { product ->
+                    product!!.isChosen
+                }
+
+                if (filteredProducts.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = modifier
+                            .fillMaxWidth()
+                    ) {
+                        items(items = filteredProducts, key = { product ->
+                            product?.id ?: "empty-${System.currentTimeMillis()}"
+                        }, itemContent = { product ->
+                            if (product != null) {
+                                ProductOnSelected(buatPesananViewModel, product, modifier)
+                            }
+                            Spacer(modifier = modifier.height(8.dp))
+                        })
+                    }
+                } else {
+                    Spacer(modifier = modifier.height(128.dp))
+                }
+            }
         }
     }
 
