@@ -77,6 +77,7 @@ class BuatPesananViewModel @Inject constructor(
         viewModelScope.launch {
             setIdCustomer("")
             setPayment(0)
+            setProductsList()
             _selectedCustomer.value = null
         }
     }
@@ -85,6 +86,7 @@ class BuatPesananViewModel @Inject constructor(
         viewModelScope.launch {
             _idCustomer.value = getIdCustomer()
             _payment.value = getPayment()
+            _productsList.value = getProductsList()
 
             if (idCustomer.value.isNotEmpty()) fetchDetailCustomer(idCustomer.value)
         }
@@ -120,7 +122,7 @@ class BuatPesananViewModel @Inject constructor(
         _payment.value = payment
     }
 
-    suspend fun setProductsList(productsList: List<ProductOrderStore>) {
+    suspend fun setProductsList(productsList: List<ProductOrderStore> = emptyList()) {
         productsDataStore.updateData {
             if (productsList.isEmpty()) {
                 ProductOrderList.getDefaultInstance() // Set empty list
