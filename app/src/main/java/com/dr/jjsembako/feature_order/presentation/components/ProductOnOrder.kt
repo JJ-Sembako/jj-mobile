@@ -326,7 +326,7 @@ private fun OrderContent(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        stringResource(R.string.add_to_cart),
+                        stringResource(R.string.delete),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                     Spacer(modifier = modifier.size(ButtonDefaults.IconSpacing))
@@ -347,6 +347,29 @@ private fun OrderContent(
                     color = Color.Red
                 )
             )
+            if(orderQty.toInt() > 0){
+                Spacer(modifier = modifier.height(16.dp))
+                Button(
+                    onClick = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        pilihBarangViewModel.disableOrder(product)
+                    }, colors = ButtonDefaults.buttonColors(Color.Red)
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        stringResource(R.string.delete),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Spacer(modifier = modifier.size(ButtonDefaults.IconSpacing))
+                    Text(
+                        text = stringResource(R.string.delete),
+                        style = TextStyle(
+                            platformStyle = PlatformTextStyle(includeFontPadding = false)
+                        )
+                    )
+                }
+            }
         }
     }
 }
