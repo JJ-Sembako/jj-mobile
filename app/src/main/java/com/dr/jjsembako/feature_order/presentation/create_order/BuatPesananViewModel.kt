@@ -67,7 +67,7 @@ class BuatPesananViewModel @Inject constructor(
     val payment: StateFlow<Int> = _payment
 
     private val _orderList = MutableStateFlow(ProductOrderList.getDefaultInstance())
-    val orderList: StateFlow<ProductOrderList> = _orderList
+    private val orderList: StateFlow<ProductOrderList> = _orderList
 
     private val _dataProducts = MutableLiveData<List<DataProductOrder?>>()
     val dataProducts: LiveData<List<DataProductOrder?>> get() = _dataProducts
@@ -197,7 +197,7 @@ class BuatPesananViewModel @Inject constructor(
     private fun recoveryOrderData() {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
-            val currentOrderList = _orderList.value.dataList
+            val currentOrderList = orderList.value.dataList
 
             if (currentOrderList.isNotEmpty() && currentList.isNotEmpty()) {
                 for (orderItem in currentOrderList) {

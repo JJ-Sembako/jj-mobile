@@ -44,7 +44,7 @@ class PilihBarangViewModel @Inject constructor(
     val dataCategories: LiveData<List<FilterOption?>> get() = _dataCategories
 
     private val _orderList = MutableStateFlow(ProductOrderList.getDefaultInstance())
-    val orderList: StateFlow<ProductOrderList> = _orderList
+    private val orderList: StateFlow<ProductOrderList> = _orderList
 
     init {
         initSocket()
@@ -93,7 +93,7 @@ class PilihBarangViewModel @Inject constructor(
     private fun recoveryOrderData() {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
-            val currentOrderList = _orderList.value.dataList
+            val currentOrderList = orderList.value.dataList
 
             if (currentOrderList.isNotEmpty() && currentList.isNotEmpty()) {
                 for (orderItem in currentOrderList) {
@@ -423,6 +423,7 @@ class PilihBarangViewModel @Inject constructor(
 
         socketOrderHandler.onErrorState = { it ->
             viewModelScope.launch {
+                saveData()
                 _errorState.value = it
             }
         }
