@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_order.presentation.select_product
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -40,6 +40,7 @@ import com.dr.jjsembako.feature_order.presentation.components.ProductOnOrder
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CatalogContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) {
+    val tag = "Catalog Content"
     val dataProducts = pilihBarangViewModel.dataProducts.observeAsState().value
     val option = pilihBarangViewModel.dataCategories.observeAsState().value
     val loadingState = pilihBarangViewModel.loadingState.observeAsState().value
@@ -49,18 +50,11 @@ fun CatalogContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifie
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val snackbarHostState = remember { SnackbarHostState() }
     val showSheet = remember { mutableStateOf(false) }
     val checkBoxResult = rememberMutableStateListOf<String>()
     val checkBoxStates = rememberMutableStateMapOf<String, Boolean>()
     val searchQuery = rememberSaveable { mutableStateOf("") }
     val activeSearch = remember { mutableStateOf(false) }
-
-    LaunchedEffect(errorState) {
-        if (errorState == true && !errorMsg.isNullOrEmpty()) {
-            snackbarHostState.showSnackbar(message = errorMsg)
-        }
-    }
 
     LaunchedEffect(Unit) {
         if (!option.isNullOrEmpty()) {
@@ -101,6 +95,7 @@ fun CatalogContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifie
         if (errorState == true && !errorMsg.isNullOrEmpty()) {
             HeaderError(modifier = modifier, message = errorMsg)
             Spacer(modifier = modifier.height(16.dp))
+            Log.e(tag, errorMsg)
         }
         SearchFilter(
             placeholder = stringResource(R.string.search_product),

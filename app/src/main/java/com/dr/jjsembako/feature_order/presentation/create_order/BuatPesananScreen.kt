@@ -138,18 +138,13 @@ private fun BuatPesananContent(
 ) {
     val tag = "Buat Pesanan Content"
     val stateRefresh = buatPesananViewModel.stateRefresh.observeAsState().value
-    val errorState =  buatPesananViewModel.errorState.observeAsState().value
-    val errorMsg =  buatPesananViewModel.errorMsg.observeAsState().value
+    val errorState = buatPesananViewModel.errorState.observeAsState().value
+    val errorMsg = buatPesananViewModel.errorMsg.observeAsState().value
     val isRefreshing by buatPesananViewModel.isRefreshing.collectAsState(initial = false)
     val message = buatPesananViewModel.message.observeAsState().value
     val statusCode = buatPesananViewModel.statusCode.observeAsState().value
     val payment = buatPesananViewModel.payment.asLiveData().observeAsState().value
     val selectedCustomer = buatPesananViewModel.selectedCustomer.observeAsState().value
-    val productsList = buatPesananViewModel. orderList.asLiveData().observeAsState().value
-
-    LaunchedEffect(productsList){
-        Log.e(tag, "productsList with size ${productsList?.serializedSize}: ${productsList?.dataList}")
-    }
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current

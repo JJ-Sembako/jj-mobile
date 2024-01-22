@@ -18,10 +18,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,7 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.asLiveData
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.components.HeaderError
 import com.dr.jjsembako.core.presentation.components.LoadingScreen
@@ -54,22 +51,9 @@ fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) 
     val loadingState = pilihBarangViewModel.loadingState.observeAsState().value
     val errorState = pilihBarangViewModel.errorState.observeAsState().value
     val errorMsg = pilihBarangViewModel.errorMsg.observeAsState().value
-    val orderList = pilihBarangViewModel.orderList.asLiveData().observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(orderList) {
-        Log.e(tag, "productsList with size ${orderList?.serializedSize}: ${orderList?.dataList}")
-    }
-
-    LaunchedEffect(errorState) {
-        if (errorState == true && !errorMsg.isNullOrEmpty()) {
-            snackbarHostState.showSnackbar(message = errorMsg)
-        }
-    }
 
     Column(
         modifier = modifier
@@ -87,6 +71,7 @@ fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) 
         if (errorState == true && !errorMsg.isNullOrEmpty()) {
             HeaderError(modifier = modifier, message = errorMsg)
             Spacer(modifier = modifier.height(16.dp))
+            Log.e(tag, errorMsg)
         }
         Spacer(modifier = modifier.height(16.dp))
 
@@ -102,7 +87,9 @@ fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) 
 
                 if (filteredProducts.isNotEmpty()) {
                     Row(
-                        modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -116,7 +103,9 @@ fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) 
                             Icons.Default.DeleteSweep,
                             contentDescription = stringResource(R.string.clear_data),
                             tint = Color.Red,
-                            modifier = modifier.size(32.dp).clickable { pilihBarangViewModel.reset() }
+                            modifier = modifier
+                                .size(32.dp)
+                                .clickable { pilihBarangViewModel.reset() }
                         )
                     }
 
