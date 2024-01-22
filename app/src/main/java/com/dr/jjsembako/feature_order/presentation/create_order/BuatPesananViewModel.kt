@@ -62,14 +62,14 @@ class BuatPesananViewModel @Inject constructor(
     private val _payment = MutableStateFlow(0)
     val payment: StateFlow<Int> = _payment
 
-    private val _productsList = MutableStateFlow(ProductOrderList.getDefaultInstance())
-    val productsList: StateFlow<ProductOrderList> = _productsList
+    private val _orderList = MutableStateFlow(ProductOrderList.getDefaultInstance())
+    val orderList: StateFlow<ProductOrderList> = _orderList
 
     init {
         viewModelScope.launch {
             _idCustomer.value = getIdCustomer()
             _payment.value = getPayment()
-            _productsList.value = getProductsList()
+            _orderList.value = getProductOrderList()
         }
     }
 
@@ -77,7 +77,7 @@ class BuatPesananViewModel @Inject constructor(
         viewModelScope.launch {
             setIdCustomer("")
             setPayment(0)
-            setProductsList()
+            setProductOrderList()
             _selectedCustomer.value = null
         }
     }
@@ -86,7 +86,7 @@ class BuatPesananViewModel @Inject constructor(
         viewModelScope.launch {
             _idCustomer.value = getIdCustomer()
             _payment.value = getPayment()
-            _productsList.value = getProductsList()
+            _orderList.value = getProductOrderList()
 
             if (idCustomer.value.isNotEmpty()) fetchDetailCustomer(idCustomer.value)
         }
@@ -104,7 +104,7 @@ class BuatPesananViewModel @Inject constructor(
         return preferencesDataStore.data.first()[PreferencesKeys.PAYMENT] ?: 0
     }
 
-    private suspend fun getProductsList(): ProductOrderList {
+    private suspend fun getProductOrderList(): ProductOrderList {
         return productsDataStore.data.first()
     }
 
@@ -122,7 +122,7 @@ class BuatPesananViewModel @Inject constructor(
         _payment.value = payment
     }
 
-    suspend fun setProductsList(productsList: List<ProductOrderStore> = emptyList()) {
+    private suspend fun setProductOrderList(productsList: List<ProductOrderStore> = emptyList()) {
         productsDataStore.updateData {
             if (productsList.isEmpty()) {
                 ProductOrderList.getDefaultInstance() // Set empty list
@@ -130,7 +130,7 @@ class BuatPesananViewModel @Inject constructor(
                 ProductOrderList.newBuilder().addAllData(productsList).build()
             }
         }
-        _productsList.value = productsDataStore.data.first() // Update UI state
+        _orderList.value = productsDataStore.data.first() // Update UI state
     }
 
     fun fetchDetailCustomer(id: String) {

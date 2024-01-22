@@ -49,25 +49,25 @@ class PilihBarangViewModel @Inject constructor(
     init {
         initSocket()
         viewModelScope.launch {
-            _orderList.value = getProductsList()
+            _orderList.value = getProductOrderList()
         }
     }
 
     suspend fun saveData() {
         val currentList = _dataProducts.value.orEmpty().toMutableList()
         if (currentList.isEmpty()) {
-            setProductsList()
+            setProductOrderList()
         } else {
             val selectedProduct = currentList.filter { product -> product!!.isChosen }
-            setProductsList(mapListDataProductOrderToListProductOrderStore(selectedProduct))
+            setProductOrderList(mapListDataProductOrderToListProductOrderStore(selectedProduct))
         }
     }
 
-    private suspend fun getProductsList(): ProductOrderList {
+    private suspend fun getProductOrderList(): ProductOrderList {
         return productsDataStore.data.first()
     }
 
-    private suspend fun setProductsList(orderList: List<ProductOrderStore> = emptyList()) {
+    private suspend fun setProductOrderList(orderList: List<ProductOrderStore> = emptyList()) {
         productsDataStore.updateData {
             if (orderList.isEmpty()) {
                 ProductOrderList.getDefaultInstance()
