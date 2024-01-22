@@ -53,6 +53,18 @@ class PilihBarangViewModel @Inject constructor(
         }
     }
 
+    fun reset() {
+        viewModelScope.launch {
+            val currentList = _dataProducts.value.orEmpty().toMutableList()
+            if (currentList.isNotEmpty()) {
+                val selectedProduct = currentList.filter { product -> product!!.isChosen }
+                for (product in selectedProduct) {
+                    if (product != null) disableOrder(product)
+                }
+            }
+        }
+    }
+
     suspend fun saveData() {
         val currentList = _dataProducts.value.orEmpty().toMutableList()
         if (currentList.isEmpty()) {
