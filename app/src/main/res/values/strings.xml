@@ -124,4 +124,7 @@
     <string name="from_date">Dari tanggal</string>
     <string name="until_date">Sampai tanggal</string>
     <string name="activate_filter">Aktifkan filter</string>
+
+    <string name="id">ID: %1$s</string>
+    <string name="time">%1$s - %2$s</string>
 </resources>
