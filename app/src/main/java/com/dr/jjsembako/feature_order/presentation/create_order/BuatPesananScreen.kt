@@ -294,7 +294,7 @@ private fun BuatPesananContent(
                 onSelectProduct = { onNavigateToSelectProduct() },
                 modifier = modifier
             )
-            TotalPayment(totalPrice = 1525750, modifier = modifier)
+            TotalPayment(buatPesananViewModel = buatPesananViewModel, modifier = modifier)
             Spacer(modifier = modifier.height(32.dp))
 
             if (showLoadingDialog.value) {
