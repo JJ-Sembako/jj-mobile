@@ -10,25 +10,28 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
+import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananViewModel
 
 @Composable
-fun TotalPayment(totalPrice: Long = 0, modifier: Modifier) {
+fun TotalPayment(buatPesananViewModel: BuatPesananViewModel, modifier: Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 16.dp)
     ) {
         TotalPaymentHeader(modifier)
-        TotalPaymentContent(totalPrice, modifier)
+        TotalPaymentContent(buatPesananViewModel, modifier)
     }
 }
 
@@ -52,7 +55,13 @@ private fun TotalPaymentHeader(modifier: Modifier) {
 }
 
 @Composable
-private fun TotalPaymentContent(totalPrice: Long = 0, modifier: Modifier) {
+private fun TotalPaymentContent(buatPesananViewModel: BuatPesananViewModel, modifier: Modifier) {
+    val selectedProducts =
+        buatPesananViewModel.dataProducts.observeAsState().value?.filter { product ->
+            product!!.isChosen
+        }
+    val totalPrice = selectedProducts?.sumOf { it?.orderTotalPrice ?: 0L } ?: 0L
+
     Spacer(modifier = modifier.height(32.dp))
     Column(modifier = modifier.padding(start = 16.dp)) {
         Text(
@@ -71,6 +80,6 @@ private fun TotalPaymentContent(totalPrice: Long = 0, modifier: Modifier) {
 @Composable
 private fun TotalPaymentPreview() {
     JJSembakoTheme {
-        TotalPayment(totalPrice = 175500, modifier = Modifier)
+        TotalPayment(buatPesananViewModel = hiltViewModel(), modifier = Modifier)
     }
 }

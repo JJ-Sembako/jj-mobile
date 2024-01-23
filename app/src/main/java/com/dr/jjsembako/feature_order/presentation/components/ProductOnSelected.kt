@@ -59,11 +59,11 @@ import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.core.utils.rememberCurrencyVisualTransformation
-import com.dr.jjsembako.feature_order.presentation.select_product.PilihBarangViewModel
+import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananViewModel
 
 @Composable
-fun ProductOnOrder(
-    pilihBarangViewModel: PilihBarangViewModel,
+fun ProductOnSelected(
+    buatPesananViewModel: BuatPesananViewModel,
     product: DataProductOrder,
     modifier: Modifier
 ) {
@@ -85,7 +85,7 @@ fun ProductOnOrder(
             Spacer(modifier = modifier.width(16.dp))
             ProductInfo(product = product, modifier = modifier)
         }
-        OrderContent(pilihBarangViewModel, product, modifier)
+        OrderContent(buatPesananViewModel, product, modifier)
     }
 }
 
@@ -162,7 +162,7 @@ private fun ProductInfo(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun OrderContent(
-    pilihBarangViewModel: PilihBarangViewModel,
+    buatPesananViewModel: BuatPesananViewModel,
     product: DataProductOrder,
     modifier: Modifier
 ) {
@@ -192,7 +192,7 @@ private fun OrderContent(
                 Button(onClick = {
                     keyboardController?.hide()
                     focusManager.clearFocus()
-                    pilihBarangViewModel.enableOrder(product)
+                    buatPesananViewModel.enableOrder(product)
                 }) {
                     Icon(
                         Icons.Default.AddShoppingCart,
@@ -216,7 +216,7 @@ private fun OrderContent(
                     IconButton(onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        pilihBarangViewModel.minusOrderQty(product)
+                        buatPesananViewModel.minusOrderQty(product)
                     }) {
                         Icon(
                             Icons.Default.Remove,
@@ -236,14 +236,15 @@ private fun OrderContent(
                             var newValue =
                                 it.filter { it2 -> it2.isDigit() || it2 == '0' } // Only allow digits and leading zero
                             newValue = newValue.trimStart('0') // Remove leading zeros
-                            newValue = newValue.trim { it2 -> it2.isDigit().not() } // Remove non-digits
+                            newValue =
+                                newValue.trim { it2 -> it2.isDigit().not() } // Remove non-digits
 
                             // Enforce minimum & maximum value
                             orderQty = if (newValue.isEmpty()) "0"
                             else if ((newValue.toIntOrNull()
                                     ?: 0) > QTY_MAX_VALUE
                             ) QTY_MAX_VALUE.toString() else newValue
-                            pilihBarangViewModel.updateOrderQty(product, orderQty)
+                            buatPesananViewModel.updateOrderQty(product, orderQty)
                         },
                         isError = product.orderQty == 0 || (product.orderQty > product.stockInUnit),
                         modifier = modifier
@@ -254,7 +255,7 @@ private fun OrderContent(
                     IconButton(onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        pilihBarangViewModel.plusOrderQty(product)
+                        buatPesananViewModel.plusOrderQty(product)
                     }) {
                         Icon(
                             Icons.Default.Add,
@@ -282,7 +283,7 @@ private fun OrderContent(
                         else if ((newValue.toLongOrNull()
                                 ?: 0L) > MAX_VALUE
                         ) MAX_VALUE.toString() else newValue
-                        pilihBarangViewModel.updateOrderPrice(product, orderPrice)
+                        buatPesananViewModel.updateOrderPrice(product, orderPrice)
                     },
                     isError = product.orderPrice == 0L,
                     modifier = modifier
@@ -309,7 +310,7 @@ private fun OrderContent(
                         else if ((newValue.toLongOrNull()
                                 ?: 0L) > MAX_VALUE
                         ) MAX_VALUE.toString() else newValue
-                        pilihBarangViewModel.updateOrderTotalPrice(product, orderTotalPrice)
+                        buatPesananViewModel.updateOrderTotalPrice(product, orderTotalPrice)
                     },
                     isError = product.orderTotalPrice == 0L,
                     modifier = modifier
@@ -321,7 +322,7 @@ private fun OrderContent(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        pilihBarangViewModel.disableOrder(product)
+                        buatPesananViewModel.disableOrder(product)
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(
@@ -353,7 +354,7 @@ private fun OrderContent(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        pilihBarangViewModel.disableOrder(product)
+                        buatPesananViewModel.disableOrder(product)
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(
@@ -379,11 +380,11 @@ private const val QTY_MAX_VALUE = 1_000
 
 @Composable
 @Preview(showBackground = true)
-private fun ProductOnOrderPreview() {
+private fun ProductOnSelectedPreview() {
     JJSembakoTheme {
-        val pilihBarangViewModel: PilihBarangViewModel = hiltViewModel()
-        ProductOnOrder(
-            pilihBarangViewModel = pilihBarangViewModel,
+        val buatPesananViewModel: BuatPesananViewModel = hiltViewModel()
+        ProductOnSelected(
+            buatPesananViewModel = buatPesananViewModel,
             product = DataProductOrder(
                 id = "bc3bbd9e",
                 name = "Air Cahaya",

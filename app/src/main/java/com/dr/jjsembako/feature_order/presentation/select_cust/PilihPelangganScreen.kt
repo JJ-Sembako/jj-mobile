@@ -5,15 +5,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,6 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -66,14 +71,14 @@ import kotlin.math.roundToInt
 @Composable
 fun PilihPelangganScreen(
     onNavigateToMainOrderScreen: () -> Unit,
-    modifier: Modifier = Modifier,
-    idSelectedCustomer: String = ""
+    modifier: Modifier = Modifier
 ) {
     val tag = "Pilih Pelanggan Screen"
     val pilihPelangganViewModel: PilihPelangganViewModel = hiltViewModel()
     val state = pilihPelangganViewModel.state.observeAsState().value
     val message = pilihPelangganViewModel.message.observeAsState().value
     val statusCode = pilihPelangganViewModel.statusCode.observeAsState().value
+    val idSelectedCustomer = pilihPelangganViewModel.idSelectedCustomer.collectAsState().value
 
     if (idSelectedCustomer.isEmpty()) {
         PilihPelangganContent(
@@ -120,9 +125,7 @@ fun PilihPelangganScreen(
     }
 }
 
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun PilihPelangganContent(
     pilihPelangganViewModel: PilihPelangganViewModel,
@@ -141,6 +144,7 @@ private fun PilihPelangganContent(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
     val showSheet = remember { mutableStateOf(false) }
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
@@ -204,6 +208,7 @@ private fun PilihPelangganContent(
                 actions = {
                     IconButton(onClick = {
                         keyboardController?.hide()
+                        pilihPelangganViewModel.saveIdCustomer()
                         onNavigateToMainOrderScreen()
                     }) {
                         Icon(
@@ -337,7 +342,7 @@ private fun InfoSelectedCustomer(
     modifier: Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -356,13 +361,40 @@ private fun InfoSelectedCustomer(
                 phoneNumber = selectedCustomer.phoneNumber,
                 debt = selectedCustomer.debt
             )
+
             Spacer(modifier = modifier.height(8.dp))
-            CustomerInfoOrder(
-                pilihPelangganViewModel = pilihPelangganViewModel,
-                selectedCust = selectedCustomer,
-                customer = data,
-                modifier = modifier
-            )
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CustomerInfoOrder(
+                        pilihPelangganViewModel = pilihPelangganViewModel,
+                        selectedCust = selectedCustomer,
+                        customer = data,
+                        modifier = modifier
+                    )
+                }
+                Column(
+                    modifier = modifier
+                        .clickable { pilihPelangganViewModel.reset() },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Spacer(modifier = modifier.width(8.dp))
+                    Icon(
+                        Icons.Default.DeleteSweep,
+                        contentDescription = stringResource(R.string.clear_data),
+                        tint = Color.Red,
+                        modifier = modifier.size(32.dp)
+                    )
+                }
+            }
             Spacer(modifier = modifier.height(16.dp))
         } else {
             Spacer(modifier = modifier.height(8.dp))

@@ -107,6 +107,7 @@
     <string name="total_payment">Total Biaya Pesanan</string>
 
     <string name="selected_data">Data Terpilih</string>
+    <string name="selected_num">Terpilih: %1$d produk</string>
     <string name="cart">Keranjang</string>
     <string name="catalog">Katalog</string>
     <string name="stock_empty">Stok habis</string>
@@ -116,6 +117,7 @@
     <string name="qty">Qty</string>
     <string name="price">Harga Jual</string>
     <string name="total_price">Total Harga</string>
+<!--    <string name="err_not_select_cust">Silahkan pilih pelanggan terlebih dahulu!</string>-->
 
     <string name="history">Riwayat</string>
     <string name="search_transaction">Cari transaksi</string>

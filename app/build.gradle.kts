@@ -4,6 +4,7 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
+    id("com.google.protobuf") version "0.9.4"
 }
 
 android {
@@ -131,7 +132,25 @@ dependencies {
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore:1.0.0")
+    implementation("com.google.protobuf:protobuf-javalite:3.25.1")
 
     //lottie
     implementation("com.airbnb.android:lottie-compose:6.2.0")
+}
+
+// Datastore schema
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.1"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }

@@ -27,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import kotlinx.coroutines.launch
 
 @OptIn(
     ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,
@@ -49,6 +51,7 @@ fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifie
     val pilihBarangViewModel: PilihBarangViewModel = hiltViewModel()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val coroutineScope = rememberCoroutineScope()
 
     var tabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabs = listOf(stringResource(R.string.cart), stringResource(R.string.catalog))
@@ -87,6 +90,7 @@ fun PilihBarangScreen(onNavigateToMainOrderScreen: () -> Unit, modifier: Modifie
                     IconButton(onClick = {
                         onNavigateToMainOrderScreen()
                         keyboardController?.hide()
+                        coroutineScope.launch { pilihBarangViewModel.saveData() }
                     }) {
                         Icon(
                             Icons.Default.Check,
