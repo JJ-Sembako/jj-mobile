@@ -1,54 +1,42 @@
-package com.dr.jjsembako.core.presentation.components
+package com.dr.jjsembako.core.presentation.components.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
-fun LoadingDialog(
-    showDialog: MutableState<Boolean>,
+fun LoadingScreen(
     modifier: Modifier
 ) {
-    val dialogMinWidth = 280.dp
-    val dialogMaxWidth = 560.dp
-
-    Dialog(
-        onDismissRequest = { showDialog.value = false }) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
         Column(
-            modifier = modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .sizeIn(
-                    minWidth = dialogMinWidth,
-                    maxWidth = dialogMaxWidth
-                )
-                .padding(24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -72,18 +60,15 @@ fun LoadingDialog(
                 textAlign = TextAlign.Center,
                 modifier = modifier.wrapContentSize(Alignment.Center)
             )
-            Spacer(modifier = modifier.height(24.dp))
+            Spacer(modifier = modifier.height(16.dp))
         }
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-private fun LoadingDialogPreview() {
+private fun LoadingScreenPreview() {
     JJSembakoTheme {
-        LoadingDialog(
-            showDialog = remember { mutableStateOf(true) },
-            modifier = Modifier
-        )
+        LoadingScreen(modifier = Modifier)
     }
 }

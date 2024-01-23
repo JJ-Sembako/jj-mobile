@@ -27,11 +27,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.presentation.components.BottomSheetProduct
-import com.dr.jjsembako.core.presentation.components.HeaderError
-import com.dr.jjsembako.core.presentation.components.LoadingScreen
-import com.dr.jjsembako.core.presentation.components.NotFoundScreen
-import com.dr.jjsembako.core.presentation.components.SearchFilter
+import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetProduct
+import com.dr.jjsembako.core.presentation.components.utils.HeaderError
+import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
+import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
+import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.rememberMutableStateListOf
 import com.dr.jjsembako.core.utils.rememberMutableStateMapOf

@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.presentation.components
+package com.dr.jjsembako.core.presentation.components.dialog
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding

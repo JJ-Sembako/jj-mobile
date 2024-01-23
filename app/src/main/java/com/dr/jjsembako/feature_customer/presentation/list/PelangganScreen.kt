@@ -43,12 +43,12 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
-import com.dr.jjsembako.core.presentation.components.BottomSheetCustomer
-import com.dr.jjsembako.core.presentation.components.CustomerInfo
-import com.dr.jjsembako.core.presentation.components.ErrorScreen
-import com.dr.jjsembako.core.presentation.components.LoadingScreen
-import com.dr.jjsembako.core.presentation.components.NotFoundScreen
-import com.dr.jjsembako.core.presentation.components.SearchFilter
+import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetCustomer
+import com.dr.jjsembako.core.presentation.components.card.CustomerInfo
+import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
+import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
+import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)

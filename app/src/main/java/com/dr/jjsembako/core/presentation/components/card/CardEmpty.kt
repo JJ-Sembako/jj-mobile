@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.presentation.components
+package com.dr.jjsembako.core.presentation.components.card
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

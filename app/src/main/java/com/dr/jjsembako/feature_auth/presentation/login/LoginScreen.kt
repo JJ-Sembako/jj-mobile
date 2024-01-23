@@ -56,8 +56,8 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
-import com.dr.jjsembako.core.presentation.components.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidPassword
 import com.dr.jjsembako.core.utils.isValidUsername

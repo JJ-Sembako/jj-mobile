@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
-import com.dr.jjsembako.core.presentation.components.CustomerInfo
+import com.dr.jjsembako.core.presentation.components.card.CustomerInfo
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable

@@ -57,8 +57,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
-import com.dr.jjsembako.core.presentation.components.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidNewPassword
 import com.dr.jjsembako.core.utils.isValidPassword

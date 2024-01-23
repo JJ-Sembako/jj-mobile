@@ -36,7 +36,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.presentation.components.SearchFilter
+import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.initializeDateValues
 import com.dr.jjsembako.feature_history.presentation.components.BottomSheetHistory

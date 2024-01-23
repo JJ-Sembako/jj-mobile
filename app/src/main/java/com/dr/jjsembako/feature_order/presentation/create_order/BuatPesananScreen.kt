@@ -52,11 +52,11 @@ import androidx.lifecycle.asLiveData
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
-import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
-import com.dr.jjsembako.core.presentation.components.ErrorScreen
-import com.dr.jjsembako.core.presentation.components.HeaderError
-import com.dr.jjsembako.core.presentation.components.LoadingDialog
-import com.dr.jjsembako.core.presentation.components.LoadingScreen
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.utils.HeaderError
+import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_order.presentation.components.SelectCustomer
 import com.dr.jjsembako.feature_order.presentation.components.SelectPayment
