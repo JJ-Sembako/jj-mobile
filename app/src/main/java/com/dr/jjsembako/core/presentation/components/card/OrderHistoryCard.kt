@@ -71,7 +71,7 @@ fun OrderHistoryCard (
 
 @Composable
 @Preview(showBackground = true)
-private fun CustomerInfoPreview() {
+private fun OrderHistoryPreview() {
     JJSembakoTheme {
         OrderHistoryCard (
             onNavigateToDetail = {},
