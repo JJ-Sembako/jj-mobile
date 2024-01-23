@@ -100,18 +100,16 @@ class PilihBarangViewModel @Inject constructor(
                     val index = currentList.indexOfFirst { it?.id == orderItem.id }
                     if (index != -1) {
                         val existingProduct = currentList[index]!!
-                        if (existingProduct.amountPerUnit != 0) {
-                            val updatedExistingProduct = existingProduct.copy(
-                                orderQty = orderItem.orderQty,
-                                orderPrice = orderItem.orderPrice,
-                                orderTotalPrice = orderItem.orderTotalPrice,
-                                isChosen = true
-                            )
-                            currentList[index] = updatedExistingProduct
-                            currentList.remove(existingProduct)
+                        val updatedExistingProduct = existingProduct.copy(
+                            orderQty = orderItem.orderQty,
+                            orderPrice = orderItem.orderPrice,
+                            orderTotalPrice = orderItem.orderTotalPrice,
+                            isChosen = true
+                        )
+                        currentList[index] = updatedExistingProduct
+                        currentList.remove(existingProduct)
 
-                            _dataProducts.value = currentList
-                        }
+                        _dataProducts.value = currentList
                     }
                 }
             }
@@ -423,7 +421,10 @@ class PilihBarangViewModel @Inject constructor(
 
         socketOrderHandler.onErrorState = { it ->
             viewModelScope.launch {
-                saveData()
+                if ((dataProducts.value?.size ?: 0) > 0
+                    && (orderList.value.dataList?.size ?: 0) > 0) {
+                    saveData()
+                }
                 _errorState.value = it
             }
         }

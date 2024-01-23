@@ -23,6 +23,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -148,14 +150,20 @@ private fun BuatPesananContent(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val selectedOption = rememberSaveable { mutableIntStateOf(payment ?: 0) }
-
-    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
-    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
-
+    val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { buatPesananViewModel.refresh() })
+
+    val selectedOption = rememberSaveable { mutableIntStateOf(payment ?: 0) }
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(errorState) {
+        if (errorState == true && !errorMsg.isNullOrEmpty()) {
+            snackbarHostState.showSnackbar(message = errorMsg)
+        }
+    }
 
     when (stateRefresh) {
         StateResponse.LOADING -> {
@@ -214,7 +222,8 @@ private fun BuatPesananContent(
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { contentPadding ->
         Column(
             modifier = modifier

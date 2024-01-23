@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -104,19 +103,21 @@ private fun SelectProductContent(
                 }
 
                 if (filteredProducts.isNotEmpty()) {
-                    LazyColumn(
+                    Spacer(modifier = modifier.height(16.dp))
+                    Column(
                         modifier = modifier
                             .fillMaxWidth()
                     ) {
-                        items(items = filteredProducts, key = { product ->
-                            product?.id ?: "empty-${System.currentTimeMillis()}"
-                        }, itemContent = { product ->
-                            if (product != null) {
-                                ProductOnSelected(buatPesananViewModel, product, modifier)
+                        filteredProducts.forEach { product ->
+                            key(product?.id ?: "empty-${System.currentTimeMillis()}") {
+                                if (product != null) {
+                                    ProductOnSelected(buatPesananViewModel, product, modifier)
+                                }
+                                Spacer(modifier = modifier.height(8.dp))
                             }
-                            Spacer(modifier = modifier.height(8.dp))
-                        })
+                        }
                     }
+                    Spacer(modifier = modifier.height(8.dp))
                 } else {
                     Spacer(modifier = modifier.height(128.dp))
                 }

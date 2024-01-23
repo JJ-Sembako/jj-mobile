@@ -39,7 +39,7 @@ class BuatPesananViewModel @Inject constructor(
     private val _stateRefresh = MutableLiveData<StateResponse?>()
     val stateRefresh: LiveData<StateResponse?> = _stateRefresh
 
-    private val _loadingState = MutableLiveData(true)
+    private val _loadingState = MutableLiveData(false)
     val loadingState: LiveData<Boolean> get() = _loadingState
 
     private val _errorState = MutableLiveData(false)
@@ -77,18 +77,17 @@ class BuatPesananViewModel @Inject constructor(
             _idCustomer.value = getIdCustomer()
             _payment.value = getPayment()
             _orderList.value = getProductOrderList()
-
-            if (orderList.value.dataList.isNotEmpty()) initSocket()
         }
     }
 
     fun reset() {
+        disconnect()
         viewModelScope.launch {
             setIdCustomer("")
             setPayment(0)
             setProductOrderList()
             _selectedCustomer.value = null
-            disconnect()
+            _dataProducts.value = emptyList()
         }
     }
 
@@ -99,7 +98,6 @@ class BuatPesananViewModel @Inject constructor(
             _orderList.value = getProductOrderList()
 
             if (idCustomer.value.isNotEmpty()) fetchDetailCustomer(idCustomer.value)
-            if (dataProducts.value?.isEmpty() == true) initSocket()
         }
     }
 
@@ -130,7 +128,9 @@ class BuatPesananViewModel @Inject constructor(
     }
 
     private suspend fun getProductOrderList(): ProductOrderList {
-        return productsDataStore.data.first()
+        val res = productsDataStore.data.first()
+        if (res.dataList.isNotEmpty()) initSocket()
+        return res
     }
 
     private suspend fun setIdCustomer(idCustomer: String) {
@@ -204,18 +204,16 @@ class BuatPesananViewModel @Inject constructor(
                     val index = currentList.indexOfFirst { it?.id == orderItem.id }
                     if (index != -1) {
                         val existingProduct = currentList[index]!!
-                        if (existingProduct.amountPerUnit != 0) {
-                            val updatedExistingProduct = existingProduct.copy(
-                                orderQty = orderItem.orderQty,
-                                orderPrice = orderItem.orderPrice,
-                                orderTotalPrice = orderItem.orderTotalPrice,
-                                isChosen = true
-                            )
-                            currentList[index] = updatedExistingProduct
-                            currentList.remove(existingProduct)
+                        val updatedExistingProduct = existingProduct.copy(
+                            orderQty = orderItem.orderQty,
+                            orderPrice = orderItem.orderPrice,
+                            orderTotalPrice = orderItem.orderTotalPrice,
+                            isChosen = true
+                        )
+                        currentList[index] = updatedExistingProduct
+                        currentList.remove(existingProduct)
 
-                            _dataProducts.value = currentList
-                        }
+                        _dataProducts.value = currentList
                     }
                 }
             }
@@ -515,7 +513,10 @@ class BuatPesananViewModel @Inject constructor(
 
         socketOrderHandler.onErrorState = { it ->
             viewModelScope.launch {
-                saveProductOrderData()
+                if ((dataProducts.value?.size ?: 0) > 0
+                    && (orderList.value.dataList?.size ?: 0) > 0) {
+                    saveProductOrderData()
+                }
                 _errorState.value = it
             }
         }
