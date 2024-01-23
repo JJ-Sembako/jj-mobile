@@ -73,6 +73,7 @@ class BuatPesananViewModel @Inject constructor(
     val dataProducts: LiveData<List<DataProductOrder?>> get() = _dataProducts
 
     init {
+        initSocket()
         viewModelScope.launch {
             _idCustomer.value = getIdCustomer()
             _payment.value = getPayment()
@@ -81,7 +82,6 @@ class BuatPesananViewModel @Inject constructor(
     }
 
     fun reset() {
-        disconnect()
         viewModelScope.launch {
             setIdCustomer("")
             setPayment(0)
@@ -128,9 +128,7 @@ class BuatPesananViewModel @Inject constructor(
     }
 
     private suspend fun getProductOrderList(): ProductOrderList {
-        val res = productsDataStore.data.first()
-        if (res.dataList.isNotEmpty()) initSocket()
-        return res
+        return productsDataStore.data.first()
     }
 
     private suspend fun setIdCustomer(idCustomer: String) {
@@ -196,6 +194,9 @@ class BuatPesananViewModel @Inject constructor(
 
     private fun recoveryOrderData() {
         viewModelScope.launch {
+            if (orderList.value.dataList.isEmpty()) {
+                _orderList.value = getProductOrderList()
+            }
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val currentOrderList = orderList.value.dataList
 
@@ -514,21 +515,19 @@ class BuatPesananViewModel @Inject constructor(
         socketOrderHandler.onErrorState = { it ->
             viewModelScope.launch {
                 if ((dataProducts.value?.size ?: 0) > 0
-                    && (orderList.value.dataList?.size ?: 0) > 0) {
+                    && (orderList.value.dataList?.size ?: 0) > 0
+                ) {
                     saveProductOrderData()
                 }
                 _errorState.value = it
+                _orderList.value = getProductOrderList()
             }
         }
     }
 
-    private fun disconnect() {
-        socketOrderHandler.disconnect()
-    }
-
     override fun onCleared() {
         // Disconnect Socket when ViewModel is cleared
-        disconnect()
+        socketOrderHandler.disconnect()
         super.onCleared()
     }
 }

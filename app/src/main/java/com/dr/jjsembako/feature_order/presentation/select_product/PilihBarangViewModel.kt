@@ -92,6 +92,9 @@ class PilihBarangViewModel @Inject constructor(
 
     private fun recoveryOrderData() {
         viewModelScope.launch {
+            if (orderList.value.dataList.isEmpty()) {
+                _orderList.value = getProductOrderList()
+            }
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val currentOrderList = orderList.value.dataList
 
@@ -426,6 +429,7 @@ class PilihBarangViewModel @Inject constructor(
                     saveData()
                 }
                 _errorState.value = it
+                _orderList.value = getProductOrderList()
             }
         }
     }
