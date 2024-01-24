@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_history.presentation.list
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -46,6 +48,7 @@ import com.dr.jjsembako.feature_history.presentation.components.BottomSheetHisto
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun RiwayatScreen(
+    context: Context,
     clipboardManager: ClipboardManager,
     onNavigateToDetail: (String) -> Unit,
     onNavigateBack: () -> Unit,
@@ -121,24 +124,28 @@ fun RiwayatScreen(
                 verticalArrangement = Arrangement.Top
             ) {
                 OrderHistoryCard(
+                    context = context,
                     onNavigateToDetail = { onNavigateToDetail("b") },
                     clipboardManager = clipboardManager,
                     modifier = modifier
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 OrderHistoryCard(
+                    context = context,
                     onNavigateToDetail = { onNavigateToDetail("c") },
                     clipboardManager = clipboardManager,
                     modifier = modifier
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 OrderHistoryCard(
+                    context = context,
                     onNavigateToDetail = { onNavigateToDetail("d") },
                     clipboardManager = clipboardManager,
                     modifier = modifier
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 OrderHistoryCard(
+                    context = context,
                     onNavigateToDetail = { onNavigateToDetail("e") },
                     clipboardManager = clipboardManager,
                     modifier = modifier
@@ -164,6 +171,7 @@ fun RiwayatScreen(
 private fun RiwayatScreenPreview() {
     JJSembakoTheme {
         RiwayatScreen(
+            context = LocalContext.current,
             clipboardManager = LocalClipboardManager.current,
             onNavigateToDetail = {},
             onNavigateBack = {}

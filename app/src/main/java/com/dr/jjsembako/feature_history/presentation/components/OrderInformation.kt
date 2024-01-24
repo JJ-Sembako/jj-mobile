@@ -1,7 +1,9 @@
 package com.dr.jjsembako.feature_history.presentation.components
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,22 +38,24 @@ import com.dr.jjsembako.core.presentation.components.utils.OrderStatus
 import com.dr.jjsembako.core.presentation.components.utils.PaymentStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OrderInformation(
+    context: Context,
+    clipboardManager: ClipboardManager,
     modifier: Modifier
 ) {
     val id = "20240121-ABC123"
+    val toastCopiedIdMsg = stringResource(R.string.copied_id)
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary)),
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "Informasi Pesanan",
-            fontWeight = FontWeight.Bold, fontSize = 14.sp,
+            fontWeight = FontWeight.Bold, fontSize = 16.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
             modifier = modifier
                 .fillMaxWidth()
@@ -64,7 +72,20 @@ fun OrderInformation(
                 .padding(vertical = 8.dp, horizontal = 16.dp)
         ) {
             Row(
-                modifier = modifier.fillMaxWidth(),
+                modifier = modifier
+                    .fillMaxWidth()
+                    .combinedClickable(
+                        onClick = {
+                            clipboardManager.setText(AnnotatedString(id))
+                            Toast.makeText(context, toastCopiedIdMsg, Toast.LENGTH_SHORT).show()
+                        },
+                        onLongClick = {
+                            clipboardManager.setText(AnnotatedString(id))
+                            Toast.makeText(context, toastCopiedIdMsg, Toast.LENGTH_SHORT).show()
+                        },
+                        onClickLabel = toastCopiedIdMsg,
+                        onLongClickLabel = toastCopiedIdMsg
+                    ),
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.Start
             ) {
@@ -121,7 +142,9 @@ fun OrderInformation(
         )
         Spacer(modifier = modifier.height(8.dp))
         Row(
-            modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
@@ -130,6 +153,11 @@ fun OrderInformation(
             OrderStatus(status = 0, modifier = modifier)
         }
         Spacer(modifier = modifier.height(8.dp))
+        Divider(
+            modifier = modifier
+                .fillMaxWidth()
+                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+        )
     }
 }
 
@@ -143,6 +171,8 @@ private fun OrderInformationPreview() {
                 .height(300.dp)
         ) {
             OrderInformation(
+                context = LocalContext.current,
+                clipboardManager = LocalClipboardManager.current,
                 modifier = Modifier
             )
         }

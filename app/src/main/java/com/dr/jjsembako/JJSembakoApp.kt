@@ -295,6 +295,7 @@ fun JJSembakoApp() {
 
         composable(Screen.Riwayat.route) {
             RiwayatScreen(
+                context = context,
                 clipboardManager = clipboardManager,
                 onNavigateToDetail = { id ->
                     navController.navigate(Screen.DetailRiwayat.createRoute(id)) {
@@ -312,6 +313,8 @@ fun JJSembakoApp() {
             val id = it.arguments?.getString("id") ?: ""
             DetailTransaksi(
                 id = id,
+                context = context,
+                clipboardManager = clipboardManager,
                 onNavigateBack = {
                     navController.navigate(Screen.Riwayat.route) {
                         popUpTo(Screen.Riwayat.route) { inclusive = true }

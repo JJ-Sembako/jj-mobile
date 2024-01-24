@@ -1,5 +1,7 @@
 package com.dr.jjsembako.core.presentation.components.card
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.PlatformTextStyle
@@ -38,11 +41,13 @@ import com.dr.jjsembako.core.utils.formatRupiah
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OrderHistoryCard(
+    context: Context,
     onNavigateToDetail: (String) -> Unit,
     clipboardManager: ClipboardManager,
     modifier: Modifier
 ) {
     val id = "20240121-ABC123"
+    val toastCopiedIdMsg = stringResource(R.string.copied_id)
 
     OutlinedCard(
         modifier = modifier
@@ -53,8 +58,9 @@ fun OrderHistoryCard(
                 onClick = { onNavigateToDetail("") },
                 onLongClick = {
                     clipboardManager.setText(AnnotatedString(id))
+                    Toast.makeText(context, toastCopiedIdMsg, Toast.LENGTH_SHORT).show()
                 },
-                onLongClickLabel = stringResource(R.string.copied_id)
+                onLongClickLabel = toastCopiedIdMsg
             )
     ) {
         Text(
@@ -143,6 +149,7 @@ private fun OrderHistoryPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OrderHistoryCard(
+                context = LocalContext.current,
                 onNavigateToDetail = {},
                 clipboardManager = LocalClipboardManager.current,
                 modifier = Modifier
