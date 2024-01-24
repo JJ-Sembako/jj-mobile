@@ -21,28 +21,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.presentation.theme.OrderDeliveredBg
-import com.dr.jjsembako.core.presentation.theme.OrderDeliveredText
-import com.dr.jjsembako.core.presentation.theme.OrderFinishedBg
-import com.dr.jjsembako.core.presentation.theme.OrderFinishedText
-import com.dr.jjsembako.core.presentation.theme.OrderPackedBg
-import com.dr.jjsembako.core.presentation.theme.OrderPackedText
-import com.dr.jjsembako.core.presentation.theme.OrderWaitConfirmBg
-import com.dr.jjsembako.core.presentation.theme.OrderWaitConfirmText
+import com.dr.jjsembako.core.presentation.theme.PaymentNotPaidOffBg
+import com.dr.jjsembako.core.presentation.theme.PaymentNotPaidOffText
+import com.dr.jjsembako.core.presentation.theme.PaymentPaidOffBg
+import com.dr.jjsembako.core.presentation.theme.PaymentPaidOffText
 import com.dr.jjsembako.core.presentation.theme.StatusNotFoundBg
 import com.dr.jjsembako.core.presentation.theme.StatusNotFoundText
 
 @Composable
-fun OrderStatus(
+fun PaymentStatus(
     status: Int,
     modifier: Modifier
 ) {
 
     val statusText = when (status) {
-        0 -> stringResource(R.string.order_wait_confirm)
-        1 -> stringResource(R.string.order_packed)
-        2 -> stringResource(R.string.order_delivered)
-        3 -> stringResource(R.string.order_finished)
+        0 -> stringResource(R.string.payment_not_paid_off)
+        1 -> stringResource(R.string.payment_paid_off)
         else -> stringResource(R.string.status_not_found)
     }
 
@@ -51,10 +45,8 @@ fun OrderStatus(
             .clip(RoundedCornerShape(4.dp))
             .background(
                 when (status) {
-                    0 -> OrderWaitConfirmBg
-                    1 -> OrderPackedBg
-                    2 -> OrderDeliveredBg
-                    3 -> OrderFinishedBg
+                    0 -> PaymentNotPaidOffBg
+                    1 -> PaymentPaidOffBg
                     else -> StatusNotFoundBg
                 }
             )
@@ -69,10 +61,8 @@ fun OrderStatus(
             style = TextStyle(
                 platformStyle = PlatformTextStyle(includeFontPadding = false),
                 color = when (status) {
-                    0 -> OrderWaitConfirmText
-                    1 -> OrderPackedText
-                    2 -> OrderDeliveredText
-                    3 -> OrderFinishedText
+                    0 -> PaymentNotPaidOffText
+                    1 -> PaymentPaidOffText
                     else -> StatusNotFoundText
                 }
             )
@@ -82,14 +72,14 @@ fun OrderStatus(
 
 @Composable
 @Preview(showBackground = true)
-private fun OrderStatusPreview() {
+private fun PaymentStatusPreview() {
     JJSembakoTheme {
         Column(
             modifier = Modifier.size(150.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OrderStatus(
+            PaymentStatus(
                 status = 0,
                 modifier = Modifier
             )

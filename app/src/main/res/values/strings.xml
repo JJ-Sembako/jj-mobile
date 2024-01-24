@@ -125,6 +125,14 @@
     <string name="until_date">Sampai tanggal</string>
     <string name="activate_filter">Aktifkan filter</string>
 
+    <string name="status_not_found">Status tidak diketahui</string>
+    <string name="payment_not_paid_off">Belum Lunas</string>
+    <string name="payment_paid_off">Lunas</string>
+    <string name="order_wait_confirm">Menunggu Konfirmasi</string>
+    <string name="order_packed">Dikemas</string>
+    <string name="order_delivered">Dikirim</string>
+    <string name="order_finished">Selesai</string>
+
     <string name="id">ID: %1$s</string>
     <string name="time">%1$s - %2$s</string>
 </resources>

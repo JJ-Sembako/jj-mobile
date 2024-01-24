@@ -23,3 +23,18 @@ val OnCardSelectedLight = Color(0xFF002105)
 
 val CardSelectedDark = Color(0xFF005318)
 val OnCardSelectedDark = CardSelectedLight
+
+val StatusNotFoundBg = Color(0XFFFFE5E5)
+val StatusNotFoundText =Color(0XFFD3180C)
+val OrderWaitConfirmBg = Color(0XFFFFEFD7)
+val OrderWaitConfirmText = Color(0XFFA05E03)
+val OrderPackedBg = Color(0XFFC9F0FF)
+val OrderPackedText = Color(0XFF0065D0)
+val OrderDeliveredBg = Color(0XFFEDD7FF)
+val OrderDeliveredText = Color(0XFF6E03A0)
+val OrderFinishedBg = Color(0XFFECFCE5)
+val OrderFinishedText = Color(0XFF198155)
+val PaymentNotPaidOffBg = StatusNotFoundBg
+val PaymentNotPaidOffText = StatusNotFoundText
+val PaymentPaidOffBg = OrderFinishedBg
+val PaymentPaidOffText = OrderFinishedText
