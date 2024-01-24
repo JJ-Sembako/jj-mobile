@@ -54,7 +54,7 @@ fun OrderHistoryCard(
                 onLongClick = {
                     clipboardManager.setText(AnnotatedString(id))
                 },
-                onLongClickLabel = stringResource(R.string.copy_id)
+                onLongClickLabel = stringResource(R.string.copied_id)
             )
     ) {
         Text(
