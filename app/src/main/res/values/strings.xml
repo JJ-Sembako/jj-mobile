@@ -134,7 +134,8 @@
     <string name="order_finished">Selesai</string>
 
     <string name="id">#ID %1$s</string>
-    <string name="copy_id">Salin ID pesanan</string>
-    <string name="copied_id">ID pesanan tersalin:\n %1$s</string>
+    <string name="copy_id">ID pesanan telah tersalin</string>
     <string name="time">%1$s - %2$s</string>
+    <string name="det_order">Detail Transaksi</string>
+    <string name="cancel_order">Batalkan Transaksi</string>
 </resources>

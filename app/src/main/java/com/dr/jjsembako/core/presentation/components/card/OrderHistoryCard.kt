@@ -1,7 +1,5 @@
 package com.dr.jjsembako.core.presentation.components.card
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.PlatformTextStyle
@@ -42,12 +39,10 @@ import com.dr.jjsembako.core.utils.formatRupiah
 @Composable
 fun OrderHistoryCard(
     onNavigateToDetail: (String) -> Unit,
-    context: Context,
     clipboardManager: ClipboardManager,
     modifier: Modifier
 ) {
     val id = "20240121-ABC123"
-    val copiedId = stringResource(R.string.copy_id, id)
 
     OutlinedCard(
         modifier = modifier
@@ -58,9 +53,6 @@ fun OrderHistoryCard(
                 onClick = { onNavigateToDetail("") },
                 onLongClick = {
                     clipboardManager.setText(AnnotatedString(id))
-                    Toast
-                        .makeText(context, copiedId, Toast.LENGTH_SHORT)
-                        .show()
                 },
                 onLongClickLabel = stringResource(R.string.copy_id)
             )
@@ -152,7 +144,6 @@ private fun OrderHistoryPreview() {
         ) {
             OrderHistoryCard(
                 onNavigateToDetail = {},
-                context = LocalContext.current,
                 clipboardManager = LocalClipboardManager.current,
                 modifier = Modifier
             )

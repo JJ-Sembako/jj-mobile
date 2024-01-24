@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Devices
@@ -32,6 +33,7 @@ import com.dr.jjsembako.feature_customer.presentation.add.TambahPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.detail.DetailPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.edit.EditPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
+import com.dr.jjsembako.feature_history.presentation.detail.DetailTransaksi
 import com.dr.jjsembako.feature_history.presentation.list.RiwayatScreen
 import com.dr.jjsembako.feature_home.presentation.HomeScreen
 import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananScreen
@@ -49,6 +51,7 @@ fun JJSembakoApp() {
     val token by tokenViewModel.token.collectAsState()
     val username by tokenViewModel.username.collectAsState()
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
     val activity = (LocalLifecycleOwner.current as ComponentActivity)
     val navController = rememberNavController()
     val startDestination = if (token.isEmpty()) Screen.Login.route else Screen.Home.route
@@ -291,7 +294,31 @@ fun JJSembakoApp() {
         }
 
         composable(Screen.Riwayat.route) {
-            RiwayatScreen(onNavigateBack = { navController.popBackStack() })
+            RiwayatScreen(
+                clipboardManager = clipboardManager,
+                onNavigateToDetail = { id ->
+                    navController.navigate(Screen.DetailRiwayat.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = Screen.DetailRiwayat.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            DetailTransaksi(
+                id = id,
+                onNavigateBack = {
+                    navController.navigate(Screen.Riwayat.route) {
+                        popUpTo(Screen.Riwayat.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
 
         composable(Screen.Performa.route) {
