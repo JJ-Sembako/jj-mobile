@@ -144,4 +144,10 @@
     <string name="time_order_created">Waktu Pemesanan</string>
     <string name="time_order_delivered">Waktu Pengiriman</string>
     <string name="time_order_finished">Waktu Pesanan Selesai</string>
+    <string name="menu_open_maps">Buka Maps</string>
+    <string name="menu_call">Telepon</string>
+    <string name="menu_chat_wa">Chat WA</string>
+    <string name="menu_confirm_payment">Konfirmasi Pembayaran</string>
+    <string name="menu_retur">Ajukan Retur</string>
+    <string name="menu_potong_nota">Ajukan Potong Nota</string>
 </resources>
