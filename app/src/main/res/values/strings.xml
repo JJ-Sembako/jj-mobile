@@ -141,4 +141,7 @@
     <string name="time">%1$s - %2$s</string>
     <string name="det_order">Detail Transaksi</string>
     <string name="cancel_order">Batalkan Transaksi</string>
+    <string name="time_order_created">Waktu Pemesanan</string>
+    <string name="time_order_delivered">Waktu Pengiriman</string>
+    <string name="time_order_finished">Waktu Pesanan Selesai</string>
 </resources>
