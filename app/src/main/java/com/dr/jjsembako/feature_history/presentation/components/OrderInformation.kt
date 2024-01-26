@@ -54,7 +54,7 @@ fun OrderInformation(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Informasi Pesanan",
+            text = stringResource(R.string.order_information),
             fontWeight = FontWeight.Bold, fontSize = 16.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
             modifier = modifier

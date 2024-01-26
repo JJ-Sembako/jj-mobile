@@ -151,4 +151,6 @@
     <string name="menu_retur">Ajukan Retur</string>
     <string name="menu_potong_nota">Ajukan Potong Nota</string>
     <string name="order_qty">x%1$d</string>
+    <string name="order_information">Informasi Pesanan</string>
+    <string name="product_detail">Detail Produk</string>
 </resources>
