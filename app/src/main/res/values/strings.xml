@@ -152,5 +152,10 @@
     <string name="menu_potong_nota">Ajukan Potong Nota</string>
     <string name="order_qty">x%1$d</string>
     <string name="order_information">Informasi Pesanan</string>
-    <string name="product_detail">Detail Produk</string>
+    <string name="ordered_product_detail">Detail Produk Pesanan</string>
+    <string name="retur_potong_nota_detail">Detail Pengajuan Retur &amp; Potong Nota</string>
+    <string name="total_price_order">Total Harga Pesanan</string>
+    <string name="final_total_price">Total Harga Akhir\n Setelah Retur dan/atau Potong Nota</string>
+    <string name="retur">Retur</string>
+    <string name="potong_nota">Potong Nota</string>
 </resources>
