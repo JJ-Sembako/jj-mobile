@@ -150,4 +150,5 @@
     <string name="menu_confirm_payment">Konfirmasi Pembayaran</string>
     <string name="menu_retur">Ajukan Retur</string>
     <string name="menu_potong_nota">Ajukan Potong Nota</string>
+    <string name="order_qty">x%1$d</string>
 </resources>
