@@ -158,4 +158,5 @@
     <string name="final_total_price">Total Harga Akhir\n Setelah Retur dan/atau Potong Nota</string>
     <string name="retur">Retur</string>
     <string name="potong_nota">Potong Nota</string>
+    <string name="replaced">Digantikan</string>
 </resources>
