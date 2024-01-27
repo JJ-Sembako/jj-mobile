@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Divider
@@ -61,8 +60,7 @@ fun ReturPotongNotaInformation(
     ) {
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
         Text(
             text = stringResource(R.string.retur_potong_nota_detail),
@@ -74,8 +72,7 @@ fun ReturPotongNotaInformation(
         )
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
 
         TabRow(selectedTabIndex = tabIndex) {
@@ -101,8 +98,7 @@ fun ReturPotongNotaInformation(
 
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
         Column(
             modifier = modifier
@@ -126,8 +122,7 @@ fun ReturPotongNotaInformation(
         }
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
     }
 }

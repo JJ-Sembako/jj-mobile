@@ -63,8 +63,7 @@ fun OrderInformation(
         )
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
         Column(
             modifier = modifier
@@ -137,8 +136,7 @@ fun OrderInformation(
         Spacer(modifier = modifier.height(8.dp))
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
         Spacer(modifier = modifier.height(8.dp))
         Row(
@@ -155,8 +153,7 @@ fun OrderInformation(
         Spacer(modifier = modifier.height(8.dp))
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
     }
 }

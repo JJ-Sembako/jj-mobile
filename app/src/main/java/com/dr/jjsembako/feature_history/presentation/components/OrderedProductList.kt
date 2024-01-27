@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,8 +37,7 @@ fun OrderedProductList(
     ) {
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
         Text(
             text = stringResource(R.string.ordered_product_detail),
@@ -51,8 +49,7 @@ fun OrderedProductList(
         )
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
 
         Column(
@@ -76,8 +73,7 @@ fun OrderedProductList(
 
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
         Column(
             modifier = modifier
@@ -99,8 +95,7 @@ fun OrderedProductList(
         }
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
     }
 }

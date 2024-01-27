@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,8 +31,7 @@ fun OrderTimestamps(modifier: Modifier) {
     ) {
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
         Spacer(modifier = modifier.height(8.dp))
         Row(
@@ -89,8 +87,7 @@ fun OrderTimestamps(modifier: Modifier) {
         Spacer(modifier = modifier.height(8.dp))
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
     }
 }
