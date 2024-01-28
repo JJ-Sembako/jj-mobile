@@ -2,6 +2,7 @@ package com.dr.jjsembako.feature_history.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,10 +11,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,12 +46,15 @@ import com.dr.jjsembako.core.utils.formatRupiah
 fun PotongNotaItem(
     modifier: Modifier
 ) {
+    val expanded = remember { mutableStateOf(false) }
+
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
     ) {
+        StatusAndOption(expanded, modifier)
         Row(
             modifier = modifier
                 .fillMaxWidth(),
@@ -51,6 +64,45 @@ fun PotongNotaItem(
             PotongNotaInfo(modifier = modifier)
         }
     }
+}
+
+@Composable
+private fun StatusAndOption(
+    expanded: MutableState<Boolean>,
+    modifier: Modifier
+) {
+    Spacer(modifier = modifier.height(8.dp))
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End
+    ) {
+        Text(
+            text = "Status",
+            fontSize = 12.sp, fontWeight = FontWeight.Normal,
+            style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
+        )
+        IconButton(onClick = { expanded.value = !expanded.value }) {
+            Icon(
+                Icons.Default.MoreVert,
+                stringResource(R.string.menu),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+        Box(modifier = modifier.padding(top = 16.dp), contentAlignment = Alignment.TopEnd) {
+            DropdownMenu(
+                modifier = modifier.width(144.dp),
+                expanded = expanded.value,
+                onDismissRequest = { expanded.value = false }) {
+                DropdownMenuItem(
+                    text = { stringResource(R.string.cancel_potong_nota) },
+                    onClick = { /*TODO*/ })
+            }
+        }
+    }
+    Spacer(modifier = modifier.height(8.dp))
 }
 
 @Composable
