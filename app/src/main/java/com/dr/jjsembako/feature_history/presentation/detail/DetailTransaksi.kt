@@ -35,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.feature_history.presentation.components.OrderInformation
+import com.dr.jjsembako.feature_history.presentation.components.detail.OrderInformation
 
 @Composable
 fun DetailTransaksi(

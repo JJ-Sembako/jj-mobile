@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.presentation.components
+package com.dr.jjsembako.feature_history.presentation.components.item_list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

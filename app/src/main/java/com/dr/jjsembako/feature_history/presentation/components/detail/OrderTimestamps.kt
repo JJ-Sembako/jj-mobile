@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.presentation.components
+package com.dr.jjsembako.feature_history.presentation.components.detail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.presentation.components
+package com.dr.jjsembako.feature_history.presentation.components.detail
 
 import android.content.Context
 import android.widget.Toast

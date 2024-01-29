@@ -1,25 +1,16 @@
-package com.dr.jjsembako.feature_history.presentation.components
+package com.dr.jjsembako.feature_history.presentation.components.detail
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,26 +23,13 @@ import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
+import com.dr.jjsembako.feature_history.presentation.components.item_list.OrderedProductItem
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ReturPotongNotaInformation(
+fun OrderedProductList(
     modifier: Modifier
 ) {
-    var tabIndex by rememberSaveable { mutableIntStateOf(0) }
-    val tabs = listOf(stringResource(R.string.retur), stringResource(R.string.potong_nota))
-    val pagerState = rememberPagerState { tabs.size }
-
-    val finalTotalPrice = 135000L
-
-    LaunchedEffect(tabIndex) {
-        pagerState.animateScrollToPage(tabIndex)
-    }
-    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-        if (!pagerState.isScrollInProgress) {
-            tabIndex = pagerState.currentPage
-        }
-    }
+    val totalPrice = 125000L
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -63,7 +41,7 @@ fun ReturPotongNotaInformation(
                 .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
         Text(
-            text = stringResource(R.string.retur_potong_nota_detail),
+            text = stringResource(R.string.ordered_product_detail),
             fontWeight = FontWeight.Bold, fontSize = 16.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
             modifier = modifier
@@ -75,25 +53,23 @@ fun ReturPotongNotaInformation(
                 .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
 
-        TabRow(selectedTabIndex = tabIndex) {
-            tabs.forEachIndexed { index, title ->
-                Tab(text = { Text(title) },
-                    selected = tabIndex == index,
-                    onClick = { tabIndex = index }
-                )
-            }
-        }
-        HorizontalPager(
-            state = pagerState,
+        Column(
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(min = 128.dp)
-        ) { index ->
-            when (index) {
-                0 -> ReturInformationContent(modifier)
-                1 -> PotongNotaInformationContent(modifier)
-                else -> {}
-            }
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            OrderedProductItem(modifier = modifier)
+            Spacer(modifier = modifier.height(8.dp))
+            OrderedProductItem(modifier = modifier)
+            Spacer(modifier = modifier.height(8.dp))
+            OrderedProductItem(modifier = modifier)
+            Spacer(modifier = modifier.height(8.dp))
+            OrderedProductItem(modifier = modifier)
+            Spacer(modifier = modifier.height(8.dp))
+            OrderedProductItem(modifier = modifier)
+            Spacer(modifier = modifier.height(8.dp))
         }
 
         Divider(
@@ -108,15 +84,13 @@ fun ReturPotongNotaInformation(
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = stringResource(R.string.final_total_price),
+                text = stringResource(R.string.total_price_order),
                 fontSize = 12.sp, fontWeight = FontWeight.Normal,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                 color = MaterialTheme.colorScheme.tertiary
             )
             Text(
-                text = formatRupiah(finalTotalPrice),
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
+                text = formatRupiah(totalPrice), fontWeight = FontWeight.Bold, fontSize = 14.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }
@@ -129,7 +103,7 @@ fun ReturPotongNotaInformation(
 
 @Composable
 @Preview(showBackground = true)
-private fun ReturPotongNotaInformationPreview() {
+private fun OrderedProductListPreview() {
     JJSembakoTheme {
         Column(
             modifier = Modifier
@@ -137,7 +111,7 @@ private fun ReturPotongNotaInformationPreview() {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ReturPotongNotaInformation(
+            OrderedProductList(
                 modifier = Modifier
             )
         }

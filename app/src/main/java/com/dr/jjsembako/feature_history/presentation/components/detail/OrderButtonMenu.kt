@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.presentation.components
+package com.dr.jjsembako.feature_history.presentation.components.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

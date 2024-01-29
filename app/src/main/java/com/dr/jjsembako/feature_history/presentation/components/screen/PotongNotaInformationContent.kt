@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.presentation.components
+package com.dr.jjsembako.feature_history.presentation.components.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,14 +10,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
-fun ReturInformationContent(
+fun PotongNotaInformationContent(
     modifier: Modifier
 ) {
 }
 
 @Composable
 @Preview(showBackground = true)
-private fun ReturInformationContentPreview() {
+private fun PotongNotaInformationContentPreview() {
     JJSembakoTheme {
         Column(
             modifier = Modifier
@@ -25,7 +25,7 @@ private fun ReturInformationContentPreview() {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ReturInformationContent(
+            PotongNotaInformationContent(
                 modifier = Modifier
             )
         }
