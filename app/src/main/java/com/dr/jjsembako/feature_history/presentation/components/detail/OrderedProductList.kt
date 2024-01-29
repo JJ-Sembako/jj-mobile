@@ -84,7 +84,7 @@ fun OrderedProductList(
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = stringResource(R.string.total_price_order),
+                text = stringResource(R.string.total_payment),
                 fontSize = 12.sp, fontWeight = FontWeight.Normal,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                 color = MaterialTheme.colorScheme.tertiary

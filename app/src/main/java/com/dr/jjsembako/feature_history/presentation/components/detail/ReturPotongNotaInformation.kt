@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -26,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,9 +87,7 @@ fun ReturPotongNotaInformation(
         }
         HorizontalPager(
             state = pagerState,
-            modifier = modifier
-                .fillMaxWidth()
-                .heightIn(min = 128.dp)
+            modifier = modifier.fillMaxWidth()
         ) { index ->
             when (index) {
                 0 -> ReturInformationContent(modifier)
@@ -111,7 +109,7 @@ fun ReturPotongNotaInformation(
         ) {
             Text(
                 text = stringResource(R.string.final_total_price),
-                fontSize = 12.sp, fontWeight = FontWeight.Normal,
+                fontSize = 12.sp, fontWeight = FontWeight.Normal, textAlign = TextAlign.Center,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                 color = MaterialTheme.colorScheme.tertiary
             )

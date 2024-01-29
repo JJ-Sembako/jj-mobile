@@ -1,6 +1,7 @@
 package com.dr.jjsembako.feature_history.presentation.components.item_list
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -85,16 +86,17 @@ private fun StatusAndOption(
             Icon(
                 Icons.Default.MoreVert,
                 stringResource(R.string.menu),
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
+                else MaterialTheme.colorScheme.tertiary,
             )
         }
         Box(modifier = modifier.padding(top = 16.dp), contentAlignment = Alignment.TopEnd) {
             DropdownMenu(
-                modifier = modifier.width(144.dp),
+                modifier = modifier.width(180.dp),
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false }) {
                 DropdownMenuItem(
-                    text = { stringResource(R.string.cancel_potong_nota) },
+                    text = { Text(text = stringResource(R.string.cancel_potong_nota)) },
                     onClick = { /*TODO*/ })
             }
         }
@@ -116,9 +118,9 @@ private fun ProductImage(
             contentScale = ContentScale.Crop,
             modifier = modifier
                 .padding(8.dp)
-                .width(60.dp)
-                .height(80.dp)
-                .clip(RoundedCornerShape(16.dp))
+                .width(30.dp)
+                .height(40.dp)
+                .clip(RoundedCornerShape(4.dp))
         )
     } else {
         AsyncImage(
@@ -128,9 +130,9 @@ private fun ProductImage(
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
                 .padding(8.dp)
-                .width(60.dp)
-                .height(80.dp)
-                .clip(RoundedCornerShape(16.dp))
+                .width(30.dp)
+                .height(40.dp)
+                .clip(RoundedCornerShape(4.dp))
         )
     }
 }
@@ -155,7 +157,9 @@ private fun PotongNotaInfo(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "-${formatRupiah(sellPrice)}", fontWeight = FontWeight.Bold, fontSize = 14.sp,
+                text = "-${formatRupiah(sellPrice)}",
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
                 color = Color.Red
             )
             Spacer(modifier = modifier.width(2.dp))

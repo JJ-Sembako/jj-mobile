@@ -66,9 +66,9 @@ private fun ProductImage(
             contentScale = ContentScale.Crop,
             modifier = modifier
                 .padding(8.dp)
-                .width(60.dp)
-                .height(80.dp)
-                .clip(RoundedCornerShape(16.dp))
+                .width(30.dp)
+                .height(40.dp)
+                .clip(RoundedCornerShape(4.dp))
         )
     } else {
         AsyncImage(
@@ -78,9 +78,9 @@ private fun ProductImage(
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
                 .padding(8.dp)
-                .width(60.dp)
-                .height(80.dp)
-                .clip(RoundedCornerShape(16.dp))
+                .width(30.dp)
+                .height(40.dp)
+                .clip(RoundedCornerShape(4.dp))
         )
     }
 }

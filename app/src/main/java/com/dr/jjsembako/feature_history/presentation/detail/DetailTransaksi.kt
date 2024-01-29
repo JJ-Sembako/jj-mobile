@@ -2,7 +2,10 @@ package com.dr.jjsembako.feature_history.presentation.detail
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -35,7 +38,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_history.presentation.components.detail.OrderButtonMenu
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderInformation
+import com.dr.jjsembako.feature_history.presentation.components.detail.OrderTimestamps
+import com.dr.jjsembako.feature_history.presentation.components.detail.OrderedProductList
+import com.dr.jjsembako.feature_history.presentation.components.detail.ReturPotongNotaInformation
+import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
+import eu.bambooapps.material3.pullrefresh.pullRefresh
+import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
+import kotlin.math.roundToInt
 
 @Composable
 fun DetailTransaksi(
@@ -66,6 +77,11 @@ private fun DetailTransaksiContent(
     val scrollState = rememberScrollState()
     var menuExpanded by remember { mutableStateOf(false) }
     val showDialog = remember { mutableStateOf(false) }
+    val isRefreshing = remember { mutableStateOf(false) }
+
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing.value,
+        onRefresh = {})
 
     Scaffold(
         topBar = {
@@ -112,16 +128,34 @@ private fun DetailTransaksiContent(
     ) { contentPadding ->
         Column(
             modifier = modifier
-                .verticalScroll(scrollState)
                 .fillMaxSize()
+                .pullRefresh(pullRefreshState)
+                .verticalScroll(scrollState)
                 .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            PullRefreshIndicator(
+                refreshing = isRefreshing.value,
+                state = pullRefreshState,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height((pullRefreshState.progress * 100).roundToInt().dp)
+            )
+
             OrderInformation(
                 context = context,
                 clipboardManager = clipboardManager,
                 modifier = modifier
             )
+            Spacer(modifier = modifier.height(16.dp))
+            OrderButtonMenu(modifier)
+            Spacer(modifier = modifier.height(16.dp))
+            OrderedProductList(modifier)
+            Spacer(modifier = modifier.height(16.dp))
+            OrderTimestamps(modifier)
+            Spacer(modifier = modifier.height(64.dp))
+            ReturPotongNotaInformation(modifier)
+            Spacer(modifier = modifier.height(16.dp))
         }
     }
 }

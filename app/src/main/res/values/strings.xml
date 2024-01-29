@@ -157,8 +157,7 @@
     <string name="order_information">Informasi Pesanan</string>
     <string name="ordered_product_detail">Detail Produk Pesanan</string>
     <string name="retur_potong_nota_detail">Detail Pengajuan Retur &amp; Potong Nota</string>
-    <string name="total_price_order">Total Harga Pesanan</string>
-    <string name="final_total_price">Total Harga Akhir\n Setelah Retur dan/atau Potong Nota</string>
+    <string name="final_total_price">Total Biaya Akhir\n Setelah Retur dan/atau Potong Nota</string>
     <string name="retur">Retur</string>
     <string name="potong_nota">Potong Nota</string>
     <string name="replaced">Digantikan</string>
