@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.presentation.components.utils.PotongNotaStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
@@ -79,11 +80,7 @@ private fun StatusAndOption(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
     ) {
-        Text(
-            text = "Status",
-            fontSize = 12.sp, fontWeight = FontWeight.Normal,
-            style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
-        )
+        PotongNotaStatus(status = 0, modifier = modifier)
         IconButton(onClick = { expanded.value = !expanded.value }) {
             Icon(
                 Icons.Default.MoreVert,
