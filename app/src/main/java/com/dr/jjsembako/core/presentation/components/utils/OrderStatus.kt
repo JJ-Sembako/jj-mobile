@@ -21,43 +21,48 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.presentation.theme.OrderDeliveredBg
-import com.dr.jjsembako.core.presentation.theme.OrderDeliveredText
-import com.dr.jjsembako.core.presentation.theme.OrderFinishedBg
-import com.dr.jjsembako.core.presentation.theme.OrderFinishedText
-import com.dr.jjsembako.core.presentation.theme.OrderPackedBg
-import com.dr.jjsembako.core.presentation.theme.OrderPackedText
-import com.dr.jjsembako.core.presentation.theme.OrderWaitConfirmBg
-import com.dr.jjsembako.core.presentation.theme.OrderWaitConfirmText
+import com.dr.jjsembako.core.presentation.theme.StatusDeliveredBg
+import com.dr.jjsembako.core.presentation.theme.StatusDeliveredText
 import com.dr.jjsembako.core.presentation.theme.StatusNotFoundBg
 import com.dr.jjsembako.core.presentation.theme.StatusNotFoundText
+import com.dr.jjsembako.core.presentation.theme.StatusPackedBg
+import com.dr.jjsembako.core.presentation.theme.StatusPackedText
+import com.dr.jjsembako.core.presentation.theme.StatusShippingBg
+import com.dr.jjsembako.core.presentation.theme.StatusWaitConfirmBg
+import com.dr.jjsembako.core.presentation.theme.StatusWaitConfirmText
+import com.dr.jjsembako.core.presentation.theme.statusShippingText
 
 @Composable
 fun OrderStatus(
     status: Int,
     modifier: Modifier
 ) {
-
     val statusText = when (status) {
-        0 -> stringResource(R.string.order_wait_confirm)
-        1 -> stringResource(R.string.order_packed)
-        2 -> stringResource(R.string.order_delivered)
-        3 -> stringResource(R.string.order_finished)
+        0 -> stringResource(R.string.status_wait_confirm)
+        1 -> stringResource(R.string.status_packed)
+        2 -> stringResource(R.string.status_shipping)
+        3 -> stringResource(R.string.status_delivered)
         else -> stringResource(R.string.status_not_found)
+    }
+    val colorBg = when (status) {
+        0 -> StatusWaitConfirmBg
+        1 -> StatusPackedBg
+        2 -> StatusShippingBg
+        3 -> StatusDeliveredBg
+        else -> StatusNotFoundBg
+    }
+    val colorText = when (status) {
+        0 -> StatusWaitConfirmText
+        1 -> StatusPackedText
+        2 -> statusShippingText
+        3 -> StatusDeliveredText
+        else -> StatusNotFoundText
     }
 
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(4.dp))
-            .background(
-                when (status) {
-                    0 -> OrderWaitConfirmBg
-                    1 -> OrderPackedBg
-                    2 -> OrderDeliveredBg
-                    3 -> OrderFinishedBg
-                    else -> StatusNotFoundBg
-                }
-            )
+            .background(colorBg)
             .padding(4.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -67,14 +72,7 @@ fun OrderStatus(
             fontWeight = FontWeight.Bold, fontSize = 12.sp,
             textAlign = TextAlign.Center,
             style = TextStyle(
-                platformStyle = PlatformTextStyle(includeFontPadding = false),
-                color = when (status) {
-                    0 -> OrderWaitConfirmText
-                    1 -> OrderPackedText
-                    2 -> OrderDeliveredText
-                    3 -> OrderFinishedText
-                    else -> StatusNotFoundText
-                }
+                platformStyle = PlatformTextStyle(includeFontPadding = false), color = colorText
             )
         )
     }

@@ -128,10 +128,11 @@
     <string name="status_not_found">Status tidak diketahui</string>
     <string name="payment_not_paid_off">Belum Lunas</string>
     <string name="payment_paid_off">Lunas</string>
-    <string name="order_wait_confirm">Menunggu Konfirmasi</string>
-    <string name="order_packed">Dikemas</string>
-    <string name="order_delivered">Dikirim</string>
-    <string name="order_finished">Selesai</string>
+    <string name="status_wait_confirm">Menunggu Konfirmasi</string>
+    <string name="status_packed">Dikemas</string>
+    <string name="status_shipping">Dikirim</string>
+    <string name="status_delivered">Diterima</string>
+    <string name="status_confirmed">Dikonfirmasi</string>
 
     <string name="id_detail">ID Pesanan</string>
     <string name="time_detail">Tanggal Pesan</string>

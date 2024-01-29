@@ -21,31 +21,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.presentation.theme.PaymentNotPaidOffBg
-import com.dr.jjsembako.core.presentation.theme.PaymentNotPaidOffText
-import com.dr.jjsembako.core.presentation.theme.PaymentPaidOffBg
-import com.dr.jjsembako.core.presentation.theme.PaymentPaidOffText
+import com.dr.jjsembako.core.presentation.theme.StatusConfirmedPotongNotaBg
+import com.dr.jjsembako.core.presentation.theme.StatusConfirmedPotongNotaText
 import com.dr.jjsembako.core.presentation.theme.StatusNotFoundBg
 import com.dr.jjsembako.core.presentation.theme.StatusNotFoundText
+import com.dr.jjsembako.core.presentation.theme.StatusWaitConfirmBg
+import com.dr.jjsembako.core.presentation.theme.StatusWaitConfirmText
 
 @Composable
-fun PaymentStatus(
+fun PotongNotaStatus(
     status: Int,
     modifier: Modifier
 ) {
     val statusText = when (status) {
-        0 -> stringResource(R.string.payment_not_paid_off)
-        1 -> stringResource(R.string.payment_paid_off)
+        0 -> stringResource(R.string.status_wait_confirm)
+        1 -> stringResource(R.string.status_confirmed)
         else -> stringResource(R.string.status_not_found)
     }
     val colorBg = when (status) {
-        0 -> PaymentNotPaidOffBg
-        1 -> PaymentPaidOffBg
+        0 -> StatusWaitConfirmBg
+        1 -> StatusConfirmedPotongNotaBg
         else -> StatusNotFoundBg
     }
     val colorText = when (status) {
-        0 -> PaymentNotPaidOffText
-        1 -> PaymentPaidOffText
+        0 -> StatusWaitConfirmText
+        1 -> StatusConfirmedPotongNotaText
         else -> StatusNotFoundText
     }
 
@@ -70,14 +70,14 @@ fun PaymentStatus(
 
 @Composable
 @Preview(showBackground = true)
-private fun PaymentStatusPreview() {
+private fun PotongNotaStatusPreview() {
     JJSembakoTheme {
         Column(
             modifier = Modifier.size(150.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            PaymentStatus(
+            PotongNotaStatus(
                 status = 0,
                 modifier = Modifier
             )
