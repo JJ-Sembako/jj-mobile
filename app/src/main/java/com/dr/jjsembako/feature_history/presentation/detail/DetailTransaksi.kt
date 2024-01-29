@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -37,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.presentation.components.dialog.OrderInformationDialog
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_history.presentation.components.detail.CustomerInformation
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderButtonMenu
@@ -76,6 +78,7 @@ private fun DetailTransaksiContent(
     modifier: Modifier
 ) {
     val scrollState = rememberScrollState()
+    val showInfoDialog = remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
     val showDialog = remember { mutableStateOf(false) }
     val isRefreshing = remember { mutableStateOf(false) }
@@ -104,6 +107,13 @@ private fun DetailTransaksiContent(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { showInfoDialog.value = !showInfoDialog.value }) {
+                        Icon(
+                            Icons.Default.Info,
+                            stringResource(R.string.info),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                     IconButton(onClick = { menuExpanded = !menuExpanded }) {
                         Icon(
                             Icons.Default.MoreVert,
@@ -159,6 +169,10 @@ private fun DetailTransaksiContent(
             Spacer(modifier = modifier.height(64.dp))
             ReturPotongNotaInformation(modifier)
             Spacer(modifier = modifier.height(16.dp))
+
+            if (showInfoDialog.value) {
+                OrderInformationDialog(showDialog = showInfoDialog, modifier = modifier)
+            }
         }
     }
 }

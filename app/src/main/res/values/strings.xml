@@ -17,6 +17,7 @@
     <string name="update">Perbarui</string>
     <string name="reload">Muat Ulang</string>
     <string name="back">Kembali</string>
+    <string name="next">Selanjutnya</string>
     <string name="edit">Edit</string>
     <string name="are_you_sure">Apakah Anda Yakin?</string>
     <string name="content_del">Aksi ini akan menghapus data secara permanen dan tidak dapat dipulihkan kembali.</string>
@@ -29,6 +30,8 @@
     <string name="clear_data">Kosongkan data</string>
     <string name="menu">Menu</string>
     <string name="alert">Peringatan</string>
+    <string name="info">Informasi</string>
+    <string name="become">Menjadi</string>
     <string name="on_progress">Dalam Proses</string>
     <string name="not_found">Data tidak ditemukan</string>
     <string name="empty_data">Data kosong</string>
@@ -117,7 +120,7 @@
     <string name="qty">Qty</string>
     <string name="price">Harga Jual</string>
     <string name="total_price">Total Harga</string>
-<!--    <string name="err_not_select_cust">Silahkan pilih pelanggan terlebih dahulu!</string>-->
+    <!--    <string name="err_not_select_cust">Silahkan pilih pelanggan terlebih dahulu!</string>-->
 
     <string name="history">Riwayat</string>
     <string name="search_transaction">Cari transaksi</string>
@@ -161,4 +164,21 @@
     <string name="retur">Retur</string>
     <string name="potong_nota">Potong Nota</string>
     <string name="replaced">Digantikan</string>
+    <string name="retur_status">Status Retur</string>
+    <string name="potong_nota_status">Status Potong Nota</string>
+    <string name="payment">Pembayaran</string>
+    <string name="retur_potong_nota_schema">Skema Retur dan Potong Nota</string>
+    <string name="info_payment">Status pembayaran tidak bisa diubah jika sudah dinyatakan lunas.
+        Jika terdapat penambahan biaya diluar biaya pesanan atau kesalahan konfirmasi maka catat
+        secara manual dan laporkan ke atasan. Selain itu, jika sudah lunas dan terjadi retur maka
+        pelanggan diharuskan membayar secara langsung saat menerima barang retur. Jika belum lunas
+        dan terjadi retur maka akan ditagih diakhir bersamaan dengan tagihan pesanan.
+    </string>
+    <string name="info_schema">Setiap pesanan yang belum lunas dapat melakukan retur dan potong nota,
+        sedangkan jika sudah lunas maka hanya bisa melakukan retur saja. Retur atau potong nota
+        hanya dapat dilakukan sekali untuk setiap barang pesanan. Jika sebuah barang sudah dilakukan
+        retur maka sudah tidak bisa dilakukan potong nota pada barang tersebut dan sebaliknya.
+        Pada retur, setiap barang yang akan diretur hanya bisa digantikan oleh satu produk
+        barang pengganti saja dan total biayanya minimal setara atau lebih mahal.
+    </string>
 </resources>
