@@ -38,5 +38,5 @@ data class DataCustomer(
     val phoneNumber: String,
 
     @field:SerializedName("debt")
-    val debt: Long? = 0
+    val debt: Long? = 0L
 )

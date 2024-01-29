@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_history.presentation.components.detail.CustomerInformation
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderButtonMenu
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderInformation
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderTimestamps
@@ -149,6 +150,8 @@ private fun DetailTransaksiContent(
             )
             Spacer(modifier = modifier.height(16.dp))
             OrderButtonMenu(modifier)
+            Spacer(modifier = modifier.height(16.dp))
+            CustomerInformation(modifier)
             Spacer(modifier = modifier.height(16.dp))
             OrderedProductList(modifier)
             Spacer(modifier = modifier.height(16.dp))

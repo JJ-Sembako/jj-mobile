@@ -40,10 +40,12 @@ fun CustomerInfo(
                 .padding(16.dp)
         ) {
             Text(
-                text = customer.shopName, fontWeight = FontWeight.Bold, fontSize = 14.sp
+                text = customer.shopName, fontWeight = FontWeight.Bold, fontSize = 14.sp,
+                style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = customer.name, fontSize = 12.sp
+                text = customer.name, fontSize = 12.sp,
+                style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
                 text = customer.phoneNumber, fontSize = 12.sp
@@ -53,7 +55,7 @@ fun CustomerInfo(
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = stringResource(R.string.total_debt, formatRupiah(customer.debt ?: 0)),
+                text = stringResource(R.string.total_debt, formatRupiah(customer.debt ?: 0L)),
                 fontSize = 12.sp
             )
         }
