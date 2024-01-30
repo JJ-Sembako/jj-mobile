@@ -58,6 +58,7 @@ fun DetailTransaksi(
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
     onNavigateToPotongNota: () -> Unit,
+    onNavigateToRetur: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     DetailTransaksiContent(
@@ -65,6 +66,8 @@ fun DetailTransaksi(
         context = context,
         clipboardManager = clipboardManager,
         onNavigateBack = { onNavigateBack() },
+        onNavigateToPotongNota = { onNavigateToPotongNota() },
+        onNavigateToRetur = { onNavigateToRetur() },
         modifier = modifier
     )
 }
@@ -76,6 +79,8 @@ private fun DetailTransaksiContent(
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
+    onNavigateToPotongNota: () -> Unit,
+    onNavigateToRetur: () -> Unit,
     modifier: Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -160,7 +165,11 @@ private fun DetailTransaksiContent(
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
-            OrderButtonMenu(modifier)
+            OrderButtonMenu(
+                onNavigateToPotongNota = { onNavigateToPotongNota() },
+                onNavigateToRetur = { onNavigateToRetur() },
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(16.dp))
             CustomerInformation(modifier)
             Spacer(modifier = modifier.height(16.dp))
@@ -188,6 +197,7 @@ private fun DetailTransaksiPreview() {
             clipboardManager = LocalClipboardManager.current,
             onNavigateBack = {},
             onNavigateToPotongNota = {},
+            onNavigateToRetur = {},
             modifier = Modifier
         )
     }

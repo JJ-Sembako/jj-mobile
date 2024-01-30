@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.presentation.potong_nota.create
+package com.dr.jjsembako.feature_history.presentation.retur.create
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
@@ -35,37 +35,41 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_history.presentation.components.PNRHeader
 import com.dr.jjsembako.feature_history.presentation.components.PNRTotalPayment
-import com.dr.jjsembako.feature_history.presentation.components.potong_nota.PNSelectedProduct
+import com.dr.jjsembako.feature_history.presentation.components.retur.RSelectedProduct
+import com.dr.jjsembako.feature_history.presentation.components.retur.RSelectedSubstitute
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 
 @Composable
-fun PotongNotaScreen(
+fun ReturScreen(
     id: String,
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
     onSelectProduct: () -> Unit,
+    onSelectSubstitute: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    PotongNotaContent(
+    ReturContent(
         id = id,
         context = context,
         clipboardManager = clipboardManager,
         onNavigateBack = { onNavigateBack() },
         onSelectProduct = { onSelectProduct() },
+        onSelectSubstitute = { onSelectSubstitute() },
         modifier = modifier
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PotongNotaContent(
+private fun ReturContent(
     id: String,
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
     onSelectProduct: () -> Unit,
+    onSelectSubstitute: () -> Unit,
     modifier: Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -84,7 +88,7 @@ private fun PotongNotaContent(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
-                title = { Text(stringResource(R.string.potong_nota)) },
+                title = { Text(stringResource(R.string.retur)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         onNavigateBack()
@@ -121,9 +125,11 @@ private fun PotongNotaContent(
         ) {
             PNRHeader(context = context, clipboardManager = clipboardManager, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
-            PNSelectedProduct(onSelectProduct = { onSelectProduct() }, modifier = modifier)
+            RSelectedProduct(onSelectProduct = { onSelectProduct() }, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
-            PNRTotalPayment(orderCost = 1_500_000L, changeCost = -125_000L, modifier = modifier)
+            RSelectedSubstitute(onSelectSubstitute = { onSelectSubstitute() }, modifier = modifier)
+            Spacer(modifier = modifier.height(16.dp))
+            PNRTotalPayment(orderCost = 1_500_000L, changeCost = 125_000L, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
         }
     }
@@ -131,14 +137,15 @@ private fun PotongNotaContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun PotongNotaScreenPreview() {
+private fun ReturScreenPreview() {
     JJSembakoTheme {
-        PotongNotaScreen(
+        ReturScreen(
             id = "123",
             context = LocalContext.current,
             clipboardManager = LocalClipboardManager.current,
             onNavigateBack = {},
-            onSelectProduct = {}
+            onSelectProduct = {},
+            onSelectSubstitute = {}
         )
     }
 }

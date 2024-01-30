@@ -36,6 +36,7 @@ import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
 import com.dr.jjsembako.feature_history.presentation.detail.DetailTransaksi
 import com.dr.jjsembako.feature_history.presentation.list.RiwayatScreen
 import com.dr.jjsembako.feature_history.presentation.potong_nota.create.PotongNotaScreen
+import com.dr.jjsembako.feature_history.presentation.retur.create.ReturScreen
 import com.dr.jjsembako.feature_home.presentation.HomeScreen
 import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananScreen
 import com.dr.jjsembako.feature_order.presentation.select_cust.PilihPelangganScreen
@@ -326,6 +327,11 @@ fun JJSembakoApp() {
                     navController.navigate(Screen.PotongNota.createRoute(id)) {
                         launchSingleTop = true
                     }
+                },
+                onNavigateToRetur = {
+                    navController.navigate(Screen.Retur.createRoute(id)) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -341,6 +347,21 @@ fun JJSembakoApp() {
                 clipboardManager = clipboardManager,
                 onNavigateBack = { navController.popBackStack() },
                 onSelectProduct = { /*TODO*/ }
+            )
+        }
+
+        composable(
+            route =Screen.Retur.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            ReturScreen(
+                id = id,
+                context = context,
+                clipboardManager = clipboardManager,
+                onNavigateBack = { navController.popBackStack() },
+                onSelectProduct = { /*TODO*/ },
+                onSelectSubstitute = { /*TODO*/ }
             )
         }
 

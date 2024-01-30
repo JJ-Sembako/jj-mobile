@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.presentation.components.potong_nota
+package com.dr.jjsembako.feature_history.presentation.components
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
@@ -28,7 +28,7 @@ import com.dr.jjsembako.core.presentation.components.card.OrderHistoryCard
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
-fun PNHeader(
+fun PNRHeader(
     context: Context,
     clipboardManager: ClipboardManager,
     modifier: Modifier
@@ -75,7 +75,7 @@ fun PNHeader(
 @Composable
 private fun PNHeaderPreview() {
     JJSembakoTheme {
-        PNHeader(
+        PNRHeader(
             context = LocalContext.current,
             clipboardManager = LocalClipboardManager.current,
             modifier = Modifier

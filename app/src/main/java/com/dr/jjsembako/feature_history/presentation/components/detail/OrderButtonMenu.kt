@@ -42,6 +42,8 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun OrderButtonMenu(
+    onNavigateToPotongNota: () -> Unit,
+    onNavigateToRetur: () -> Unit,
     modifier: Modifier
 ) {
     val menuList = listOf(
@@ -64,7 +66,9 @@ fun OrderButtonMenu(
             .padding(horizontal = 16.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -74,6 +78,8 @@ fun OrderButtonMenu(
                 menuList.take(3).forEachIndexed { index, menuInfo ->
                     MenuItem(
                         menu = menuInfo,
+                        onNavigateToPotongNota = { onNavigateToPotongNota() },
+                        onNavigateToRetur = { onNavigateToRetur() },
                         modifier = modifier
                     )
                     if (index < 2) {
@@ -88,6 +94,8 @@ fun OrderButtonMenu(
                 menuList.takeLast(3).forEachIndexed { index, menuInfo ->
                     MenuItem(
                         menu = menuInfo,
+                        onNavigateToPotongNota = { onNavigateToPotongNota() },
+                        onNavigateToRetur = { onNavigateToRetur() },
                         modifier = modifier
                     )
                     if (index < 2) {
@@ -102,6 +110,8 @@ fun OrderButtonMenu(
 @Composable
 private fun MenuItem(
     menu: MenuOrderInfo,
+    onNavigateToPotongNota: () -> Unit,
+    onNavigateToRetur: () -> Unit,
     modifier: Modifier
 ) {
     Column(
@@ -109,12 +119,18 @@ private fun MenuItem(
             .clip(RoundedCornerShape(16.dp))
             .clickable {
                 when (menu.id) {
-                    0 -> {}
-                    1 -> {}
-                    2 -> {}
-                    3 -> {}
-                    4 -> {}
-                    5 -> {}
+                    0 -> {} /* maps */
+                    1 -> {} /* call */
+                    2 -> {} /* chat WA */
+                    3 -> {} /* payment confirmation */
+                    4 -> {
+                        onNavigateToRetur()
+                    }
+
+                    5 -> {
+                        onNavigateToPotongNota()
+                    }
+
                     else -> {}
                 }
             }
@@ -153,6 +169,8 @@ private fun OrderButtonMenuPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OrderButtonMenu(
+                onNavigateToPotongNota = {},
+                onNavigateToRetur = {},
                 modifier = Modifier
             )
         }

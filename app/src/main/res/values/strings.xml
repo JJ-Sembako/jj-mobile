@@ -170,6 +170,7 @@
     <string name="replaced">Digantikan</string>
     <string name="retur_status">Status Retur</string>
     <string name="potong_nota_status">Status Potong Nota</string>
+    <string name="select_substitute">Pilih Pengganti</string>
     <string name="payment">Pembayaran</string>
     <string name="retur_potong_nota_schema">Skema Retur dan Potong Nota</string>
     <string name="info_payment">Status pembayaran tidak bisa diubah jika sudah dinyatakan lunas.
