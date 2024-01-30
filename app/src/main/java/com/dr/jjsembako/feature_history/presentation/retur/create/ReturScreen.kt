@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -37,8 +38,10 @@ import com.dr.jjsembako.feature_history.presentation.components.PNRHeader
 import com.dr.jjsembako.feature_history.presentation.components.PNRTotalPayment
 import com.dr.jjsembako.feature_history.presentation.components.retur.RSelectedProduct
 import com.dr.jjsembako.feature_history.presentation.components.retur.RSelectedSubstitute
+import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
+import kotlin.math.roundToInt
 
 @Composable
 fun ReturScreen(
@@ -123,6 +126,14 @@ private fun ReturContent(
                 .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            PullRefreshIndicator(
+                refreshing = isRefreshing.value,
+                state = pullRefreshState,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height((pullRefreshState.progress * 100).roundToInt().dp)
+            )
+
             PNRHeader(context = context, clipboardManager = clipboardManager, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
             RSelectedProduct(onSelectProduct = { onSelectProduct() }, modifier = modifier)

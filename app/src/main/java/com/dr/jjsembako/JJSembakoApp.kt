@@ -36,7 +36,10 @@ import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
 import com.dr.jjsembako.feature_history.presentation.detail.DetailTransaksi
 import com.dr.jjsembako.feature_history.presentation.list.RiwayatScreen
 import com.dr.jjsembako.feature_history.presentation.potong_nota.create.PotongNotaScreen
+import com.dr.jjsembako.feature_history.presentation.potong_nota.select_product.PilihBarangPotongNotaScreen
 import com.dr.jjsembako.feature_history.presentation.retur.create.ReturScreen
+import com.dr.jjsembako.feature_history.presentation.retur.select_product.PilihBarangReturScreen
+import com.dr.jjsembako.feature_history.presentation.retur.select_substitute.PilihPenggantiReturScreen
 import com.dr.jjsembako.feature_home.presentation.HomeScreen
 import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananScreen
 import com.dr.jjsembako.feature_order.presentation.select_cust.PilihPelangganScreen
@@ -337,7 +340,7 @@ fun JJSembakoApp() {
         }
 
         composable(
-            route =Screen.PotongNota.route,
+            route = Screen.PotongNota.route,
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
             val id = it.arguments?.getString("id") ?: ""
@@ -346,12 +349,24 @@ fun JJSembakoApp() {
                 context = context,
                 clipboardManager = clipboardManager,
                 onNavigateBack = { navController.popBackStack() },
-                onSelectProduct = { /*TODO*/ }
+                onSelectProduct = {
+                    navController.navigate(Screen.PotongNotaPilihBarang.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                }
             )
         }
 
         composable(
-            route =Screen.Retur.route,
+            route = Screen.PotongNotaPilihBarang.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            PilihBarangPotongNotaScreen(id = id, onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(
+            route = Screen.Retur.route,
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
             val id = it.arguments?.getString("id") ?: ""
@@ -360,9 +375,29 @@ fun JJSembakoApp() {
                 context = context,
                 clipboardManager = clipboardManager,
                 onNavigateBack = { navController.popBackStack() },
-                onSelectProduct = { /*TODO*/ },
-                onSelectSubstitute = { /*TODO*/ }
+                onSelectProduct = {
+                    navController.navigate(Screen.ReturPilihBarang.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
+                onSelectSubstitute = {
+                    navController.navigate(Screen.ReturPilihPengganti.route) {
+                        launchSingleTop = true
+                    }
+                }
             )
+        }
+
+        composable(
+            route = Screen.ReturPilihBarang.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            PilihBarangReturScreen(id = id, onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(route = Screen.ReturPilihPengganti.route) {
+            PilihPenggantiReturScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable(Screen.Performa.route) {
