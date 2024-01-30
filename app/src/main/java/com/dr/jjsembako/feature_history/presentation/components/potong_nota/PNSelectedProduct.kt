@@ -21,8 +21,14 @@ fun PNSelectedProduct(
     onSelectProduct: () -> Unit,
     modifier: Modifier
 ) {
-    PNRSelectProductHeader(onSelectProduct = { onSelectProduct() }, modifier = modifier)
-    PNSelectedProductContent(modifier = modifier)
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp)
+    ) {
+        PNRSelectProductHeader(onSelectProduct = { onSelectProduct() }, modifier = modifier)
+        PNSelectedProductContent(modifier = modifier)
+    }
 }
 
 @Composable

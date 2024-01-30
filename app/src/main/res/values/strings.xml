@@ -108,6 +108,9 @@
     <string name="select_payment">Pilih Metode Pembayaran</string>
     <string name="select_product">Pilih Barang</string>
     <string name="total_payment">Total Biaya Pesanan</string>
+    <string name="original_cost">Biaya Asli Pesanan</string>
+    <string name="change_cost">Perubahan Biaya</string>
+    <string name="final_cost">Biaya Akhir Pesanan</string>
 
     <string name="selected_data">Data Terpilih</string>
     <string name="selected_num">Terpilih: %1$d produk</string>
@@ -158,6 +161,7 @@
     <string name="cancel_potong_nota">Batalkan Potong Nota</string>
     <string name="order_qty">x%1$d</string>
     <string name="order_information">Informasi Pesanan</string>
+    <string name="cost_information">Informasi Biaya Pesanan</string>
     <string name="ordered_product_detail">Detail Produk Pesanan</string>
     <string name="retur_potong_nota_detail">Detail Pengajuan Retur &amp; Potong Nota</string>
     <string name="final_total_price">Total Biaya Akhir\n Setelah Retur dan/atau Potong Nota</string>

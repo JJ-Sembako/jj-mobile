@@ -57,6 +57,7 @@ fun DetailTransaksi(
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
+    onNavigateToPotongNota: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     DetailTransaksiContent(
@@ -186,6 +187,7 @@ private fun DetailTransaksiPreview() {
             context = LocalContext.current,
             clipboardManager = LocalClipboardManager.current,
             onNavigateBack = {},
+            onNavigateToPotongNota = {},
             modifier = Modifier
         )
     }

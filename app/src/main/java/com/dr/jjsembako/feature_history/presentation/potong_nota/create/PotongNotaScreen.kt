@@ -24,7 +24,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -34,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_history.presentation.components.PNRTotalPayment
 import com.dr.jjsembako.feature_history.presentation.components.potong_nota.PNHeader
 import com.dr.jjsembako.feature_history.presentation.components.potong_nota.PNSelectedProduct
 import eu.bambooapps.material3.pullrefresh.pullRefresh
@@ -41,6 +41,7 @@ import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 
 @Composable
 fun PotongNotaScreen(
+    id: String,
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
@@ -48,6 +49,7 @@ fun PotongNotaScreen(
     modifier: Modifier = Modifier
 ) {
     PotongNotaContent(
+        id = id,
         context = context,
         clipboardManager = clipboardManager,
         onNavigateBack = { onNavigateBack() },
@@ -56,9 +58,10 @@ fun PotongNotaScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PotongNotaContent(
+    id: String,
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
@@ -120,6 +123,8 @@ private fun PotongNotaContent(
             Spacer(modifier = modifier.height(16.dp))
             PNSelectedProduct(onSelectProduct = { onSelectProduct() }, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
+            PNRTotalPayment(orderCost = 1_500_000L, changeCost = 125_000L, modifier = modifier)
+            Spacer(modifier = modifier.height(16.dp))
         }
     }
 }
@@ -129,6 +134,7 @@ private fun PotongNotaContent(
 private fun PotongNotaScreenPreview() {
     JJSembakoTheme {
         PotongNotaScreen(
+            id = "123",
             context = LocalContext.current,
             clipboardManager = LocalClipboardManager.current,
             onNavigateBack = {},
