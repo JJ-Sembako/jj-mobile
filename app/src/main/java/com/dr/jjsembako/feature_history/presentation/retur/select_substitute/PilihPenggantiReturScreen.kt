@@ -105,7 +105,8 @@ private fun PilihPenggantiReturContent(
                         activeSearch.value = false
                         focusManager.clearFocus()
                     })
-                .padding(contentPadding),
+                .padding(contentPadding)
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SearchFilter(

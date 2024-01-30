@@ -58,7 +58,7 @@ private fun RSelectedSubstituteHeader(onSelectSubstitute: () -> Unit, modifier: 
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = stringResource(id = R.string.select_product), fontSize = 14.sp)
+        Text(text = stringResource(id = R.string.select_substitute), fontSize = 14.sp)
         Icon(
             Icons.Default.KeyboardArrowRight,
             contentDescription = stringResource(R.string.select_substitute)
