@@ -157,13 +157,15 @@
     <string name="menu_confirm_payment">Konfirmasi Pembayaran</string>
     <string name="menu_retur">Ajukan Retur</string>
     <string name="menu_potong_nota">Ajukan Potong Nota</string>
+    <string name="add_product_order">Tambah Barang Pesanan</string>
+    <string name="edit_product_order">Edit Barang Pesanan</string>
     <string name="del_product_order">Hapus Barang Pesanan</string>
     <string name="cancel_retur">Batalkan Retur</string>
     <string name="cancel_potong_nota">Batalkan Potong Nota</string>
     <string name="order_qty">x%1$d</string>
     <string name="order_information">Informasi Pesanan</string>
     <string name="cost_information">Informasi Biaya Pesanan</string>
-    <string name="ordered_product_detail">Detail Produk Pesanan</string>
+    <string name="ordered_product_detail">Detail Barang Pesanan</string>
     <string name="retur_potong_nota_detail">Detail Pengajuan Retur &amp; Potong Nota</string>
     <string name="final_total_price">Total Biaya Akhir\n Setelah Retur dan/atau Potong Nota</string>
     <string name="retur">Retur</string>

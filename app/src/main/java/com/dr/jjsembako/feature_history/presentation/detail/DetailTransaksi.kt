@@ -132,7 +132,11 @@ private fun DetailTransaksiContent(
                         expanded = menuExpanded,
                         onDismissRequest = { menuExpanded = false }) {
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(R.string.edit)) },
+                            text = { Text(text = stringResource(R.string.add_product_order)) },
+                            onClick = { },
+                        )
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(R.string.edit_product_order)) },
                             onClick = { },
                         )
                         DropdownMenuItem(
