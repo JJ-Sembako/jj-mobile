@@ -65,7 +65,9 @@ sealed class Screen(val route: String) {
         fun createRoute(id: String) = "riwayat/retur/pilih-barang/$id"
     }
 
-    object ReturPilihPengganti : Screen("riwayat/retur/pilih-pengganti")
+    object ReturPilihPengganti : Screen("riwayat/retur/pilih-pengganti/{id}") {
+        fun createRoute(id: String) = "riwayat/retur/pilih-pengganti/$id"
+    }
 
     object Performa : Screen("performa")
 

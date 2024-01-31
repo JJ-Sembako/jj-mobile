@@ -57,6 +57,8 @@ fun DetailTransaksi(
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
+    onNavigateToAddProductOrder: () -> Unit,
+    onNavigateToEditProductOrder: () -> Unit,
     onNavigateToPotongNota: () -> Unit,
     onNavigateToRetur: () -> Unit,
     modifier: Modifier = Modifier
@@ -66,6 +68,8 @@ fun DetailTransaksi(
         context = context,
         clipboardManager = clipboardManager,
         onNavigateBack = { onNavigateBack() },
+        onNavigateToAddProductOrder = { onNavigateToAddProductOrder() },
+        onNavigateToEditProductOrder = { onNavigateToEditProductOrder() },
         onNavigateToPotongNota = { onNavigateToPotongNota() },
         onNavigateToRetur = { onNavigateToRetur() },
         modifier = modifier
@@ -79,6 +83,8 @@ private fun DetailTransaksiContent(
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
+    onNavigateToAddProductOrder: () -> Unit,
+    onNavigateToEditProductOrder: () -> Unit,
     onNavigateToPotongNota: () -> Unit,
     onNavigateToRetur: () -> Unit,
     modifier: Modifier
@@ -133,11 +139,17 @@ private fun DetailTransaksiContent(
                         onDismissRequest = { menuExpanded = false }) {
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.add_product_order)) },
-                            onClick = { },
+                            onClick = {
+                                menuExpanded = false
+                                onNavigateToAddProductOrder()
+                            },
                         )
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.edit_product_order)) },
-                            onClick = { },
+                            onClick = {
+                                menuExpanded = false
+                                onNavigateToEditProductOrder()
+                            },
                         )
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.cancel_order)) },
@@ -200,6 +212,8 @@ private fun DetailTransaksiPreview() {
             context = LocalContext.current,
             clipboardManager = LocalClipboardManager.current,
             onNavigateBack = {},
+            onNavigateToAddProductOrder = {},
+            onNavigateToEditProductOrder = {},
             onNavigateToPotongNota = {},
             onNavigateToRetur = {},
             modifier = Modifier
