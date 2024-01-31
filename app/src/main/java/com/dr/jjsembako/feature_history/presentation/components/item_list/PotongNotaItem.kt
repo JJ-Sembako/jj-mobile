@@ -65,6 +65,7 @@ fun PotongNotaItem(
             ProductImage(modifier = modifier)
             PotongNotaInfo(modifier = modifier)
         }
+        Spacer(modifier = modifier.height(4.dp))
     }
 }
 
@@ -97,11 +98,13 @@ private fun StatusAndOption(
                 onDismissRequest = { expanded.value = false }) {
                 DropdownMenuItem(
                     text = { Text(text = stringResource(R.string.cancel_potong_nota)) },
-                    onClick = { /*TODO*/ })
+                    onClick = {
+                        expanded.value = !expanded.value
+                        /*TODO*/
+                    })
             }
         }
     }
-    Spacer(modifier = modifier.height(8.dp))
 }
 
 @Composable

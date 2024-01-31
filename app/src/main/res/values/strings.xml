@@ -157,6 +157,7 @@
     <string name="menu_confirm_payment">Konfirmasi Pembayaran</string>
     <string name="menu_retur">Ajukan Retur</string>
     <string name="menu_potong_nota">Ajukan Potong Nota</string>
+    <string name="del_product_order">Hapus Barang Pesanan</string>
     <string name="cancel_retur">Batalkan Retur</string>
     <string name="cancel_potong_nota">Batalkan Potong Nota</string>
     <string name="order_qty">x%1$d</string>

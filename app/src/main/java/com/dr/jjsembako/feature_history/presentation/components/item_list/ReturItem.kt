@@ -62,6 +62,7 @@ fun ReturItem(
         ProductOnReturnedItem(modifier)
         DividerInfo(modifier)
         ProductSubstituteItem(modifier)
+        Spacer(modifier = modifier.height(4.dp))
     }
 }
 
@@ -94,11 +95,13 @@ private fun StatusAndOption(
                 onDismissRequest = { expanded.value = false }) {
                 DropdownMenuItem(
                     text = { Text(text = stringResource(R.string.cancel_retur)) },
-                    onClick = { /*TODO*/ })
+                    onClick = {
+                        expanded.value = !expanded.value
+                        /*TODO*/
+                    })
             }
         }
     }
-    Spacer(modifier = modifier.height(8.dp))
 }
 
 @Composable
