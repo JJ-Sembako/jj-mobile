@@ -3,8 +3,11 @@ package com.dr.jjsembako.core.di
 import android.content.SharedPreferences
 import com.dr.jjsembako.BuildConfig
 import com.dr.jjsembako.core.data.remote.network.AccountApiService
+import com.dr.jjsembako.core.data.remote.network.CanceledApiService
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
+import com.dr.jjsembako.core.data.remote.network.OrderApiService
 import com.dr.jjsembako.core.data.remote.network.ProductApiService
+import com.dr.jjsembako.core.data.remote.network.ReturApiService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -86,5 +89,20 @@ class NetworkModule {
     @Provides
     fun provideProductService(retrofit: Retrofit): ProductApiService {
         return retrofit.create(ProductApiService::class.java)
+    }
+
+    @Provides
+    fun provideOrderService(retrofit: Retrofit): OrderApiService {
+        return retrofit.create(OrderApiService::class.java)
+    }
+
+    @Provides
+    fun provideReturService(retrofit: Retrofit): ReturApiService {
+        return retrofit.create(ReturApiService::class.java)
+    }
+
+    @Provides
+    fun provideCanceledService(retrofit: Retrofit): CanceledApiService {
+        return retrofit.create(CanceledApiService::class.java)
     }
 }
