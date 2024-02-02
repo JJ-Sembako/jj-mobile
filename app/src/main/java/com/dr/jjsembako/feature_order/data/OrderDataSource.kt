@@ -1,9 +1,12 @@
 package com.dr.jjsembako.feature_order.data
 
 import com.dr.jjsembako.core.common.Resource
+import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
+import com.dr.jjsembako.core.data.remote.network.OrderApiService
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.order.PostHandleCreateOrderResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +19,41 @@ import javax.inject.Inject
 
 class OrderDataSource @Inject constructor(
     private val customerApiService: CustomerApiService,
+    private val orderApiService: OrderApiService,
     private val gson: Gson
 ) {
+
+    suspend fun handleCreateOrder(
+        customerId: String,
+        products: List<OrderProduct>,
+        paymentStatus: String
+    ): Flow<Resource<out PostHandleCreateOrderResponse?>> = flow {
+        try {
+            val response = orderApiService.handleCreateOrder(customerId, products, paymentStatus)
+            emit(Resource.Success(null, response.message, response.statusCode))
+        } catch (e: CancellationException) {
+            // Do nothing, the flow is cancelled
+        } catch (e: IOException) {
+            // Handle IOException (connection issues, timeout, etc.)
+            emit(Resource.Error("Masalah jaringan koneksi internet", 408, null))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val errorResponse = e.response()?.errorBody()?.string()
+                val statusCode = e.code()
+                val errorMessage = e.message()
+
+                if (errorResponse != null) {
+                    val errorResponseObj =
+                        gson.fromJson(errorResponse, PostHandleCreateOrderResponse::class.java)
+                    emit(Resource.Error(errorResponseObj.message, statusCode, null))
+                } else {
+                    emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
+                }
+            } else {
+                emit(Resource.Error(e.message ?: "Unknown error", 400, null))
+            }
+        }
+    }.flowOn(Dispatchers.IO)
 
     suspend fun fetchDetailCustomer(id: String): Flow<Resource<out DataCustomer?>> = flow {
         try {

@@ -4,8 +4,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
+import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.order.PostHandleCreateOrderResponse
+import com.dr.jjsembako.feature_order.domain.repository.IOrderRepository
 import com.dr.jjsembako.feature_order.domain.repository.ISelectCustRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +23,7 @@ class OrderRepository @Inject constructor(
     private val orderDataSource: OrderDataSource,
     private val selectCustPagingSource: SelectCustPagingSource,
     private val gson: Gson
-) : ISelectCustRepository {
+) : ISelectCustRepository, IOrderRepository {
 
     override suspend fun fetchCustomers(searchQuery: String): Flow<PagingData<DataCustomer>> {
         return Pager(
@@ -65,6 +68,56 @@ class OrderRepository @Inject constructor(
                 if (errorResponse != null) {
                     val errorResponseObj =
                         gson.fromJson(errorResponse, GetFetchDetailCustomerResponse::class.java)
+                    emit(Resource.Error(errorResponseObj.message, statusCode, null))
+                } else {
+                    emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
+                }
+            } else {
+                emit(Resource.Error(e.message ?: "Unknown error", 400, null))
+            }
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun handleCreateOrder(
+        customerId: String,
+        products: List<OrderProduct>,
+        paymentStatus: String
+    ): Flow<Resource<out PostHandleCreateOrderResponse?>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response =
+                orderDataSource.handleCreateOrder(customerId, products, paymentStatus).first()
+
+            when (response.status) {
+                201 -> {
+                    emit(
+                        Resource.Success(
+                            null,
+                            response.message ?: "Unknown error",
+                            response.status
+                        )
+                    )
+                }
+
+                else -> {
+                    // Meneruskan pesan dan status code dari respon error
+                    emit(
+                        Resource.Error(
+                            response.message ?: "Unknown error",
+                            response.status ?: 400
+                        )
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val errorResponse = e.response()?.errorBody()?.string()
+                val statusCode = e.code()
+                val errorMessage = e.message()
+
+                if (errorResponse != null) {
+                    val errorResponseObj =
+                        gson.fromJson(errorResponse, PostHandleCreateOrderResponse::class.java)
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
