@@ -33,7 +33,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -53,10 +52,10 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
-import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
-import com.dr.jjsembako.core.presentation.components.utils.HeaderError
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
+import com.dr.jjsembako.core.presentation.components.utils.HeaderError
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_order.presentation.components.SelectCustomer
 import com.dr.jjsembako.feature_order.presentation.components.SelectPayment
@@ -155,7 +154,7 @@ private fun BuatPesananContent(
         refreshing = isRefreshing,
         onRefresh = { buatPesananViewModel.refresh() })
 
-    val selectedOption = rememberSaveable { mutableIntStateOf(payment ?: 0) }
+    val selectedOption = rememberSaveable { mutableStateOf(payment ?: paymentList[0].value) }
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
@@ -313,8 +312,8 @@ private fun BuatPesananContent(
 }
 
 private val paymentList = listOf(
-    FilterOption("Tempo", "0"),
-    FilterOption("Tunai", "1")
+    FilterOption("Tempo", "PENDING"),
+    FilterOption("Tunai", "PAID")
 )
 
 @Preview(showBackground = true)

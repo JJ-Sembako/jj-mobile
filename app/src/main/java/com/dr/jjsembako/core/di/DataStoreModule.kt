@@ -64,9 +64,9 @@ object DataStoreModule {
 
     @Singleton
     @Provides
-    fun providePaymentPreference(dataStore: DataStore<Preferences>): Flow<Int> {
+    fun providePaymentPreference(dataStore: DataStore<Preferences>): Flow<String> {
         return dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.PAYMENT] ?: 0
+            preferences[PreferencesKeys.PAYMENT] ?: "PENDING"
         }
     }
 

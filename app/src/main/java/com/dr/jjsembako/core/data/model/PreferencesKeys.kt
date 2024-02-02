@@ -1,9 +1,8 @@
 package com.dr.jjsembako.core.data.model
 
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
 object PreferencesKeys {
     val ID_CUSTOMER = stringPreferencesKey("id_customer")
-    val PAYMENT = intPreferencesKey("payment")
+    val PAYMENT = stringPreferencesKey("payment")
 }

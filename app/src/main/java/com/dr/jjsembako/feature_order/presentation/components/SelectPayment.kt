@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 fun SelectPayment(
     buatPesananViewModel: BuatPesananViewModel,
     paymentList: List<FilterOption>,
-    selectedOption: MutableState<Int>,
+    selectedOption: MutableState<String>,
     modifier: Modifier
 ) {
     Column(
@@ -79,7 +79,7 @@ private fun SelectPaymentHeader(modifier: Modifier) {
 private fun SelectPaymentContent(
     buatPesananViewModel: BuatPesananViewModel,
     paymentList: List<FilterOption>,
-    selectedOption: MutableState<Int>,
+    selectedOption: MutableState<String>,
     modifier: Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -87,20 +87,22 @@ private fun SelectPaymentContent(
     val selectedCustomer = buatPesananViewModel.selectedCustomer.observeAsState().value
 
     LaunchedEffect(Unit) {
-        if (payment != null && payment == 0) {
-            selectedOption.value = 0
-        } else if (payment != null && payment == 1) {
-            selectedOption.value = 1
+        if (payment != null && payment == paymentList[0].value) {
+            selectedOption.value = paymentList[0].value
+        } else if (payment != null && payment == paymentList[1].value) {
+            selectedOption.value = paymentList[1].value
         }
+        // set payment to tunai (PAID) if customer has debt
         if (selectedCustomer != null && selectedCustomer.debt != 0L) {
-            buatPesananViewModel.setPayment(0)
-            selectedOption.value = 0
+            buatPesananViewModel.setPayment(paymentList[1].value)
+            selectedOption.value = paymentList[1].value
         }
     }
     LaunchedEffect(selectedOption.value) {
-        if (selectedCustomer != null && selectedCustomer.debt != 0L && selectedOption.value == 1) {
-            buatPesananViewModel.setPayment(0)
-            selectedOption.value = 0
+        // set payment to tunai (PAID) if customer has debt
+        if (selectedCustomer != null && selectedCustomer.debt != 0L && selectedOption.value == paymentList[0].value) {
+            buatPesananViewModel.setPayment(paymentList[1].value)
+            selectedOption.value = paymentList[1].value
         }
     }
     LaunchedEffect(payment) {
@@ -118,26 +120,29 @@ private fun SelectPaymentContent(
                 modifier = modifier
                     .fillMaxWidth()
                     .selectable(
-                        enabled = !(selectedCustomer != null && selectedCustomer.debt != 0L && paymentOpt.name == "Tempo"),
-                        selected = (paymentOpt.value == selectedOption.value.toString()),
+                        // disable option TEMPO (PENDING) if customer data is not null & debt is not 0
+                        enabled = !(selectedCustomer != null && selectedCustomer.debt != 0L && paymentOpt.name == paymentList[0].name),
+                        selected = (paymentOpt.value == selectedOption.value),
                         onClick = {
                             if (selectedCustomer != null) {
                                 coroutineScope.launch {
-                                    if (paymentOpt.name == "Tempo") {
+                                    if (paymentOpt.name == paymentList[0].name) {
+                                        // if TEMPO (PENDING) is selected
                                         if (selectedCustomer.debt == 0L) {
-                                            buatPesananViewModel.setPayment(0)
+                                            buatPesananViewModel.setPayment(paymentList[0].value)
                                         } else {
-                                            buatPesananViewModel.setPayment(1)
+                                            buatPesananViewModel.setPayment(paymentList[1].value)
                                         }
                                     } else {
-                                        buatPesananViewModel.setPayment(paymentOpt.value.toInt())
+                                        // if TUNAI (PAID) is selected
+                                        buatPesananViewModel.setPayment(paymentList[1].value)
                                     }
                                 }
                             } else {
                                 coroutineScope.launch {
-                                    if (paymentOpt.name == "Tempo") {
-                                        buatPesananViewModel.setPayment(0)
-                                    } else buatPesananViewModel.setPayment(1)
+                                    if (paymentOpt.name == paymentList[0].name) {
+                                        buatPesananViewModel.setPayment(paymentList[0].value)
+                                    } else buatPesananViewModel.setPayment(paymentList[1].value)
                                 }
                             }
                         }
@@ -145,25 +150,29 @@ private fun SelectPaymentContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    enabled = !(selectedCustomer != null && selectedCustomer.debt != 0L && paymentOpt.name == "Tempo"),
-                    selected = (paymentOpt.value == selectedOption.value.toString()),
+                    // disable option TEMPO (PENDING) if customer data is not null & debt is not 0
+                    enabled = !(selectedCustomer != null && selectedCustomer.debt != 0L && paymentOpt.name == paymentList[0].name),
+                    selected = (paymentOpt.value == selectedOption.value),
                     onClick = {
                         if (selectedCustomer != null) {
                             coroutineScope.launch {
-                                if (paymentOpt.name == "Tempo") {
+                                if (paymentOpt.name == paymentList[0].name) {
+                                    // if TEMPO (PENDING) is selected
                                     if (selectedCustomer.debt == 0L) {
-                                        buatPesananViewModel.setPayment(0)
+                                        buatPesananViewModel.setPayment(paymentList[0].value)
                                     } else {
-                                        buatPesananViewModel.setPayment(1)
+                                        buatPesananViewModel.setPayment(paymentList[1].value)
                                     }
                                 } else {
-                                    buatPesananViewModel.setPayment(paymentOpt.value.toInt())
+                                    // if TUNAI (PAID) is selected
+                                    buatPesananViewModel.setPayment(paymentList[1].value)
                                 }
                             }
                         } else {
                             coroutineScope.launch {
-                                if (paymentOpt.name == "Tempo") buatPesananViewModel.setPayment(0)
-                                else buatPesananViewModel.setPayment(1)
+                                if (paymentOpt.name == paymentList[0].name) {
+                                    buatPesananViewModel.setPayment(paymentList[0].value)
+                                } else buatPesananViewModel.setPayment(paymentList[1].value)
                             }
                         }
                     },
@@ -189,13 +198,14 @@ private fun SelectPaymentContent(
 @Composable
 private fun SelectPaymentPreview() {
     JJSembakoTheme {
+        val payment = listOf(
+            FilterOption("Tempo", "PENDING"),
+            FilterOption("Tunai", "PAID")
+        )
         SelectPayment(
             buatPesananViewModel = hiltViewModel(),
-            paymentList = listOf(
-                FilterOption("Tempo", "0"),
-                FilterOption("Tunai", "1")
-            ),
-            selectedOption = remember { mutableIntStateOf(0) },
+            paymentList = payment,
+            selectedOption = remember { mutableStateOf(payment[0].value) },
             modifier = Modifier
         )
     }

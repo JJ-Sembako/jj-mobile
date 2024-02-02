@@ -63,8 +63,8 @@ class BuatPesananViewModel @Inject constructor(
     private val _idCustomer = MutableStateFlow("")
     val idCustomer: StateFlow<String> = _idCustomer
 
-    private val _payment = MutableStateFlow(0)
-    val payment: StateFlow<Int> = _payment
+    private val _payment = MutableStateFlow("PENDING")
+    val payment: StateFlow<String> = _payment
 
     private val _orderList = MutableStateFlow(ProductOrderList.getDefaultInstance())
     private val orderList: StateFlow<ProductOrderList> = _orderList
@@ -84,7 +84,7 @@ class BuatPesananViewModel @Inject constructor(
     fun reset() {
         viewModelScope.launch {
             setIdCustomer("")
-            setPayment(0)
+            setPayment("PENDING")
             setProductOrderList()
             _selectedCustomer.value = null
             _dataProducts.value = emptyList()
@@ -123,8 +123,8 @@ class BuatPesananViewModel @Inject constructor(
         return preferencesDataStore.data.first()[PreferencesKeys.ID_CUSTOMER] ?: ""
     }
 
-    private suspend fun getPayment(): Int {
-        return preferencesDataStore.data.first()[PreferencesKeys.PAYMENT] ?: 0
+    private suspend fun getPayment(): String {
+        return preferencesDataStore.data.first()[PreferencesKeys.PAYMENT] ?: "PENDING"
     }
 
     private suspend fun getProductOrderList(): ProductOrderList {
@@ -138,7 +138,7 @@ class BuatPesananViewModel @Inject constructor(
         _idCustomer.value = idCustomer
     }
 
-    suspend fun setPayment(payment: Int) {
+    suspend fun setPayment(payment: String) {
         preferencesDataStore.edit { preferences ->
             preferences[PreferencesKeys.PAYMENT] = payment
         }
