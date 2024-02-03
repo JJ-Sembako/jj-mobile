@@ -33,7 +33,7 @@ interface CustomerApiService {
         @Field("phone_number") phoneNumber: String
     ): PostHandleCreateCustomerResponse
 
-    @GET("customer/{id}/detail")
+    @GET("customer/{id}")
     suspend fun fetchDetailCustomer(
         @Path("id") id: String
     ): GetFetchDetailCustomerResponse
