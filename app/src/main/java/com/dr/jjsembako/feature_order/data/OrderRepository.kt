@@ -7,6 +7,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.order.DataAfterCreateOrder
 import com.dr.jjsembako.core.data.remote.response.order.PostHandleCreateOrderResponse
 import com.dr.jjsembako.feature_order.domain.repository.IOrderRepository
 import com.dr.jjsembako.feature_order.domain.repository.ISelectCustRepository
@@ -82,7 +83,7 @@ class OrderRepository @Inject constructor(
         customerId: String,
         products: List<OrderProduct>,
         paymentStatus: String
-    ): Flow<Resource<out PostHandleCreateOrderResponse?>> = flow {
+    ): Flow<Resource<out DataAfterCreateOrder?>> = flow {
         emit(Resource.Loading())
         try {
             val response =
@@ -90,9 +91,10 @@ class OrderRepository @Inject constructor(
 
             when (response.status) {
                 201 -> {
+                    val data = response.data
                     emit(
                         Resource.Success(
-                            null,
+                            data,
                             response.message ?: "Unknown error",
                             response.status
                         )

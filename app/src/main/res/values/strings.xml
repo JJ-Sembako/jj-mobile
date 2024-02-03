@@ -123,7 +123,9 @@
     <string name="qty">Qty</string>
     <string name="price">Harga Jual</string>
     <string name="total_price">Total Harga</string>
-    <!--    <string name="err_not_select_cust">Silahkan pilih pelanggan terlebih dahulu!</string>-->
+    <string name="err_order_customer">Silakan pilih pelanggan terlebih dahulu!</string>
+    <string name="err_order_payment">Pelanggan yang mempunyai utang dilarang membayar secara tempo!</string>
+    <string name="err_order_product">Silakan pilih barang pesanan terlebih dahulu!</string>
 
     <string name="history">Riwayat</string>
     <string name="search_transaction">Cari transaksi</string>

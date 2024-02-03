@@ -6,6 +6,7 @@ import com.dr.jjsembako.core.data.remote.network.CustomerApiService
 import com.dr.jjsembako.core.data.remote.network.OrderApiService
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.order.DataAfterCreateOrder
 import com.dr.jjsembako.core.data.remote.response.order.PostHandleCreateOrderResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
@@ -27,10 +28,10 @@ class OrderDataSource @Inject constructor(
         customerId: String,
         products: List<OrderProduct>,
         paymentStatus: String
-    ): Flow<Resource<out PostHandleCreateOrderResponse?>> = flow {
+    ): Flow<Resource<out DataAfterCreateOrder?>> = flow {
         try {
             val response = orderApiService.handleCreateOrder(customerId, products, paymentStatus)
-            emit(Resource.Success(null, response.message, response.statusCode))
+            emit(Resource.Success(response.data, response.message, response.statusCode))
         } catch (e: CancellationException) {
             // Do nothing, the flow is cancelled
         } catch (e: IOException) {

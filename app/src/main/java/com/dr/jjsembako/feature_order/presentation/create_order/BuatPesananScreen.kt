@@ -57,6 +57,7 @@ import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.utils.HeaderError
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_order.domain.model.ErrValidationCreateOrder
 import com.dr.jjsembako.feature_order.presentation.components.SelectCustomer
 import com.dr.jjsembako.feature_order.presentation.components.SelectPayment
 import com.dr.jjsembako.feature_order.presentation.components.SelectProduct
@@ -71,6 +72,7 @@ fun BuatPesananScreen(
     onNavigateBack: () -> Unit,
     onNavigateToSelectCustomer: () -> Unit,
     onNavigateToSelectProduct: () -> Unit,
+    onNavigateToDetailTransaction: (id: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val tag = "Buat Pesanan Screen"
@@ -85,7 +87,8 @@ fun BuatPesananScreen(
             buatPesananViewModel = buatPesananViewModel,
             onNavigateBack = { onNavigateBack() },
             onNavigateToSelectCustomer = { onNavigateToSelectCustomer() },
-            onNavigateToSelectProduct = { onNavigateToSelectProduct() }
+            onNavigateToSelectProduct = { onNavigateToSelectProduct() },
+            onNavigateToDetailTransaction = { id -> onNavigateToDetailTransaction(id) }
         )
     } else {
         LaunchedEffect(idCust) {
@@ -118,7 +121,8 @@ fun BuatPesananScreen(
                     buatPesananViewModel = buatPesananViewModel,
                     onNavigateBack = { onNavigateBack() },
                     onNavigateToSelectCustomer = { onNavigateToSelectCustomer() },
-                    onNavigateToSelectProduct = { onNavigateToSelectProduct() }
+                    onNavigateToSelectProduct = { onNavigateToSelectProduct() },
+                    onNavigateToDetailTransaction = { id -> onNavigateToDetailTransaction(id) }
                 )
             }
 
@@ -135,10 +139,13 @@ private fun BuatPesananContent(
     onNavigateBack: () -> Unit,
     onNavigateToSelectCustomer: () -> Unit,
     onNavigateToSelectProduct: () -> Unit,
+    onNavigateToDetailTransaction: (id: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val tag = "Buat Pesanan Content"
     val stateRefresh = buatPesananViewModel.stateRefresh.observeAsState().value
+    val stateCreate = buatPesananViewModel.stateCreate.observeAsState().value
+    val errValidationCreateOrder = buatPesananViewModel.errValidationCreateOrder.observeAsState().value
     val errorState = buatPesananViewModel.errorState.observeAsState().value
     val errorMsg = buatPesananViewModel.errorMsg.observeAsState().value
     val isRefreshing by buatPesananViewModel.isRefreshing.collectAsState(initial = false)
@@ -146,6 +153,7 @@ private fun BuatPesananContent(
     val statusCode = buatPesananViewModel.statusCode.observeAsState().value
     val payment = buatPesananViewModel.payment.asLiveData().observeAsState().value
     val selectedCustomer = buatPesananViewModel.selectedCustomer.observeAsState().value
+    val dataOrderId = buatPesananViewModel.dataOrderId.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -157,6 +165,8 @@ private fun BuatPesananContent(
     val selectedOption = rememberSaveable { mutableStateOf(payment ?: paymentList[0].value) }
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorValidationDialog = rememberSaveable { mutableStateOf(false) }
+    val msgErrorValidation = rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(errorState) {
         if (errorState == true && !errorMsg.isNullOrEmpty()) {
@@ -188,6 +198,53 @@ private fun BuatPesananContent(
         else -> {}
     }
 
+    when (errValidationCreateOrder) {
+        ErrValidationCreateOrder.ERR_CUSTOMER -> {
+            msgErrorValidation.value = stringResource(R.string.err_order_customer)
+            showErrorValidationDialog.value = true
+            buatPesananViewModel.setErrValidationCreateOrder(null)
+        }
+
+        ErrValidationCreateOrder.ERR_PAYMENT -> {
+            msgErrorValidation.value = stringResource(R.string.err_order_payment)
+            showErrorValidationDialog.value = true
+            buatPesananViewModel.setErrValidationCreateOrder(null)
+        }
+
+        ErrValidationCreateOrder.ERR_PRODUCT -> {
+            msgErrorValidation.value = stringResource(R.string.err_order_product)
+            showErrorValidationDialog.value = true
+            buatPesananViewModel.setErrValidationCreateOrder(null)
+        }
+
+        else -> { showErrorValidationDialog.value = false }
+    }
+
+    when (stateCreate) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateRefresh")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            buatPesananViewModel.setStateCreate(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            buatPesananViewModel.reset()
+            onNavigateToDetailTransaction(dataOrderId!!)
+        }
+
+        else -> {}
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -210,7 +267,7 @@ private fun BuatPesananContent(
                 },
                 actions = {
                     IconButton(onClick = {
-                        onNavigateBack()
+                        buatPesananViewModel.handleCreateOrder()
                         keyboardController?.hide()
                     }) {
                         Icon(
@@ -307,6 +364,14 @@ private fun BuatPesananContent(
                     modifier = modifier
                 )
             }
+
+            if (showErrorValidationDialog.value) {
+                AlertErrorDialog(
+                    message = msgErrorValidation.value,
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
         }
     }
 }
@@ -323,7 +388,8 @@ private fun BuatPesananScreenPreview() {
         BuatPesananScreen(
             onNavigateBack = {},
             onNavigateToSelectCustomer = {},
-            onNavigateToSelectProduct = {}
+            onNavigateToSelectProduct = {},
+            onNavigateToDetailTransaction = {}
         )
     }
 }

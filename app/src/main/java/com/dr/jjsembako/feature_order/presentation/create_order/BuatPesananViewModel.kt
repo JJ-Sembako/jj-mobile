@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_order.presentation.create_order
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -16,7 +17,9 @@ import com.dr.jjsembako.core.data.model.PreferencesKeys
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.utils.DataMapper
 import com.dr.jjsembako.feature_order.data.SocketOrderHandler
+import com.dr.jjsembako.feature_order.domain.model.ErrValidationCreateOrder
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
+import com.dr.jjsembako.feature_order.domain.usecase.HandleCreateOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +33,8 @@ class BuatPesananViewModel @Inject constructor(
     private val preferencesDataStore: DataStore<Preferences>,
     private val productsDataStore: DataStore<ProductOrderList>,
     private val socketOrderHandler: SocketOrderHandler,
-    private val fetchDetailSelectedCustUseCase: FetchDetailSelectedCustUseCase
+    private val fetchDetailSelectedCustUseCase: FetchDetailSelectedCustUseCase,
+    private val handleCreateOrderUseCase: HandleCreateOrderUseCase
 ) : ViewModel() {
 
     private val _state = MutableLiveData<StateResponse?>()
@@ -39,8 +43,14 @@ class BuatPesananViewModel @Inject constructor(
     private val _stateRefresh = MutableLiveData<StateResponse?>()
     val stateRefresh: LiveData<StateResponse?> = _stateRefresh
 
+    private val _stateCreate = MutableLiveData<StateResponse?>()
+    val stateCreate: LiveData<StateResponse?> = _stateCreate
+
     private val _loadingState = MutableLiveData(false)
     val loadingState: LiveData<Boolean> get() = _loadingState
+
+    private val _errValidationCreateOrder = MutableLiveData<ErrValidationCreateOrder?>()
+    val errValidationCreateOrder: LiveData<ErrValidationCreateOrder?> get() = _errValidationCreateOrder
 
     private val _errorState = MutableLiveData(false)
     val errorState: LiveData<Boolean> get() = _errorState
@@ -71,6 +81,9 @@ class BuatPesananViewModel @Inject constructor(
 
     private val _dataProducts = MutableLiveData<List<DataProductOrder?>>()
     val dataProducts: LiveData<List<DataProductOrder?>> get() = _dataProducts
+
+    private val _dataOrderId = MutableLiveData<String?>()
+    val dataOrderId: LiveData<String?> get() = _dataOrderId
 
     init {
         initSocket()
@@ -103,6 +116,14 @@ class BuatPesananViewModel @Inject constructor(
 
     fun setStateRefresh(state: StateResponse?) {
         _stateRefresh.value = state
+    }
+
+    fun setStateCreate(state: StateResponse?) {
+        _stateCreate.value = state
+    }
+
+    fun setErrValidationCreateOrder(state: ErrValidationCreateOrder?) {
+        _errValidationCreateOrder.value = state
     }
 
     private suspend fun saveProductOrderData() {
@@ -521,6 +542,44 @@ class BuatPesananViewModel @Inject constructor(
                 }
                 _errorState.value = it
                 _orderList.value = getProductOrderList()
+            }
+        }
+    }
+
+    fun handleCreateOrder(){
+        viewModelScope.launch {
+            if(idCustomer.value.isEmpty() && selectedCustomer.value?.id.isNullOrEmpty()){
+                Log.e("VM-CreateOrder", "ID OR data customer is null")
+                setErrValidationCreateOrder(ErrValidationCreateOrder.ERR_CUSTOMER)
+            } else if (selectedCustomer.value?.debt != 0L && payment.value == "PENDING"){
+                Log.e("VM-CreateOrder", "Debt is not 0 and payment is pending")
+                setErrValidationCreateOrder(ErrValidationCreateOrder.ERR_PAYMENT)
+            } else {
+                val products = DataMapper.mapListDataProductOrderStoreToListOrderProduct(orderList.value.dataList)
+                if (products.isEmpty()){
+                    Log.e("VM-CreateOrder", "Product order is empty")
+                    setErrValidationCreateOrder(ErrValidationCreateOrder.ERR_PRODUCT)
+                } else {
+                    setErrValidationCreateOrder(null)
+                    handleCreateOrderUseCase.handleCreateOrder(idCustomer.value, products, payment.value).collect {
+                        when(it){
+                            is Resource.Loading -> {
+                                _stateCreate.value = StateResponse.LOADING
+                            }
+                            is Resource.Success -> {
+                                _dataOrderId.value = it.data!!.id
+                                _stateCreate.value = StateResponse.SUCCESS
+                                _message.value = it.message
+                                _statusCode.value = it.status
+                            }
+                            is Resource.Error -> {
+                                _stateCreate.value = StateResponse.ERROR
+                                _message.value = it.message
+                                _statusCode.value = it.status
+                            }
+                        }
+                    }
+                }
             }
         }
     }

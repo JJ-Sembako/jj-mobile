@@ -3,6 +3,7 @@ package com.dr.jjsembako.core.utils
 import com.dr.jjsembako.ProductOrderStore
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.FilterOption
+import com.dr.jjsembako.core.data.model.OrderProduct
 
 object DataMapper {
     fun mapListDataCategoryToListFilterOption(data: List<String?>?): List<FilterOption?> {
@@ -40,6 +41,22 @@ object DataMapper {
                     // return value
                     productOrderStore
 
+                } else null
+            }
+        }
+    }
+
+    fun mapListDataProductOrderStoreToListOrderProduct(data: List<ProductOrderStore?>) : List<OrderProduct> {
+        return if(data.isEmpty()){
+            emptyList()
+        } else {
+            data.mapNotNull { product ->
+                if(product != null && product.orderQty != 0){
+                    OrderProduct(
+                        id = product.id,
+                        amountInUnit = product.orderQty,
+                        pricePerUnitL = product.orderPrice
+                    )
                 } else null
             }
         }

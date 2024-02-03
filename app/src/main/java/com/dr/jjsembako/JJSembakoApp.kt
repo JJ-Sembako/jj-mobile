@@ -197,7 +197,14 @@ fun JJSembakoApp() {
                     navController.navigate(Screen.BuatPesananPilihBarang.route) {
                         launchSingleTop = true
                     }
-                })
+                },
+                onNavigateToDetailTransaction = { id ->
+                    navController.navigate(Screen.DetailRiwayat.createRoute(id)) {
+                        popUpTo(Screen.BuatPesanan.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
 
         composable(Screen.BuatPesananPilihPelangan.route) {
@@ -322,12 +329,7 @@ fun JJSembakoApp() {
                 id = id,
                 context = context,
                 clipboardManager = clipboardManager,
-                onNavigateBack = {
-                    navController.navigate(Screen.Riwayat.route) {
-                        popUpTo(Screen.Riwayat.route) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                },
+                onNavigateBack = { navController.popBackStack() },
                 onNavigateToAddProductOrder = {
                     navController.navigate(Screen.TambahBarangPesanan.createRoute(id)) {
                         launchSingleTop = true
