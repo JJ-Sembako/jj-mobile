@@ -55,7 +55,7 @@ data class DetailOrderData(
 	val customer: DataCustomer,
 
 	@field:SerializedName("orderToProducts")
-	val orderToProducts: List<OrderToProductsItem>,
+	val orderToProducts: List<OrderToProductsItem2>,
 
 	@field:SerializedName("canceled")
 	val canceled: List<CanceledItem?>? = null,
@@ -75,14 +75,14 @@ data class CanceledItem(
 	@field:SerializedName("status")
 	val status: Int,
 
+	@field:SerializedName("selled_price")
+	val selledPrice: Long,
+
 	@field:SerializedName("created_at")
 	val createdAt: String,
 
 	@field:SerializedName("updated_at")
 	val updatedAt: String,
-
-	@field:SerializedName("selled_price")
-	val selledPrice: Long,
 
 	@field:SerializedName("product")
 	val product: DataProduct
@@ -99,6 +99,9 @@ data class ReturItem(
 	@field:SerializedName("status")
 	val status: Int,
 
+	@field:SerializedName("old_selled_price")
+	val oldSelledPrice: Long,
+
 	@field:SerializedName("selled_price")
 	val selledPrice: Long,
 
@@ -113,4 +116,34 @@ data class ReturItem(
 
 	@field:SerializedName("returned_product")
 	val returnedProduct: DataProduct
+)
+
+data class OrderToProductsItem2(
+
+	@field:SerializedName("id")
+	val id: String,
+
+	@field:SerializedName("amount")
+	val amount: Int,
+
+	@field:SerializedName("actual_amount")
+	val actualAmount: Int,
+
+	@field:SerializedName("is_confirmed")
+	val isConfirmed: Int,
+
+	@field:SerializedName("selled_price")
+	val selledPrice: Long,
+
+	@field:SerializedName("status")
+	val status: Int,
+
+	@field:SerializedName("created_at")
+	val createdAt: String,
+
+	@field:SerializedName("updated_at")
+	val updatedAt: String,
+
+	@field:SerializedName("product")
+	val product: DataProduct
 )

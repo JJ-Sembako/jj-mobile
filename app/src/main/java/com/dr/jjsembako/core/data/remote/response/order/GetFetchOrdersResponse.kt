@@ -87,6 +87,9 @@ data class OrderToProductsItem(
     @field:SerializedName("amount")
     val amount: Int,
 
+    @field:SerializedName("actual_amount")
+    val actualAmount: Int,
+
     @field:SerializedName("is_confirmed")
     val isConfirmed: Boolean,
 

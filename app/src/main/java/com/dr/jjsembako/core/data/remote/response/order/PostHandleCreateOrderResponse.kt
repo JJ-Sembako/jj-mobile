@@ -28,17 +28,20 @@ data class DataAfterCreateOrder(
     @field:SerializedName("customer")
     val customer: DataCustomer,
 
+    @field:SerializedName("order_status")
+    val orderStatus: Int,
+
     @field:SerializedName("payment_status")
     val paymentStatus: Int,
 
     @field:SerializedName("created_at")
     val createdAt: String,
 
-    @field:SerializedName("actual_total_price")
-    val actualTotalPrice: Long,
-
     @field:SerializedName("total_price")
     val totalPrice: Long,
+
+    @field:SerializedName("actual_total_price")
+    val actualTotalPrice: Long,
 
     @field:SerializedName("orderToProducts")
     val orderToProducts: List<OrderToProductsItem>
