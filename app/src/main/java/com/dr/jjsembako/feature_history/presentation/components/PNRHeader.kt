@@ -24,11 +24,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.core.presentation.components.card.OrderHistoryCard
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun PNRHeader(
+    data: OrderDataItem,
     context: Context,
     clipboardManager: ClipboardManager,
     modifier: Modifier
@@ -57,6 +60,7 @@ fun PNRHeader(
                 .padding(vertical = 8.dp, horizontal = 16.dp)
         ) {
             OrderHistoryCard(
+                data = data,
                 context = context,
                 onNavigateToDetail = {},
                 clipboardManager = clipboardManager,
@@ -76,6 +80,7 @@ fun PNRHeader(
 private fun PNHeaderPreview() {
     JJSembakoTheme {
         PNRHeader(
+            data = dataOrderDataItem,
             context = LocalContext.current,
             clipboardManager = LocalClipboardManager.current,
             modifier = Modifier

@@ -144,6 +144,7 @@
 
     <string name="id_detail">ID Pesanan</string>
     <string name="time_detail">Tanggal Pesan</string>
+    <string name="created_by">Dibuat: %1$s</string>
     <string name="id">#ID %1$s</string>
     <string name="copy_id">Salin ID pesanan</string>
     <string name="copied_id">ID pesanan telah tersalin</string>

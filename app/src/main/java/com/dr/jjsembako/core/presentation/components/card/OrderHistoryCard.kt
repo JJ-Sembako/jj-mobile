@@ -33,6 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.core.presentation.components.utils.OrderStatus
 import com.dr.jjsembako.core.presentation.components.utils.PaymentStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -41,12 +43,12 @@ import com.dr.jjsembako.core.utils.formatRupiah
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OrderHistoryCard(
+    data: OrderDataItem,
     context: Context,
     onNavigateToDetail: (String) -> Unit,
     clipboardManager: ClipboardManager,
     modifier: Modifier
 ) {
-    val id = "20240121-ABC123"
     val toastCopiedIdMsg = stringResource(R.string.copied_id)
 
     OutlinedCard(
@@ -55,16 +57,18 @@ fun OrderHistoryCard(
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
             .combinedClickable(
-                onClick = { onNavigateToDetail("") },
+                onClick = { onNavigateToDetail(data.id) },
                 onLongClick = {
-                    clipboardManager.setText(AnnotatedString(id))
-                    Toast.makeText(context, toastCopiedIdMsg, Toast.LENGTH_SHORT).show()
+                    clipboardManager.setText(AnnotatedString(data.invoice))
+                    Toast
+                        .makeText(context, toastCopiedIdMsg, Toast.LENGTH_SHORT)
+                        .show()
                 },
                 onLongClickLabel = toastCopiedIdMsg
             )
     ) {
         Text(
-            text = stringResource(R.string.id, id),
+            text = stringResource(R.string.id, data.invoice),
             fontWeight = FontWeight.Bold, fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
             modifier = modifier
@@ -75,22 +79,30 @@ fun OrderHistoryCard(
             modifier = modifier
                 .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
-
+        Text(
+            text = stringResource(R.string.created_by, data.account.username), fontSize = 12.sp,
+            style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
+            modifier = modifier.padding(vertical = 4.dp, horizontal = 16.dp)
+        )
+        Divider(
+            modifier = modifier
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
+        )
         Column(
             modifier = modifier
                 .padding(16.dp)
         ) {
             Text(
-                text = "Toko Aji Sakti", fontSize = 14.sp,
+                text = data.customer.shopName, fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = "Budi Waluyo", fontSize = 12.sp,
+                text = data.customer.name, fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = "Jl. Slamet Riyadi No. 46, Solo, Kota Surakarta", fontSize = 12.sp,
+                text = data.customer.address, fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }
@@ -123,7 +135,9 @@ fun OrderHistoryCard(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = formatRupiah(450000L), fontSize = 12.sp, fontWeight = FontWeight.Bold,
+                text = formatRupiah(data.totalPrice),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
@@ -146,6 +160,7 @@ private fun OrderHistoryPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OrderHistoryCard(
+                data = dataOrderDataItem,
                 context = LocalContext.current,
                 onNavigateToDetail = {},
                 clipboardManager = LocalClipboardManager.current,

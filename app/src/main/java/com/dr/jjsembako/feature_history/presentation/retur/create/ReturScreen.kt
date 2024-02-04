@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_history.presentation.components.PNRHeader
 import com.dr.jjsembako.feature_history.presentation.components.PNRTotalPayment
@@ -134,7 +135,7 @@ private fun ReturContent(
                     .height((pullRefreshState.progress * 100).roundToInt().dp)
             )
 
-            PNRHeader(context = context, clipboardManager = clipboardManager, modifier = modifier)
+            PNRHeader(data = dataOrderDataItem, context = context, clipboardManager = clipboardManager, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
             RSelectedProduct(onSelectProduct = { onSelectProduct() }, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
