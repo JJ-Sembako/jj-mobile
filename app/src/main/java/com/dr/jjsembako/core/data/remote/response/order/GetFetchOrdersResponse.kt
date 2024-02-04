@@ -31,22 +31,22 @@ data class OrderDataItem(
     val paymentStatus: Int,
 
     @field:SerializedName("total_price")
-    val totalPrice: Int,
+    val totalPrice: Long,
 
     @field:SerializedName("actual_total_price")
-    val actualTotalPrice: Int,
-
-    @field:SerializedName("deliver_at")
-    val deliverAt: String? = null,
-
-    @field:SerializedName("finished_at")
-    val finishedAt: String? = null,
+    val actualTotalPrice: Long,
 
     @field:SerializedName("created_at")
     val createdAt: String,
 
     @field:SerializedName("updated_at")
     val updatedAt: String,
+
+    @field:SerializedName("deliver_at")
+    val deliverAt: String? = null,
+
+    @field:SerializedName("finished_at")
+    val finishedAt: String? = null,
 
     @field:SerializedName("account")
     val account: Account,
@@ -78,27 +78,27 @@ data class Account(
 
 data class OrderToProductsItem(
 
+    @field:SerializedName("id")
+    val id: String,
+
     @field:SerializedName("amount")
     val amount: Int,
-
-    @field:SerializedName("product")
-    val product: DataProduct,
-
-    @field:SerializedName("updated_at")
-    val updatedAt: String,
 
     @field:SerializedName("is_confirmed")
     val isConfirmed: Boolean,
 
+    @field:SerializedName("selled_price")
+    val selledPrice: Long,
+
+    @field:SerializedName("status")
+    val status: Int,
+
     @field:SerializedName("created_at")
     val createdAt: String,
 
-    @field:SerializedName("id")
-    val id: String,
+    @field:SerializedName("updated_at")
+    val updatedAt: String,
 
-    @field:SerializedName("selled_price")
-    val selledPrice: Int,
-
-    @field:SerializedName("status")
-    val status: Int
+    @field:SerializedName("product")
+    val product: DataProduct
 )

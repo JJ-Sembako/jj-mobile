@@ -1,6 +1,7 @@
 package com.dr.jjsembako.core.data.remote.response.order
 
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 import com.google.gson.annotations.SerializedName
 
 data class GetFetchOrderResponse(
@@ -17,72 +18,99 @@ data class GetFetchOrderResponse(
 
 data class DetailOrderData(
 
-	@field:SerializedName("actual_total_price")
-	val actualTotalPrice: Int? = null,
-
-	@field:SerializedName("orderToProducts")
-	val orderToProducts: List<OrderToProductsItem2?>? = null,
-
-	@field:SerializedName("total_price")
-	val totalPrice: Int? = null,
-
-	@field:SerializedName("finished_at")
-	val finishedAt: Any? = null,
-
-	@field:SerializedName("payment_status")
-	val paymentStatus: Int? = null,
-
-	@field:SerializedName("retur")
-	val retur: List<Any?>? = null,
-
-	@field:SerializedName("created_at")
-	val createdAt: String? = null,
-
-	@field:SerializedName("deliver_at")
-	val deliverAt: Any? = null,
-
-	@field:SerializedName("order_status")
-	val orderStatus: Int? = null,
-
-	@field:SerializedName("canceled")
-	val canceled: List<Any?>? = null,
-
-	@field:SerializedName("updated_at")
-	val updatedAt: String? = null,
-
 	@field:SerializedName("id")
-	val id: String? = null,
+	val id: String,
 
 	@field:SerializedName("invoice")
-	val invoice: String? = null,
+	val invoice: String,
 
-	@field:SerializedName("account")
-	val account: Account? = null,
+	@field:SerializedName("order_status")
+	val orderStatus: Int,
 
-	@field:SerializedName("customer")
-	val customer: DataCustomer ? = null
-)
+	@field:SerializedName("payment_status")
+	val paymentStatus: Int,
 
-data class OrderToProductsItem2(
+	@field:SerializedName("total_price")
+	val totalPrice: Long,
 
-	@field:SerializedName("amount")
-	val amount: Int? = null,
-
-	@field:SerializedName("updated_at")
-	val updatedAt: String? = null,
-
-	@field:SerializedName("is_confirmed")
-	val isConfirmed: Boolean? = null,
+	@field:SerializedName("actual_total_price")
+	val actualTotalPrice: Long,
 
 	@field:SerializedName("created_at")
-	val createdAt: String? = null,
+	val createdAt: String,
+
+	@field:SerializedName("updated_at")
+	val updatedAt: String,
+
+	@field:SerializedName("deliver_at")
+	val deliverAt: String? = null,
+
+	@field:SerializedName("finished_at")
+	val finishedAt: String? = null,
+
+	@field:SerializedName("account")
+	val account: Account,
+
+	@field:SerializedName("customer")
+	val customer: DataCustomer,
+
+	@field:SerializedName("orderToProducts")
+	val orderToProducts: List<OrderToProductsItem>,
+
+	@field:SerializedName("canceled")
+	val canceled: List<CanceledItem?>? = null,
+
+	@field:SerializedName("retur")
+	val retur: List<ReturItem?>? = null
+)
+
+data class CanceledItem(
 
 	@field:SerializedName("id")
-	val id: String? = null,
+	val id: String,
 
-	@field:SerializedName("selled_price")
-	val selledPrice: Int? = null,
+	@field:SerializedName("amount")
+	val amount: Int,
 
 	@field:SerializedName("status")
-	val status: Int? = null
+	val status: Int,
+
+	@field:SerializedName("created_at")
+	val createdAt: String,
+
+	@field:SerializedName("updated_at")
+	val updatedAt: String,
+
+	@field:SerializedName("selled_price")
+	val selledPrice: Long,
+
+	@field:SerializedName("product")
+	val product: DataProduct
+)
+
+data class ReturItem(
+
+	@field:SerializedName("id")
+	val id: String,
+
+	@field:SerializedName("amount")
+	val amount: Int,
+
+	@field:SerializedName("status")
+	val status: Int,
+
+	@field:SerializedName("selled_price")
+	val selledPrice: Long,
+
+	@field:SerializedName("created_at")
+	val createdAt: String,
+
+	@field:SerializedName("updated_at")
+	val updatedAt: String,
+
+	@field:SerializedName("retured_product")
+	val returedProduct: DataProduct,
+
+	@field:SerializedName("returned_product")
+	val returnedProduct: DataProduct
 )
