@@ -24,6 +24,8 @@ import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustInte
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustInteractor
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustUseCase
+import com.dr.jjsembako.feature_order.domain.usecase.HandleCreateOrderInteractor
+import com.dr.jjsembako.feature_order.domain.usecase.HandleCreateOrderUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryInteractor
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.ChangePasswordInteractor
@@ -119,6 +121,10 @@ abstract class AppModule {
     /****************************
      * Order
      ***************************/
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleCreateOrderUseCase(handleCreateOrderInteractor: HandleCreateOrderInteractor): HandleCreateOrderUseCase
+
     @Binds
     @ViewModelScoped
     abstract fun provideFetchSelectCustUseCase(fetchSelectCustInteractor: FetchSelectCustInteractor): FetchSelectCustUseCase
