@@ -51,6 +51,7 @@ import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.DataMapper.mapOrderDataItemToDataOrderHistoryCard
 import com.dr.jjsembako.core.utils.initializeDateValues
 import com.dr.jjsembako.feature_history.presentation.components.BottomSheetHistory
 
@@ -191,7 +192,7 @@ fun RiwayatScreen(
                         ) {
                             items(orderPagingItems.itemCount) { index ->
                                 OrderHistoryCard(
-                                    data = orderPagingItems[index]!!,
+                                    data = mapOrderDataItemToDataOrderHistoryCard(orderPagingItems[index]!!),
                                     context = context,
                                     onNavigateToDetail = { id -> onNavigateToDetail(id) },
                                     clipboardManager = clipboardManager,

@@ -142,12 +142,12 @@
     <string name="status_delivered">Diterima</string>
     <string name="status_confirmed">Dikonfirmasi</string>
 
-    <string name="id_detail">ID Pesanan</string>
+    <string name="invoice_detail">Invoice Pesanan</string>
     <string name="time_detail">Tanggal Pesan</string>
     <string name="created_by">Dibuat: %1$s</string>
-    <string name="id">#ID %1$s</string>
-    <string name="copy_id">Salin ID pesanan</string>
-    <string name="copied_id">ID pesanan telah tersalin</string>
+    <string name="invoice">Invocie: %1$s</string>
+    <string name="copy_invoice">Salin Invoice pesanan</string>
+    <string name="copied_invoice">Invoice pesanan telah tersalin</string>
     <string name="time">%1$s - %2$s</string>
     <string name="det_order">Detail Transaksi</string>
     <string name="cancel_order">Batalkan Transaksi</string>

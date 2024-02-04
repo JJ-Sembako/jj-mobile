@@ -46,7 +46,7 @@ fun OrderInformation(
     modifier: Modifier
 ) {
     val id = "20240121-ABC123"
-    val toastCopiedIdMsg = stringResource(R.string.copied_id)
+    val toastCopiedIdMsg = stringResource(R.string.copied_invoice)
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -94,20 +94,20 @@ fun OrderInformation(
                     horizontalArrangement = Arrangement.Start
                 ) {
                     Text(
-                        text = stringResource(R.string.id_detail), fontSize = 12.sp,
+                        text = stringResource(R.string.invoice_detail), fontSize = 12.sp,
                         style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
                     )
                     Spacer(modifier = modifier.width(8.dp))
                     Icon(
                         Icons.Default.ContentCopy,
-                        contentDescription = stringResource(R.string.copy_id),
+                        contentDescription = stringResource(R.string.copy_invoice),
                         tint = MaterialTheme.colorScheme.tertiary,
                         modifier = modifier.size(12.dp)
                     )
                 }
                 Spacer(modifier = modifier.width(8.dp))
                 Text(
-                    text = stringResource(R.string.id, id), fontSize = 12.sp,
+                    text = stringResource(R.string.invoice, id), fontSize = 12.sp,
                     style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                     modifier = modifier.weight(1f)
                 )

@@ -34,22 +34,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
-import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.core.presentation.components.utils.OrderStatus
 import com.dr.jjsembako.core.presentation.components.utils.PaymentStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
+import com.dr.jjsembako.core.utils.toDateArray
+import com.dr.jjsembako.feature_history.domain.DataOrderHistoryCard
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OrderHistoryCard(
-    data: OrderDataItem,
+    data: DataOrderHistoryCard,
     context: Context,
     onNavigateToDetail: (String) -> Unit,
     clipboardManager: ClipboardManager,
     modifier: Modifier
 ) {
-    val toastCopiedIdMsg = stringResource(R.string.copied_id)
+    val toastCopiedIdMsg = stringResource(R.string.copied_invoice)
+    val createdDate = data.createdAt.toDateArray()
 
     OutlinedCard(
         modifier = modifier
@@ -68,7 +70,7 @@ fun OrderHistoryCard(
             )
     ) {
         Text(
-            text = stringResource(R.string.id, data.invoice),
+            text = stringResource(R.string.invoice, data.invoice),
             fontWeight = FontWeight.Bold, fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
             modifier = modifier
@@ -118,9 +120,9 @@ fun OrderHistoryCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-            PaymentStatus(status = 0, modifier = modifier)
+            PaymentStatus(status = data.paymentStatus, modifier = modifier)
             Spacer(modifier = modifier.width(8.dp))
-            OrderStatus(status = 0, modifier = modifier)
+            OrderStatus(status = data.orderStatus, modifier = modifier)
         }
 
         Divider(
@@ -141,7 +143,7 @@ fun OrderHistoryCard(
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = stringResource(R.string.time, "23 Jan 2024", "12:25"), fontSize = 12.sp,
+                text = stringResource(R.string.time, createdDate[0], createdDate[1]), fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }

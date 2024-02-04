@@ -25,13 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
-import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.core.presentation.components.card.OrderHistoryCard
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_history.domain.DataOrderHistoryCard
 
 @Composable
 fun PNRHeader(
-    data: OrderDataItem,
+    data: DataOrderHistoryCard,
     context: Context,
     clipboardManager: ClipboardManager,
     modifier: Modifier

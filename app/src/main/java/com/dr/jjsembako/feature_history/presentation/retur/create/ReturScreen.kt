@@ -135,7 +135,12 @@ private fun ReturContent(
                     .height((pullRefreshState.progress * 100).roundToInt().dp)
             )
 
-            PNRHeader(data = dataOrderDataItem, context = context, clipboardManager = clipboardManager, modifier = modifier)
+            PNRHeader(
+                data = dataOrderDataItem,
+                context = context,
+                clipboardManager = clipboardManager,
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(16.dp))
             RSelectedProduct(onSelectProduct = { onSelectProduct() }, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))

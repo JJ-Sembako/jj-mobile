@@ -11,8 +11,10 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -202,5 +204,34 @@ fun convertDateStringToCalendar(
         }
     } catch (e: Exception) {
         e.printStackTrace()
+    }
+}
+
+fun String.toDateArray(): Array<String> {
+    try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+            val dateTime = LocalDateTime.parse(this, dateTimeFormatter)
+            val monthName = dateTime.month.getDisplayName(TextStyle.SHORT, Locale("in", "ID"))
+            val day = dateTime.dayOfMonth.toString()
+            val year = dateTime.year.toString()
+            val hour = dateTime.hour.toString().padStart(2, '0')
+            val minute = dateTime.minute.toString().padStart(2, '0')
+            return arrayOf("$day $monthName $year", "$hour:$minute")
+        } else {
+            val date =
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault()).parse(this)
+            val calendar = Calendar.getInstance()
+            calendar.time = date
+            val monthName = SimpleDateFormat("MMM", Locale("in", "ID")).format(date)
+            val day = calendar.get(Calendar.DAY_OF_MONTH).toString()
+            val year = calendar.get(Calendar.YEAR).toString()
+            val hour = calendar.get(Calendar.HOUR_OF_DAY).toString().padStart(2, '0')
+            val minute = calendar.get(Calendar.MINUTE).toString().padStart(2, '0')
+            return arrayOf("$day $monthName $year", "$hour:$minute")
+        }
+    }catch (e: Exception) {
+        e.printStackTrace()
+        return arrayOf("ERR CONVERT DATE", "ERR CONVERT TIME")
     }
 }
