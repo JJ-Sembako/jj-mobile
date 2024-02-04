@@ -13,7 +13,10 @@ data class GetFetchOrdersResponse(
     val statusCode: Int,
 
     @field:SerializedName("data")
-    val data: List<OrderDataItem?>? = null
+    val data: List<OrderDataItem>? = null,
+
+    @field:SerializedName("count")
+    val count: Int? = null,
 )
 
 data class OrderDataItem(
