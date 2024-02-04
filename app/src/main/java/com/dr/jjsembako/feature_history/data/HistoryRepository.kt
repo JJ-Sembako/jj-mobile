@@ -18,7 +18,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class HistoryRepository @Inject constructor(
     private val historyDataSource: HistoryDataSource,
     private val historyPagingSource: HistoryPagingSource,
