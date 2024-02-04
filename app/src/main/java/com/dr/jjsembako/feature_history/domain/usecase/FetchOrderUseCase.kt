@@ -1,4 +1,11 @@
 package com.dr.jjsembako.feature_history.domain.usecase
 
+import com.dr.jjsembako.core.common.Resource
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
+import kotlinx.coroutines.flow.Flow
+
 interface FetchOrderUseCase {
+
+    suspend fun fetchOrder(id: String): Flow<Resource<out DetailOrderData?>>
+
 }
