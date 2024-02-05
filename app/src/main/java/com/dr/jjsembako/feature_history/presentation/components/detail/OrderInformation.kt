@@ -34,18 +34,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.presentation.components.utils.OrderStatus
 import com.dr.jjsembako.core.presentation.components.utils.PaymentStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.toDateArray
+import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OrderInformation(
+    data: DataOrderHistoryCard,
     context: Context,
     clipboardManager: ClipboardManager,
     modifier: Modifier
 ) {
-    val id = "20240121-ABC123"
+    val createdDate = data.createdAt.toDateArray()
     val toastCopiedIdMsg = stringResource(R.string.copied_invoice)
 
     Column(
@@ -75,12 +79,16 @@ fun OrderInformation(
                     .fillMaxWidth()
                     .combinedClickable(
                         onClick = {
-                            clipboardManager.setText(AnnotatedString(id))
-                            Toast.makeText(context, toastCopiedIdMsg, Toast.LENGTH_SHORT).show()
+                            clipboardManager.setText(AnnotatedString(data.invoice))
+                            Toast
+                                .makeText(context, toastCopiedIdMsg, Toast.LENGTH_SHORT)
+                                .show()
                         },
                         onLongClick = {
-                            clipboardManager.setText(AnnotatedString(id))
-                            Toast.makeText(context, toastCopiedIdMsg, Toast.LENGTH_SHORT).show()
+                            clipboardManager.setText(AnnotatedString(data.invoice))
+                            Toast
+                                .makeText(context, toastCopiedIdMsg, Toast.LENGTH_SHORT)
+                                .show()
                         },
                         onClickLabel = toastCopiedIdMsg,
                         onLongClickLabel = toastCopiedIdMsg
@@ -107,14 +115,29 @@ fun OrderInformation(
                 }
                 Spacer(modifier = modifier.width(8.dp))
                 Text(
-                    text = stringResource(R.string.invoice, id), fontSize = 12.sp,
+                    text = stringResource(R.string.invoice, data.invoice), fontSize = 12.sp,
                     style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                     modifier = modifier.weight(1f)
                 )
             }
-
             Spacer(modifier = modifier.height(8.dp))
-
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    text = stringResource(R.string.created), fontSize = 12.sp,
+                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
+                    modifier = modifier.width(88.dp)
+                )
+                Spacer(modifier = modifier.width(8.dp))
+                Text(
+                    text = data.account.username, fontSize = 12.sp,
+                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
+                )
+            }
+            Spacer(modifier = modifier.height(8.dp))
             Row(
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Top,
@@ -127,7 +150,8 @@ fun OrderInformation(
                 )
                 Spacer(modifier = modifier.width(8.dp))
                 Text(
-                    text = stringResource(R.string.time, "23 Jan 2024", "12:25"), fontSize = 12.sp,
+                    text = stringResource(R.string.time, createdDate[0], createdDate[1]),
+                    fontSize = 12.sp,
                     style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
                 )
             }
@@ -146,9 +170,9 @@ fun OrderInformation(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-            PaymentStatus(status = 0, modifier = modifier)
+            PaymentStatus(status = data.paymentStatus, modifier = modifier)
             Spacer(modifier = modifier.width(8.dp))
-            OrderStatus(status = 0, modifier = modifier)
+            OrderStatus(status = data.orderStatus, modifier = modifier)
         }
         Spacer(modifier = modifier.height(8.dp))
         Divider(
@@ -168,6 +192,7 @@ private fun OrderInformationPreview() {
                 .height(300.dp)
         ) {
             OrderInformation(
+                data = dataOrderDataItem,
                 context = LocalContext.current,
                 clipboardManager = LocalClipboardManager.current,
                 modifier = Modifier

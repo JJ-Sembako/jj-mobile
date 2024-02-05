@@ -144,6 +144,7 @@
 
     <string name="invoice_detail">Invoice Pesanan</string>
     <string name="time_detail">Tanggal Pesan</string>
+    <string name="created">Dibuat</string>
     <string name="created_by">Dibuat: %1$s</string>
     <string name="invoice">Invocie: %1$s</string>
     <string name="copy_invoice">Salin Invoice pesanan</string>

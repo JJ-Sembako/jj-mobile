@@ -1,6 +1,7 @@
 package com.dr.jjsembako.feature_history.presentation.detail
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +26,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,9 +40,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.presentation.components.dialog.OrderInformationDialog
+import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderHistoryCard
 import com.dr.jjsembako.feature_history.presentation.components.detail.CustomerInformation
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderButtonMenu
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderInformation
@@ -63,23 +72,72 @@ fun DetailTransaksi(
     onNavigateToRetur: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    DetailTransaksiContent(
-        id = "",
-        context = context,
-        clipboardManager = clipboardManager,
-        onNavigateBack = { onNavigateBack() },
-        onNavigateToAddProductOrder = { onNavigateToAddProductOrder() },
-        onNavigateToEditProductOrder = { onNavigateToEditProductOrder() },
-        onNavigateToPotongNota = { onNavigateToPotongNota() },
-        onNavigateToRetur = { onNavigateToRetur() },
-        modifier = modifier
-    )
+    val tag = "DetailTransaksi"
+    val detailTransaksiViewModel: DetailTransaksiViewModel = hiltViewModel()
+    val stateFirst = detailTransaksiViewModel.stateFirst.observeAsState().value
+    val statusCode = detailTransaksiViewModel.statusCode.observeAsState().value
+    val message = detailTransaksiViewModel.message.observeAsState().value
+    val orderData = detailTransaksiViewModel.orderData
+
+    // Set id for the first time Composable is rendered
+    LaunchedEffect(id) {
+        detailTransaksiViewModel.setId(id)
+    }
+
+    when (stateFirst) {
+        StateResponse.LOADING -> {
+            LoadingScreen(modifier = modifier)
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateFirst")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            ErrorScreen(
+                onNavigateBack = { onNavigateBack() },
+                onReload = { detailTransaksiViewModel.fetchOrder(id) },
+                message = message ?: "Unknown error",
+                modifier = modifier
+            )
+        }
+
+        StateResponse.SUCCESS -> {
+            if (orderData == null) {
+                ErrorScreen(
+                    onNavigateBack = { onNavigateBack() },
+                    onReload = { detailTransaksiViewModel.fetchOrder(id) },
+                    message = "Server Error",
+                    modifier = modifier
+                )
+            } else {
+                DetailTransaksiContent(
+                    tag = tag,
+                    id = id,
+                    orderData = orderData,
+                    context = context,
+                    clipboardManager = clipboardManager,
+                    onNavigateBack = { onNavigateBack() },
+                    onNavigateToAddProductOrder = { onNavigateToAddProductOrder() },
+                    onNavigateToEditProductOrder = { onNavigateToEditProductOrder() },
+                    onNavigateToPotongNota = { onNavigateToPotongNota() },
+                    onNavigateToRetur = { onNavigateToRetur() },
+                    modifier = modifier
+                )
+            }
+        }
+
+        else -> {}
+    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailTransaksiContent(
+    tag: String,
     id: String,
+    orderData: DetailOrderData,
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
@@ -176,6 +234,7 @@ private fun DetailTransaksiContent(
             )
 
             OrderInformation(
+                data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
                 context = context,
                 clipboardManager = clipboardManager,
                 modifier = modifier
@@ -187,7 +246,10 @@ private fun DetailTransaksiContent(
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
-            CustomerInformation(modifier)
+            CustomerInformation(
+                data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(16.dp))
             OrderedProductList(modifier)
             Spacer(modifier = modifier.height(16.dp))

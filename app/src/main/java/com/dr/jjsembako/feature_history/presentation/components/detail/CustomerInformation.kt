@@ -20,11 +20,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
+import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 
 @Composable
-fun CustomerInformation(modifier: Modifier) {
+fun CustomerInformation(data: DataOrderHistoryCard, modifier: Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -53,22 +55,22 @@ fun CustomerInformation(modifier: Modifier) {
                 .padding(vertical = 8.dp, horizontal = 16.dp)
         ) {
             Text(
-                text = "Budiono Shop", fontWeight = FontWeight.Bold, fontSize = 14.sp,
+                text = data.customer.shopName, fontWeight = FontWeight.Bold, fontSize = 14.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = "Budi", fontSize = 12.sp,
+                text = data.customer.name, fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = "08123456789", fontSize = 12.sp
+                text = data.customer.phoneNumber, fontSize = 12.sp
             )
             Text(
-                text = "Karya Angkasa Pura Jaya Karya, Surakarta, Jawa Tengah", fontSize = 12.sp,
+                text = data.customer.address, fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = stringResource(R.string.total_debt, formatRupiah(1234567890L)),
+                text = stringResource(R.string.total_debt, formatRupiah(data.customer.debt ?: 0L)),
                 fontSize = 12.sp
             )
         }
@@ -91,6 +93,7 @@ private fun CustomerInformationPreview() {
                 .height(300.dp)
         ) {
             CustomerInformation(
+                data = dataOrderDataItem,
                 modifier = Modifier
             )
         }
