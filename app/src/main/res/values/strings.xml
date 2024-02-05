@@ -20,6 +20,8 @@
     <string name="next">Selanjutnya</string>
     <string name="edit">Edit</string>
     <string name="are_you_sure">Apakah Anda Yakin?</string>
+    <string name="iam_aware">Saya sadar atas tindakan ini</string>
+    <string name="yes_sure">Ya, saya yakin!</string>
     <string name="content_del">Aksi ini akan menghapus data secara permanen dan tidak dapat dipulihkan kembali.</string>
     <string name="delete">Hapus</string>
     <string name="yes_delete">Ya, Hapus!</string>
@@ -198,5 +200,10 @@
     </string>
     <string name="info_cannot_pn">
         Tindakan potong nota tidak bisa dilakukan karena pembayaran sudah lunas!
+    </string>
+    <string name="err_payment">Pembayaran pesanan sudah lunas!</string>
+    <string name="confirm_payment">Konfirmasi pembayaran pesanan</string>
+    <string name="confirm_payment_text">
+        Konfirmasi pembayaran pesanan hanya bisa dilakukan sekali dan tidak dapat diubah kembali.
     </string>
 </resources>

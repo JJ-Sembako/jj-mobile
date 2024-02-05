@@ -54,6 +54,7 @@ import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderHistoryCard
 import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderTimestamps
+import com.dr.jjsembako.feature_history.presentation.components.PaymentDialog
 import com.dr.jjsembako.feature_history.presentation.components.detail.CustomerInformation
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderButtonMenu
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderInformation
@@ -169,6 +170,7 @@ private fun DetailTransaksiContent(
     val showInfoDialog = remember { mutableStateOf(false) }
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = remember { mutableStateOf(false) }
+    val showPaymentDialog = remember { mutableStateOf(false) }
     val showCantPNRDialog = remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
     val showDialog = remember { mutableStateOf(false) }
@@ -325,6 +327,14 @@ private fun DetailTransaksiContent(
                 AlertErrorDialog(
                     message = msgErrorPNR.value,
                     showDialog = showCantPNRDialog,
+                    modifier = modifier
+                )
+            }
+
+            if (showPaymentDialog.value) {
+                PaymentDialog(
+                    data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
+                    showDialog = showPaymentDialog,
                     modifier = modifier
                 )
             }
