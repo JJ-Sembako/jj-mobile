@@ -25,6 +25,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,11 +41,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.data.model.MenuOrderInfo
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 
 @Composable
 fun OrderButtonMenu(
+    data: DataOrderHistoryCard,
+    showCantPNRDialog: MutableState<Boolean>,
+    msgErrorPNR: MutableState<String>,
+    openMaps: (String) -> Unit,
+    call: (String) -> Unit,
+    chatWA: (String) -> Unit,
     onNavigateToPotongNota: () -> Unit,
     onNavigateToRetur: () -> Unit,
     modifier: Modifier
@@ -77,7 +89,13 @@ fun OrderButtonMenu(
             ) {
                 menuList.take(3).forEachIndexed { index, menuInfo ->
                     MenuItem(
+                        data = data,
+                        showCantPNRDialog = showCantPNRDialog,
+                        msgErrorPNR = msgErrorPNR,
                         menu = menuInfo,
+                        openMaps = { url -> openMaps(url) },
+                        call = { uri -> call(uri) },
+                        chatWA = { url -> chatWA(url) },
                         onNavigateToPotongNota = { onNavigateToPotongNota() },
                         onNavigateToRetur = { onNavigateToRetur() },
                         modifier = modifier
@@ -93,7 +111,13 @@ fun OrderButtonMenu(
             ) {
                 menuList.takeLast(3).forEachIndexed { index, menuInfo ->
                     MenuItem(
+                        data = data,
+                        showCantPNRDialog = showCantPNRDialog,
+                        msgErrorPNR = msgErrorPNR,
                         menu = menuInfo,
+                        openMaps = { url -> openMaps(url) },
+                        call = { uri -> call(uri) },
+                        chatWA = { url -> chatWA(url) },
                         onNavigateToPotongNota = { onNavigateToPotongNota() },
                         onNavigateToRetur = { onNavigateToRetur() },
                         modifier = modifier
@@ -109,26 +133,57 @@ fun OrderButtonMenu(
 
 @Composable
 private fun MenuItem(
+    data: DataOrderHistoryCard,
+    showCantPNRDialog: MutableState<Boolean>,
+    msgErrorPNR: MutableState<String>,
     menu: MenuOrderInfo,
+    openMaps: (String) -> Unit,
+    call: (String) -> Unit,
+    chatWA: (String) -> Unit,
     onNavigateToPotongNota: () -> Unit,
     onNavigateToRetur: () -> Unit,
     modifier: Modifier
 ) {
+    val msgErrorCantPNR = stringResource(R.string.info_cannot_pnr)
+    val msgErrorCantPN = stringResource(R.string.info_cannot_pn)
+
+    LaunchedEffect(Unit) {
+        msgErrorPNR.value =
+            if (data.orderStatus != 3) msgErrorCantPNR
+            else if (data.paymentStatus == 1) msgErrorCantPN
+            else ""
+    }
+
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .clickable {
                 when (menu.id) {
-                    0 -> {} /* maps */
-                    1 -> {} /* call */
-                    2 -> {} /* chat WA */
-                    3 -> {} /* payment confirmation */
-                    4 -> {
-                        onNavigateToRetur()
+                    0 -> { /* maps */
+                        openMaps(data.customer.gmapsLink)
                     }
 
-                    5 -> {
-                        onNavigateToPotongNota()
+                    1 -> { /* call */
+                        call(data.customer.phoneNumber)
+                    }
+
+                    2 -> { /* chat WA */
+                        chatWA(data.customer.phoneNumber)
+                    }
+
+                    3 -> { /* payment confirmation */
+                    }
+
+                    4 -> { /* Retur */
+                        if (data.orderStatus != 3) {
+                            showCantPNRDialog.value = true
+                        } else onNavigateToRetur()
+                    }
+
+                    5 -> { /* Potong Nota */
+                        if (data.orderStatus != 3 || data.paymentStatus == 1) {
+                            showCantPNRDialog.value = true
+                        } else onNavigateToPotongNota()
                     }
 
                     else -> {}
@@ -169,6 +224,12 @@ private fun OrderButtonMenuPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OrderButtonMenu(
+                data = dataOrderDataItem,
+                showCantPNRDialog = remember { mutableStateOf(true) },
+                msgErrorPNR = remember { mutableStateOf("") },
+                openMaps = {},
+                call = {},
+                chatWA = {},
                 onNavigateToPotongNota = {},
                 onNavigateToRetur = {},
                 modifier = Modifier

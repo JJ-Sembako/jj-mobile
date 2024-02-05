@@ -193,4 +193,10 @@
         Pada retur, setiap barang yang akan diretur hanya bisa digantikan oleh satu produk
         barang pengganti saja dan total biayanya minimal setara atau lebih mahal.
     </string>
+    <string name="info_cannot_pnr">
+        Tindakan retur atau potong nota tidak bisa dilakukan sebelum status pesanan diterima!
+    </string>
+    <string name="info_cannot_pn">
+        Tindakan potong nota tidak bisa dilakukan karena pembayaran sudah lunas!
+    </string>
 </resources>

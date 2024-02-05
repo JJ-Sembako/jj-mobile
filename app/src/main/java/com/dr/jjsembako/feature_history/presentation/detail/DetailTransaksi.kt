@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.OrderInformationDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
@@ -65,6 +67,9 @@ fun DetailTransaksi(
     id: String,
     context: Context,
     clipboardManager: ClipboardManager,
+    openMaps: (String) -> Unit,
+    call: (String) -> Unit,
+    chatWA: (String) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToAddProductOrder: () -> Unit,
     onNavigateToEditProductOrder: () -> Unit,
@@ -117,6 +122,9 @@ fun DetailTransaksi(
                     orderData = orderData,
                     context = context,
                     clipboardManager = clipboardManager,
+                    openMaps = { url -> openMaps(url) },
+                    call = { uri -> call(uri) },
+                    chatWA = { url -> chatWA(url) },
                     onNavigateBack = { onNavigateBack() },
                     onNavigateToAddProductOrder = { onNavigateToAddProductOrder() },
                     onNavigateToEditProductOrder = { onNavigateToEditProductOrder() },
@@ -140,6 +148,9 @@ private fun DetailTransaksiContent(
     orderData: DetailOrderData,
     context: Context,
     clipboardManager: ClipboardManager,
+    openMaps: (String) -> Unit,
+    call: (String) -> Unit,
+    chatWA: (String) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToAddProductOrder: () -> Unit,
     onNavigateToEditProductOrder: () -> Unit,
@@ -149,9 +160,13 @@ private fun DetailTransaksiContent(
 ) {
     val scrollState = rememberScrollState()
     val showInfoDialog = remember { mutableStateOf(false) }
+    val showErrorDialog = remember { mutableStateOf(false) }
+    val showCantPNRDialog = remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
     val showDialog = remember { mutableStateOf(false) }
     val isRefreshing = remember { mutableStateOf(false) }
+
+    val msgErrorPNR = rememberSaveable { mutableStateOf("") }
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing.value,
@@ -241,6 +256,12 @@ private fun DetailTransaksiContent(
             )
             Spacer(modifier = modifier.height(16.dp))
             OrderButtonMenu(
+                data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
+                showCantPNRDialog = showCantPNRDialog,
+                msgErrorPNR = msgErrorPNR,
+                openMaps = { url -> openMaps(url) },
+                call = { uri -> call(uri) },
+                chatWA = { url -> chatWA(url) },
                 onNavigateToPotongNota = { onNavigateToPotongNota() },
                 onNavigateToRetur = { onNavigateToRetur() },
                 modifier = modifier
@@ -261,6 +282,14 @@ private fun DetailTransaksiContent(
             if (showInfoDialog.value) {
                 OrderInformationDialog(showDialog = showInfoDialog, modifier = modifier)
             }
+
+            if (showCantPNRDialog.value) {
+                AlertErrorDialog(
+                    message = msgErrorPNR.value,
+                    showDialog = showCantPNRDialog,
+                    modifier = modifier
+                )
+            }
         }
     }
 }
@@ -273,6 +302,9 @@ private fun DetailTransaksiPreview() {
             id = "",
             context = LocalContext.current,
             clipboardManager = LocalClipboardManager.current,
+            openMaps = {},
+            call = {},
+            chatWA = {},
             onNavigateBack = {},
             onNavigateToAddProductOrder = {},
             onNavigateToEditProductOrder = {},

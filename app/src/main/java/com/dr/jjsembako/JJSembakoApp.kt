@@ -329,6 +329,9 @@ fun JJSembakoApp() {
                 id = id,
                 context = context,
                 clipboardManager = clipboardManager,
+                openMaps = { url -> openMaps(context, url) },
+                call = { uri -> call(context, uri) },
+                chatWA = { url -> chatWA(context, url) },
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToAddProductOrder = {
                     navController.navigate(Screen.TambahBarangPesanan.createRoute(id)) {
