@@ -27,7 +27,7 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.presentation.components.card.OrderHistoryCard
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.feature_history.domain.DataOrderHistoryCard
+import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 
 @Composable
 fun PNRHeader(

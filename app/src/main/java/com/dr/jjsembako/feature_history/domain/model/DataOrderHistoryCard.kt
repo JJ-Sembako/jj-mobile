@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.domain
+package com.dr.jjsembako.feature_history.domain.model
 
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.order.Account

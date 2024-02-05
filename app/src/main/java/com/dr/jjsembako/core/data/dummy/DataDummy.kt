@@ -2,7 +2,7 @@ package com.dr.jjsembako.core.data.dummy
 
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.order.Account
-import com.dr.jjsembako.feature_history.domain.DataOrderHistoryCard
+import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 
 val dataOrderDataItem = DataOrderHistoryCard(
     id = "123",

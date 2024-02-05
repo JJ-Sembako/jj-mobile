@@ -6,7 +6,7 @@ import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
-import com.dr.jjsembako.feature_history.domain.DataOrderHistoryCard
+import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 
 object DataMapper {
     fun mapListDataCategoryToListFilterOption(data: List<String?>?): List<FilterOption?> {
