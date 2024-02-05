@@ -9,6 +9,9 @@ import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.feature_history.domain.usecase.FetchOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +22,12 @@ class DetailTransaksiViewModel @Inject constructor(
 
     private val _stateFirst = MutableLiveData<StateResponse?>()
     val stateFirst: LiveData<StateResponse?> = _stateFirst
+
+    private val _stateRefresh = MutableLiveData<StateResponse?>()
+    val stateRefresh: LiveData<StateResponse?> = _stateRefresh
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
     private val _statusCode = MutableLiveData<Int?>()
     val statusCode: LiveData<Int?> = _statusCode
@@ -35,7 +44,16 @@ class DetailTransaksiViewModel @Inject constructor(
         init()
     }
 
+    fun setStateRefresh(state: StateResponse?) {
+        _stateRefresh.value = state
+    }
+
     private fun init() {
+        val id = _id ?: return
+        fetchOrder(id)
+    }
+
+    fun refresh() {
         val id = _id ?: return
         fetchOrder(id)
     }
@@ -44,16 +62,22 @@ class DetailTransaksiViewModel @Inject constructor(
         viewModelScope.launch {
             fetchOrderUseCase.fetchOrder(id).collect {
                 when (it) {
-                    is Resource.Loading -> _stateFirst.value = StateResponse.LOADING
+                    is Resource.Loading -> {
+                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.LOADING
+                        else _stateRefresh.value = StateResponse.LOADING
+                    }
+
                     is Resource.Success -> {
-                        _stateFirst.value = StateResponse.SUCCESS
+                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.SUCCESS
+                        else _stateRefresh.value = StateResponse.SUCCESS
                         _message.value = it.message
                         _statusCode.value = it.status
                         _orderData.value = it.data
                     }
 
                     is Resource.Error -> {
-                        _stateFirst.value = StateResponse.ERROR
+                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.ERROR
+                        else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
                     }

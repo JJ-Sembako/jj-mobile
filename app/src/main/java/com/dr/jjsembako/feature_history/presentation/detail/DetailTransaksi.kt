@@ -27,6 +27,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +47,7 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.dialog.OrderInformationDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
@@ -77,7 +79,7 @@ fun DetailTransaksi(
     onNavigateToRetur: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val tag = "DetailTransaksi"
+    val tag = "DetailTransaksi-S"
     val detailTransaksiViewModel: DetailTransaksiViewModel = hiltViewModel()
     val stateFirst = detailTransaksiViewModel.stateFirst.observeAsState().value
     val statusCode = detailTransaksiViewModel.statusCode.observeAsState().value
@@ -117,8 +119,6 @@ fun DetailTransaksi(
                 )
             } else {
                 DetailTransaksiContent(
-                    tag = tag,
-                    id = id,
                     orderData = orderData,
                     context = context,
                     clipboardManager = clipboardManager,
@@ -130,6 +130,7 @@ fun DetailTransaksi(
                     onNavigateToEditProductOrder = { onNavigateToEditProductOrder() },
                     onNavigateToPotongNota = { onNavigateToPotongNota() },
                     onNavigateToRetur = { onNavigateToRetur() },
+                    detailTransaksiViewModel = detailTransaksiViewModel,
                     modifier = modifier
                 )
             }
@@ -143,8 +144,6 @@ fun DetailTransaksi(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailTransaksiContent(
-    tag: String,
-    id: String,
     orderData: DetailOrderData,
     context: Context,
     clipboardManager: ClipboardManager,
@@ -156,21 +155,52 @@ private fun DetailTransaksiContent(
     onNavigateToEditProductOrder: () -> Unit,
     onNavigateToPotongNota: () -> Unit,
     onNavigateToRetur: () -> Unit,
+    detailTransaksiViewModel: DetailTransaksiViewModel,
     modifier: Modifier
 ) {
+    val tag = "DetailTransaksi-C"
+    val stateRefresh = detailTransaksiViewModel.stateRefresh.observeAsState().value
+    val isRefreshing by detailTransaksiViewModel.isRefreshing.collectAsState(initial = false)
+    val message = detailTransaksiViewModel.message.observeAsState().value
+    val statusCode = detailTransaksiViewModel.statusCode.observeAsState().value
+
     val scrollState = rememberScrollState()
     val showInfoDialog = remember { mutableStateOf(false) }
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = remember { mutableStateOf(false) }
     val showCantPNRDialog = remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
     val showDialog = remember { mutableStateOf(false) }
-    val isRefreshing = remember { mutableStateOf(false) }
 
     val msgErrorPNR = rememberSaveable { mutableStateOf("") }
 
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing.value,
-        onRefresh = {})
+        refreshing = isRefreshing,
+        onRefresh = { detailTransaksiViewModel.refresh() })
+
+    when (stateRefresh) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateRefresh")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            detailTransaksiViewModel.setStateRefresh(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            detailTransaksiViewModel.setStateRefresh(null)
+        }
+
+        else -> {}
+    }
 
     Scaffold(
         topBar = {
@@ -241,7 +271,7 @@ private fun DetailTransaksiContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             PullRefreshIndicator(
-                refreshing = isRefreshing.value,
+                refreshing = isRefreshing,
                 state = pullRefreshState,
                 modifier = modifier
                     .fillMaxWidth()
@@ -278,6 +308,10 @@ private fun DetailTransaksiContent(
             Spacer(modifier = modifier.height(64.dp))
             ReturPotongNotaInformation(modifier)
             Spacer(modifier = modifier.height(16.dp))
+
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
 
             if (showInfoDialog.value) {
                 OrderInformationDialog(showDialog = showInfoDialog, modifier = modifier)
