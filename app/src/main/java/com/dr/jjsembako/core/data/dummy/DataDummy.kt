@@ -3,6 +3,7 @@ package com.dr.jjsembako.core.data.dummy
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.order.Account
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
+import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
 
 val dataOrderDataItem = DataOrderHistoryCard(
     id = "123",
@@ -24,4 +25,11 @@ val dataOrderDataItem = DataOrderHistoryCard(
         gmapsLink = "https://maps.app.goo.gl/7kj9ocXFyNB6SspT8",
         phoneNumber = "085225213456"
     )
+)
+
+val dataOrderTimestamps = DataOrderTimestamps(
+    createdAt = "2024-01-23T12:25:00.000Z",
+    updatedAt = "2024-02-04T23:16:57.000Z",
+    deliverAt = "2024-02-04T23:16:57.000Z",
+    finishedAt = "2024-02-04T23:16:57.000Z"
 )

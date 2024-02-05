@@ -7,6 +7,7 @@ import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
+import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
 
 object DataMapper {
     fun mapListDataCategoryToListFilterOption(data: List<String?>?): List<FilterOption?> {
@@ -88,6 +89,15 @@ object DataMapper {
             createdAt = data.createdAt,
             account = data.account,
             customer = data.customer
+        )
+    }
+
+    fun mapDetailOrderDataToDataOrderTimestamps(data: DetailOrderData): DataOrderTimestamps {
+        return DataOrderTimestamps(
+            createdAt = data.createdAt,
+            updatedAt = data.updatedAt,
+            deliverAt = data.deliverAt,
+            finishedAt = data.finishedAt
         )
     }
 }

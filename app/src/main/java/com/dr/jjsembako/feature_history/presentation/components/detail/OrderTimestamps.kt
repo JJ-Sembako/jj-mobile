@@ -20,10 +20,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataOrderTimestamps
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.toDateArray
+import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
 
 @Composable
-fun OrderTimestamps(modifier: Modifier) {
+fun OrderTimestamps(data: DataOrderTimestamps, modifier: Modifier) {
+    val createdDate = data.createdAt.toDateArray()
+    val deliverDate =
+        if (!data.deliverAt.isNullOrEmpty()) data.deliverAt.toDateArray() else arrayOf("", "")
+    val finishedDate =
+        if (!data.finishedAt.isNullOrEmpty()) data.finishedAt.toDateArray() else arrayOf("", "")
+
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -46,7 +55,7 @@ fun OrderTimestamps(modifier: Modifier) {
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = "04-03-2023 15:25", fontSize = 12.sp,
+                text = "${createdDate[0]} ${createdDate[1]}", fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }
@@ -63,7 +72,7 @@ fun OrderTimestamps(modifier: Modifier) {
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = "06-03-2023 18:41", fontSize = 12.sp,
+                text = "$deliverDate[0]} ${deliverDate[1]}", fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }
@@ -80,7 +89,7 @@ fun OrderTimestamps(modifier: Modifier) {
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = "07-03-2023 17:11", fontSize = 12.sp,
+                text = "${finishedDate[0]} ${finishedDate[1]}", fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }
@@ -102,6 +111,7 @@ private fun OrderTimestampsPreview() {
                 .height(300.dp)
         ) {
             OrderTimestamps(
+                data = dataOrderTimestamps,
                 modifier = Modifier
             )
         }

@@ -53,6 +53,7 @@ import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderHistoryCard
+import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderTimestamps
 import com.dr.jjsembako.feature_history.presentation.components.detail.CustomerInformation
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderButtonMenu
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderInformation
@@ -304,7 +305,10 @@ private fun DetailTransaksiContent(
             Spacer(modifier = modifier.height(16.dp))
             OrderedProductList(modifier)
             Spacer(modifier = modifier.height(16.dp))
-            OrderTimestamps(modifier)
+            OrderTimestamps(
+                data = mapDetailOrderDataToDataOrderTimestamps(orderData),
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(64.dp))
             ReturPotongNotaInformation(modifier)
             Spacer(modifier = modifier.height(16.dp))
