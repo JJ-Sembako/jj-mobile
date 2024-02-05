@@ -2,6 +2,8 @@ package com.dr.jjsembako.core.data.dummy
 
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.order.Account
+import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
+import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
 
@@ -32,4 +34,49 @@ val dataOrderTimestamps = DataOrderTimestamps(
     updatedAt = "2024-02-04T23:16:57.000Z",
     deliverAt = "2024-02-04T23:16:57.000Z",
     finishedAt = "2024-02-04T23:16:57.000Z"
+)
+
+val dataOrderToProductsItem = listOf(
+    OrderToProductsItem(
+        id = "9be23a7a-ef7a-4299-92af-29ff955d9cf2",
+        amount = 3,
+        actualAmount = 1,
+        selledPrice = 26000L,
+        status = 1,
+        createdAt = "2023-12-24T01:38:25.095Z",
+        updatedAt = "2024-02-04T23:54:00.986Z",
+        product = DataProduct(
+            id = "9be23a7a-ef7a-4299-92af-29ff955d9cf2",
+            name = "Tepung Norin",
+            stockInPcs = 90,
+            stockInUnit = 15,
+            stockInPcsRemaining = 0,
+            standardPrice = 23000L,
+            amountPerUnit = 6,
+            image = "http://54.251.20.182/img/default.png",
+            unit = "Karung",
+            category = "Tepung"
+        )
+    ),
+    OrderToProductsItem(
+        id = "aeb8bbef-1b53-4b96-ad39-904aecca0852",
+        amount = 3,
+        actualAmount = 2,
+        selledPrice = 45000L,
+        status = 2,
+        createdAt = "2023-12-24T01:38:25.095Z",
+        updatedAt = "2024-02-04T23:54:00.986Z",
+        product = DataProduct(
+            id = "aeb8bbef-1b53-4b96-ad39-904aecca0852",
+            name = "Air Cahaya",
+            stockInPcs = 168,
+            stockInUnit = 7,
+            stockInPcsRemaining = 0,
+            standardPrice = 42000L,
+            amountPerUnit = 24,
+            image = "http://54.251.20.182/img/default.png",
+            unit = "Karton",
+            category = "Air Mineral"
+        )
+    )
 )

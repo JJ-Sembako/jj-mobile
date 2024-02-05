@@ -39,11 +39,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataOrderToProductsItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
 fun OrderedProductItem(
+    data: OrderToProductsItem,
     modifier: Modifier
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -59,8 +62,8 @@ fun OrderedProductItem(
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ProductImage(modifier = modifier)
-            OrderedProductInfo(modifier = modifier)
+            ProductImage(data = data, modifier = modifier)
+            OrderedProductInfo(data = data, modifier = modifier)
         }
         Spacer(modifier = modifier.height(4.dp))
     }
@@ -107,15 +110,13 @@ private fun Option(
 
 @Composable
 private fun ProductImage(
+    data: OrderToProductsItem,
     modifier: Modifier
 ) {
-    val image = ""
-    val name = "Sari Roti Tawar"
-
-    if (image.isEmpty() || image.contains("default")) {
+    if (data.product.image.isEmpty() || data.product.image.contains("default")) {
         Image(
             painter = painterResource(id = R.drawable.ic_default),
-            contentDescription = stringResource(R.string.product_description, name),
+            contentDescription = stringResource(R.string.product_description, data.product.name),
             contentScale = ContentScale.Crop,
             modifier = modifier
                 .padding(8.dp)
@@ -125,8 +126,8 @@ private fun ProductImage(
         )
     } else {
         AsyncImage(
-            model = image,
-            contentDescription = stringResource(R.string.product_description, name),
+            model = data.product.image,
+            contentDescription = stringResource(R.string.product_description, data.product.name),
             contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
@@ -140,16 +141,12 @@ private fun ProductImage(
 
 @Composable
 private fun OrderedProductInfo(
+    data: OrderToProductsItem,
     modifier: Modifier
 ) {
-    val name = "Sari Roti Tawar"
-    name.uppercase()
-    val orderQty = 10
-    val sellPrice = 15000L
-
     Column(modifier = modifier.padding(start = 8.dp, end = 16.dp)) {
         Text(
-            text = name, fontWeight = FontWeight.Normal, fontSize = 14.sp,
+            text = data.product.name.uppercase(), fontWeight = FontWeight.Normal, fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
         Row(
@@ -158,12 +155,14 @@ private fun OrderedProductInfo(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = formatRupiah(sellPrice), fontWeight = FontWeight.Bold, fontSize = 14.sp,
+                text = formatRupiah(data.selledPrice),
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.tertiary
             )
             Spacer(modifier = modifier.width(2.dp))
             Text(
-                text = stringResource(R.string.order_qty, orderQty),
+                text = stringResource(R.string.order_qty, data.amount),
                 fontSize = 12.sp, fontWeight = FontWeight.Bold,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                 color = MaterialTheme.colorScheme.tertiary
@@ -184,6 +183,7 @@ private fun OrderedProductItemPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OrderedProductItem(
+                data = dataOrderToProductsItem[0],
                 modifier = Modifier
             )
         }

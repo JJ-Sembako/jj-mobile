@@ -11,6 +11,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,16 +22,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataOrderToProductsItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.feature_history.presentation.components.item_list.OrderedProductItem
 
 @Composable
 fun OrderedProductList(
+    data: List<OrderToProductsItem>,
+    totalPrice: Long,
     modifier: Modifier
 ) {
-    val totalPrice = 125000L
-
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -60,16 +63,15 @@ fun OrderedProductList(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            OrderedProductItem(modifier = modifier)
-            Spacer(modifier = modifier.height(8.dp))
-            OrderedProductItem(modifier = modifier)
-            Spacer(modifier = modifier.height(8.dp))
-            OrderedProductItem(modifier = modifier)
-            Spacer(modifier = modifier.height(8.dp))
-            OrderedProductItem(modifier = modifier)
-            Spacer(modifier = modifier.height(8.dp))
-            OrderedProductItem(modifier = modifier)
-            Spacer(modifier = modifier.height(8.dp))
+            data.forEach { item ->
+                key(item.id) {
+                    OrderedProductItem(
+                        data = item,
+                        modifier = modifier
+                    )
+                    Spacer(modifier = modifier.height(8.dp))
+                }
+            }
         }
 
         Divider(
@@ -90,7 +92,9 @@ fun OrderedProductList(
                 color = MaterialTheme.colorScheme.tertiary
             )
             Text(
-                text = formatRupiah(totalPrice), fontWeight = FontWeight.Bold, fontSize = 14.sp,
+                text = formatRupiah(totalPrice),
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }
@@ -112,6 +116,8 @@ private fun OrderedProductListPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OrderedProductList(
+                data = dataOrderToProductsItem,
+                totalPrice = 168_000L,
                 modifier = Modifier
             )
         }

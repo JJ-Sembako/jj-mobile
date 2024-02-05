@@ -306,7 +306,11 @@ private fun DetailTransaksiContent(
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
-            OrderedProductList(modifier)
+            OrderedProductList(
+                data = orderData.orderToProducts,
+                totalPrice = orderData.totalPrice,
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(16.dp))
             OrderTimestamps(
                 data = mapDetailOrderDataToDataOrderTimestamps(orderData),
