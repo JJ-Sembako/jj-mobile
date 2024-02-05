@@ -291,6 +291,7 @@ private fun DetailTransaksiContent(
             OrderButtonMenu(
                 data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
                 showCantPNRDialog = showCantPNRDialog,
+                showPaymentDialog =showPaymentDialog,
                 msgErrorPNR = msgErrorPNR,
                 openMaps = { url -> openMaps(url) },
                 call = { uri -> call(uri) },

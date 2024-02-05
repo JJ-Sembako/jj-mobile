@@ -50,6 +50,7 @@ import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 fun OrderButtonMenu(
     data: DataOrderHistoryCard,
     showCantPNRDialog: MutableState<Boolean>,
+    showPaymentDialog: MutableState<Boolean>,
     msgErrorPNR: MutableState<String>,
     openMaps: (String) -> Unit,
     call: (String) -> Unit,
@@ -91,6 +92,7 @@ fun OrderButtonMenu(
                     MenuItem(
                         data = data,
                         showCantPNRDialog = showCantPNRDialog,
+                        showPaymentDialog = showPaymentDialog,
                         msgErrorPNR = msgErrorPNR,
                         menu = menuInfo,
                         openMaps = { url -> openMaps(url) },
@@ -113,6 +115,7 @@ fun OrderButtonMenu(
                     MenuItem(
                         data = data,
                         showCantPNRDialog = showCantPNRDialog,
+                        showPaymentDialog = showPaymentDialog,
                         msgErrorPNR = msgErrorPNR,
                         menu = menuInfo,
                         openMaps = { url -> openMaps(url) },
@@ -135,6 +138,7 @@ fun OrderButtonMenu(
 private fun MenuItem(
     data: DataOrderHistoryCard,
     showCantPNRDialog: MutableState<Boolean>,
+    showPaymentDialog: MutableState<Boolean>,
     msgErrorPNR: MutableState<String>,
     menu: MenuOrderInfo,
     openMaps: (String) -> Unit,
@@ -172,6 +176,7 @@ private fun MenuItem(
                     }
 
                     3 -> { /* payment confirmation */
+                        showPaymentDialog.value = true
                     }
 
                     4 -> { /* Retur */
@@ -226,6 +231,7 @@ private fun OrderButtonMenuPreview() {
             OrderButtonMenu(
                 data = dataOrderDataItem,
                 showCantPNRDialog = remember { mutableStateOf(true) },
+                showPaymentDialog = remember { mutableStateOf(true) },
                 msgErrorPNR = remember { mutableStateOf("") },
                 openMaps = {},
                 call = {},
