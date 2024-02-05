@@ -40,6 +40,7 @@
     <string name="option_not_available">Opsi tidak tersedia</string>
     <string name="please_wait">Mohon bersabar</string>
     <string name="error">Terjadi Kesalahan</string>
+    <string name="action_denied">Tindakan Ditolak</string>
     <string name="error_msg_default">Kesalahan sistem terjadi.</string>
     <string name="err_input_empty">Inputan Wajib diisi!</string>
     <string name="err_username">Username minimal 5 karakter diawali huruf diikuti karakter huruf, angka, underscore, atau strip!</string>
@@ -205,5 +206,11 @@
     <string name="confirm_payment">Konfirmasi pembayaran pesanan</string>
     <string name="confirm_payment_text">
         Konfirmasi pembayaran pesanan hanya bisa dilakukan sekali dan tidak dapat diubah kembali.
+    </string>
+    <string name="err_del_product">Barang pesanan tidak bisa dibatalkan ketika sudah dikirim maupun diterima!</string>
+    <string name="confirm_del_product">Konfirmasi pembatalan barang pesanan</string>
+    <string name="confirm_del_product_text">
+        Pembatalan barang pesanan akan menghapus data barang dari pesanan dan mengubah informasi
+        pesanan. Tindakan ini tidak dapat dipulihkan.
     </string>
 </resources>

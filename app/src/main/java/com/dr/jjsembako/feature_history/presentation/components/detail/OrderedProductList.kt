@@ -11,7 +11,10 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,6 +35,7 @@ import com.dr.jjsembako.feature_history.presentation.components.item_list.Ordere
 fun OrderedProductList(
     data: List<OrderToProductsItem>,
     totalPrice: Long,
+    showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
     Column(
@@ -67,6 +71,7 @@ fun OrderedProductList(
                 key(item.id) {
                     OrderedProductItem(
                         data = item,
+                        showDialog = showDialog,
                         modifier = modifier
                     )
                     Spacer(modifier = modifier.height(8.dp))
@@ -118,6 +123,7 @@ private fun OrderedProductListPreview() {
             OrderedProductList(
                 data = dataOrderToProductsItem,
                 totalPrice = 168_000L,
+                showDialog = remember { mutableStateOf(true) },
                 modifier = Modifier
             )
         }

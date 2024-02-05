@@ -47,6 +47,7 @@ import com.dr.jjsembako.core.utils.formatRupiah
 @Composable
 fun OrderedProductItem(
     data: OrderToProductsItem,
+    showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -57,13 +58,13 @@ fun OrderedProductItem(
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
     ) {
-        Option(expanded = expanded, modifier = modifier)
+        Option(expanded, showDialog, modifier)
         Row(
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ProductImage(data = data, modifier = modifier)
-            OrderedProductInfo(data = data, modifier = modifier)
+            ProductImage(data, modifier)
+            OrderedProductInfo(data, modifier)
         }
         Spacer(modifier = modifier.height(4.dp))
     }
@@ -72,6 +73,7 @@ fun OrderedProductItem(
 @Composable
 private fun Option(
     expanded: MutableState<Boolean>,
+    showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -100,7 +102,7 @@ private fun Option(
                         text = { Text(text = stringResource(R.string.del_product_order)) },
                         onClick = {
                             expanded.value = !expanded.value
-                            /*TODO*/
+                            showDialog.value = !showDialog.value
                         })
                 }
             }
@@ -184,6 +186,7 @@ private fun OrderedProductItemPreview() {
         ) {
             OrderedProductItem(
                 data = dataOrderToProductsItem[0],
+                showDialog = remember { mutableStateOf(true) },
                 modifier = Modifier
             )
         }

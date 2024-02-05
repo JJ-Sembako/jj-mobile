@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.presentation.components
+package com.dr.jjsembako.feature_history.presentation.components.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,19 +41,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.presentation.theme.dialogMaxWidth
 import com.dr.jjsembako.core.presentation.theme.dialogMinWidth
-import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 
 @Composable
 fun PaymentDialog(
-    data: DataOrderHistoryCard,
+    paymentStatus: Int,
     showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
-    if (data.paymentStatus == 0) PaymentConfirmation(showDialog, modifier)
+    if (paymentStatus == 0) PaymentConfirmation(showDialog, modifier)
     else PaymentError(showDialog, modifier)
 }
 
@@ -80,13 +78,13 @@ private fun PaymentError(
         ) {
             Icon(
                 imageVector = Icons.Default.ErrorOutline,
-                contentDescription = stringResource(R.string.error),
+                contentDescription = stringResource(R.string.action_denied),
                 tint = Color.Red,
                 modifier = modifier.size(80.dp)
             )
             Spacer(modifier = modifier.height(16.dp))
             Text(
-                text = stringResource(R.string.error),
+                text = stringResource(R.string.action_denied),
                 fontWeight = FontWeight.Medium,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
@@ -218,7 +216,7 @@ private fun PaymentConfirmation(
 private fun PaymentDialogPreview() {
     JJSembakoTheme {
         PaymentDialog(
-            data = dataOrderDataItem,
+            paymentStatus = 0,
             showDialog = remember { mutableStateOf(true) },
             modifier = Modifier
         )

@@ -54,13 +54,14 @@ import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderHistoryCard
 import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderTimestamps
-import com.dr.jjsembako.feature_history.presentation.components.PaymentDialog
+import com.dr.jjsembako.feature_history.presentation.components.dialog.PaymentDialog
 import com.dr.jjsembako.feature_history.presentation.components.detail.CustomerInformation
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderButtonMenu
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderInformation
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderTimestamps
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderedProductList
 import com.dr.jjsembako.feature_history.presentation.components.detail.ReturPotongNotaInformation
+import com.dr.jjsembako.feature_history.presentation.components.dialog.DeleteProductDialog
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
@@ -165,12 +166,14 @@ private fun DetailTransaksiContent(
     val isRefreshing by detailTransaksiViewModel.isRefreshing.collectAsState(initial = false)
     val message = detailTransaksiViewModel.message.observeAsState().value
     val statusCode = detailTransaksiViewModel.statusCode.observeAsState().value
+    val orderInfo = mapDetailOrderDataToDataOrderHistoryCard(orderData)
 
     val scrollState = rememberScrollState()
     val showInfoDialog = remember { mutableStateOf(false) }
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = remember { mutableStateOf(false) }
     val showPaymentDialog = remember { mutableStateOf(false) }
+    val showDeleteProductOrderDialog = remember { mutableStateOf(false) }
     val showCantPNRDialog = remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
     val showDialog = remember { mutableStateOf(false) }
@@ -289,9 +292,9 @@ private fun DetailTransaksiContent(
             )
             Spacer(modifier = modifier.height(16.dp))
             OrderButtonMenu(
-                data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
+                data = orderInfo,
                 showCantPNRDialog = showCantPNRDialog,
-                showPaymentDialog =showPaymentDialog,
+                showPaymentDialog = showPaymentDialog,
                 msgErrorPNR = msgErrorPNR,
                 openMaps = { url -> openMaps(url) },
                 call = { uri -> call(uri) },
@@ -302,13 +305,14 @@ private fun DetailTransaksiContent(
             )
             Spacer(modifier = modifier.height(16.dp))
             CustomerInformation(
-                data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
+                data = orderInfo,
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
             OrderedProductList(
                 data = orderData.orderToProducts,
                 totalPrice = orderData.totalPrice,
+                showDialog = showDeleteProductOrderDialog,
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
@@ -338,8 +342,16 @@ private fun DetailTransaksiContent(
 
             if (showPaymentDialog.value) {
                 PaymentDialog(
-                    data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
+                    paymentStatus = orderData.paymentStatus,
                     showDialog = showPaymentDialog,
+                    modifier = modifier
+                )
+            }
+
+            if(showDeleteProductOrderDialog.value) {
+                DeleteProductDialog(
+                    orderStatus = orderData.orderStatus,
+                    showDialog = showDeleteProductOrderDialog,
                     modifier = modifier
                 )
             }
