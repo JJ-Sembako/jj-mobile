@@ -20,10 +20,18 @@ import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerInte
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerInteractor
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleCreateCanceledInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleCreateCanceledUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleDeleteCanceledInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleDeleteCanceledUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderInteractor
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrdersInteractor
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrdersUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleCreateReturInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleCreateReturUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleDeleteReturInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleDeleteReturUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustInteractor
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustInteractor
@@ -147,5 +155,28 @@ abstract class AppModule {
     @Binds
     @ViewModelScoped
     abstract fun provideFetchOrderUseCase(fetchOrdesInteractor: FetchOrderInteractor): FetchOrderUseCase
+
+    /****************************
+     * Canceled
+     ***************************/
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleCreateCanceledUseCase(handleCreateCanceledInteractor: HandleCreateCanceledInteractor): HandleCreateCanceledUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleDeleteCanceledUseCase(handleDeleteCanceledInteractor: HandleDeleteCanceledInteractor): HandleDeleteCanceledUseCase
+
+
+    /****************************
+     * Retur
+     ***************************/
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleCreateReturUseCase(handleCreateReturInteractor: HandleCreateReturInteractor): HandleCreateReturUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleDeleteReturUseCase(handleDeleteReturUseInteractor: HandleDeleteReturInteractor): HandleDeleteReturUseCase
 
 }

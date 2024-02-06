@@ -1,11 +1,10 @@
-package com.dr.jjsembako.feature_history.domain.repository
+package com.dr.jjsembako.feature_history.domain.usecase.retur
 
 import com.dr.jjsembako.core.common.Resource
-import com.dr.jjsembako.core.data.remote.response.retur.DeleteHandleDeleteReturResponse
 import com.dr.jjsembako.core.data.remote.response.retur.PostHandleCreateReturResponse
 import kotlinx.coroutines.flow.Flow
 
-interface IReturRepository {
+interface HandleCreateReturUseCase {
 
     suspend fun handleCreateRetur(
         orderId: String,
@@ -14,7 +13,5 @@ interface IReturRepository {
         amountInUnit: Int,
         selledPrice: Long
     ): Flow<Resource<out PostHandleCreateReturResponse>>
-
-    suspend fun handleDeleteRetur(id: String): Flow<Resource<out DeleteHandleDeleteReturResponse>>
 
 }
