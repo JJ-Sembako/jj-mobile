@@ -174,10 +174,15 @@ private fun DetailTransaksiContent(
     val showErrorDialog = remember { mutableStateOf(false) }
     val showPaymentDialog = remember { mutableStateOf(false) }
     val showDeleteProductOrderDialog = remember { mutableStateOf(false) }
+    val showDeleteCanceledDialog = remember { mutableStateOf(false) }
+    val showDeleteReturDialog = remember { mutableStateOf(false) }
     val showCantPNRDialog = remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
     val showDialog = remember { mutableStateOf(false) }
 
+    val idDeleteProductOrder = remember { mutableStateOf("") }
+    val idDeleteCanceled = remember { mutableStateOf("") }
+    val idDeleteRetur = remember { mutableStateOf("") }
     val msgErrorPNR = rememberSaveable { mutableStateOf("") }
 
     val pullRefreshState = rememberPullRefreshState(
@@ -321,7 +326,16 @@ private fun DetailTransaksiContent(
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(64.dp))
-            ReturPotongNotaInformation(modifier)
+            ReturPotongNotaInformation(
+                dataCanceled = orderData.canceled,
+                dataRetur = orderData.retur,
+                actualTotalPrice = orderData.actualTotalPrice,
+                showDialogCanceled = showDeleteCanceledDialog,
+                showDialogRetur = showDeleteReturDialog,
+                idDeleteCanceled = idDeleteCanceled,
+                idDeleteRetur = idDeleteRetur,
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(16.dp))
 
             if (showLoadingDialog.value) {
@@ -348,7 +362,7 @@ private fun DetailTransaksiContent(
                 )
             }
 
-            if(showDeleteProductOrderDialog.value) {
+            if (showDeleteProductOrderDialog.value) {
                 DeleteProductDialog(
                     orderStatus = orderData.orderStatus,
                     showDialog = showDeleteProductOrderDialog,

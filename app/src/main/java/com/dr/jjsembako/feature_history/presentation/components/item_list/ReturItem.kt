@@ -42,12 +42,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataRetur
+import com.dr.jjsembako.core.data.remote.response.order.ReturItem
 import com.dr.jjsembako.core.presentation.components.utils.ReturStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
 fun ReturItem(
+    data: ReturItem,
+    showDialogRetur: MutableState<Boolean>,
+    idDeleteRetur: MutableState<String>,
     modifier: Modifier
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -58,16 +63,19 @@ fun ReturItem(
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
     ) {
-        StatusAndOption(expanded, modifier)
-        ProductOnReturnedItem(modifier)
+        StatusAndOption(data.id, showDialogRetur, idDeleteRetur, expanded, modifier)
+        ProductOnReturnedItem(data, modifier)
         DividerInfo(modifier)
-        ProductSubstituteItem(modifier)
+        ProductSubstituteItem(data, modifier)
         Spacer(modifier = modifier.height(4.dp))
     }
 }
 
 @Composable
 private fun StatusAndOption(
+    id: String,
+    showDialogRetur: MutableState<Boolean>,
+    idDeleteRetur: MutableState<String>,
     expanded: MutableState<Boolean>,
     modifier: Modifier
 ) {
@@ -96,8 +104,9 @@ private fun StatusAndOption(
                 DropdownMenuItem(
                     text = { Text(text = stringResource(R.string.cancel_retur)) },
                     onClick = {
-                        expanded.value = !expanded.value
-                        /*TODO*/
+                        expanded.value = false
+                        idDeleteRetur.value = id
+                        showDialogRetur.value = true
                     })
             }
         }
@@ -105,9 +114,7 @@ private fun StatusAndOption(
 }
 
 @Composable
-private fun DividerInfo(
-    modifier: Modifier
-) {
+private fun DividerInfo(modifier: Modifier) {
     Spacer(modifier = modifier.height(8.dp))
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -135,6 +142,7 @@ private fun DividerInfo(
 
 @Composable
 private fun ProductOnReturnedItem(
+    data: ReturItem,
     modifier: Modifier
 ) {
     Row(
@@ -142,13 +150,14 @@ private fun ProductOnReturnedItem(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ProductImage(modifier)
-        ProductInfo(true, modifier)
+        ProductImage(data.returnedProduct.name, data.returnedProduct.image, modifier)
+        ProductInfo(true, data.returnedProduct.name, data.amount, data.oldSelledPrice, modifier)
     }
 }
 
 @Composable
 private fun ProductSubstituteItem(
+    data: ReturItem,
     modifier: Modifier
 ) {
     Row(
@@ -156,18 +165,17 @@ private fun ProductSubstituteItem(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ProductImage(modifier)
-        ProductInfo(false, modifier)
+        ProductImage(data.returedProduct.name, data.returedProduct.image, modifier)
+        ProductInfo(false, data.returedProduct.name, data.amount, data.selledPrice, modifier)
     }
 }
 
 @Composable
 private fun ProductImage(
+    name: String,
+    image: String,
     modifier: Modifier
 ) {
-    val image = ""
-    val name = "Sari Roti Tawar"
-
     if (image.isEmpty() || image.contains("default")) {
         Image(
             painter = painterResource(id = R.drawable.ic_default),
@@ -197,16 +205,14 @@ private fun ProductImage(
 @Composable
 private fun ProductInfo(
     isReturned: Boolean,
+    name: String,
+    amount: Int,
+    price: Long,
     modifier: Modifier
 ) {
-    val name = "Sari Roti Tawar"
-    name.uppercase()
-    val orderQty = 10
-    val sellPrice = 15000L
-
     Column(modifier = modifier.padding(start = 8.dp, end = 16.dp)) {
         Text(
-            text = name, fontWeight = FontWeight.Normal, fontSize = 14.sp,
+            text = name.uppercase(), fontWeight = FontWeight.Normal, fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
         Row(
@@ -215,14 +221,14 @@ private fun ProductInfo(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = if (isReturned) "-${formatRupiah(sellPrice)}" else formatRupiah(sellPrice),
+                text = if (isReturned) "-${formatRupiah(price)}" else formatRupiah(price),
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 color = if (isReturned) Color.Red else MaterialTheme.colorScheme.tertiary
             )
             Spacer(modifier = modifier.width(2.dp))
             Text(
-                text = stringResource(R.string.order_qty, orderQty),
+                text = stringResource(R.string.order_qty, amount),
                 fontSize = 12.sp, fontWeight = FontWeight.Bold,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                 color = MaterialTheme.colorScheme.tertiary
@@ -241,6 +247,9 @@ private fun ReturItemPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ReturItem(
+                data = dataRetur[0],
+                showDialogRetur = remember { mutableStateOf(true) },
+                idDeleteRetur = remember { mutableStateOf("") },
                 modifier = Modifier
             )
         }

@@ -15,8 +15,11 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,6 +33,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataCanceled
+import com.dr.jjsembako.core.data.dummy.dataRetur
+import com.dr.jjsembako.core.data.remote.response.order.CanceledItem
+import com.dr.jjsembako.core.data.remote.response.order.ReturItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.feature_history.presentation.components.screen.PotongNotaInformationContent
@@ -38,13 +45,18 @@ import com.dr.jjsembako.feature_history.presentation.components.screen.ReturInfo
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReturPotongNotaInformation(
+    dataCanceled: List<CanceledItem?>?,
+    dataRetur: List<ReturItem?>?,
+    actualTotalPrice: Long,
+    showDialogCanceled: MutableState<Boolean>,
+    showDialogRetur: MutableState<Boolean>,
+    idDeleteCanceled: MutableState<String>,
+    idDeleteRetur: MutableState<String>,
     modifier: Modifier
 ) {
     var tabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabs = listOf(stringResource(R.string.retur), stringResource(R.string.potong_nota))
     val pagerState = rememberPagerState { tabs.size }
-
-    val finalTotalPrice = 135000L
 
     LaunchedEffect(tabIndex) {
         pagerState.animateScrollToPage(tabIndex)
@@ -90,8 +102,20 @@ fun ReturPotongNotaInformation(
             modifier = modifier.fillMaxWidth()
         ) { index ->
             when (index) {
-                0 -> ReturInformationContent(modifier)
-                1 -> PotongNotaInformationContent(modifier)
+                0 -> ReturInformationContent(
+                    dataRetur,
+                    showDialogRetur,
+                    idDeleteRetur,
+                    modifier
+                )
+
+                1 -> PotongNotaInformationContent(
+                    dataCanceled,
+                    showDialogCanceled,
+                    idDeleteCanceled,
+                    modifier
+                )
+
                 else -> {}
             }
         }
@@ -114,7 +138,7 @@ fun ReturPotongNotaInformation(
                 color = MaterialTheme.colorScheme.tertiary
             )
             Text(
-                text = formatRupiah(finalTotalPrice),
+                text = formatRupiah(actualTotalPrice),
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
@@ -138,6 +162,13 @@ private fun ReturPotongNotaInformationPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ReturPotongNotaInformation(
+                dataCanceled = dataCanceled,
+                dataRetur = dataRetur,
+                actualTotalPrice = 1_500_000L,
+                showDialogCanceled = remember { mutableStateOf(true) },
+                showDialogRetur = remember { mutableStateOf(true) },
+                idDeleteCanceled = remember { mutableStateOf("") },
+                idDeleteRetur = remember { mutableStateOf("") },
                 modifier = Modifier
             )
         }

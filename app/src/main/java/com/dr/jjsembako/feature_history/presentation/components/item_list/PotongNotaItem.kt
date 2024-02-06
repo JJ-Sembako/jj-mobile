@@ -40,12 +40,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataCanceled
+import com.dr.jjsembako.core.data.remote.response.order.CanceledItem
 import com.dr.jjsembako.core.presentation.components.utils.PotongNotaStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
 fun PotongNotaItem(
+    data: CanceledItem,
+    showDialogCanceled: MutableState<Boolean>,
+    idDeleteCanceled: MutableState<String>,
     modifier: Modifier
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -56,14 +61,14 @@ fun PotongNotaItem(
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
     ) {
-        StatusAndOption(expanded, modifier)
+        StatusAndOption(data.id, showDialogCanceled, idDeleteCanceled, expanded, modifier)
         Row(
             modifier = modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ProductImage(modifier = modifier)
-            PotongNotaInfo(modifier = modifier)
+            ProductImage(data, modifier)
+            PotongNotaInfo(data, modifier)
         }
         Spacer(modifier = modifier.height(4.dp))
     }
@@ -71,6 +76,9 @@ fun PotongNotaItem(
 
 @Composable
 private fun StatusAndOption(
+    id: String,
+    showDialogCanceled: MutableState<Boolean>,
+    idDeleteCanceled: MutableState<String>,
     expanded: MutableState<Boolean>,
     modifier: Modifier
 ) {
@@ -99,8 +107,9 @@ private fun StatusAndOption(
                 DropdownMenuItem(
                     text = { Text(text = stringResource(R.string.cancel_potong_nota)) },
                     onClick = {
-                        expanded.value = !expanded.value
-                        /*TODO*/
+                        expanded.value = false
+                        idDeleteCanceled.value = id
+                        showDialogCanceled.value = true
                     })
             }
         }
@@ -109,15 +118,13 @@ private fun StatusAndOption(
 
 @Composable
 private fun ProductImage(
+    data: CanceledItem,
     modifier: Modifier
 ) {
-    val image = ""
-    val name = "Sari Roti Tawar"
-
-    if (image.isEmpty() || image.contains("default")) {
+    if (data.product.image.isEmpty() || data.product.image.contains("default")) {
         Image(
             painter = painterResource(id = R.drawable.ic_default),
-            contentDescription = stringResource(R.string.product_description, name),
+            contentDescription = stringResource(R.string.product_description, data.product.name),
             contentScale = ContentScale.Crop,
             modifier = modifier
                 .padding(8.dp)
@@ -127,8 +134,8 @@ private fun ProductImage(
         )
     } else {
         AsyncImage(
-            model = image,
-            contentDescription = stringResource(R.string.product_description, name),
+            model = data.product.image,
+            contentDescription = stringResource(R.string.product_description, data.product.name),
             contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
@@ -142,16 +149,12 @@ private fun ProductImage(
 
 @Composable
 private fun PotongNotaInfo(
+    data: CanceledItem,
     modifier: Modifier
 ) {
-    val name = "Sari Roti Tawar"
-    name.uppercase()
-    val orderQty = 10
-    val sellPrice = 15000L
-
     Column(modifier = modifier.padding(start = 8.dp, end = 16.dp)) {
         Text(
-            text = name, fontWeight = FontWeight.Normal, fontSize = 14.sp,
+            text = data.product.name.uppercase(), fontWeight = FontWeight.Normal, fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
         Row(
@@ -160,14 +163,14 @@ private fun PotongNotaInfo(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "-${formatRupiah(sellPrice)}",
+                text = "-${formatRupiah(data.selledPrice)}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 color = Color.Red
             )
             Spacer(modifier = modifier.width(2.dp))
             Text(
-                text = stringResource(R.string.order_qty, orderQty),
+                text = stringResource(R.string.order_qty, data.amount),
                 fontSize = 12.sp, fontWeight = FontWeight.Bold,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                 color = MaterialTheme.colorScheme.tertiary
@@ -188,6 +191,9 @@ private fun PotongNotaItemPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             PotongNotaItem(
+                data = dataCanceled[0],
+                showDialogCanceled = remember { mutableStateOf(true) },
+                idDeleteCanceled = remember { mutableStateOf("") },
                 modifier = Modifier
             )
         }

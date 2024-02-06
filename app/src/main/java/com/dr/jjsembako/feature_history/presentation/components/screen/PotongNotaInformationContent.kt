@@ -8,30 +8,44 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dr.jjsembako.core.data.remote.response.order.CanceledItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_history.presentation.components.item_list.PotongNotaItem
 
 @Composable
 fun PotongNotaInformationContent(
+    dataCanceled: List<CanceledItem?>?,
+    showDialogCanceled: MutableState<Boolean>,
+    idDeleteCanceled: MutableState<String>,
     modifier: Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxWidth().padding(vertical = 8.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
-    ){
-        PotongNotaItem(modifier)
-        Spacer(modifier = modifier.height(8.dp))
-        PotongNotaItem(modifier)
-        Spacer(modifier = modifier.height(8.dp))
-        PotongNotaItem(modifier)
-        Spacer(modifier = modifier.height(8.dp))
-        PotongNotaItem(modifier)
-        Spacer(modifier = modifier.height(8.dp))
+    ) {
+        if (dataCanceled.isNullOrEmpty()) {
+            Spacer(modifier = modifier.height(48.dp))
+        } else {
+            dataCanceled.forEach { item ->
+                if (item != null) {
+                    key(item.id) {
+                        PotongNotaItem(item, showDialogCanceled, idDeleteCanceled, modifier)
+                        Spacer(modifier = modifier.height(8.dp))
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -46,6 +60,9 @@ private fun PotongNotaInformationContentPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             PotongNotaInformationContent(
+                dataCanceled = null,
+                showDialogCanceled = remember { mutableStateOf(true) },
+                idDeleteCanceled = remember { mutableStateOf("") },
                 modifier = Modifier
             )
         }
