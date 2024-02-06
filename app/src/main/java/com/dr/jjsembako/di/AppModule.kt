@@ -32,6 +32,8 @@ import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteOrderIn
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteProductOrderInteractor
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteProductOrderUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdatePaymentStatusInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdatePaymentStatusUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleCreateReturInteractor
 import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleCreateReturUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleDeleteReturInteractor
@@ -159,6 +161,10 @@ abstract class AppModule {
     @Binds
     @ViewModelScoped
     abstract fun provideFetchOrderUseCase(fetchOrdesInteractor: FetchOrderInteractor): FetchOrderUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleUpdatePaymentStatusUseCase(handleUpdatePaymentStatusInteractor: HandleUpdatePaymentStatusInteractor): HandleUpdatePaymentStatusUseCase
 
     @Binds
     @ViewModelScoped

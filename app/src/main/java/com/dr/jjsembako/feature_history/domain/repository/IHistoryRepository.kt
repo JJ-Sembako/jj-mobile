@@ -6,6 +6,7 @@ import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteOrderR
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteProductOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
+import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdatePaymentStatusResponse
 import kotlinx.coroutines.flow.Flow
 
 interface IHistoryRepository {
@@ -18,6 +19,8 @@ interface IHistoryRepository {
     ): Flow<PagingData<OrderDataItem>>
 
     suspend fun fetchOrder(id: String): Flow<Resource<out DetailOrderData?>>
+
+    suspend fun handleUpdatePaymentStatus(id: String): Flow<Resource<out PatchHandleUpdatePaymentStatusResponse>>
 
     suspend fun handleDeleteProductOrder(
         id: String,
