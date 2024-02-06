@@ -49,21 +49,21 @@ import com.dr.jjsembako.core.presentation.theme.dialogMaxWidth
 import com.dr.jjsembako.core.presentation.theme.dialogMinWidth
 
 @Composable
-fun PaymentDialog(
-    paymentStatus: Int,
+fun CancelReturDialog(
+    status: Int,
     showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
-    if (paymentStatus == 0) PaymentConfirmation(showDialog, modifier)
-    else PaymentError(showDialog, modifier)
+    if (status == 0) CancelReturConfirmation(showDialog, modifier)
+    else CancelReturError(showDialog, modifier)
 }
 
 @Composable
-private fun PaymentError(
+private fun CancelReturError(
     showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
-    val message = stringResource(R.string.err_payment)
+    val message = stringResource(R.string.err_del_retur)
 
     Dialog(
         onDismissRequest = { showDialog.value = false }) {
@@ -126,7 +126,7 @@ private fun PaymentError(
 }
 
 @Composable
-private fun PaymentConfirmation(
+private fun CancelReturConfirmation(
     showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
@@ -148,7 +148,7 @@ private fun PaymentConfirmation(
         ) {
             Icon(
                 imageVector = Icons.Default.Warning,
-                contentDescription = stringResource(R.string.confirm_payment),
+                contentDescription = stringResource(R.string.cancel_retur),
                 tint = Color.Red,
                 modifier = modifier.size(80.dp)
             )
@@ -162,7 +162,7 @@ private fun PaymentConfirmation(
             )
             Spacer(modifier = modifier.height(16.dp))
             Text(
-                text = stringResource(R.string.confirm_payment_text),
+                text = stringResource(R.string.confirm_del_retur_text),
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
@@ -236,10 +236,10 @@ private fun PaymentConfirmation(
 
 @Composable
 @Preview(showBackground = true)
-private fun PaymentDialogPreview() {
+private fun CancelReturDialogPreview() {
     JJSembakoTheme {
-        PaymentDialog(
-            paymentStatus = 0,
+        CancelReturDialog(
+            status = 0,
             showDialog = remember { mutableStateOf(true) },
             modifier = Modifier
         )

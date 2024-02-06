@@ -217,4 +217,14 @@
     <string name="success_delete_product">Hapus barang pesanan berhasil!</string>
     <string name="success_delete_retur">Retur berhasil dibatalkan!</string>
     <string name="success_delete_pn">Potong nota berhasil dibatalkan!</string>
+    <string name="err_del_retur">Retur tidak bisa dibatalkan ketika sudah dikonfirmasi maupun diterima!</string>
+    <string name="err_del_pn">Potong nota tidak bisa dibatalkan ketika sudah dikonfirmasi!</string>
+    <string name="confirm_del_retur_text">
+        Pembatalan retur akan menghapus data retur dari pesanan dan mengubah informasi pesanan.
+        Tindakan ini tidak dapat dipulihkan.
+    </string>
+    <string name="confirm_del_pn_text">
+        Pembatalan potong nota akan menghapus data potong nota dari pesanan dan mengubah
+        informasi pesanan. Tindakan ini tidak dapat dipulihkan.
+    </string>
 </resources>

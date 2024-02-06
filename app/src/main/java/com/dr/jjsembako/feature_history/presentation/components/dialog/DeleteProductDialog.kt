@@ -1,5 +1,6 @@
 package com.dr.jjsembako.feature_history.presentation.components.dialog
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +23,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -53,6 +56,73 @@ fun DeleteProductDialog(
 ) {
     if (orderStatus == 2 || orderStatus == 3) DeleteProductError(showDialog, modifier)
     else DeleteProductConfirmation(showDialog, modifier)
+}
+
+@Composable
+private fun DeleteProductError(
+    showDialog: MutableState<Boolean>,
+    modifier: Modifier
+) {
+    val message = stringResource(R.string.err_del_product)
+
+    Dialog(
+        onDismissRequest = { showDialog.value = false }) {
+        Column(
+            modifier = modifier
+                .clip(RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .sizeIn(
+                    minWidth = dialogMinWidth,
+                    maxWidth = dialogMaxWidth
+                )
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.ErrorOutline,
+                contentDescription = stringResource(R.string.action_denied),
+                tint = Color.Red,
+                modifier = modifier.size(80.dp)
+            )
+            Spacer(modifier = modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.action_denied),
+                fontWeight = FontWeight.Medium,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                modifier = modifier.wrapContentSize(Alignment.Center)
+            )
+            Spacer(modifier = modifier.height(16.dp))
+            Text(
+                text = message,
+                fontWeight = FontWeight.Normal,
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                modifier = modifier.wrapContentSize(Alignment.Center)
+            )
+            Spacer(modifier = modifier.height(24.dp))
+            Button(
+                onClick = {
+                    showDialog.value = false
+                },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Red,
+                    containerColor = Color.Red
+                ),
+                shape = RoundedCornerShape(50.dp),
+                modifier = modifier.padding(horizontal = 5.dp, vertical = 10.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.ok),
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    modifier = modifier.padding(horizontal = 4.dp, vertical = 4.dp),
+                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -120,92 +190,45 @@ private fun DeleteProductConfirmation(
                 )
             }
             Spacer(modifier = modifier.height(24.dp))
-            Button(
-                enabled = checkBoxStates.value,
-                onClick = {
-                    showDialog.value = false
-                },
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = Color.Red,
-                    containerColor = Color.Red
-                ),
-                shape = RoundedCornerShape(50.dp),
-                modifier = modifier.padding(horizontal = 5.dp, vertical = 10.dp)
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = stringResource(R.string.yes_sure),
-                    color = Color.White,
-                    fontSize = 12.sp,
-                    modifier = modifier.padding(horizontal = 4.dp, vertical = 4.dp),
-                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun DeleteProductError(
-    showDialog: MutableState<Boolean>,
-    modifier: Modifier
-) {
-    val message = stringResource(R.string.err_del_product)
-
-    Dialog(
-        onDismissRequest = { showDialog.value = false }) {
-        Column(
-            modifier = modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .sizeIn(
-                    minWidth = dialogMinWidth,
-                    maxWidth = dialogMaxWidth
-                )
-                .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                imageVector = Icons.Default.ErrorOutline,
-                contentDescription = stringResource(R.string.action_denied),
-                tint = Color.Red,
-                modifier = modifier.size(80.dp)
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            Text(
-                text = stringResource(R.string.action_denied),
-                fontWeight = FontWeight.Medium,
-                fontSize = 20.sp, color = Color.Red,
-                textAlign = TextAlign.Center,
-                modifier = modifier.wrapContentSize(Alignment.Center)
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            Text(
-                text = message,
-                fontWeight = FontWeight.Normal,
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center,
-                modifier = modifier.wrapContentSize(Alignment.Center)
-            )
-            Spacer(modifier = modifier.height(24.dp))
-            Button(
-                onClick = {
-                    showDialog.value = false
-                },
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = Color.Red,
-                    containerColor = Color.Red
-                ),
-                shape = RoundedCornerShape(50.dp),
-                modifier = modifier.padding(horizontal = 5.dp, vertical = 10.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.ok),
-                    color = Color.White,
-                    fontSize = 12.sp,
-                    modifier = modifier.padding(horizontal = 4.dp, vertical = 4.dp),
-                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
-                )
+                OutlinedButton(
+                    onClick = { showDialog.value = false },
+                    shape = RoundedCornerShape(50.dp),
+                    border = BorderStroke(1.dp, Color.Red),
+                    modifier = modifier.padding(horizontal = 5.dp, vertical = 10.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                    )
+                }
+                Spacer(modifier = modifier.width(32.dp))
+                Button(
+                    enabled = checkBoxStates.value,
+                    onClick = {
+                        showDialog.value = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = Color.Red,
+                        containerColor = Color.Red
+                    ),
+                    shape = RoundedCornerShape(50.dp),
+                    modifier = modifier.padding(horizontal = 5.dp, vertical = 10.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.yes_sure),
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        modifier = modifier.padding(horizontal = 4.dp, vertical = 4.dp),
+                        style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
+                    )
+                }
             }
         }
     }
