@@ -7,6 +7,8 @@ import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteProduc
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdatePaymentStatusResponse
+import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdateProductOrderResponse
+import com.dr.jjsembako.core.data.remote.response.order.PostHandleAddProductOrderResponse
 import kotlinx.coroutines.flow.Flow
 
 interface IHistoryRepository {
@@ -19,6 +21,20 @@ interface IHistoryRepository {
     ): Flow<PagingData<OrderDataItem>>
 
     suspend fun fetchOrder(id: String): Flow<Resource<out DetailOrderData?>>
+
+    suspend fun handleAddProductOrder(
+        id: String,
+        productId: String,
+        amountInUnit: Int,
+        pricePerUnit: Long
+    ): Flow<Resource<out PostHandleAddProductOrderResponse>>
+
+    suspend fun handleUpdateProductOrder(
+        id: String,
+        productId: String,
+        amountInUnit: Int,
+        pricePerUnit: Long
+    ): Flow<Resource<out PatchHandleUpdateProductOrderResponse>>
 
     suspend fun handleUpdatePaymentStatus(id: String): Flow<Resource<out PatchHandleUpdatePaymentStatusResponse>>
 

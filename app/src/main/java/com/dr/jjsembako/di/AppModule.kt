@@ -28,12 +28,16 @@ import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderInteracto
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrdersInteractor
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrdersUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleAddProductOrderInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleAddProductOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteOrderInteractor
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteProductOrderInteractor
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteProductOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdatePaymentStatusInteractor
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdatePaymentStatusUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdateProductOrderInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdateProductOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleCreateReturInteractor
 import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleCreateReturUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleDeleteReturInteractor
@@ -161,6 +165,14 @@ abstract class AppModule {
     @Binds
     @ViewModelScoped
     abstract fun provideFetchOrderUseCase(fetchOrdesInteractor: FetchOrderInteractor): FetchOrderUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleAddProductOrderUseCase(handleAddProductOrderInteractor: HandleAddProductOrderInteractor): HandleAddProductOrderUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleUpdateProductOrderUseCase(handleUpdateProductOrderInteractor: HandleUpdateProductOrderInteractor): HandleUpdateProductOrderUseCase
 
     @Binds
     @ViewModelScoped
