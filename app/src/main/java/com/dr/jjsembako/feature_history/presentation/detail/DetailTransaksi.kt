@@ -54,7 +54,6 @@ import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderHistoryCard
 import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderTimestamps
-import com.dr.jjsembako.feature_history.presentation.components.dialog.PaymentDialog
 import com.dr.jjsembako.feature_history.presentation.components.detail.CustomerInformation
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderButtonMenu
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderInformation
@@ -62,6 +61,7 @@ import com.dr.jjsembako.feature_history.presentation.components.detail.OrderTime
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderedProductList
 import com.dr.jjsembako.feature_history.presentation.components.detail.ReturPotongNotaInformation
 import com.dr.jjsembako.feature_history.presentation.components.dialog.DeleteProductDialog
+import com.dr.jjsembako.feature_history.presentation.components.dialog.PaymentDialog
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
@@ -318,6 +318,7 @@ private fun DetailTransaksiContent(
                 data = orderData.orderToProducts,
                 totalPrice = orderData.totalPrice,
                 showDialog = showDeleteProductOrderDialog,
+                idDeleteProductOrder = idDeleteProductOrder,
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))

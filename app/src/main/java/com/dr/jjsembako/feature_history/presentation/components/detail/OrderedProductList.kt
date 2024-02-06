@@ -36,6 +36,7 @@ fun OrderedProductList(
     data: List<OrderToProductsItem>,
     totalPrice: Long,
     showDialog: MutableState<Boolean>,
+    idDeleteProductOrder: MutableState<String>,
     modifier: Modifier
 ) {
     Column(
@@ -72,6 +73,7 @@ fun OrderedProductList(
                     OrderedProductItem(
                         data = item,
                         showDialog = showDialog,
+                        idDeleteProductOrder = idDeleteProductOrder,
                         modifier = modifier
                     )
                     Spacer(modifier = modifier.height(8.dp))
@@ -124,6 +126,7 @@ private fun OrderedProductListPreview() {
                 data = dataOrderToProductsItem,
                 totalPrice = 168_000L,
                 showDialog = remember { mutableStateOf(true) },
+                idDeleteProductOrder = remember { mutableStateOf("") },
                 modifier = Modifier
             )
         }
