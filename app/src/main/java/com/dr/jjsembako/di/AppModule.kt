@@ -20,10 +20,10 @@ import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerInte
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerInteractor
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerUseCase
-import com.dr.jjsembako.feature_history.domain.usecase.FetchOrderInteractor
-import com.dr.jjsembako.feature_history.domain.usecase.FetchOrderUseCase
-import com.dr.jjsembako.feature_history.domain.usecase.FetchOrdersInteractor
-import com.dr.jjsembako.feature_history.domain.usecase.FetchOrdersUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrdersInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrdersUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustInteractor
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustInteractor

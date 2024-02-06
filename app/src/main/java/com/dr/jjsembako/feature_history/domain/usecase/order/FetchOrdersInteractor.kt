@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.domain.usecase
+package com.dr.jjsembako.feature_history.domain.usecase.order
 
 import androidx.paging.PagingData
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem

@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
-import com.dr.jjsembako.feature_history.domain.usecase.FetchOrderUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

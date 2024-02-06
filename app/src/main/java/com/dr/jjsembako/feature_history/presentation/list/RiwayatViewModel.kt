@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
-import com.dr.jjsembako.feature_history.domain.usecase.FetchOrdersUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrdersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
