@@ -175,7 +175,7 @@ private fun DeleteProductError(
             Text(
                 text = stringResource(R.string.action_denied),
                 fontWeight = FontWeight.Medium,
-                fontSize = 20.sp,
+                fontSize = 20.sp, color = Color.Red,
                 textAlign = TextAlign.Center,
                 modifier = modifier.wrapContentSize(Alignment.Center)
             )
