@@ -6,8 +6,11 @@ import com.dr.jjsembako.feature_auth.domain.repository.IForgetPasswordRepository
 import com.dr.jjsembako.feature_customer.data.CustomerRepository
 import com.dr.jjsembako.feature_customer.domain.repository.ICustomerRepository
 import com.dr.jjsembako.feature_history.data.HistoryRepository
+import com.dr.jjsembako.feature_history.domain.repository.ICanceledRepository
 import com.dr.jjsembako.feature_history.domain.repository.IHistoryRepository
+import com.dr.jjsembako.feature_history.domain.repository.IReturRepository
 import com.dr.jjsembako.feature_order.data.OrderRepository
+import com.dr.jjsembako.feature_order.domain.repository.IOrderRepository
 import com.dr.jjsembako.feature_order.domain.repository.ISelectCustRepository
 import com.dr.jjsembako.feature_setting.data.SettingRepository
 import com.dr.jjsembako.feature_setting.domain.repository.IRecoveryRepository
@@ -36,9 +39,18 @@ abstract class RepositoryModule {
     abstract fun provideCustomerRepository(customerRepository: CustomerRepository): ICustomerRepository
 
     @Binds
+    abstract fun provideOrderRepository(orderRepository: OrderRepository): IOrderRepository
+
+    @Binds
     abstract fun provideSelectCustomerRepository(orderRepository: OrderRepository): ISelectCustRepository
 
     @Binds
     abstract fun provideHistoryRepository(historyRepository: HistoryRepository): IHistoryRepository
+
+    @Binds
+    abstract fun provideCanceledRepository(historyRepository: HistoryRepository): ICanceledRepository
+
+    @Binds
+    abstract fun provideReturRepository(historyRepository: HistoryRepository): IReturRepository
 
 }
