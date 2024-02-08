@@ -428,6 +428,7 @@ private fun DetailTransaksiContent(
                 PaymentDialog(
                     paymentStatus = orderData.paymentStatus,
                     showDialog = showPaymentDialog,
+                    detailTransaksiViewModel = detailTransaksiViewModel,
                     modifier = modifier
                 )
             }
