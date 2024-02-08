@@ -52,9 +52,14 @@ import com.dr.jjsembako.core.presentation.theme.dialogMinWidth
 fun CancelPotongNotaDialog(
     status: Int,
     showDialog: MutableState<Boolean>,
+    handleDeleteCanceled: () -> Unit,
     modifier: Modifier
 ) {
-    if (status == 0) CancelPotongNotaConfirmation(showDialog, modifier)
+    if (status == 0) CancelPotongNotaConfirmation(
+        showDialog = showDialog,
+        handleDeleteCanceled = { handleDeleteCanceled() },
+        modifier = modifier
+    )
     else CancelPotongNotaError(showDialog, modifier)
 }
 
@@ -128,6 +133,7 @@ private fun CancelPotongNotaError(
 @Composable
 private fun CancelPotongNotaConfirmation(
     showDialog: MutableState<Boolean>,
+    handleDeleteCanceled: () -> Unit,
     modifier: Modifier
 ) {
     val checkBoxStates = remember { mutableStateOf(false) }
@@ -213,6 +219,7 @@ private fun CancelPotongNotaConfirmation(
                     enabled = checkBoxStates.value,
                     onClick = {
                         showDialog.value = false
+                        handleDeleteCanceled()
                     },
                     colors = ButtonDefaults.buttonColors(
                         contentColor = Color.Red,
@@ -241,6 +248,7 @@ private fun CancelPotongNotaDialogPreview() {
         CancelPotongNotaDialog(
             status = 0,
             showDialog = remember { mutableStateOf(true) },
+            handleDeleteCanceled = {},
             modifier = Modifier
         )
     }

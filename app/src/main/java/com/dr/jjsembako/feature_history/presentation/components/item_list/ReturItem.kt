@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,6 +54,7 @@ fun ReturItem(
     data: ReturItem,
     showDialogRetur: MutableState<Boolean>,
     idDeleteRetur: MutableState<String>,
+    statusRetur: MutableState<Int>,
     modifier: Modifier
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -63,7 +65,15 @@ fun ReturItem(
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
     ) {
-        StatusAndOption(data.id, showDialogRetur, idDeleteRetur, expanded, modifier)
+        StatusAndOption(
+            data.id,
+            data.status,
+            showDialogRetur,
+            idDeleteRetur,
+            statusRetur,
+            expanded,
+            modifier
+        )
         ProductOnReturnedItem(data, modifier)
         DividerInfo(modifier)
         ProductSubstituteItem(data, modifier)
@@ -74,8 +84,10 @@ fun ReturItem(
 @Composable
 private fun StatusAndOption(
     id: String,
+    status: Int,
     showDialogRetur: MutableState<Boolean>,
     idDeleteRetur: MutableState<String>,
+    statusRetur: MutableState<Int>,
     expanded: MutableState<Boolean>,
     modifier: Modifier
 ) {
@@ -106,6 +118,7 @@ private fun StatusAndOption(
                     onClick = {
                         expanded.value = false
                         idDeleteRetur.value = id
+                        statusRetur.value = status
                         showDialogRetur.value = true
                     })
             }
@@ -250,6 +263,7 @@ private fun ReturItemPreview() {
                 data = dataRetur[0],
                 showDialogRetur = remember { mutableStateOf(true) },
                 idDeleteRetur = remember { mutableStateOf("") },
+                statusRetur = remember { mutableIntStateOf(0) },
                 modifier = Modifier
             )
         }

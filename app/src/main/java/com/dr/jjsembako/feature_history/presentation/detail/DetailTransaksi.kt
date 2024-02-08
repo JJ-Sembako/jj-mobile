@@ -30,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -62,6 +63,8 @@ import com.dr.jjsembako.feature_history.presentation.components.detail.OrderInfo
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderTimestamps
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderedProductList
 import com.dr.jjsembako.feature_history.presentation.components.detail.ReturPotongNotaInformation
+import com.dr.jjsembako.feature_history.presentation.components.dialog.CancelPotongNotaDialog
+import com.dr.jjsembako.feature_history.presentation.components.dialog.CancelReturDialog
 import com.dr.jjsembako.feature_history.presentation.components.dialog.DeleteProductDialog
 import com.dr.jjsembako.feature_history.presentation.components.dialog.PaymentDialog
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
@@ -188,6 +191,8 @@ private fun DetailTransaksiContent(
     val idDeleteProductOrder = remember { mutableStateOf("") }
     val idDeleteCanceled = remember { mutableStateOf("") }
     val idDeleteRetur = remember { mutableStateOf("") }
+    val statusCanceled = remember { mutableIntStateOf(0) }
+    val statusRetur = remember { mutableIntStateOf(0) }
     val msgErrorPNR = rememberSaveable { mutableStateOf("") }
     val msgSuccess = rememberSaveable { mutableStateOf("") }
     val msgSuccessOption = listOf(
@@ -404,6 +409,8 @@ private fun DetailTransaksiContent(
                 showDialogRetur = showDeleteReturDialog,
                 idDeleteCanceled = idDeleteCanceled,
                 idDeleteRetur = idDeleteRetur,
+                statusCanceled = statusCanceled,
+                statusRetur = statusRetur,
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
@@ -442,6 +449,28 @@ private fun DetailTransaksiContent(
                             idDeleteProductOrder.value
                         )
                     },
+                    modifier = modifier
+                )
+            }
+
+            if (showDeleteCanceledDialog.value) {
+                CancelPotongNotaDialog(
+                    status = statusCanceled.intValue,
+                    showDialog = showDeleteCanceledDialog,
+                    handleDeleteCanceled = {
+                        detailTransaksiViewModel.handleDeleteCanceled(
+                            idDeleteCanceled.value
+                        )
+                    },
+                    modifier = modifier
+                )
+            }
+
+            if (showDeleteReturDialog.value) {
+                CancelReturDialog(
+                    status = statusRetur.intValue,
+                    showDialog = showDeleteReturDialog,
+                    handleDeleteRetur = { detailTransaksiViewModel.handleDeleteRetur(idDeleteRetur.value) },
                     modifier = modifier
                 )
             }

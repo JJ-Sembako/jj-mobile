@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ fun PotongNotaInformationContent(
     dataCanceled: List<CanceledItem?>?,
     showDialogCanceled: MutableState<Boolean>,
     idDeleteCanceled: MutableState<String>,
+    statusCanceled: MutableState<Int>,
     modifier: Modifier
 ) {
     Column(
@@ -40,7 +42,7 @@ fun PotongNotaInformationContent(
             dataCanceled.forEach { item ->
                 if (item != null) {
                     key(item.id) {
-                        PotongNotaItem(item, showDialogCanceled, idDeleteCanceled, modifier)
+                        PotongNotaItem(item, showDialogCanceled, idDeleteCanceled, statusCanceled, modifier)
                         Spacer(modifier = modifier.height(8.dp))
                     }
                 }
@@ -63,6 +65,7 @@ private fun PotongNotaInformationContentPreview() {
                 dataCanceled = null,
                 showDialogCanceled = remember { mutableStateOf(true) },
                 idDeleteCanceled = remember { mutableStateOf("") },
+                statusCanceled = remember { mutableIntStateOf(0) },
                 modifier = Modifier
             )
         }

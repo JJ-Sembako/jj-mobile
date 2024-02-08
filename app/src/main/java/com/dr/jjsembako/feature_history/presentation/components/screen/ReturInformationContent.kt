@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ fun ReturInformationContent(
     dataRetur: List<ReturItem?>?,
     showDialogRetur: MutableState<Boolean>,
     idDeleteRetur: MutableState<String>,
+    statusRetur: MutableState<Int>,
     modifier: Modifier
 ) {
     Column(
@@ -40,7 +42,7 @@ fun ReturInformationContent(
             dataRetur.forEach { item ->
                 if (item != null) {
                     key(item.id) {
-                        ReturItem(item, showDialogRetur, idDeleteRetur, modifier)
+                        ReturItem(item, showDialogRetur, idDeleteRetur, statusRetur, modifier)
                         Spacer(modifier = modifier.height(8.dp))
                     }
                 }
@@ -63,6 +65,7 @@ private fun ReturInformationContentPreview() {
                 dataRetur = null,
                 showDialogRetur = remember { mutableStateOf(true) },
                 idDeleteRetur = remember { mutableStateOf("") },
+                statusRetur = remember { mutableIntStateOf(0) },
                 modifier = Modifier
             )
         }

@@ -52,6 +52,8 @@ fun ReturPotongNotaInformation(
     showDialogRetur: MutableState<Boolean>,
     idDeleteCanceled: MutableState<String>,
     idDeleteRetur: MutableState<String>,
+    statusCanceled: MutableState<Int>,
+    statusRetur: MutableState<Int>,
     modifier: Modifier
 ) {
     var tabIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -106,6 +108,7 @@ fun ReturPotongNotaInformation(
                     dataRetur,
                     showDialogRetur,
                     idDeleteRetur,
+                    statusRetur,
                     modifier
                 )
 
@@ -113,6 +116,7 @@ fun ReturPotongNotaInformation(
                     dataCanceled,
                     showDialogCanceled,
                     idDeleteCanceled,
+                    statusCanceled,
                     modifier
                 )
 
@@ -169,6 +173,8 @@ private fun ReturPotongNotaInformationPreview() {
                 showDialogRetur = remember { mutableStateOf(true) },
                 idDeleteCanceled = remember { mutableStateOf("") },
                 idDeleteRetur = remember { mutableStateOf("") },
+                statusCanceled = remember { mutableIntStateOf(0) },
+                statusRetur = remember { mutableIntStateOf(0) },
                 modifier = Modifier
             )
         }

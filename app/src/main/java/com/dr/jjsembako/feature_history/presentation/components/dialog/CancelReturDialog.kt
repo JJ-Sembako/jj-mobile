@@ -52,9 +52,14 @@ import com.dr.jjsembako.core.presentation.theme.dialogMinWidth
 fun CancelReturDialog(
     status: Int,
     showDialog: MutableState<Boolean>,
+    handleDeleteRetur: () -> Unit,
     modifier: Modifier
 ) {
-    if (status == 0) CancelReturConfirmation(showDialog, modifier)
+    if (status == 0) CancelReturConfirmation(
+        showDialog = showDialog,
+        handleDeleteRetur = { handleDeleteRetur() },
+        modifier = modifier
+    )
     else CancelReturError(showDialog, modifier)
 }
 
@@ -128,6 +133,7 @@ private fun CancelReturError(
 @Composable
 private fun CancelReturConfirmation(
     showDialog: MutableState<Boolean>,
+    handleDeleteRetur: () -> Unit,
     modifier: Modifier
 ) {
     val checkBoxStates = remember { mutableStateOf(false) }
@@ -213,6 +219,7 @@ private fun CancelReturConfirmation(
                     enabled = checkBoxStates.value,
                     onClick = {
                         showDialog.value = false
+                        handleDeleteRetur()
                     },
                     colors = ButtonDefaults.buttonColors(
                         contentColor = Color.Red,
@@ -241,6 +248,7 @@ private fun CancelReturDialogPreview() {
         CancelReturDialog(
             status = 0,
             showDialog = remember { mutableStateOf(true) },
+            handleDeleteRetur = {},
             modifier = Modifier
         )
     }

@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,6 +52,7 @@ fun PotongNotaItem(
     data: CanceledItem,
     showDialogCanceled: MutableState<Boolean>,
     idDeleteCanceled: MutableState<String>,
+    statusCanceled: MutableState<Int>,
     modifier: Modifier
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -61,7 +63,15 @@ fun PotongNotaItem(
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
     ) {
-        StatusAndOption(data.id, showDialogCanceled, idDeleteCanceled, expanded, modifier)
+        StatusAndOption(
+            data.id,
+            data.status,
+            showDialogCanceled,
+            idDeleteCanceled,
+            statusCanceled,
+            expanded,
+            modifier
+        )
         Row(
             modifier = modifier
                 .fillMaxWidth(),
@@ -77,8 +87,10 @@ fun PotongNotaItem(
 @Composable
 private fun StatusAndOption(
     id: String,
+    status: Int,
     showDialogCanceled: MutableState<Boolean>,
     idDeleteCanceled: MutableState<String>,
+    statusCanceled: MutableState<Int>,
     expanded: MutableState<Boolean>,
     modifier: Modifier
 ) {
@@ -109,6 +121,7 @@ private fun StatusAndOption(
                     onClick = {
                         expanded.value = false
                         idDeleteCanceled.value = id
+                        statusCanceled.value = status
                         showDialogCanceled.value = true
                     })
             }
@@ -194,6 +207,7 @@ private fun PotongNotaItemPreview() {
                 data = dataCanceled[0],
                 showDialogCanceled = remember { mutableStateOf(true) },
                 idDeleteCanceled = remember { mutableStateOf("") },
+                statusCanceled = remember { mutableIntStateOf(0) },
                 modifier = Modifier
             )
         }
