@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+option java_package = "com.dr.jjsembako";
+option java_multiple_files = true;
+
