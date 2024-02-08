@@ -47,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
+import com.dr.jjsembako.core.presentation.components.dialog.AlertDeleteDialog
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.dialog.OrderInformationDialog
@@ -181,12 +182,13 @@ private fun DetailTransaksiContent(
     val showErrorDialog = remember { mutableStateOf(false) }
     val showSuccessDialog = remember { mutableStateOf(false) }
     val showPaymentDialog = remember { mutableStateOf(false) }
+    val showDeleteOrder = remember { mutableStateOf(false) }
     val showDeleteProductOrderDialog = remember { mutableStateOf(false) }
     val showDeleteCanceledDialog = remember { mutableStateOf(false) }
     val showDeleteReturDialog = remember { mutableStateOf(false) }
+    val showCantDelOrderDialog = remember { mutableStateOf(false) }
     val showCantPNRDialog = remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
-    val showDialog = remember { mutableStateOf(false) }
 
     val idDeleteProductOrder = remember { mutableStateOf("") }
     val idDeleteCanceled = remember { mutableStateOf("") }
@@ -341,7 +343,12 @@ private fun DetailTransaksiContent(
                         )
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.cancel_order)) },
-                            onClick = { showDialog.value = true })
+                            onClick = {
+                                if (orderData.orderStatus != 0 && orderData.orderStatus != 1) {
+                                    menuExpanded = false
+                                    showCantDelOrderDialog.value = true
+                                } else showDeleteOrder.value = true
+                            })
                     }
                 }
             )
@@ -431,6 +438,14 @@ private fun DetailTransaksiContent(
                 )
             }
 
+            if (showCantDelOrderDialog.value) {
+                AlertErrorDialog(
+                    message = stringResource(R.string.err_del_order),
+                    showDialog = showCantDelOrderDialog,
+                    modifier = modifier
+                )
+            }
+
             if (showPaymentDialog.value) {
                 PaymentDialog(
                     paymentStatus = orderData.paymentStatus,
@@ -471,6 +486,14 @@ private fun DetailTransaksiContent(
                     status = statusRetur.intValue,
                     showDialog = showDeleteReturDialog,
                     handleDeleteRetur = { detailTransaksiViewModel.handleDeleteRetur(idDeleteRetur.value) },
+                    modifier = modifier
+                )
+            }
+
+            if (showDeleteOrder.value) {
+                AlertDeleteDialog(
+                    onDelete = { detailTransaksiViewModel.handleDeleteOrder() },
+                    showDialog = showDeleteOrder,
                     modifier = modifier
                 )
             }

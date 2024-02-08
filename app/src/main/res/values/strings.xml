@@ -212,6 +212,7 @@
         Pembatalan barang pesanan akan menghapus data barang dari pesanan dan mengubah informasi
         pesanan. Tindakan ini tidak dapat dipulihkan.
     </string>
+    <string name="err_del_order">Transaksi pesanan tidak dapat dibatalkan ketika sudah dikirim maupun diterima!</string>
     <string name="success_payment">Pembayaran berhasil diganti menjadi lunas!</string>
     <string name="success_delete_product">Hapus barang pesanan berhasil!</string>
     <string name="success_delete_retur">Retur berhasil dibatalkan!</string>
