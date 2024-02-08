@@ -49,11 +49,13 @@ import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.dialog.OrderInformationDialog
+import com.dr.jjsembako.core.presentation.components.dialog.SuccessDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderHistoryCard
 import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderTimestamps
+import com.dr.jjsembako.feature_history.domain.model.UpdateStateOrder
 import com.dr.jjsembako.feature_history.presentation.components.detail.CustomerInformation
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderButtonMenu
 import com.dr.jjsembako.feature_history.presentation.components.detail.OrderInformation
@@ -162,6 +164,8 @@ private fun DetailTransaksiContent(
     modifier: Modifier
 ) {
     val tag = "DetailTransaksi-C"
+    val stateSecond = detailTransaksiViewModel.stateSecond.observeAsState().value
+    val stateUpdate = detailTransaksiViewModel.stateUpdate.observeAsState().value
     val stateRefresh = detailTransaksiViewModel.stateRefresh.observeAsState().value
     val isRefreshing by detailTransaksiViewModel.isRefreshing.collectAsState(initial = false)
     val message = detailTransaksiViewModel.message.observeAsState().value
@@ -172,6 +176,7 @@ private fun DetailTransaksiContent(
     val showInfoDialog = remember { mutableStateOf(false) }
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = remember { mutableStateOf(false) }
+    val showSuccessDialog = remember { mutableStateOf(false) }
     val showPaymentDialog = remember { mutableStateOf(false) }
     val showDeleteProductOrderDialog = remember { mutableStateOf(false) }
     val showDeleteCanceledDialog = remember { mutableStateOf(false) }
@@ -184,10 +189,74 @@ private fun DetailTransaksiContent(
     val idDeleteCanceled = remember { mutableStateOf("") }
     val idDeleteRetur = remember { mutableStateOf("") }
     val msgErrorPNR = rememberSaveable { mutableStateOf("") }
+    val msgSuccess = rememberSaveable { mutableStateOf("") }
+    val msgSuccessOption = listOf(
+        stringResource(R.string.success_payment),
+        stringResource(R.string.success_delete_product),
+        stringResource(R.string.success_delete_pn),
+        stringResource(R.string.success_delete_retur),
+    )
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { detailTransaksiViewModel.refresh() })
+
+    when (stateSecond) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateSecond")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            detailTransaksiViewModel.setStateSecond(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            detailTransaksiViewModel.setStateSecond(null)
+        }
+
+        else -> {}
+    }
+
+    when (stateUpdate) {
+        UpdateStateOrder.PAYMENT -> {
+            showSuccessDialog.value = true
+            msgSuccess.value = msgSuccessOption[0]
+            detailTransaksiViewModel.setStateUpdate(null)
+        }
+
+        UpdateStateOrder.DEL_PRODUCT -> {
+            showSuccessDialog.value = true
+            msgSuccess.value = msgSuccessOption[1]
+            detailTransaksiViewModel.setStateUpdate(null)
+        }
+
+        UpdateStateOrder.DEL_CANCELED -> {
+            showSuccessDialog.value = true
+            msgSuccess.value = msgSuccessOption[2]
+            detailTransaksiViewModel.setStateUpdate(null)
+        }
+
+        UpdateStateOrder.DEL_RETUR -> {
+            showSuccessDialog.value = true
+            msgSuccess.value = msgSuccessOption[3]
+            detailTransaksiViewModel.setStateUpdate(null)
+        }
+
+        UpdateStateOrder.DEL_ORDER -> {
+            detailTransaksiViewModel.setStateUpdate(null)
+            onNavigateBack()
+        }
+
+        else -> {}
+    }
 
     when (stateRefresh) {
         StateResponse.LOADING -> {
@@ -367,6 +436,14 @@ private fun DetailTransaksiContent(
                 DeleteProductDialog(
                     orderStatus = orderData.orderStatus,
                     showDialog = showDeleteProductOrderDialog,
+                    modifier = modifier
+                )
+            }
+
+            if (showSuccessDialog.value) {
+                SuccessDialog(
+                    message = msgSuccess.value,
+                    showDialog = showSuccessDialog,
                     modifier = modifier
                 )
             }
