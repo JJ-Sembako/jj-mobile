@@ -2,13 +2,12 @@ package com.dr.jjsembako.core.data.model
 
 import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 
-data class SelectCanceledItem(
+data class SelectPNRItem(
     val id: String,
     val amount: Int,
-    val status: Int,
+    val actualAmount: Int,
     val selledPrice: Long,
-    val createdAt: String,
-    val updatedAt: String,
+    val status: Int,
     val product: DataProduct,
     val amountSelected: Int = 0,
     val isChosen: Boolean = false
