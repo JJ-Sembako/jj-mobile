@@ -43,19 +43,30 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.presentation.theme.dialogMaxWidth
 import com.dr.jjsembako.core.presentation.theme.dialogMinWidth
+import com.dr.jjsembako.feature_history.presentation.detail.DetailTransaksiViewModel
 
 @Composable
 fun DeleteProductDialog(
     orderStatus: Int,
+    idDeleteProductOrder: String,
     showDialog: MutableState<Boolean>,
+    detailTransaksiViewModel: DetailTransaksiViewModel,
     modifier: Modifier
 ) {
     if (orderStatus == 2 || orderStatus == 3) DeleteProductError(showDialog, modifier)
-    else DeleteProductConfirmation(showDialog, modifier)
+    else {
+        DeleteProductConfirmation(
+            idDeleteProductOrder = idDeleteProductOrder,
+            showDialog = showDialog,
+            detailTransaksiViewModel = detailTransaksiViewModel,
+            modifier = modifier
+        )
+    }
 }
 
 @Composable
@@ -127,7 +138,9 @@ private fun DeleteProductError(
 
 @Composable
 private fun DeleteProductConfirmation(
+    idDeleteProductOrder: String,
     showDialog: MutableState<Boolean>,
+    detailTransaksiViewModel: DetailTransaksiViewModel,
     modifier: Modifier
 ) {
     val checkBoxStates = remember { mutableStateOf(false) }
@@ -213,6 +226,7 @@ private fun DeleteProductConfirmation(
                     enabled = checkBoxStates.value,
                     onClick = {
                         showDialog.value = false
+                        detailTransaksiViewModel.handleDeleteProductOrder(idDeleteProductOrder)
                     },
                     colors = ButtonDefaults.buttonColors(
                         contentColor = Color.Red,
@@ -240,7 +254,9 @@ private fun DeleteProductDialogPreview() {
     JJSembakoTheme {
         DeleteProductDialog(
             orderStatus = 0,
+            idDeleteProductOrder = "",
             showDialog = remember { mutableStateOf(true) },
+            detailTransaksiViewModel = hiltViewModel(),
             modifier = Modifier
         )
     }

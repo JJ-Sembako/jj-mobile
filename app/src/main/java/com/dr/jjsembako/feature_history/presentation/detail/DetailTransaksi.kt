@@ -436,7 +436,9 @@ private fun DetailTransaksiContent(
             if (showDeleteProductOrderDialog.value) {
                 DeleteProductDialog(
                     orderStatus = orderData.orderStatus,
+                    idDeleteProductOrder = idDeleteProductOrder.value,
                     showDialog = showDeleteProductOrderDialog,
+                    detailTransaksiViewModel = detailTransaksiViewModel,
                     modifier = modifier
                 )
             }
