@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_order.data
+package com.dr.jjsembako.feature_history.data
 
 import android.content.SharedPreferences
 import android.util.Log
@@ -12,16 +12,14 @@ import io.socket.engineio.client.transports.WebSocket
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
-//@Singleton
-class SocketOrderHandler @Inject constructor(
+class SocketPNRHandler @Inject constructor(
     @Named("webSocket") private val client: OkHttpClient,
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson
 ) {
     companion object {
-        private const val TAG = "Socket-Order"
+        private const val TAG = "Socket-PNR"
     }
 
     private lateinit var socket: Socket
