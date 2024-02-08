@@ -43,24 +43,22 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.presentation.theme.dialogMaxWidth
 import com.dr.jjsembako.core.presentation.theme.dialogMinWidth
-import com.dr.jjsembako.feature_history.presentation.detail.DetailTransaksiViewModel
 
 @Composable
 fun PaymentDialog(
     paymentStatus: Int,
     showDialog: MutableState<Boolean>,
-    detailTransaksiViewModel: DetailTransaksiViewModel,
+    handleUpdatePaymentStatus: () -> Unit,
     modifier: Modifier
 ) {
     if (paymentStatus == 0) {
         PaymentConfirmation(
             showDialog = showDialog,
-            detailTransaksiViewModel = detailTransaksiViewModel,
+            handleUpdatePaymentStatus = { handleUpdatePaymentStatus() },
             modifier = modifier
         )
     } else PaymentError(showDialog, modifier)
@@ -136,7 +134,7 @@ private fun PaymentError(
 @Composable
 private fun PaymentConfirmation(
     showDialog: MutableState<Boolean>,
-    detailTransaksiViewModel: DetailTransaksiViewModel,
+    handleUpdatePaymentStatus: () -> Unit,
     modifier: Modifier
 ) {
     val checkBoxStates = remember { mutableStateOf(false) }
@@ -222,7 +220,7 @@ private fun PaymentConfirmation(
                     enabled = checkBoxStates.value,
                     onClick = {
                         showDialog.value = false
-                        detailTransaksiViewModel.handleUpdatePaymentStatus()
+                        handleUpdatePaymentStatus()
                     },
                     colors = ButtonDefaults.buttonColors(
                         contentColor = Color.Red,
@@ -251,7 +249,7 @@ private fun PaymentDialogPreview() {
         PaymentDialog(
             paymentStatus = 0,
             showDialog = remember { mutableStateOf(true) },
-            detailTransaksiViewModel = hiltViewModel(),
+            handleUpdatePaymentStatus = {},
             modifier = Modifier
         )
     }
