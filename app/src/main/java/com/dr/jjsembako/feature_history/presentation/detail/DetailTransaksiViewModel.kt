@@ -8,10 +8,12 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.feature_history.domain.model.UpdateStateOrder
+import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleDeleteCanceledUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteProductOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdatePaymentStatusUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleDeleteReturUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +26,9 @@ class DetailTransaksiViewModel @Inject constructor(
     private val fetchOrderUseCase: FetchOrderUseCase,
     private val handleUpdatePaymentStatusUseCase: HandleUpdatePaymentStatusUseCase,
     private val handleDeleteProductOrderUseCase: HandleDeleteProductOrderUseCase,
-    private val handleDeleteOrderUseCase: HandleDeleteOrderUseCase
+    private val handleDeleteOrderUseCase: HandleDeleteOrderUseCase,
+    private val handleDeleteCanceledUseCase: HandleDeleteCanceledUseCase,
+    private val handleDeleteReturUseCase: HandleDeleteReturUseCase
 ) : ViewModel() {
 
     private val _stateFirst = MutableLiveData<StateResponse?>()
@@ -149,7 +153,7 @@ class DetailTransaksiViewModel @Inject constructor(
                         _statusCode.value = it.status
                         val oldValue = orderData
                         val newOrderToProducts = oldValue!!.orderToProducts.filter { data ->
-                            data.id != productId
+                            data.product.id != productId
                         }
                         val newValue = oldValue.copy(
                             orderToProducts = newOrderToProducts
@@ -184,6 +188,72 @@ class DetailTransaksiViewModel @Inject constructor(
                         _stateUpdate.value = UpdateStateOrder.DEL_ORDER
                         _message.value = it.message
                         _statusCode.value = it.status
+                    }
+
+                    is Resource.Error -> {
+                        _stateSecond.value = StateResponse.ERROR
+                        _message.value = it.message
+                        _statusCode.value = it.status
+                    }
+                }
+            }
+        }
+    }
+
+    fun handleDeleteCanceled(canceledId: String) {
+        viewModelScope.launch {
+            handleDeleteCanceledUseCase.handleDeleteCanceled(canceledId).collect {
+                when (it) {
+                    is Resource.Loading -> _stateSecond.value = StateResponse.LOADING
+
+                    is Resource.Success -> {
+                        _stateSecond.value = StateResponse.SUCCESS
+                        _stateUpdate.value = UpdateStateOrder.DEL_CANCELED
+                        _message.value = it.message
+                        _statusCode.value = it.status
+                        val oldValue = orderData
+                        if (oldValue?.canceled != null) {
+                            val newCanceled = oldValue.canceled.filter { data ->
+                                data!!.id != canceledId
+                            }
+                            val newValue = oldValue.copy(
+                                canceled = newCanceled
+                            )
+                            _orderData.value = newValue
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        _stateSecond.value = StateResponse.ERROR
+                        _message.value = it.message
+                        _statusCode.value = it.status
+                    }
+                }
+            }
+        }
+    }
+
+    fun handleDeleteRetur(returId: String) {
+        viewModelScope.launch {
+            handleDeleteReturUseCase.handleDeleteRetur(returId).collect {
+                when (it) {
+                    is Resource.Loading -> _stateSecond.value = StateResponse.LOADING
+
+                    is Resource.Success -> {
+                        _stateSecond.value = StateResponse.SUCCESS
+                        _stateUpdate.value = UpdateStateOrder.DEL_RETUR
+                        _message.value = it.message
+                        _statusCode.value = it.status
+                        val oldValue = orderData
+                        if (oldValue?.retur != null) {
+                            val newRetur = oldValue.retur.filter { data ->
+                                data!!.id != returId
+                            }
+                            val newValue = oldValue.copy(
+                                retur = newRetur
+                            )
+                            _orderData.value = newValue
+                        }
                     }
 
                     is Resource.Error -> {
