@@ -13,7 +13,7 @@ import okhttp3.OkHttpClient
 import javax.inject.Inject
 import javax.inject.Named
 
-class SocketPNRHandler @Inject constructor(
+class SocketModifyOrderHandler @Inject constructor(
     @Named("webSocket") private val client: OkHttpClient,
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson
