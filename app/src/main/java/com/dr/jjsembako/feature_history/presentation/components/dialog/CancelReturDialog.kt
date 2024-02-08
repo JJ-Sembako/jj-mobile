@@ -154,7 +154,7 @@ private fun CancelReturConfirmation(
         ) {
             Icon(
                 imageVector = Icons.Default.Warning,
-                contentDescription = stringResource(R.string.cancel_retur),
+                contentDescription = stringResource(R.string.alert),
                 tint = Color.Red,
                 modifier = modifier.size(80.dp)
             )

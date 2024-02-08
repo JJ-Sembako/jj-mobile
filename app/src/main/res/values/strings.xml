@@ -204,12 +204,10 @@
         Tindakan potong nota tidak bisa dilakukan karena pembayaran sudah lunas!
     </string>
     <string name="err_payment">Pembayaran pesanan sudah lunas!</string>
-    <string name="confirm_payment">Konfirmasi pembayaran pesanan</string>
     <string name="confirm_payment_text">
         Konfirmasi pembayaran pesanan hanya bisa dilakukan sekali dan tidak dapat diubah kembali.
     </string>
     <string name="err_del_product">Barang pesanan tidak bisa dibatalkan ketika sudah dikirim maupun diterima!</string>
-    <string name="confirm_del_product">Konfirmasi pembatalan barang pesanan</string>
     <string name="confirm_del_product_text">
         Pembatalan barang pesanan akan menghapus data barang dari pesanan dan mengubah informasi
         pesanan. Tindakan ini tidak dapat dipulihkan.

@@ -156,7 +156,7 @@ private fun DeleteProductConfirmation(
         ) {
             Icon(
                 imageVector = Icons.Default.Warning,
-                contentDescription = stringResource(R.string.confirm_del_product),
+                contentDescription = stringResource(R.string.alert),
                 tint = Color.Red,
                 modifier = modifier.size(80.dp)
             )

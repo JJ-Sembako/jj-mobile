@@ -155,7 +155,7 @@ private fun PaymentConfirmation(
         ) {
             Icon(
                 imageVector = Icons.Default.Warning,
-                contentDescription = stringResource(R.string.confirm_payment),
+                contentDescription = stringResource(R.string.alert),
                 tint = Color.Red,
                 modifier = modifier.size(80.dp)
             )

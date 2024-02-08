@@ -154,7 +154,7 @@ private fun CancelPotongNotaConfirmation(
         ) {
             Icon(
                 imageVector = Icons.Default.Warning,
-                contentDescription = stringResource(R.string.cancel_potong_nota),
+                contentDescription = stringResource(R.string.alert),
                 tint = Color.Red,
                 modifier = modifier.size(80.dp)
             )
