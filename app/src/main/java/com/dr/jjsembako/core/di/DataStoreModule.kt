@@ -9,13 +9,15 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.dr.jjsembako.AddOrderStore
+import com.dr.jjsembako.CanceledStore
 import com.dr.jjsembako.ProductOrderList
-import com.dr.jjsembako.UpdateOrderStore
+import com.dr.jjsembako.ReturStore
+import com.dr.jjsembako.SubstituteStore
 import com.dr.jjsembako.core.data.model.PreferencesKeys
-import com.dr.jjsembako.core.utils.proto.AddOrderStoreSerializer
+import com.dr.jjsembako.core.utils.proto.CanceledStoreSerializer
 import com.dr.jjsembako.core.utils.proto.ProductOrderStoreSerializer
-import com.dr.jjsembako.core.utils.proto.UpdateOrderStoreSerializer
+import com.dr.jjsembako.core.utils.proto.ReturStoreSerializer
+import com.dr.jjsembako.core.utils.proto.SubstituteStoreSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,8 +36,6 @@ object DataStoreModule {
 
     private const val ORDER_PREFERENCES = "order_preferences"
     private const val DATA_STORE_FILE_CREATE_ORDER = "ordered_product_prefs.pb"
-    private const val DATA_STORE_FILE_ADD_ORDER = "add_ordered_product_prefs.pb"
-    private const val DATA_STORE_FILE_UPDATE_ORDER = "update_ordered_product_prefs.pb"
     private const val DATA_STORE_FILE_CANCELED = "canceled_prefs.pb"
     private const val DATA_STORE_FILE_RETUR = "retur_prefs.pb"
     private const val DATA_STORE_FILE_SUBSTITUTE_RETUR = "substitute_retur_prefs.pb"
@@ -65,10 +65,10 @@ object DataStoreModule {
 
     @Singleton
     @Provides
-    fun provideProtoDataStoreAddOrder(@ApplicationContext appContext: Context): DataStore<AddOrderStore> {
+    fun provideProtoDataStoreCanceled(@ApplicationContext appContext: Context): DataStore<CanceledStore> {
         return DataStoreFactory.create(
-            serializer = AddOrderStoreSerializer(),
-            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_ADD_ORDER) },
+            serializer = CanceledStoreSerializer(),
+            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_CANCELED) },
             corruptionHandler = null,
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         )
@@ -76,10 +76,21 @@ object DataStoreModule {
 
     @Singleton
     @Provides
-    fun provideProtoDataStoreUpdateOrder(@ApplicationContext appContext: Context): DataStore<UpdateOrderStore> {
+    fun provideProtoDataStoreRetur(@ApplicationContext appContext: Context): DataStore<ReturStore> {
         return DataStoreFactory.create(
-            serializer = UpdateOrderStoreSerializer(),
-            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_UPDATE_ORDER) },
+            serializer = ReturStoreSerializer(),
+            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_RETUR) },
+            corruptionHandler = null,
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideProtoDataStoreSubstitute(@ApplicationContext appContext: Context): DataStore<SubstituteStore> {
+        return DataStoreFactory.create(
+            serializer = SubstituteStoreSerializer(),
+            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_SUBSTITUTE_RETUR) },
             corruptionHandler = null,
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         )
@@ -109,13 +120,19 @@ object DataStoreModule {
 
     @Singleton
     @Provides
-    fun provideAddOrderData(dataStore: DataStore<AddOrderStore>): Flow<AddOrderStore> {
+    fun provideCanceledData(dataStore: DataStore<CanceledStore>): Flow<CanceledStore> {
         return dataStore.data
     }
 
     @Singleton
     @Provides
-    fun provideUpdateOrderData(dataStore: DataStore<UpdateOrderStore>): Flow<UpdateOrderStore> {
+    fun provideReturData(dataStore: DataStore<ReturStore>): Flow<ReturStore> {
+        return dataStore.data
+    }
+
+    @Singleton
+    @Provides
+    fun provideSubstituteData(dataStore: DataStore<SubstituteStore>): Flow<SubstituteStore> {
         return dataStore.data
     }
 }

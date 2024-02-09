@@ -3,22 +3,22 @@ package com.dr.jjsembako.core.utils.proto
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import androidx.datastore.preferences.protobuf.InvalidProtocolBufferException
-import com.dr.jjsembako.AddOrderStore
+import com.dr.jjsembako.ReturStore
 import java.io.InputStream
 import java.io.OutputStream
 
-class AddOrderStoreSerializer : Serializer<AddOrderStore> {
-    override val defaultValue: AddOrderStore = AddOrderStore.getDefaultInstance()
+class ReturStoreSerializer : Serializer<ReturStore> {
+    override val defaultValue: ReturStore = ReturStore.getDefaultInstance()
 
-    override suspend fun readFrom(input: InputStream): AddOrderStore {
+    override suspend fun readFrom(input: InputStream): ReturStore {
         try {
-            return AddOrderStore.parseFrom(input)
+            return ReturStore.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
             throw CorruptionException("Cannot read proto.", exception)
         }
     }
 
-    override suspend fun writeTo(t: AddOrderStore, output: OutputStream) {
+    override suspend fun writeTo(t: ReturStore, output: OutputStream) {
         t.writeTo(output)
     }
 }
