@@ -9,9 +9,13 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.dr.jjsembako.AddOrderStore
 import com.dr.jjsembako.ProductOrderList
+import com.dr.jjsembako.UpdateOrderStore
 import com.dr.jjsembako.core.data.model.PreferencesKeys
-import com.dr.jjsembako.core.utils.ProductOrderStoreSerializer
+import com.dr.jjsembako.core.utils.proto.AddOrderStoreSerializer
+import com.dr.jjsembako.core.utils.proto.ProductOrderStoreSerializer
+import com.dr.jjsembako.core.utils.proto.UpdateOrderStoreSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +33,12 @@ import javax.inject.Singleton
 object DataStoreModule {
 
     private const val ORDER_PREFERENCES = "order_preferences"
-    private const val DATA_STORE_FILE_NAME = "ordered_product_prefs.pb"
+    private const val DATA_STORE_FILE_CREATE_ORDER = "ordered_product_prefs.pb"
+    private const val DATA_STORE_FILE_ADD_ORDER = "add_ordered_product_prefs.pb"
+    private const val DATA_STORE_FILE_UPDATE_ORDER = "update_ordered_product_prefs.pb"
+    private const val DATA_STORE_FILE_CANCELED = "canceled_prefs.pb"
+    private const val DATA_STORE_FILE_RETUR = "retur_prefs.pb"
+    private const val DATA_STORE_FILE_SUBSTITUTE_RETUR = "substitute_retur_prefs.pb"
 
     @Singleton
     @Provides
@@ -45,10 +54,32 @@ object DataStoreModule {
 
     @Singleton
     @Provides
-    fun provideProtoDataStore(@ApplicationContext appContext: Context): DataStore<ProductOrderList> {
+    fun provideProtoDataStoreCreateOrder(@ApplicationContext appContext: Context): DataStore<ProductOrderList> {
         return DataStoreFactory.create(
             serializer = ProductOrderStoreSerializer(),
-            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_NAME) },
+            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_CREATE_ORDER) },
+            corruptionHandler = null,
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideProtoDataStoreAddOrder(@ApplicationContext appContext: Context): DataStore<AddOrderStore> {
+        return DataStoreFactory.create(
+            serializer = AddOrderStoreSerializer(),
+            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_ADD_ORDER) },
+            corruptionHandler = null,
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideProtoDataStoreUpdateOrder(@ApplicationContext appContext: Context): DataStore<UpdateOrderStore> {
+        return DataStoreFactory.create(
+            serializer = UpdateOrderStoreSerializer(),
+            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_UPDATE_ORDER) },
             corruptionHandler = null,
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         )
@@ -73,6 +104,18 @@ object DataStoreModule {
     @Singleton
     @Provides
     fun provideProductsList(dataStore: DataStore<ProductOrderList>): Flow<ProductOrderList> {
+        return dataStore.data
+    }
+
+    @Singleton
+    @Provides
+    fun provideAddOrderData(dataStore: DataStore<AddOrderStore>): Flow<AddOrderStore> {
+        return dataStore.data
+    }
+
+    @Singleton
+    @Provides
+    fun provideUpdateOrderData(dataStore: DataStore<UpdateOrderStore>): Flow<UpdateOrderStore> {
         return dataStore.data
     }
 }

@@ -1,4 +1,4 @@
-package com.dr.jjsembako.core.utils
+package com.dr.jjsembako.core.utils.proto
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer

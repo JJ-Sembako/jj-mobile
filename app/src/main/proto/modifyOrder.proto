@@ -3,14 +3,14 @@ syntax = "proto3";
 option java_package = "com.dr.jjsembako";
 option java_multiple_files = true;
 
-message AddProductStore {
+message AddOrderStore {
   string id = 1;
   int32 order_qty = 2;
   int64 order_price = 3;
   int64 order_total_price = 4;
 }
 
-message UpdateProductStore {
+message UpdateOrderStore {
   string idProduct = 1;
   int32 update_amount = 2;
   int64 update_selled_price = 3;
