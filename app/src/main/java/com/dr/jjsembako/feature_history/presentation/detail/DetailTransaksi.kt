@@ -186,6 +186,7 @@ private fun DetailTransaksiContent(
     val showDeleteProductOrderDialog = remember { mutableStateOf(false) }
     val showDeleteCanceledDialog = remember { mutableStateOf(false) }
     val showDeleteReturDialog = remember { mutableStateOf(false) }
+    val showCantModifyOrderDialog = remember { mutableStateOf(false) }
     val showCantDelOrderDialog = remember { mutableStateOf(false) }
     val showCantPNRDialog = remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
@@ -331,21 +332,25 @@ private fun DetailTransaksiContent(
                             text = { Text(text = stringResource(R.string.add_product_order)) },
                             onClick = {
                                 menuExpanded = false
-                                onNavigateToAddProductOrder()
+                                if (orderData.orderStatus != 0 && orderData.orderStatus != 1){
+                                    showCantModifyOrderDialog.value = true
+                                } else onNavigateToAddProductOrder()
                             },
                         )
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.edit_product_order)) },
                             onClick = {
                                 menuExpanded = false
-                                onNavigateToEditProductOrder()
+                                if (orderData.orderStatus != 0 && orderData.orderStatus != 1){
+                                    showCantModifyOrderDialog.value = true
+                                } else onNavigateToEditProductOrder()
                             },
                         )
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.cancel_order)) },
                             onClick = {
+                                menuExpanded = false
                                 if (orderData.orderStatus != 0 && orderData.orderStatus != 1) {
-                                    menuExpanded = false
                                     showCantDelOrderDialog.value = true
                                 } else showDeleteOrder.value = true
                             })
@@ -434,6 +439,14 @@ private fun DetailTransaksiContent(
                 AlertErrorDialog(
                     message = msgErrorPNR.value,
                     showDialog = showCantPNRDialog,
+                    modifier = modifier
+                )
+            }
+
+            if (showCantModifyOrderDialog.value) {
+                AlertErrorDialog(
+                    message = stringResource(R.string.err_edit_order),
+                    showDialog = showCantModifyOrderDialog,
                     modifier = modifier
                 )
             }
