@@ -431,6 +431,14 @@ private fun DetailTransaksiContent(
                 LoadingDialog(showLoadingDialog, modifier)
             }
 
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: "Unknown error",
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
+
             if (showInfoDialog.value) {
                 OrderInformationDialog(showDialog = showInfoDialog, modifier = modifier)
             }

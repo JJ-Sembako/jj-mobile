@@ -97,6 +97,11 @@ class TambahBarangPesananViewModel @Inject constructor(
         fetchOrder(id)
     }
 
+    fun reset() {
+        if (selectedData.value == null) return
+        else disableOrder(selectedData.value!!)
+    }
+
     fun fetchOrder(id: String) {
         viewModelScope.launch {
             fetchOrderUseCase.fetchOrder(id).collect {
@@ -119,6 +124,39 @@ class TambahBarangPesananViewModel @Inject constructor(
                         else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
+                    }
+                }
+            }
+        }
+    }
+
+    fun handleAddProductOrder() {
+        val id = _id ?: return
+        if (selectedData.value == null) return
+        else {
+            val productId = selectedData.value!!.id
+            val amountInUnit = selectedData.value!!.orderQty
+            val pricePerUnit = selectedData.value!!.orderPrice
+            viewModelScope.launch {
+                handleAddProductOrderUseCase.handleAddProductOrder(
+                    id, productId, amountInUnit, pricePerUnit
+                ).collect {
+                    when (it) {
+                        is Resource.Loading -> {
+                            _stateSecond.value = StateResponse.LOADING
+                        }
+
+                        is Resource.Success -> {
+                            _stateSecond.value = StateResponse.SUCCESS
+                            _message.value = it.message
+                            _statusCode.value = it.status
+                        }
+
+                        is Resource.Error -> {
+                            _stateSecond.value = StateResponse.ERROR
+                            _message.value = it.message
+                            _statusCode.value = it.status
+                        }
                     }
                 }
             }
@@ -381,9 +419,9 @@ class TambahBarangPesananViewModel @Inject constructor(
         }
     }
 
-    private fun recoveryData(){
+    private fun recoveryData() {
         if (selectedData.value == null) return
-        else{
+        else {
             if (dataProducts.value?.isEmpty() == true) return
             else {
                 val currentList = _dataProducts.value.orEmpty().toMutableList()
