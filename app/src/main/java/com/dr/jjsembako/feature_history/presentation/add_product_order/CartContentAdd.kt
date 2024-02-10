@@ -12,13 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
@@ -29,23 +27,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.PlatformTextStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.detailOrderData
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.utils.HeaderError
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_history.presentation.components.ChangeTotalPayment
 import com.dr.jjsembako.feature_history.presentation.components.card.AddOrderCard
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CartContentAdd(
+    orderData: DetailOrderData,
     viewModel: TambahBarangPesananViewModel,
     modifier: Modifier
 ) {
@@ -54,6 +52,7 @@ fun CartContentAdd(
     val loadingState = viewModel.loadingState.observeAsState().value
     val errorState = viewModel.errorState.observeAsState().value
     val errorMsg = viewModel.errorMsg.observeAsState().value
+    val selectedData = viewModel.selectedData.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -68,7 +67,7 @@ fun CartContentAdd(
                     keyboardController?.hide()
                     focusManager.clearFocus()
                 })
-            .padding(16.dp),
+            .padding(vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (errorState == true && !errorMsg.isNullOrEmpty()) {
@@ -92,16 +91,10 @@ fun CartContentAdd(
                     Row(
                         modifier = modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                            .padding(horizontal = 24.dp),
+                        horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = stringResource(R.string.selected_num, filteredProducts.size),
-                            fontSize = 16.sp, fontWeight = FontWeight.Light,
-                            style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
-                        )
-                        Spacer(modifier = modifier.width(16.dp))
                         Icon(
                             Icons.Default.DeleteSweep,
                             contentDescription = stringResource(R.string.clear_data),
@@ -117,6 +110,7 @@ fun CartContentAdd(
                     LazyColumn(
                         modifier = modifier
                             .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                     ) {
                         items(items = filteredProducts, key = { product ->
                             product?.id ?: "empty-${System.currentTimeMillis()}"
@@ -127,6 +121,13 @@ fun CartContentAdd(
                             Spacer(modifier = modifier.height(8.dp))
                         })
                     }
+                    Spacer(modifier = modifier.height(16.dp))
+                    ChangeTotalPayment(
+                        orderCost = orderData.actualTotalPrice,
+                        changeCost = selectedData?.orderTotalPrice ?: 0L,
+                        modifier = modifier
+                    )
+
                 } else {
                     NotFoundScreen(modifier = modifier)
                 }
@@ -140,6 +141,7 @@ fun CartContentAdd(
 private fun CartContentAddPreview() {
     JJSembakoTheme {
         CartContentAdd(
+            orderData = detailOrderData,
             viewModel = hiltViewModel(),
             modifier = Modifier
         )

@@ -36,7 +36,7 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_history.presentation.components.PNRHeader
-import com.dr.jjsembako.feature_history.presentation.components.PNRTotalPayment
+import com.dr.jjsembako.feature_history.presentation.components.ChangeTotalPayment
 import com.dr.jjsembako.feature_history.presentation.components.potong_nota.PNSelectedProduct
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
@@ -135,7 +135,7 @@ private fun PotongNotaContent(
             Spacer(modifier = modifier.height(16.dp))
             PNSelectedProduct(onSelectProduct = { onSelectProduct() }, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
-            PNRTotalPayment(orderCost = 1_500_000L, changeCost = -125_000L, modifier = modifier)
+            ChangeTotalPayment(orderCost = 1_500_000L, changeCost = -125_000L, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
         }
     }

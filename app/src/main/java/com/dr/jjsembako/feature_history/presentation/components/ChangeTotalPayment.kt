@@ -26,7 +26,7 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
-fun PNRTotalPayment(
+fun ChangeTotalPayment(
     orderCost: Long,
     changeCost: Long,
     modifier: Modifier
@@ -36,13 +36,13 @@ fun PNRTotalPayment(
             .fillMaxWidth()
             .padding(bottom = 16.dp)
     ) {
-        PNRPaymentHeader(modifier = modifier)
-        PNRPaymentContent(orderCost = orderCost, changeCost = changeCost, modifier = modifier)
+        ChangePaymentHeader(modifier = modifier)
+        ChangePaymentContent(orderCost = orderCost, changeCost = changeCost, modifier = modifier)
     }
 }
 
 @Composable
-private fun PNRPaymentContent(
+private fun ChangePaymentContent(
     orderCost: Long,
     changeCost: Long,
     modifier: Modifier
@@ -118,7 +118,7 @@ private fun PNRPaymentContent(
 }
 
 @Composable
-private fun PNRPaymentHeader(modifier: Modifier) {
+private fun ChangePaymentHeader(modifier: Modifier) {
     Divider(
         modifier = modifier
             .fillMaxWidth()
@@ -140,7 +140,7 @@ private fun PNRPaymentHeader(modifier: Modifier) {
 @Composable
 private fun PNRTotalPaymentPreview() {
     JJSembakoTheme {
-        PNRTotalPayment(
+        ChangeTotalPayment(
             orderCost = 1_500_000L,
             changeCost = -125_000L,
             modifier = Modifier

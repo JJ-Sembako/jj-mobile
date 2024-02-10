@@ -267,12 +267,12 @@ private fun TambahBarangPesananContent(
                         .fillMaxWidth()
                 ) { index ->
                     when (index) {
-                        0 -> CartContentAdd(viewModel = viewModel, modifier = modifier)
+                        0 -> CartContentAdd(
+                            orderData = orderData, viewModel = viewModel, modifier = modifier
+                        )
 
                         1 -> CatalogContentAdd(
-                            orderData = orderData,
-                            viewModel = viewModel,
-                            modifier = modifier
+                            orderData = orderData, viewModel = viewModel, modifier = modifier
                         )
 
                         else -> {}
