@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -56,8 +57,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.dummy.dataOrderToProductsItem
 import com.dr.jjsembako.core.data.dummy.dataProductOrder
 import com.dr.jjsembako.core.data.model.DataProductOrder
+import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.core.utils.rememberCurrencyVisualTransformation
@@ -66,6 +69,7 @@ import com.dr.jjsembako.feature_history.presentation.edit_product_order.EditBara
 @Composable
 fun UpdateOrderCard(
     viewModel: EditBarangPesananViewModel,
+    data: OrderToProductsItem,
     product: DataProductOrder,
     modifier: Modifier
 ) {
@@ -84,9 +88,17 @@ fun UpdateOrderCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ProductImage(product = product, modifier = modifier)
-            Spacer(modifier = modifier.width(16.dp))
-            ProductInfo(product = product, modifier = modifier)
+            OrderedProductInfo(data, modifier)
         }
+        Divider(
+            modifier = modifier
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
+        )
+        ProductInfo(product = product, modifier = modifier)
+        Divider(
+            modifier = modifier
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
+        )
         OrderContent(viewModel, product, modifier)
     }
 }
@@ -123,15 +135,50 @@ private fun ProductImage(
 }
 
 @Composable
+private fun OrderedProductInfo(
+    data: OrderToProductsItem,
+    modifier: Modifier
+) {
+    Column(modifier = modifier.padding(start = 8.dp, end = 16.dp)) {
+        Text(
+            text = data.product.name.uppercase(), fontWeight = FontWeight.Normal, fontSize = 14.sp,
+            style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
+        )
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = formatRupiah(data.selledPrice),
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            Spacer(modifier = modifier.width(2.dp))
+            Text(
+                text = stringResource(R.string.order_qty, data.amount),
+                fontSize = 12.sp, fontWeight = FontWeight.Bold,
+                style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+        }
+    }
+}
+
+@Composable
 private fun ProductInfo(
     product: DataProductOrder,
     modifier: Modifier
 ) {
-    Column {
+    Column(
+        modifier = modifier.fillMaxWidth().padding(8.dp),
+    ) {
         Text(
-            text = product.name, fontWeight = FontWeight.Bold, fontSize = 14.sp,
+            text = stringResource(R.string.warehouse_info), fontWeight = FontWeight.Bold, fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
+        Spacer(modifier = modifier.height(8.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -387,8 +434,10 @@ private const val QTY_MAX_VALUE = 1_000
 @Preview(showBackground = true)
 private fun UpdateOrderCardPreview() {
     JJSembakoTheme {
+        val viewModel: EditBarangPesananViewModel = hiltViewModel()
         UpdateOrderCard(
-            viewModel = hiltViewModel(),
+            viewModel = viewModel,
+            data = dataOrderToProductsItem[0],
             product = dataProductOrder,
             modifier = Modifier
         )
