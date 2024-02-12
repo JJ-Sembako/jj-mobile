@@ -356,16 +356,17 @@ class EditBarangPesananViewModel @Inject constructor(
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
+            val orderInfo = orderData?.orderToProducts?.find { it.id == product.id }
 
-            if (productIndex != -1) {
+            if (productIndex != -1 && orderInfo != null) {
                 val existingProduct = currentList[productIndex]!!
 
                 if (!existingProduct.isChosen) {
                     val updatedExistingProduct = existingProduct.copy(
                         isChosen = true,
-                        orderQty = 1,
-                        orderPrice = existingProduct.standardPrice,
-                        orderTotalPrice = existingProduct.standardPrice
+                        orderQty = orderInfo.amount,
+                        orderPrice = orderInfo.selledPrice,
+                        orderTotalPrice = orderInfo.amount * orderInfo.selledPrice
                     )
                     currentList[productIndex] = updatedExistingProduct
                     currentList.remove(existingProduct)
