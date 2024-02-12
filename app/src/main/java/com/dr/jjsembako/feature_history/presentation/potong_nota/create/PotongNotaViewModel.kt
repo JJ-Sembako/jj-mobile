@@ -155,6 +155,7 @@ class PotongNotaViewModel @Inject constructor(
                             _stateSecond.value = StateResponse.SUCCESS
                             _message.value = it.message
                             _statusCode.value = it.status
+                            setCanceledStore()
                         }
 
                         is Resource.Error -> {
@@ -305,7 +306,7 @@ class PotongNotaViewModel @Inject constructor(
                         amountSelected = 0
                     )
                     currentList[productIndex] = updatedExistingProduct
-                    setCanceledStore(null)
+                    setCanceledStore()
                     _canceledData.value = getCanceledStore()
                 }
 
