@@ -167,13 +167,12 @@ private fun EditBarangPesananContent(
             showLoadingDialog.value = false
             showErrorDialog.value = true
             viewModel.setStateSecond(null)
-            onNavigateBack()
         }
 
         StateResponse.SUCCESS -> {
             showLoadingDialog.value = false
             showErrorDialog.value = false
-            viewModel.setStateSecond(null)
+            onNavigateBack()
         }
 
         else -> {}
