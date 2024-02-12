@@ -115,6 +115,7 @@
     <string name="original_cost">Biaya Asli Pesanan</string>
     <string name="change_cost">Perubahan Biaya</string>
     <string name="final_cost">Biaya Akhir Pesanan</string>
+    <string name="change_qty">Perubahan Jumlah Pesanan</string>
 
     <string name="selected_data">Data Terpilih</string>
     <string name="selected_num">Terpilih: %1$d produk</string>

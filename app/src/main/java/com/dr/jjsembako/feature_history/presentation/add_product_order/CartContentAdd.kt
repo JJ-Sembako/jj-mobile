@@ -18,8 +18,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -56,6 +59,18 @@ fun CartContentAdd(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    val changeCost = rememberSaveable { mutableLongStateOf(0L) }
+
+    LaunchedEffect(Unit, selectedData) {
+        if (selectedData != null) {
+            val orderInfo = orderData.orderToProducts.find { it.id == selectedData.id }
+            if (orderInfo != null) {
+                changeCost.longValue =
+                    selectedData.orderTotalPrice - (orderInfo.actualAmount * orderInfo.selledPrice)
+            }
+        }
+    }
 
     Column(
         modifier = modifier
@@ -124,7 +139,7 @@ fun CartContentAdd(
                     Spacer(modifier = modifier.height(16.dp))
                     ChangeTotalPayment(
                         orderCost = orderData.actualTotalPrice,
-                        changeCost = selectedData?.orderTotalPrice ?: 0L,
+                        changeCost = changeCost.longValue,
                         modifier = modifier
                     )
 

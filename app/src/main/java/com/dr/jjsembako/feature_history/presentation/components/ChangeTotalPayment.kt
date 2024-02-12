@@ -29,15 +29,17 @@ import com.dr.jjsembako.core.utils.formatRupiah
 fun ChangeTotalPayment(
     orderCost: Long,
     changeCost: Long,
-    modifier: Modifier
+    modifier: Modifier,
+    isForUpdate: Boolean = false,
+    changeQty: Int? = null
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 16.dp)
     ) {
-        ChangePaymentHeader(modifier = modifier)
-        ChangePaymentContent(orderCost = orderCost, changeCost = changeCost, modifier = modifier)
+        ChangePaymentHeader(modifier)
+        ChangePaymentContent(orderCost, changeCost, modifier, isForUpdate, changeQty)
     }
 }
 
@@ -45,7 +47,9 @@ fun ChangeTotalPayment(
 private fun ChangePaymentContent(
     orderCost: Long,
     changeCost: Long,
-    modifier: Modifier
+    modifier: Modifier,
+    isForUpdate: Boolean,
+    changeQty: Int? = null
 ) {
     val finalCost = orderCost + changeCost
     val changeCostText =
@@ -108,6 +112,27 @@ private fun ChangePaymentContent(
             text = formatRupiah(finalCost), fontWeight = FontWeight.Bold, fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
+    }
+    if (isForUpdate && changeQty != null) {
+        Spacer(modifier = modifier.height(8.dp))
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Text(
+                text = stringResource(R.string.change_qty),
+                fontSize = 12.sp, fontWeight = FontWeight.Normal,
+                style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            Text(
+                text = changeQty.toString(), fontWeight = FontWeight.Bold, fontSize = 14.sp,
+                style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
+            )
+        }
     }
     Spacer(modifier = modifier.height(16.dp))
     Divider(
