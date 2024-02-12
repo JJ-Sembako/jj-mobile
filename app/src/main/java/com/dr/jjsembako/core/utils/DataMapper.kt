@@ -1,11 +1,14 @@
 package com.dr.jjsembako.core.utils
 
+import com.dr.jjsembako.CanceledStore
 import com.dr.jjsembako.ProductOrderStore
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.OrderProduct
+import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
 
@@ -99,5 +102,35 @@ object DataMapper {
             deliverAt = data.deliverAt,
             finishedAt = data.finishedAt
         )
+    }
+
+    fun mapListOrderToProductsItemToListSelectPNRItem(data: List<OrderToProductsItem?>) : List<SelectPNRItem> {
+        return if (data.isEmpty()) {
+            emptyList()
+        } else {
+            data.mapNotNull { order ->
+                if (order != null) {
+                    SelectPNRItem(
+                        id = order.id,
+                        amount = order.amount,
+                        actualAmount = order.actualAmount,
+                        selledPrice = order.selledPrice,
+                        status = order.status,
+                        product = order.product
+                    )
+                } else null
+            }
+        }
+    }
+
+    fun mapSelectPNRItemToCanceledStore(data: SelectPNRItem): CanceledStore {
+        val canceledStoreBuilder = CanceledStore.newBuilder()
+        canceledStoreBuilder
+            .setId(data.id)
+            .setIdProduct(data.product.id)
+            .amountSelected = data.amountSelected
+
+        // return value
+        return canceledStoreBuilder.build()
     }
 }

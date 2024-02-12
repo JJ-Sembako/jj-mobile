@@ -8,7 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.CanceledStore
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
+import com.dr.jjsembako.core.utils.DataMapper.mapListOrderToProductsItemToListSelectPNRItem
+import com.dr.jjsembako.core.utils.DataMapper.mapSelectPNRItemToCanceledStore
 import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleCreateCanceledUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +28,7 @@ class PotongNotaViewModel @Inject constructor(
     private val fetchOrderUseCase: FetchOrderUseCase,
     private val handleCreateCanceledUseCase: HandleCreateCanceledUseCase
 ) : ViewModel() {
+
     private val _stateFirst = MutableLiveData<StateResponse?>()
     val stateFirst: LiveData<StateResponse?> = _stateFirst
 
@@ -46,14 +50,17 @@ class PotongNotaViewModel @Inject constructor(
     private val _orderData = MutableLiveData<DetailOrderData?>()
     val orderData: DetailOrderData? get() = _orderData.value
 
-    private val _selectedData = MutableLiveData<CanceledStore>()
-    val selectedData: LiveData<CanceledStore?> get() = _selectedData
+    private val _productOrder = MutableLiveData<List<SelectPNRItem?>?>()
+    val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder
+
+    private val _canceledData = MutableLiveData<CanceledStore>()
+    val canceledData: LiveData<CanceledStore?> get() = _canceledData
 
     private var _id: String? = null
 
     init {
         viewModelScope.launch {
-            _selectedData.value = getCanceledStore()
+            _canceledData.value = getCanceledStore()
         }
     }
 
@@ -76,7 +83,11 @@ class PotongNotaViewModel @Inject constructor(
 
     fun refresh() {
         val id = _id ?: return
+        viewModelScope.launch {
+            _canceledData.value = getCanceledStore()
+        }
         fetchOrder(id)
+        recoveryData()
     }
 
     fun reset() {
@@ -97,7 +108,7 @@ class PotongNotaViewModel @Inject constructor(
                 CanceledStore.newBuilder(data).build()
             }
         }
-        _selectedData.value = canceledStore.data.first() // Update UI state
+        _canceledData.value = canceledStore.data.first() // Update UI state
     }
 
     fun fetchOrder(id: String) {
@@ -115,6 +126,8 @@ class PotongNotaViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                         _orderData.value = it.data
+                        _productOrder.value =
+                            mapListOrderToProductsItemToListSelectPNRItem(it.data!!.orderToProducts)
                     }
 
                     is Resource.Error -> {
@@ -124,6 +137,179 @@ class PotongNotaViewModel @Inject constructor(
                         _statusCode.value = it.status
                     }
                 }
+            }
+        }
+    }
+
+    fun handleCreateCanceled() {
+        val id = _id ?: return
+        if (canceledData.value == null) return
+        else {
+            val productId = canceledData.value!!.idProduct
+            val amount = canceledData.value!!.amountSelected
+            viewModelScope.launch {
+                handleCreateCanceledUseCase.handleCreateCanceled(id, productId, amount).collect {
+                    when (it) {
+                        is Resource.Loading -> _stateSecond.value = StateResponse.LOADING
+                        is Resource.Success -> {
+                            _stateSecond.value = StateResponse.SUCCESS
+                            _message.value = it.message
+                            _statusCode.value = it.status
+                        }
+
+                        is Resource.Error -> {
+                            _stateSecond.value = StateResponse.ERROR
+                            _message.value = it.message
+                            _statusCode.value = it.status
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun recoveryData() {
+        if (canceledData.value == null) return
+        else {
+            if (productOrder.value?.isEmpty() == true) return
+            else {
+                val currentList = _productOrder.value.orEmpty().toMutableList()
+                val index = currentList.indexOfFirst { it?.id == canceledData.value!!.idProduct }
+                if (index != -1) {
+                    val existingProduct = currentList[index]!!
+                    val updatedExistingProduct = existingProduct.copy(
+                        amountSelected = canceledData.value!!.amountSelected,
+                        isChosen = true
+                    )
+                    currentList[index] = updatedExistingProduct
+                    currentList.remove(existingProduct)
+
+                    _productOrder.value = currentList
+                }
+            }
+        }
+    }
+
+    fun updateSelectedAmount(product: SelectPNRItem, qty: String) {
+        viewModelScope.launch {
+            val currentList = _productOrder.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = currentList[productIndex]!!
+
+                if (qty.isNotEmpty()) {
+                    val amount = qty.toInt()
+                    if (amount != existingProduct.amountSelected) {
+                        val updatedExistingProduct = existingProduct.copy(
+                            amountSelected = amount
+                        )
+                        currentList[productIndex] = updatedExistingProduct
+                        currentList.remove(existingProduct)
+                        setCanceledStore(mapSelectPNRItemToCanceledStore(updatedExistingProduct))
+                        _canceledData.value = getCanceledStore()
+                        _productOrder.value = currentList
+                    }
+                } else {
+                    disableChoose(existingProduct)
+                }
+            }
+        }
+    }
+
+    fun minusSelectedAmount(product: SelectPNRItem) {
+        viewModelScope.launch {
+            val currentList = _productOrder.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = currentList[productIndex]!!
+
+                if (existingProduct.amountSelected > 0) {
+                    val updatedExistingProduct = existingProduct.copy(
+                        amountSelected = existingProduct.amountSelected - 1
+                    )
+                    if (updatedExistingProduct.amountSelected == 0) disableChoose(existingProduct)
+                    else {
+                        currentList[productIndex] = updatedExistingProduct
+                        currentList.remove(existingProduct)
+                        setCanceledStore(mapSelectPNRItemToCanceledStore(updatedExistingProduct))
+                        _canceledData.value = getCanceledStore()
+                    }
+
+                    _productOrder.value = currentList
+                }
+            }
+        }
+    }
+
+    fun plusSelectedAmount(product: SelectPNRItem) {
+        viewModelScope.launch {
+            val currentList = _productOrder.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = currentList[productIndex]!!
+
+                if (existingProduct.amountSelected in 1..999) {
+                    val updatedExistingProduct = existingProduct.copy(
+                        amountSelected = existingProduct.amountSelected + 1
+                    )
+                    currentList[productIndex] = updatedExistingProduct
+                    currentList.remove(existingProduct)
+                    setCanceledStore(mapSelectPNRItemToCanceledStore(updatedExistingProduct))
+                    _canceledData.value = getCanceledStore()
+                    _productOrder.value = currentList
+                } else {
+                    enableChoose(existingProduct)
+                }
+            }
+        }
+    }
+
+    fun enableChoose(product: SelectPNRItem) {
+        viewModelScope.launch {
+            val currentList = _productOrder.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = currentList[productIndex]!!
+
+                if (!existingProduct.isChosen) {
+                    val updatedExistingProduct = existingProduct.copy(
+                        isChosen = true,
+                        amountSelected = 1
+                    )
+                    currentList[productIndex] = updatedExistingProduct
+                    currentList.remove(existingProduct)
+                    setCanceledStore(mapSelectPNRItemToCanceledStore(updatedExistingProduct))
+                    _canceledData.value = getCanceledStore()
+                }
+
+                _productOrder.value = currentList
+            }
+        }
+    }
+
+    fun disableChoose(product: SelectPNRItem) {
+        viewModelScope.launch {
+            val currentList = _productOrder.value.orEmpty().toMutableList()
+            val productIndex = currentList.indexOfFirst { it?.id == product.id }
+
+            if (productIndex != -1) {
+                val existingProduct = currentList[productIndex]!!
+
+                if (existingProduct.isChosen) {
+                    val updatedExistingProduct = existingProduct.copy(
+                        isChosen = false,
+                        amountSelected = 0
+                    )
+                    currentList[productIndex] = updatedExistingProduct
+                    setCanceledStore(null)
+                    _canceledData.value = getCanceledStore()
+                }
+
+                _productOrder.value = currentList
             }
         }
     }
