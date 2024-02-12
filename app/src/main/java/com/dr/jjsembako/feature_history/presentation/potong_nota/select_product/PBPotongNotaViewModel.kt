@@ -8,9 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.CanceledStore
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
+import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
+import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.core.utils.DataMapper
+import com.dr.jjsembako.core.utils.DataMapper.mapListDataCategoryToListFilterOption
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,6 +47,12 @@ class PBPotongNotaViewModel @Inject constructor(
     private val _message = MutableLiveData<String?>()
     val message: LiveData<String?> = _message
 
+    private val _dataRawCategories = MutableLiveData<List<String?>>()
+    private val dataRawCategories: LiveData<List<String?>> get() = _dataRawCategories
+
+    private val _dataCategories = MutableLiveData<List<FilterOption?>>()
+    val dataCategories: LiveData<List<FilterOption?>> get() = _dataCategories
+
     private val _orderData = MutableLiveData<DetailOrderData?>()
     val orderData: DetailOrderData? get() = _orderData.value
 
@@ -76,6 +85,7 @@ class PBPotongNotaViewModel @Inject constructor(
 
     private fun init() {
         refresh()
+        updateCategories(orderData?.orderToProducts.orEmpty())
     }
 
     fun refresh() {
@@ -297,6 +307,22 @@ class PBPotongNotaViewModel @Inject constructor(
 
                 _productOrder.value = currentList
             }
+        }
+    }
+
+    private fun updateCategories(newProducts: List<OrderToProductsItem?>) {
+        viewModelScope.launch {
+            val newCategories = newProducts.mapNotNull { it?.product?.category }.distinct()
+            val currentCategories = _dataRawCategories.value.orEmpty().toMutableSet()
+
+            newCategories.forEach {
+                if (!currentCategories.contains(it)) {
+                    currentCategories.add(it)
+                }
+            }
+
+            _dataRawCategories.value = currentCategories.toList()
+            _dataCategories.value = mapListDataCategoryToListFilterOption(dataRawCategories.value)
         }
     }
 }
