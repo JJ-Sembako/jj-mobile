@@ -31,6 +31,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -106,7 +107,7 @@ fun UpdateOrderCard(
             modifier = modifier
                 .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
-        OrderContent(viewModel, product, modifier)
+        OrderContent(viewModel, product, changeAmount, modifier)
     }
 }
 
@@ -222,6 +223,7 @@ private fun ProductInfo(
 private fun OrderContent(
     viewModel: EditBarangPesananViewModel,
     product: DataProductOrder,
+    changeAmount: MutableState<Int>,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -307,7 +309,7 @@ private fun OrderContent(
                             ) QTY_MAX_VALUE.toString() else newValue
                             viewModel.updateOrderQty(product, orderQty)
                         },
-                        isError = product.orderQty == 0 || (product.orderQty > product.stockInUnit),
+                        isError = product.orderQty == 0 || (changeAmount.value > product.stockInUnit),
                         modifier = modifier
                             .width(88.dp)
                             .padding(start = 8.dp, end = 8.dp, top = 8.dp)

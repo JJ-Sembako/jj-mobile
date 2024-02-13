@@ -22,7 +22,6 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -57,56 +56,43 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.dummy.dataOrderToProductsItem
-import com.dr.jjsembako.core.data.model.DataProductOrder
-import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
+import com.dr.jjsembako.core.data.dummy.dataSelectPNRItem
+import com.dr.jjsembako.core.data.model.SelectPNRItem
+import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
-import com.dr.jjsembako.core.utils.rememberCurrencyVisualTransformation
-import com.dr.jjsembako.feature_history.presentation.edit_product_order.EditBarangPesananViewModel
 import com.dr.jjsembako.feature_history.presentation.potong_nota.select_product.PBPotongNotaViewModel
 
 @Composable
-fun SelectOrderPNRCard(
+fun SelectOrderPNCard(
     viewModel: PBPotongNotaViewModel,
-    data: OrderToProductsItem,
+    data: SelectPNRItem,
     modifier: Modifier
 ) {
-//    val product = data.product
-//
-//    OutlinedCard(
-//        modifier = modifier
-//            .fillMaxWidth()
-//            .clip(RoundedCornerShape(16.dp))
-//            .padding(horizontal = 8.dp),
-//        border = if (product.isChosen && (product.orderTotalPrice == 0L || product.orderQty > product.stockInUnit)) {
-//            BorderStroke(3.dp, Color.Red)
-//        } else CardDefaults.outlinedCardBorder()
-//    ) {
-//        Row(
-//            modifier = modifier
-//                .fillMaxWidth(),
-//            verticalAlignment = Alignment.CenterVertically,
-//        ) {
-//            ProductImage(product = product, modifier = modifier)
-//            OrderedProductInfo(data, modifier)
-//        }
-//        Divider(
-//            modifier = modifier
-//                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
-//        )
-//        ProductInfo(product = data.product, modifier = modifier)
-//        Divider(
-//            modifier = modifier
-//                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
-//        )
-//        OrderContent(viewModel, product, modifier)
-//    }
+    OutlinedCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .padding(horizontal = 8.dp),
+        border = if (data.isChosen && data.amountSelected == 0) {
+            BorderStroke(3.dp, Color.Red)
+        } else CardDefaults.outlinedCardBorder()
+    ) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            ProductImage(product = data.product, modifier = modifier)
+            OrderedProductInfo(data, modifier)
+        }
+        OrderContent(viewModel, data, modifier)
+    }
 }
 
 @Composable
 private fun ProductImage(
-    product: DataProductOrder,
+    product: DataProduct,
     modifier: Modifier
 ) {
     if (product.image.isEmpty() || product.image.contains("default")) {
@@ -137,7 +123,7 @@ private fun ProductImage(
 
 @Composable
 private fun OrderedProductInfo(
-    data: OrderToProductsItem,
+    data: SelectPNRItem,
     modifier: Modifier
 ) {
     Column(modifier = modifier.padding(start = 8.dp, end = 16.dp)) {
@@ -167,68 +153,20 @@ private fun OrderedProductInfo(
     }
 }
 
-@Composable
-private fun ProductInfo(
-    product: DataProductOrder,
-    modifier: Modifier
-) {
-    Column(
-        modifier = modifier.fillMaxWidth().padding(8.dp),
-    ) {
-        Text(
-            text = stringResource(R.string.warehouse_info), fontWeight = FontWeight.Bold, fontSize = 14.sp,
-            style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
-        )
-        Spacer(modifier = modifier.height(8.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.standard_price),
-                fontSize = 12.sp
-            )
-            Spacer(modifier = modifier.width(2.dp))
-            Text(
-                text = formatRupiah(product.standardPrice),
-                fontSize = 12.sp, fontWeight = FontWeight.Bold
-            )
-        }
-        Text(
-            text = stringResource(R.string.stock, product.stockInUnit, product.unit.lowercase()),
-            fontSize = 12.sp
-        )
-        Text(
-            text = stringResource(
-                R.string.info_unit,
-                product.unit.lowercase(),
-                product.amountPerUnit
-            ),
-            fontSize = 11.sp, fontWeight = FontWeight.Light,
-            style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
-        )
-    }
-}
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun OrderContent(
-    viewModel: EditBarangPesananViewModel,
-    product: DataProductOrder,
+    viewModel: PBPotongNotaViewModel,
+    data: SelectPNRItem,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "IDR")
-    val selectedData = viewModel.selectedData.observeAsState().value
+    val canceledData = viewModel.canceledData.observeAsState().value
+    var selectedAmount by rememberSaveable { mutableStateOf(data.amountSelected.toString()) }
 
-    var orderQty by rememberSaveable { mutableStateOf(product.orderQty.toString()) }
-    var orderPrice by rememberSaveable { mutableStateOf(product.orderPrice.toString()) }
-    var orderTotalPrice by rememberSaveable { mutableStateOf(product.orderTotalPrice.toString()) }
-
-    LaunchedEffect(product) {
-        orderQty = product.orderQty.toString()
-        orderPrice = product.orderPrice.toString()
-        orderTotalPrice = product.orderTotalPrice.toString()
+    LaunchedEffect(data) {
+        selectedAmount = data.amountSelected.toString()
     }
 
     Column(
@@ -238,14 +176,14 @@ private fun OrderContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (product.stockInUnit > 0) {
-            if (!product.isChosen) {
+        if (data.status == 0) {
+            if (!data.isChosen) {
                 Button(
-                    enabled = selectedData == null,
+                    enabled = canceledData == null,
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.enableOrder(product)
+                        viewModel.enableChoose(data)
                     }) {
                     Icon(
                         Icons.Default.AddShoppingCart,
@@ -269,11 +207,11 @@ private fun OrderContent(
                     IconButton(onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.minusOrderQty(product)
+                        viewModel.minusSelectedAmount(data)
                     }) {
                         Icon(
                             Icons.Default.Remove,
-                            stringResource(R.string.minus_order_qty, product.name)
+                            stringResource(R.string.minus_amount_selected, data.product.name)
                         )
                     }
                     Spacer(modifier = modifier.size(ButtonDefaults.IconSpacing))
@@ -284,7 +222,7 @@ private fun OrderContent(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Done
                         ),
-                        value = orderQty,
+                        value = selectedAmount,
                         onValueChange = {
                             var newValue =
                                 it.filter { it2 -> it2.isDigit() || it2 == '0' } // Only allow digits and leading zero
@@ -293,13 +231,13 @@ private fun OrderContent(
                                 newValue.trim { it2 -> it2.isDigit().not() } // Remove non-digits
 
                             // Enforce minimum & maximum value
-                            orderQty = if (newValue.isEmpty()) "0"
+                            selectedAmount = if (newValue.isEmpty()) "0"
                             else if ((newValue.toIntOrNull()
                                     ?: 0) > QTY_MAX_VALUE
                             ) QTY_MAX_VALUE.toString() else newValue
-                            viewModel.updateOrderQty(product, orderQty)
+                            viewModel.updateSelectedAmount(data, selectedAmount)
                         },
-                        isError = product.orderQty == 0 || (product.orderQty > product.stockInUnit),
+                        isError = data.amountSelected == 0 || (data.amountSelected > data.actualAmount),
                         modifier = modifier
                             .width(88.dp)
                             .padding(start = 8.dp, end = 8.dp, top = 8.dp)
@@ -308,74 +246,20 @@ private fun OrderContent(
                     IconButton(onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.plusOrderQty(product)
+                        viewModel.plusSelectedAmount(data)
                     }) {
                         Icon(
                             Icons.Default.Add,
-                            stringResource(R.string.plus_order_qty, product.name)
+                            stringResource(R.string.plus_amount_selected, data.product.name)
                         )
                     }
                 }
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.price)) },
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
-                    ),
-                    visualTransformation = currencyVisualTransformation,
-                    value = orderPrice,
-                    onValueChange = {
-                        var newValue =
-                            it.filter { it2 -> it2.isDigit() || it2 == '0' } // Only allow digits and leading zero
-                        newValue = newValue.trimStart('0') // Remove leading zeros
-                        newValue = newValue.trim { it2 -> it2.isDigit().not() } // Remove non-digits
-
-                        // Enforce minimum & maximum value
-                        orderPrice = if (newValue.isEmpty()) "0"
-                        else if ((newValue.toLongOrNull()
-                                ?: 0L) > MAX_VALUE
-                        ) MAX_VALUE.toString() else newValue
-                        viewModel.updateOrderPrice(product, orderPrice)
-                    },
-                    isError = product.orderPrice == 0L,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                )
-                OutlinedTextField(
-                    label = { Text(stringResource(R.string.total_price)) },
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
-                    ),
-                    visualTransformation = currencyVisualTransformation,
-                    value = orderTotalPrice,
-                    onValueChange = {
-                        var newValue =
-                            it.filter { it2 -> it2.isDigit() || it2 == '0' } // Only allow digits and leading zero
-                        newValue = newValue.trimStart('0') // Remove leading zeros
-                        newValue = newValue.trim { it2 -> it2.isDigit().not() } // Remove non-digits
-
-                        // Enforce minimum & maximum value
-                        orderTotalPrice = if (newValue.isEmpty()) "0"
-                        else if ((newValue.toLongOrNull()
-                                ?: 0L) > MAX_VALUE
-                        ) MAX_VALUE.toString() else newValue
-                        viewModel.updateOrderTotalPrice(product, orderTotalPrice)
-                    },
-                    isError = product.orderTotalPrice == 0L,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                )
                 Spacer(modifier = modifier.height(16.dp))
                 Button(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.disableOrder(product)
+                        viewModel.disableChoose(data)
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(
@@ -394,20 +278,20 @@ private fun OrderContent(
             }
         } else {
             Text(
-                text = stringResource(R.string.stock_empty),
+                text = stringResource(R.string.already_pnr),
                 fontSize = 12.sp, fontWeight = FontWeight.Normal,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false),
                     color = Color.Red
                 )
             )
-            if (orderQty.toInt() > 0) {
+            if (selectedAmount.toInt() > 0) {
                 Spacer(modifier = modifier.height(16.dp))
                 Button(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.disableOrder(product)
+                        viewModel.disableChoose(data)
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(
@@ -428,17 +312,16 @@ private fun OrderContent(
     }
 }
 
-private const val MAX_VALUE = 1_000_000_000L
 private const val QTY_MAX_VALUE = 1_000
 
 @Composable
 @Preview(showBackground = true)
-private fun SelectOrderPNRCardPreview() {
+private fun SelectOrderPNCardPreview() {
     JJSembakoTheme {
         val viewModel: PBPotongNotaViewModel = hiltViewModel()
-        SelectOrderPNRCard(
+        SelectOrderPNCard(
             viewModel = viewModel,
-            data = dataOrderToProductsItem[0],
+            data = dataSelectPNRItem,
             modifier = Modifier
         )
     }
