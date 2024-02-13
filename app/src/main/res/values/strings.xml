@@ -230,10 +230,9 @@
         Pembatalan potong nota akan menghapus data potong nota dari pesanan dan mengubah
         informasi pesanan. Tindakan ini tidak dapat dipulihkan.
     </string>
-
     <string name="minus_amount_selected">Kurangi jumlah terpilih produk %1$s</string>
     <string name="plus_amount_selected">Tambah jumlah terpilih produk %1$s</string>
     <string name="already_pnr">
-        Tidak dapat dipilih karena sudah produk ini sudah pernah dilakukan retur atau potong nota!
+        Tidak dapat dipilih karena produk ini sudah pernah dilakukan retur atau potong nota!
     </string>
 </resources>
