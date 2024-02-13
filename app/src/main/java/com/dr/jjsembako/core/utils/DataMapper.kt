@@ -2,6 +2,7 @@ package com.dr.jjsembako.core.utils
 
 import com.dr.jjsembako.CanceledStore
 import com.dr.jjsembako.ProductOrderStore
+import com.dr.jjsembako.ReturStore
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.OrderProduct
@@ -128,9 +129,22 @@ object DataMapper {
         canceledStoreBuilder
             .setId(data.id)
             .setIdProduct(data.product.id)
+            .setStatus(data.status)
             .amountSelected = data.amountSelected
 
         // return value
         return canceledStoreBuilder.build()
+    }
+
+    fun mapSelectPNRItemToReturStore(data: SelectPNRItem): ReturStore {
+        val returStoreBuilder = ReturStore.newBuilder()
+        returStoreBuilder
+            .setId(data.id)
+            .setIdProduct(data.product.id)
+            .setStatus(data.status)
+            .amountSelected = data.amountSelected
+
+        // return value
+        return returStoreBuilder.build()
     }
 }

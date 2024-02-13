@@ -1,11 +1,11 @@
-package com.dr.jjsembako.feature_history.presentation.potong_nota.select_product
+package com.dr.jjsembako.feature_history.presentation.retur.select_product
 
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dr.jjsembako.CanceledStore
+import com.dr.jjsembako.ReturStore
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
@@ -14,6 +14,7 @@ import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.core.utils.DataMapper
 import com.dr.jjsembako.core.utils.DataMapper.mapListDataCategoryToListFilterOption
+import com.dr.jjsembako.core.utils.DataMapper.mapSelectPNRItemToReturStore
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +25,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PBPotongNotaViewModel @Inject constructor(
-    private val canceledStore: DataStore<CanceledStore>,
+class PBReturViewModel @Inject constructor(
+    private val returStore: DataStore<ReturStore>,
     private val fetchOrderUseCase: FetchOrderUseCase
 ) : ViewModel() {
 
@@ -56,14 +57,14 @@ class PBPotongNotaViewModel @Inject constructor(
     private val _productOrder = MutableLiveData<List<SelectPNRItem?>?>()
     val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder
 
-    private val _canceledData = MutableLiveData<CanceledStore?>()
-    val canceledData: LiveData<CanceledStore?> get() = _canceledData
+    private val _returData = MutableLiveData<ReturStore?>()
+    val returData: LiveData<ReturStore?> get() = _returData
 
     private var _id: String? = null
 
     init {
         viewModelScope.launch {
-            _canceledData.value = getCanceledStore()
+            _returData.value = getReturStore()
         }
     }
 
@@ -84,40 +85,40 @@ class PBPotongNotaViewModel @Inject constructor(
     fun refresh() {
         val id = _id ?: return
         viewModelScope.launch {
-            _canceledData.value = getCanceledStore()
+            _returData.value = getReturStore()
         }
         fetchOrder(id)
         recoveryData()
     }
 
     fun saveData() {
-        if (canceledData.value == null) return
+        if (returData.value == null) return
         else {
             viewModelScope.launch {
-                setCanceledStore(canceledData.value)
+                setReturStore(returData.value)
             }
         }
     }
 
     fun reset() {
         viewModelScope.launch {
-            setCanceledStore()
+            setReturStore()
         }
     }
 
-    private suspend fun getCanceledStore(): CanceledStore {
-        return canceledStore.data.first()
+    private suspend fun getReturStore(): ReturStore {
+        return returStore.data.first()
     }
 
-    private suspend fun setCanceledStore(data: CanceledStore? = null) {
-        canceledStore.updateData {
+    private suspend fun setReturStore(data: ReturStore? = null) {
+        returStore.updateData {
             if (data == null) {
-                CanceledStore.getDefaultInstance()
+                ReturStore.getDefaultInstance()
             } else {
-                CanceledStore.newBuilder(data).build()
+                ReturStore.newBuilder(data).build()
             }
         }
-        _canceledData.value = canceledStore.data.first() // Update UI state
+        _returData.value = returStore.data.first() // Update UI state
     }
 
     fun fetchOrder(id: String) {
@@ -151,16 +152,16 @@ class PBPotongNotaViewModel @Inject constructor(
     }
 
     private fun recoveryData() {
-        if (canceledData.value == null) return
+        if (returData.value == null) return
         else {
             if (productOrder.value?.isEmpty() == true) return
             else {
                 val currentList = _productOrder.value.orEmpty().toMutableList()
-                val index = currentList.indexOfFirst { it?.id == canceledData.value!!.idProduct }
+                val index = currentList.indexOfFirst { it?.id == returData.value!!.idProduct }
                 if (index != -1) {
                     val existingProduct = currentList[index]!!
                     val updatedExistingProduct = existingProduct.copy(
-                        amountSelected = canceledData.value!!.amountSelected,
+                        amountSelected = returData.value!!.amountSelected,
                         isChosen = true
                     )
                     currentList[index] = updatedExistingProduct
@@ -188,12 +189,8 @@ class PBPotongNotaViewModel @Inject constructor(
                         )
                         currentList[productIndex] = updatedExistingProduct
                         currentList.remove(existingProduct)
-                        setCanceledStore(
-                            DataMapper.mapSelectPNRItemToCanceledStore(
-                                updatedExistingProduct
-                            )
-                        )
-                        _canceledData.value = getCanceledStore()
+                        setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
+                        _returData.value = getReturStore()
                         _productOrder.value = currentList
                     }
                 } else {
@@ -219,12 +216,8 @@ class PBPotongNotaViewModel @Inject constructor(
                     else {
                         currentList[productIndex] = updatedExistingProduct
                         currentList.remove(existingProduct)
-                        setCanceledStore(
-                            DataMapper.mapSelectPNRItemToCanceledStore(
-                                updatedExistingProduct
-                            )
-                        )
-                        _canceledData.value = getCanceledStore()
+                        setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
+                        _returData.value = getReturStore()
                     }
 
                     _productOrder.value = currentList
@@ -247,12 +240,8 @@ class PBPotongNotaViewModel @Inject constructor(
                     )
                     currentList[productIndex] = updatedExistingProduct
                     currentList.remove(existingProduct)
-                    setCanceledStore(
-                        DataMapper.mapSelectPNRItemToCanceledStore(
-                            updatedExistingProduct
-                        )
-                    )
-                    _canceledData.value = getCanceledStore()
+                    setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
+                    _returData.value = getReturStore()
                     _productOrder.value = currentList
                 } else {
                     enableChoose(existingProduct)
@@ -276,12 +265,8 @@ class PBPotongNotaViewModel @Inject constructor(
                     )
                     currentList[productIndex] = updatedExistingProduct
                     currentList.remove(existingProduct)
-                    setCanceledStore(
-                        DataMapper.mapSelectPNRItemToCanceledStore(
-                            updatedExistingProduct
-                        )
-                    )
-                    _canceledData.value = getCanceledStore()
+                    setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
+                    _returData.value = getReturStore()
                 }
 
                 _productOrder.value = currentList
@@ -303,8 +288,8 @@ class PBPotongNotaViewModel @Inject constructor(
                         amountSelected = 0
                     )
                     currentList[productIndex] = updatedExistingProduct
-                    setCanceledStore()
-                    _canceledData.value = getCanceledStore()
+                    setReturStore()
+                    _returData.value = getReturStore()
                 }
 
                 _productOrder.value = currentList
