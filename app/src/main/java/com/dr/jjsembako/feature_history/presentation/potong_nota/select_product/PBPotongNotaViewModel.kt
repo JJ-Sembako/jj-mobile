@@ -29,11 +29,8 @@ class PBPotongNotaViewModel @Inject constructor(
     private val fetchOrderUseCase: FetchOrderUseCase
 ) : ViewModel() {
 
-    private val _stateFirst = MutableLiveData<StateResponse?>()
-    val stateFirst: LiveData<StateResponse?> = _stateFirst
-
-    private val _stateSecond = MutableLiveData<StateResponse?>()
-    val stateSecond: LiveData<StateResponse?> = _stateSecond
+    private val _state = MutableLiveData<StateResponse?>()
+    val state: LiveData<StateResponse?> = _state
 
     private val _stateRefresh = MutableLiveData<StateResponse?>()
     val stateRefresh: LiveData<StateResponse?> = _stateRefresh
@@ -73,10 +70,6 @@ class PBPotongNotaViewModel @Inject constructor(
     fun setId(id: String) {
         _id = id
         init()
-    }
-
-    fun setStateSecond(state: StateResponse?) {
-        _stateSecond.value = state
     }
 
     fun setStateRefresh(state: StateResponse?) {
@@ -132,12 +125,12 @@ class PBPotongNotaViewModel @Inject constructor(
             fetchOrderUseCase.fetchOrder(id).collect {
                 when (it) {
                     is Resource.Loading -> {
-                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.LOADING
+                        if (orderData?.id.isNullOrEmpty()) _state.value = StateResponse.LOADING
                         else _stateRefresh.value = StateResponse.LOADING
                     }
 
                     is Resource.Success -> {
-                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.SUCCESS
+                        if (orderData?.id.isNullOrEmpty()) _state.value = StateResponse.SUCCESS
                         else _stateRefresh.value = StateResponse.SUCCESS
                         _message.value = it.message
                         _statusCode.value = it.status
@@ -147,7 +140,7 @@ class PBPotongNotaViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.ERROR
+                        if (orderData?.id.isNullOrEmpty()) _state.value = StateResponse.ERROR
                         else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status

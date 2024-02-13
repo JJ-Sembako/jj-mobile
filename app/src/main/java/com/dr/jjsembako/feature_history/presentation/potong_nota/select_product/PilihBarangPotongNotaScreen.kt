@@ -43,6 +43,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetProduct
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
@@ -64,7 +66,7 @@ fun PilihBarangPotongNotaScreen(
 ) {
     val tag = "PBPN-S"
     val viewModel: PBPotongNotaViewModel = hiltViewModel()
-    val stateFirst = viewModel.stateFirst.observeAsState().value
+    val stateFirst = viewModel.state.observeAsState().value
     val statusCode = viewModel.statusCode.observeAsState().value
     val message = viewModel.message.observeAsState().value
     val orderData = viewModel.orderData
@@ -121,7 +123,6 @@ private fun PilihBarangPotongNotaContent(
     modifier: Modifier
 ) {
     val tag = "PBPN-C"
-    val stateSecond = viewModel.stateSecond.observeAsState().value
     val stateRefresh = viewModel.stateRefresh.observeAsState().value
     val isRefreshing by viewModel.isRefreshing.collectAsState(initial = false)
     val statusCode = viewModel.statusCode.observeAsState().value
@@ -163,30 +164,6 @@ private fun PilihBarangPotongNotaContent(
                 checkBoxStates.putAll(newOption.map { it!!.value to true })
             }
         }
-    }
-
-    when (stateSecond) {
-        StateResponse.LOADING -> {
-            showLoadingDialog.value = true
-        }
-
-        StateResponse.ERROR -> {
-            Log.e(tag, "Error")
-            Log.e(tag, "state: $stateSecond")
-            Log.e(tag, "Error: $message")
-            Log.e(tag, "statusCode: $statusCode")
-            showLoadingDialog.value = false
-            showErrorDialog.value = true
-            viewModel.setStateSecond(null)
-        }
-
-        StateResponse.SUCCESS -> {
-            showLoadingDialog.value = false
-            showErrorDialog.value = false
-            onNavigateBack()
-        }
-
-        else -> {}
     }
 
     when (stateRefresh) {
@@ -234,8 +211,8 @@ private fun PilihBarangPotongNotaContent(
                 },
                 actions = {
                     IconButton(onClick = {
-                        onNavigateBack()
                         viewModel.saveData()
+                        onNavigateBack()
                     }) {
                         Icon(
                             Icons.Default.Check,
@@ -250,20 +227,20 @@ private fun PilihBarangPotongNotaContent(
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = {
-                        keyboardController?.hide()
-                        activeSearch.value = false
-                        focusManager.clearFocus()
-                    })
                 .padding(contentPadding)
                 .pullRefresh(pullRefreshState)
         ) {
             Column(
                 modifier = modifier
                     .fillMaxSize()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            keyboardController?.hide()
+                            activeSearch.value = false
+                            focusManager.clearFocus()
+                        })
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -320,6 +297,18 @@ private fun PilihBarangPotongNotaContent(
                         checkBoxResult = checkBoxResult,
                         checkBoxStates = checkBoxStates,
                         showSheet = showSheet,
+                        modifier = modifier
+                    )
+                }
+
+                if (showLoadingDialog.value) {
+                    LoadingDialog(showLoadingDialog, modifier)
+                }
+
+                if (showErrorDialog.value) {
+                    AlertErrorDialog(
+                        message = message ?: "Unknown error",
+                        showDialog = showErrorDialog,
                         modifier = modifier
                     )
                 }
