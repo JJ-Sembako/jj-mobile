@@ -28,6 +28,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -45,13 +47,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.DataMapper.mapDetailOrderDataToDataOrderHistoryCard
 import com.dr.jjsembako.feature_history.presentation.components.ChangeTotalPayment
 import com.dr.jjsembako.feature_history.presentation.components.PNRHeader
 import com.dr.jjsembako.feature_history.presentation.components.potong_nota.PNSelectedProduct
@@ -149,10 +151,26 @@ private fun PotongNotaContent(
     val scrollState = rememberScrollState()
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
-
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.refresh() })
+
+    val changeCost = rememberSaveable { mutableLongStateOf(0L) }
+    val changeQty = rememberSaveable { mutableIntStateOf(0) }
+
+    LaunchedEffect(Unit, canceledData) {
+        if (canceledData != null) {
+            val orderInfo = orderData.orderToProducts.find { it.id == canceledData.idProduct }
+            if (orderInfo != null) {
+                changeQty.intValue = canceledData.amountSelected - orderInfo.actualAmount
+                changeCost.longValue =
+                    -1 * canceledData.amountSelected * orderInfo.selledPrice
+            }
+        } else {
+            changeCost.longValue = 0L
+            changeQty.intValue = 0
+        }
+    }
 
     when (stateSecond) {
         StateResponse.LOADING -> {
@@ -172,7 +190,32 @@ private fun PotongNotaContent(
         StateResponse.SUCCESS -> {
             showLoadingDialog.value = false
             showErrorDialog.value = false
+            viewModel.reset()
             onNavigateBack()
+        }
+
+        else -> {}
+    }
+
+    when (stateRefresh) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateRefresh")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            viewModel.setStateRefresh(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            viewModel.setStateRefresh(null)
         }
 
         else -> {}
@@ -235,15 +278,31 @@ private fun PotongNotaContent(
             )
 
             PNRHeader(
-                data = dataOrderDataItem,
+                data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
                 context = context,
                 clipboardManager = clipboardManager,
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
-            PNSelectedProduct(onSelectProduct = { onSelectProduct() }, modifier = modifier)
+            if (canceledData != null) {
+                PNSelectedProduct(
+                    data = if (canceledData.idProduct == null) null else {
+                        if (productOrder.isNullOrEmpty()) null
+                        else productOrder.find { it!!.id == canceledData.idProduct }
+                    },
+                    viewModel = viewModel,
+                    onSelectProduct = { onSelectProduct() },
+                    modifier = modifier
+                )
+            }
             Spacer(modifier = modifier.height(16.dp))
-            ChangeTotalPayment(orderCost = 1_500_000L, changeCost = -125_000L, modifier = modifier)
+            ChangeTotalPayment(
+                orderCost = orderData.actualTotalPrice,
+                changeCost = changeCost.longValue,
+                modifier = modifier,
+                isForUpdate = true,
+                changeQty = changeQty.intValue
+            )
             Spacer(modifier = modifier.height(16.dp))
 
             if (showLoadingDialog.value) {

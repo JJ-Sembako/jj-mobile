@@ -13,11 +13,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_history.presentation.components.PNRSelectProductHeader
+import com.dr.jjsembako.feature_history.presentation.components.card.SelectedOrderPNCard
+import com.dr.jjsembako.feature_history.presentation.potong_nota.create.PotongNotaViewModel
 
 @Composable
 fun PNSelectedProduct(
+    data: SelectPNRItem? = null,
+    viewModel: PotongNotaViewModel,
     onSelectProduct: () -> Unit,
     modifier: Modifier
 ) {
@@ -27,19 +33,26 @@ fun PNSelectedProduct(
             .padding(bottom = 16.dp)
     ) {
         PNRSelectProductHeader(onSelectProduct = { onSelectProduct() }, modifier = modifier)
-        PNSelectedProductContent(modifier = modifier)
+        PNSelectedProductContent(data, viewModel, modifier)
     }
 }
 
 @Composable
 private fun PNSelectedProductContent(
+    data: SelectPNRItem? = null,
+    viewModel: PotongNotaViewModel,
     modifier: Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = modifier.height(128.dp))
+        if (data == null) Spacer(modifier = modifier.height(128.dp))
+        else {
+            Spacer(modifier = modifier.height(8.dp))
+            SelectedOrderPNCard(viewModel, data, modifier)
+            Spacer(modifier = modifier.height(8.dp))
+        }
     }
     Divider(
         modifier = modifier
@@ -53,7 +66,9 @@ private fun PNSelectedProductContent(
 @Composable
 private fun PNSelectedProductPreview() {
     JJSembakoTheme {
+        val viewModel: PotongNotaViewModel = hiltViewModel()
         PNSelectedProduct(
+            viewModel = viewModel,
             onSelectProduct = {},
             modifier = Modifier
         )
