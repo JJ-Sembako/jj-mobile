@@ -1,6 +1,9 @@
 package com.dr.jjsembako.feature_history.presentation.potong_nota.create
 
 import android.content.Context
+import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,22 +24,36 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.feature_history.presentation.components.PNRHeader
 import com.dr.jjsembako.feature_history.presentation.components.ChangeTotalPayment
+import com.dr.jjsembako.feature_history.presentation.components.PNRHeader
 import com.dr.jjsembako.feature_history.presentation.components.potong_nota.PNSelectedProduct
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
@@ -52,34 +69,114 @@ fun PotongNotaScreen(
     onSelectProduct: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    PotongNotaContent(
-        id = id,
-        context = context,
-        clipboardManager = clipboardManager,
-        onNavigateBack = { onNavigateBack() },
-        onSelectProduct = { onSelectProduct() },
-        modifier = modifier
-    )
+    val tag = "PN-S"
+    val viewModel: PotongNotaViewModel = hiltViewModel()
+    val stateFirst = viewModel.stateFirst.observeAsState().value
+    val statusCode = viewModel.statusCode.observeAsState().value
+    val message = viewModel.message.observeAsState().value
+    val orderData = viewModel.orderData
+
+    // Set id for the first time Composable is rendered
+    LaunchedEffect(id) {
+        viewModel.setId(id)
+    }
+
+    when (stateFirst) {
+        StateResponse.LOADING -> {
+            LoadingScreen(modifier = modifier)
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateFirst")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            ErrorScreen(
+                onNavigateBack = { onNavigateBack() },
+                onReload = { viewModel.fetchOrder(id) },
+                message = message ?: "Unknown error",
+                modifier = modifier
+            )
+        }
+
+        StateResponse.SUCCESS -> {
+            if (orderData == null) {
+                ErrorScreen(
+                    onNavigateBack = { onNavigateBack() },
+                    onReload = { viewModel.fetchOrder(id) },
+                    message = "Server Error",
+                    modifier = modifier
+                )
+            } else {
+                PotongNotaContent(
+                    orderData = orderData,
+                    viewModel = viewModel,
+                    context = context,
+                    clipboardManager = clipboardManager,
+                    onNavigateBack = { onNavigateBack() },
+                    onSelectProduct = { onSelectProduct() },
+                    modifier = modifier
+                )
+            }
+        }
+
+        else -> {}
+    }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun PotongNotaContent(
-    id: String,
+    orderData: DetailOrderData,
+    viewModel: PotongNotaViewModel,
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
     onSelectProduct: () -> Unit,
     modifier: Modifier
 ) {
+    val tag = "PBPN-C"
+    val stateSecond = viewModel.stateSecond.observeAsState().value
+    val stateRefresh = viewModel.stateRefresh.observeAsState().value
+    val isRefreshing by viewModel.isRefreshing.collectAsState(initial = false)
+    val statusCode = viewModel.statusCode.observeAsState().value
+    val message = viewModel.message.observeAsState().value
+    val productOrder = viewModel.productOrder.observeAsState().value
+    val canceledData = viewModel.canceledData.observeAsState().value
+
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
-    val isRefreshing = remember { mutableStateOf(false) }
 
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing.value,
-        onRefresh = {})
+        refreshing = isRefreshing,
+        onRefresh = { viewModel.refresh() })
+
+    when (stateSecond) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateSecond")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            viewModel.setStateSecond(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            onNavigateBack()
+        }
+
+        else -> {}
+    }
 
     Scaffold(
         topBar = {
@@ -102,8 +199,7 @@ private fun PotongNotaContent(
                 },
                 actions = {
                     IconButton(onClick = {
-                        onNavigateBack()
-                        //TODO: Call function
+                        viewModel.handleCreateCanceled()
                     }) {
                         Icon(
                             Icons.Default.Check,
@@ -118,25 +214,49 @@ private fun PotongNotaContent(
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                    })
                 .pullRefresh(pullRefreshState)
                 .verticalScroll(scrollState)
                 .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             PullRefreshIndicator(
-                refreshing = isRefreshing.value,
+                refreshing = isRefreshing,
                 state = pullRefreshState,
                 modifier = modifier
                     .fillMaxWidth()
                     .height((pullRefreshState.progress * 100).roundToInt().dp)
             )
 
-            PNRHeader(data = dataOrderDataItem,context = context, clipboardManager = clipboardManager, modifier = modifier)
+            PNRHeader(
+                data = dataOrderDataItem,
+                context = context,
+                clipboardManager = clipboardManager,
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(16.dp))
             PNSelectedProduct(onSelectProduct = { onSelectProduct() }, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
             ChangeTotalPayment(orderCost = 1_500_000L, changeCost = -125_000L, modifier = modifier)
             Spacer(modifier = modifier.height(16.dp))
+
+            if (showLoadingDialog.value) {
+                LoadingDialog(showLoadingDialog, modifier)
+            }
+
+            if (showErrorDialog.value) {
+                AlertErrorDialog(
+                    message = message ?: "Unknown error",
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
         }
     }
 }
