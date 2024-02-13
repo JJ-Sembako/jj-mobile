@@ -97,6 +97,15 @@ class PBPotongNotaViewModel @Inject constructor(
         recoveryData()
     }
 
+    fun saveData() {
+        if (canceledData.value == null) return
+        else {
+            viewModelScope.launch {
+                setCanceledStore(canceledData.value)
+            }
+        }
+    }
+
     fun reset() {
         viewModelScope.launch {
             setCanceledStore()
