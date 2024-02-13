@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -73,12 +74,18 @@ fun UpdateOrderCard(
     product: DataProductOrder,
     modifier: Modifier
 ) {
+    val changeAmount = rememberSaveable { mutableIntStateOf(0) }
+
+    LaunchedEffect(product.orderQty){
+        changeAmount.intValue = product.orderQty - data.amount
+    }
+
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp),
-        border = if (product.isChosen && (product.orderTotalPrice == 0L || product.orderQty > product.stockInUnit)) {
+        border = if (product.isChosen && (product.orderTotalPrice == 0L || changeAmount.intValue > product.stockInUnit)) {
             BorderStroke(3.dp, Color.Red)
         } else CardDefaults.outlinedCardBorder()
     ) {
@@ -172,7 +179,9 @@ private fun ProductInfo(
     modifier: Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxWidth().padding(8.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp),
     ) {
         Text(
             text = stringResource(R.string.warehouse_info), fontWeight = FontWeight.Bold, fontSize = 14.sp,
