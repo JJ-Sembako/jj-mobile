@@ -53,6 +53,9 @@ class PotongNotaViewModel @Inject constructor(
     private val _productOrder = MutableLiveData<List<SelectPNRItem?>?>()
     val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder
 
+    private val _selectedData = MutableLiveData<SelectPNRItem?>()
+    private val selectedData: LiveData<SelectPNRItem?> get() = _selectedData
+
     private val _canceledData = MutableLiveData<CanceledStore>()
     val canceledData: LiveData<CanceledStore?> get() = _canceledData
 
@@ -93,7 +96,10 @@ class PotongNotaViewModel @Inject constructor(
     fun reset() {
         viewModelScope.launch {
             setCanceledStore()
+            _canceledData.value = getCanceledStore()
         }
+        if (selectedData.value == null) return
+        else disableChoose(selectedData.value!!)
     }
 
     private suspend fun getCanceledStore(): CanceledStore {
@@ -184,7 +190,7 @@ class PotongNotaViewModel @Inject constructor(
                     )
                     currentList[index] = updatedExistingProduct
                     currentList.remove(existingProduct)
-
+                    _selectedData.value = updatedExistingProduct
                     _productOrder.value = currentList
                 }
             }
@@ -209,6 +215,7 @@ class PotongNotaViewModel @Inject constructor(
                         currentList.remove(existingProduct)
                         setCanceledStore(mapSelectPNRItemToCanceledStore(updatedExistingProduct))
                         _canceledData.value = getCanceledStore()
+                        _selectedData.value = updatedExistingProduct
                         _productOrder.value = currentList
                     }
                 } else {
@@ -236,6 +243,7 @@ class PotongNotaViewModel @Inject constructor(
                         currentList.remove(existingProduct)
                         setCanceledStore(mapSelectPNRItemToCanceledStore(updatedExistingProduct))
                         _canceledData.value = getCanceledStore()
+                        _selectedData.value = updatedExistingProduct
                     }
 
                     _productOrder.value = currentList
@@ -260,6 +268,7 @@ class PotongNotaViewModel @Inject constructor(
                     currentList.remove(existingProduct)
                     setCanceledStore(mapSelectPNRItemToCanceledStore(updatedExistingProduct))
                     _canceledData.value = getCanceledStore()
+                    _selectedData.value = updatedExistingProduct
                     _productOrder.value = currentList
                 } else {
                     enableChoose(existingProduct)
@@ -285,6 +294,7 @@ class PotongNotaViewModel @Inject constructor(
                     currentList.remove(existingProduct)
                     setCanceledStore(mapSelectPNRItemToCanceledStore(updatedExistingProduct))
                     _canceledData.value = getCanceledStore()
+                    _selectedData.value = updatedExistingProduct
                 }
 
                 _productOrder.value = currentList
@@ -308,6 +318,7 @@ class PotongNotaViewModel @Inject constructor(
                     currentList[productIndex] = updatedExistingProduct
                     setCanceledStore()
                     _canceledData.value = getCanceledStore()
+                    _selectedData.value = null
                 }
 
                 _productOrder.value = currentList

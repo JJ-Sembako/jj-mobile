@@ -58,7 +58,7 @@ class PBReturViewModel @Inject constructor(
     val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder
 
     private val _selectedData = MutableLiveData<SelectPNRItem?>()
-    val selectedData: LiveData<SelectPNRItem?> get() = _selectedData
+    private val selectedData: LiveData<SelectPNRItem?> get() = _selectedData
 
     private val _returData = MutableLiveData<ReturStore?>()
     val returData: LiveData<ReturStore?> get() = _returData

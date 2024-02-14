@@ -70,7 +70,7 @@ class PPReturViewModel @Inject constructor(
     val orderData: DetailOrderData? get() = _orderData.value
 
     private val _selectedData = MutableLiveData<SelectSubstituteItem?>()
-    val selectedData: LiveData<SelectSubstituteItem?> get() = _selectedData
+    private val selectedData: LiveData<SelectSubstituteItem?> get() = _selectedData
 
     private val _substituteData = MutableLiveData<SubstituteStore?>()
     val substituteData: LiveData<SubstituteStore?> get() = _substituteData
@@ -163,6 +163,28 @@ class PPReturViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
+                }
+            }
+        }
+    }
+
+    private fun recoveryData() {
+        if (substituteData.value == null) return
+        else {
+            if (dataProducts.value?.isEmpty() == true) return
+            else {
+                val currentList = _dataProducts.value.orEmpty().toMutableList()
+                val index = currentList.indexOfFirst { it?.id == substituteData.value!!.id }
+                if (index != -1) {
+                    val existingProduct = currentList[index]!!
+                    val updatedExistingProduct = existingProduct.copy(
+                        selledPrice = substituteData.value!!.selledPrice,
+                        isChosen = true
+                    )
+                    currentList[index] = updatedExistingProduct
+                    currentList.remove(existingProduct)
+                    _selectedData.value = updatedExistingProduct
+                    _dataProducts.value = currentList
                 }
             }
         }
@@ -325,28 +347,6 @@ class PPReturViewModel @Inject constructor(
 
             _dataRawCategories.value = currentCategories.toList()
             _dataCategories.value = mapListDataCategoryToListFilterOption(dataRawCategories.value)
-        }
-    }
-
-    private fun recoveryData() {
-        if (substituteData.value == null) return
-        else {
-            if (dataProducts.value?.isEmpty() == true) return
-            else {
-                val currentList = _dataProducts.value.orEmpty().toMutableList()
-                val index = currentList.indexOfFirst { it?.id == substituteData.value!!.id }
-                if (index != -1) {
-                    val existingProduct = currentList[index]!!
-                    val updatedExistingProduct = existingProduct.copy(
-                        selledPrice = substituteData.value!!.selledPrice,
-                        isChosen = true
-                    )
-                    currentList[index] = updatedExistingProduct
-                    currentList.remove(existingProduct)
-                    _selectedData.value = updatedExistingProduct
-                    _dataProducts.value = currentList
-                }
-            }
         }
     }
 
