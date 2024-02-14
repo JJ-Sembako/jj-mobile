@@ -103,6 +103,7 @@ class PBReturViewModel @Inject constructor(
     fun reset() {
         viewModelScope.launch {
             setReturStore()
+            _returData.value = getReturStore()
         }
     }
 

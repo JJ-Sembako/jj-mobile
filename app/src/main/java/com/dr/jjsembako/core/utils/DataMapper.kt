@@ -3,10 +3,12 @@ package com.dr.jjsembako.core.utils
 import com.dr.jjsembako.CanceledStore
 import com.dr.jjsembako.ProductOrderStore
 import com.dr.jjsembako.ReturStore
+import com.dr.jjsembako.SubstituteStore
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.model.SelectPNRItem
+import com.dr.jjsembako.core.data.model.SelectSubstituteItem
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
@@ -146,5 +148,15 @@ object DataMapper {
 
         // return value
         return returStoreBuilder.build()
+    }
+
+    fun mapSelectSubstituteItemToSubstituteStore(data: SelectSubstituteItem): SubstituteStore {
+        val substituteStoreBuilder = SubstituteStore.newBuilder()
+        substituteStoreBuilder
+            .setId(data.id)
+            .setSelledPrice(data.selledPrice)
+
+        // return value
+        return substituteStoreBuilder.build()
     }
 }
