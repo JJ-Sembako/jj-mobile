@@ -12,8 +12,8 @@ import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
-import com.dr.jjsembako.core.utils.DataMapper
 import com.dr.jjsembako.core.utils.DataMapper.mapListDataCategoryToListFilterOption
+import com.dr.jjsembako.core.utils.DataMapper.mapListOrderToProductsItemToListSelectPNRItem
 import com.dr.jjsembako.core.utils.DataMapper.mapSelectPNRItemToReturStore
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,6 +56,9 @@ class PBReturViewModel @Inject constructor(
 
     private val _productOrder = MutableLiveData<List<SelectPNRItem?>?>()
     val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder
+
+    private val _selectedData = MutableLiveData<SelectPNRItem?>()
+    val selectedData: LiveData<SelectPNRItem?> get() = _selectedData
 
     private val _returData = MutableLiveData<ReturStore?>()
     val returData: LiveData<ReturStore?> get() = _returData
@@ -105,6 +108,8 @@ class PBReturViewModel @Inject constructor(
             setReturStore()
             _returData.value = getReturStore()
         }
+        if (selectedData.value != null) return
+        else disableChoose(selectedData.value!!)
     }
 
     private suspend fun getReturStore(): ReturStore {
@@ -138,7 +143,7 @@ class PBReturViewModel @Inject constructor(
                         _statusCode.value = it.status
                         _orderData.value = it.data
                         _productOrder.value =
-                            DataMapper.mapListOrderToProductsItemToListSelectPNRItem(it.data!!.orderToProducts)
+                            mapListOrderToProductsItemToListSelectPNRItem(it.data!!.orderToProducts)
                     }
 
                     is Resource.Error -> {
@@ -167,7 +172,7 @@ class PBReturViewModel @Inject constructor(
                     )
                     currentList[index] = updatedExistingProduct
                     currentList.remove(existingProduct)
-
+                    _selectedData.value = updatedExistingProduct
                     _productOrder.value = currentList
                 }
             }
@@ -192,6 +197,7 @@ class PBReturViewModel @Inject constructor(
                         currentList.remove(existingProduct)
                         setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
                         _returData.value = getReturStore()
+                        _selectedData.value = updatedExistingProduct
                         _productOrder.value = currentList
                     }
                 } else {
@@ -219,6 +225,7 @@ class PBReturViewModel @Inject constructor(
                         currentList.remove(existingProduct)
                         setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
                         _returData.value = getReturStore()
+                        _selectedData.value = updatedExistingProduct
                     }
 
                     _productOrder.value = currentList
@@ -243,6 +250,7 @@ class PBReturViewModel @Inject constructor(
                     currentList.remove(existingProduct)
                     setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
                     _returData.value = getReturStore()
+                    _selectedData.value = updatedExistingProduct
                     _productOrder.value = currentList
                 } else {
                     enableChoose(existingProduct)
@@ -268,6 +276,7 @@ class PBReturViewModel @Inject constructor(
                     currentList.remove(existingProduct)
                     setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
                     _returData.value = getReturStore()
+                    _selectedData.value = updatedExistingProduct
                 }
 
                 _productOrder.value = currentList
@@ -291,6 +300,7 @@ class PBReturViewModel @Inject constructor(
                     currentList[productIndex] = updatedExistingProduct
                     setReturStore()
                     _returData.value = getReturStore()
+                    _selectedData.value = null
                 }
 
                 _productOrder.value = currentList

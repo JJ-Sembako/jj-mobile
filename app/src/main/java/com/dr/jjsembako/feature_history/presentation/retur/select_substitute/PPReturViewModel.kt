@@ -117,6 +117,10 @@ class PPReturViewModel @Inject constructor(
     }
 
     fun reset() {
+        viewModelScope.launch {
+            setSubstituteStore()
+            _substituteData.value = getSubstituteStore()
+        }
         if (selectedData.value == null) return
         else disableOrder(selectedData.value!!)
     }
@@ -159,28 +163,6 @@ class PPReturViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-                }
-            }
-        }
-    }
-
-    private fun recoveryData2() {
-        if (substituteData.value == null) return
-        else {
-            if (dataProducts.value?.isEmpty() == true) return
-            else {
-                val currentList = _dataProducts.value.orEmpty().toMutableList()
-                val index = currentList.indexOfFirst { it?.id == substituteData.value!!.id }
-                if (index != -1) {
-                    val existingProduct = currentList[index]!!
-                    val updatedExistingProduct = existingProduct.copy(
-                        selledPrice = substituteData.value!!.selledPrice,
-                        isChosen = true
-                    )
-                    currentList[index] = updatedExistingProduct
-                    currentList.remove(existingProduct)
-
-                    _dataProducts.value = currentList
                 }
             }
         }
@@ -361,7 +343,7 @@ class PPReturViewModel @Inject constructor(
                     )
                     currentList[index] = updatedExistingProduct
                     currentList.remove(existingProduct)
-
+                    _selectedData.value = updatedExistingProduct
                     _dataProducts.value = currentList
                 }
             }
