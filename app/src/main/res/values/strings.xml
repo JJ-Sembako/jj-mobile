@@ -237,4 +237,7 @@
     </string>
     <string name="err_minus_retur">Perubahan biaya untuk retur tidak boleh minus!</string>
     <string name="err_fill_data_first">Lengkapi semua data terlebih dahulu!</string>
+    <string name="select_already">Sudah memilih</string>
+    <string name="select_not">Belum memilih</string>
+    <string name="choose">Pilih</string>
 </resources>
