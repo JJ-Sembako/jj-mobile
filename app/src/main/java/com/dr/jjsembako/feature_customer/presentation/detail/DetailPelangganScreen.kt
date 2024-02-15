@@ -52,6 +52,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -61,6 +63,7 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetOrder
 import com.dr.jjsembako.core.presentation.components.card.CustomerInfo
 import com.dr.jjsembako.core.presentation.components.dialog.AlertDeleteDialog
@@ -93,6 +96,8 @@ fun DetailPelangganScreen(
     val statusCode = viewModel.statusCode.observeAsState().value
     val message = viewModel.message.observeAsState().value
     val customerData = viewModel.customerData
+    val orderPagingItems: LazyPagingItems<OrderDataItem> =
+        viewModel.orderState.collectAsLazyPagingItems()
 
     // Set id for the first time Composable is rendered
     LaunchedEffect(idCust) {
