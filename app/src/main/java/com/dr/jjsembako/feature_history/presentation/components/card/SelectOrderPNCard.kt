@@ -74,7 +74,7 @@ fun SelectOrderPNCard(
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp),
-        border = if (data.isChosen && data.amountSelected == 0) {
+        border = if (data.isChosen && (data.amountSelected == 0 || (data.amountSelected > data.actualAmount))) {
             BorderStroke(3.dp, Color.Red)
         } else CardDefaults.outlinedCardBorder()
     ) {

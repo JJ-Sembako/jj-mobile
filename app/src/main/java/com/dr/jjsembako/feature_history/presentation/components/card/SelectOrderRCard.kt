@@ -61,11 +61,11 @@ import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
-import com.dr.jjsembako.feature_history.presentation.potong_nota.create.PotongNotaViewModel
+import com.dr.jjsembako.feature_history.presentation.retur.select_product.PBReturViewModel
 
 @Composable
-fun SelectedOrderPNCard(
-    viewModel: PotongNotaViewModel,
+fun SelectOrderRCard(
+    viewModel: PBReturViewModel,
     data: SelectPNRItem,
     modifier: Modifier
 ) {
@@ -156,13 +156,13 @@ private fun OrderedProductInfo(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun OrderContent(
-    viewModel: PotongNotaViewModel,
+    viewModel: PBReturViewModel,
     data: SelectPNRItem,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val canceledData = viewModel.canceledData.observeAsState().value
+    val returdData = viewModel.returData.observeAsState().value
     var selectedAmount by rememberSaveable { mutableStateOf(data.amountSelected.toString()) }
 
     LaunchedEffect(data) {
@@ -179,7 +179,7 @@ private fun OrderContent(
         if (data.status == 0) {
             if (!data.isChosen) {
                 Button(
-                    enabled = canceledData == null,
+                    enabled = returdData == null,
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
@@ -316,10 +316,10 @@ private const val QTY_MAX_VALUE = 1_000
 
 @Composable
 @Preview(showBackground = true)
-private fun SelectedOrderPNCardPreview() {
+private fun SelectOrderRCardPreview() {
     JJSembakoTheme {
-        val viewModel: PotongNotaViewModel = hiltViewModel()
-        SelectedOrderPNCard(
+        val viewModel: PBReturViewModel = hiltViewModel()
+        SelectOrderRCard(
             viewModel = viewModel,
             data = dataSelectPNRItem,
             modifier = Modifier

@@ -2,6 +2,7 @@ package com.dr.jjsembako.core.data.dummy
 
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.SelectPNRItem
+import com.dr.jjsembako.core.data.model.SelectSubstituteItem
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.order.Account
 import com.dr.jjsembako.core.data.remote.response.order.CanceledItem
@@ -248,4 +249,17 @@ val dataSelectPNRItem = SelectPNRItem(
         unit = "Karung",
         category = "Tepung"
     )
+)
+
+val dataSelectSubstituteItem = SelectSubstituteItem(
+    id = "9be23a7a-ef7a-4299-92af-29ff955d9cf2",
+    name = "Tepung Norin",
+    stockInPcs = 90,
+    stockInUnit = 15,
+    stockInPcsRemaining = 0,
+    standardPrice = 23000L,
+    amountPerUnit = 6,
+    image = "http://54.251.20.182/img/default.png",
+    unit = "Karung",
+    category = "Tepung"
 )

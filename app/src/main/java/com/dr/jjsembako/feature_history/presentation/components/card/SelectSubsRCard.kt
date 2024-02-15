@@ -1,6 +1,5 @@
 package com.dr.jjsembako.feature_history.presentation.components.card
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,15 +14,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddShoppingCart
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
@@ -31,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -56,17 +50,17 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.dummy.dataSelectPNRItem
-import com.dr.jjsembako.core.data.model.SelectPNRItem
-import com.dr.jjsembako.core.data.remote.response.product.DataProduct
+import com.dr.jjsembako.core.data.dummy.dataSelectSubstituteItem
+import com.dr.jjsembako.core.data.model.SelectSubstituteItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
-import com.dr.jjsembako.feature_history.presentation.potong_nota.create.PotongNotaViewModel
+import com.dr.jjsembako.core.utils.rememberCurrencyVisualTransformation
+import com.dr.jjsembako.feature_history.presentation.retur.select_substitute.PPReturViewModel
 
 @Composable
-fun SelectedOrderPNCard(
-    viewModel: PotongNotaViewModel,
-    data: SelectPNRItem,
+fun SelectSubsRCard(
+    viewModel: PPReturViewModel,
+    product: SelectSubstituteItem,
     modifier: Modifier
 ) {
     OutlinedCard(
@@ -74,25 +68,23 @@ fun SelectedOrderPNCard(
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp),
-        border = if (data.isChosen && (data.amountSelected == 0 || (data.amountSelected > data.actualAmount))) {
-            BorderStroke(3.dp, Color.Red)
-        } else CardDefaults.outlinedCardBorder()
     ) {
         Row(
             modifier = modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ProductImage(product = data.product, modifier = modifier)
-            OrderedProductInfo(data, modifier)
+            ProductImage(product, modifier)
+            Spacer(modifier = modifier.width(16.dp))
+            ProductInfo(product, modifier)
         }
-        OrderContent(viewModel, data, modifier)
+        OrderContent(viewModel, product, modifier)
     }
 }
 
 @Composable
 private fun ProductImage(
-    product: DataProduct,
+    product: SelectSubstituteItem,
     modifier: Modifier
 ) {
     if (product.image.isEmpty() || product.image.contains("default")) {
@@ -122,51 +114,58 @@ private fun ProductImage(
 }
 
 @Composable
-private fun OrderedProductInfo(
-    data: SelectPNRItem,
+private fun ProductInfo(
+    product: SelectSubstituteItem,
     modifier: Modifier
 ) {
-    Column(modifier = modifier.padding(start = 8.dp, end = 16.dp)) {
+    Column {
         Text(
-            text = data.product.name.uppercase(), fontWeight = FontWeight.Normal, fontSize = 14.sp,
+            text = product.name, fontWeight = FontWeight.Bold, fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
         Row(
-            modifier = modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = formatRupiah(data.selledPrice),
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.tertiary
+                text = stringResource(R.string.standard_price),
+                fontSize = 12.sp
             )
             Spacer(modifier = modifier.width(2.dp))
             Text(
-                text = stringResource(R.string.order_qty, data.amount),
-                fontSize = 12.sp, fontWeight = FontWeight.Bold,
-                style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
-                color = MaterialTheme.colorScheme.tertiary
+                text = formatRupiah(product.standardPrice),
+                fontSize = 12.sp, fontWeight = FontWeight.Bold
             )
         }
+        Text(
+            text = stringResource(R.string.stock, product.stockInUnit, product.unit.lowercase()),
+            fontSize = 12.sp
+        )
+        Text(
+            text = stringResource(
+                R.string.info_unit,
+                product.unit.lowercase(),
+                product.amountPerUnit
+            ),
+            fontSize = 11.sp, fontWeight = FontWeight.Light,
+            style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
+        )
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun OrderContent(
-    viewModel: PotongNotaViewModel,
-    data: SelectPNRItem,
+    viewModel: PPReturViewModel,
+    product: SelectSubstituteItem,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val canceledData = viewModel.canceledData.observeAsState().value
-    var selectedAmount by rememberSaveable { mutableStateOf(data.amountSelected.toString()) }
+    val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "IDR")
+    var selledPrice by rememberSaveable { mutableStateOf(product.selledPrice.toString()) }
 
-    LaunchedEffect(data) {
-        selectedAmount = data.amountSelected.toString()
+    LaunchedEffect(product) {
+        selledPrice = product.selledPrice.toString()
     }
 
     Column(
@@ -176,15 +175,13 @@ private fun OrderContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (data.status == 0) {
-            if (!data.isChosen) {
-                Button(
-                    enabled = canceledData == null,
-                    onClick = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                        viewModel.enableChoose(data)
-                    }) {
+        if (product.stockInUnit > 0) {
+            if (!product.isChosen) {
+                Button(onClick = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                    viewModel.enableOrder(product)
+                }) {
                     Icon(
                         Icons.Default.AddShoppingCart,
                         stringResource(R.string.add_to_cart),
@@ -199,67 +196,39 @@ private fun OrderContent(
                     )
                 }
             } else {
-                Row(
-                    modifier = modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                        viewModel.minusSelectedAmount(data)
-                    }) {
-                        Icon(
-                            Icons.Default.Remove,
-                            stringResource(R.string.minus_amount_selected, data.product.name)
-                        )
-                    }
-                    Spacer(modifier = modifier.size(ButtonDefaults.IconSpacing))
-                    OutlinedTextField(
-                        label = { Text(stringResource(R.string.qty)) },
-                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
-                        ),
-                        value = selectedAmount,
-                        onValueChange = {
-                            var newValue =
-                                it.filter { it2 -> it2.isDigit() || it2 == '0' } // Only allow digits and leading zero
-                            newValue = newValue.trimStart('0') // Remove leading zeros
-                            newValue =
-                                newValue.trim { it2 -> it2.isDigit().not() } // Remove non-digits
+                OutlinedTextField(
+                    label = { Text(stringResource(R.string.price)) },
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    visualTransformation = currencyVisualTransformation,
+                    value = selledPrice,
+                    onValueChange = {
+                        var newValue =
+                            it.filter { it2 -> it2.isDigit() || it2 == '0' } // Only allow digits and leading zero
+                        newValue = newValue.trimStart('0') // Remove leading zeros
+                        newValue = newValue.trim { it2 -> it2.isDigit().not() } // Remove non-digits
 
-                            // Enforce minimum & maximum value
-                            selectedAmount = if (newValue.isEmpty()) "0"
-                            else if ((newValue.toIntOrNull()
-                                    ?: 0) > QTY_MAX_VALUE
-                            ) QTY_MAX_VALUE.toString() else newValue
-                            viewModel.updateSelectedAmount(data, selectedAmount)
-                        },
-                        isError = data.amountSelected == 0 || (data.amountSelected > data.actualAmount),
-                        modifier = modifier
-                            .width(88.dp)
-                            .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                    )
-                    Spacer(modifier = modifier.size(ButtonDefaults.IconSpacing))
-                    IconButton(onClick = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                        viewModel.plusSelectedAmount(data)
-                    }) {
-                        Icon(
-                            Icons.Default.Add,
-                            stringResource(R.string.plus_amount_selected, data.product.name)
-                        )
-                    }
-                }
+                        // Enforce minimum & maximum value
+                        selledPrice = if (newValue.isEmpty()) "0"
+                        else if ((newValue.toLongOrNull()
+                                ?: 0L) > MAX_VALUE
+                        ) MAX_VALUE.toString() else newValue
+                        viewModel.updateOrderPrice(product, selledPrice)
+                    },
+                    isError = product.selledPrice == 0L,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                )
                 Spacer(modifier = modifier.height(16.dp))
                 Button(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.disableChoose(data)
+                        viewModel.disableOrder(product)
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(
@@ -278,20 +247,20 @@ private fun OrderContent(
             }
         } else {
             Text(
-                text = stringResource(R.string.already_pnr),
+                text = stringResource(R.string.stock_empty),
                 fontSize = 12.sp, fontWeight = FontWeight.Normal,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false),
                     color = Color.Red
                 )
             )
-            if (selectedAmount.toInt() > 0) {
+            if (product.isChosen) {
                 Spacer(modifier = modifier.height(16.dp))
                 Button(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.disableChoose(data)
+                        viewModel.disableOrder(product)
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(
@@ -312,16 +281,16 @@ private fun OrderContent(
     }
 }
 
-private const val QTY_MAX_VALUE = 1_000
+private const val MAX_VALUE = 1_000_000_000L
 
 @Composable
 @Preview(showBackground = true)
-private fun SelectedOrderPNCardPreview() {
+private fun SelectSubsRCardPreview() {
     JJSembakoTheme {
-        val viewModel: PotongNotaViewModel = hiltViewModel()
-        SelectedOrderPNCard(
+        val viewModel: PPReturViewModel = hiltViewModel()
+        SelectSubsRCard(
             viewModel = viewModel,
-            data = dataSelectPNRItem,
+            product = dataSelectSubstituteItem,
             modifier = Modifier
         )
     }
