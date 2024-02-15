@@ -235,4 +235,6 @@
     <string name="already_pnr">
         Tidak dapat dipilih karena produk ini sudah pernah dilakukan retur atau potong nota!
     </string>
+    <string name="err_minus_retur">Perubahan biaya untuk retur tidak boleh minus!</string>
+    <string name="err_fill_data_first">Lengkapi semua data terlebih dahulu!</string>
 </resources>

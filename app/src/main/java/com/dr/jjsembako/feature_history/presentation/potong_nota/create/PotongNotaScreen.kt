@@ -149,6 +149,7 @@ private fun PotongNotaContent(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
+    val showErrCantCanceled = rememberSaveable { mutableStateOf(false) }
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(
@@ -242,7 +243,8 @@ private fun PotongNotaContent(
                 },
                 actions = {
                     IconButton(onClick = {
-                        viewModel.handleCreateCanceled()
+                        if (canceledData != null) viewModel.handleCreateCanceled()
+                        else showErrCantCanceled.value = true
                     }) {
                         Icon(
                             Icons.Default.Check,
@@ -312,6 +314,14 @@ private fun PotongNotaContent(
             if (showErrorDialog.value) {
                 AlertErrorDialog(
                     message = message ?: "Unknown error",
+                    showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
+
+            if (showErrCantCanceled.value) {
+                AlertErrorDialog(
+                    message = stringResource(R.string.err_fill_data_first),
                     showDialog = showErrorDialog,
                     modifier = modifier
                 )
