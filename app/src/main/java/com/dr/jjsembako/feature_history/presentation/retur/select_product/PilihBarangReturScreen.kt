@@ -1,13 +1,17 @@
 package com.dr.jjsembako.feature_history.presentation.retur.select_product
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
@@ -20,6 +24,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,12 +39,20 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetProduct
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
+import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.rememberMutableStateListOf
 import com.dr.jjsembako.core.utils.rememberMutableStateMapOf
+import com.dr.jjsembako.feature_history.presentation.components.card.SelectOrderRCard
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
@@ -48,28 +64,131 @@ fun PilihBarangReturScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    PilihBarangReturContent(id = id, onNavigateBack = { onNavigateBack() }, modifier = modifier)
+    val tag = "PB-Retur-S"
+    val viewModel: PBReturViewModel = hiltViewModel()
+    val state = viewModel.state.observeAsState().value
+    val statusCode = viewModel.statusCode.observeAsState().value
+    val message = viewModel.message.observeAsState().value
+    val orderData = viewModel.orderData
+
+    // Set id for the first time Composable is rendered
+    LaunchedEffect(id) {
+        viewModel.setId(id)
+    }
+
+    when (state) {
+        StateResponse.LOADING -> {
+            LoadingScreen(modifier = modifier)
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $state")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            ErrorScreen(
+                onNavigateBack = { onNavigateBack() },
+                onReload = { viewModel.fetchOrder(id) },
+                message = message ?: "Unknown error",
+                modifier = modifier
+            )
+        }
+
+        StateResponse.SUCCESS -> {
+            if (orderData == null) {
+                ErrorScreen(
+                    onNavigateBack = { onNavigateBack() },
+                    onReload = { viewModel.fetchOrder(id) },
+                    message = "Server Error",
+                    modifier = modifier
+                )
+            } else {
+                PilihBarangReturContent(
+                    viewModel = viewModel,
+                    onNavigateBack = { onNavigateBack() },
+                    modifier = modifier
+                )
+            }
+        }
+
+        else -> {}
+    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun PilihBarangReturContent(
-    id: String,
+    viewModel: PBReturViewModel,
     onNavigateBack: () -> Unit,
     modifier: Modifier
 ) {
+    val tag = "PB-Retur-C"
+    val stateRefresh = viewModel.stateRefresh.observeAsState().value
+    val isRefreshing by viewModel.isRefreshing.collectAsState(initial = false)
+    val statusCode = viewModel.statusCode.observeAsState().value
+    val message = viewModel.message.observeAsState().value
+    val option = viewModel.dataCategories.observeAsState().value
+    val productOrder = viewModel.productOrder.observeAsState().value
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = remember { mutableStateOf(false) }
     val showSheet = remember { mutableStateOf(false) }
     val checkBoxResult = rememberMutableStateListOf<String>()
     val checkBoxStates = rememberMutableStateMapOf<String, Boolean>()
     val searchQuery = rememberSaveable { mutableStateOf("") }
     val activeSearch = remember { mutableStateOf(false) }
-    val isRefreshing = remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing.value,
-        onRefresh = {})
+        refreshing = isRefreshing,
+        onRefresh = { viewModel.refresh() })
+
+    LaunchedEffect(Unit) {
+        if (!option.isNullOrEmpty()) {
+            if (checkBoxResult.isEmpty()) {
+                checkBoxResult.addAll(option.map { it!!.value })
+                checkBoxStates.putAll(option.map { it!!.value to true })
+            }
+        }
+    }
+
+    LaunchedEffect(option) {
+        if (!option.isNullOrEmpty()) {
+            if (checkBoxResult.isEmpty()) {
+                checkBoxResult.addAll(option.map { it!!.value })
+                checkBoxStates.putAll(option.map { it!!.value to true })
+            } else {
+                val newOption = option.filterNot { checkBoxResult.contains(it!!.value) }
+                checkBoxResult.addAll(newOption.map { it!!.value })
+                checkBoxStates.putAll(newOption.map { it!!.value to true })
+            }
+        }
+    }
+
+    when (stateRefresh) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateRefresh")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            viewModel.setStateRefresh(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            viewModel.setStateRefresh(null)
+        }
+
+        else -> {}
+    }
 
     Scaffold(
         topBar = {
@@ -92,8 +211,8 @@ private fun PilihBarangReturContent(
                 },
                 actions = {
                     IconButton(onClick = {
+                        viewModel.saveData()
                         onNavigateBack()
-                        //TODO: Call function
                     }) {
                         Icon(
                             Icons.Default.Check,
@@ -105,50 +224,97 @@ private fun PilihBarangReturContent(
             )
         }
     ) { contentPadding ->
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
-                .pullRefresh(pullRefreshState)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = {
-                        keyboardController?.hide()
-                        activeSearch.value = false
-                        focusManager.clearFocus()
-                    })
                 .padding(contentPadding)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .pullRefresh(pullRefreshState)
         ) {
             PullRefreshIndicator(
-                refreshing = isRefreshing.value,
+                refreshing = isRefreshing,
                 state = pullRefreshState,
                 modifier = modifier
                     .fillMaxWidth()
                     .height((pullRefreshState.progress * 100).roundToInt().dp)
             )
 
-            SearchFilter(
-                placeholder = stringResource(R.string.search_product),
-                activeSearch,
-                searchQuery,
-                searchFunction = { },
-                openFilter = { showSheet.value = !showSheet.value },
+            Column(
                 modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-
-            if (showSheet.value) {
-                BottomSheetProduct(
-                    optionList = null,
-                    checkBoxResult = checkBoxResult,
-                    checkBoxStates = checkBoxStates,
-                    showSheet = showSheet,
+                    .fillMaxSize()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            keyboardController?.hide()
+                            activeSearch.value = false
+                            focusManager.clearFocus()
+                        })
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SearchFilter(
+                    placeholder = stringResource(R.string.search_product),
+                    activeSearch,
+                    searchQuery,
+                    searchFunction = { },
+                    openFilter = { showSheet.value = !showSheet.value },
                     modifier = modifier
                 )
+                Spacer(modifier = modifier.height(16.dp))
+
+                val filteredOrders = productOrder?.filter { order ->
+                    if (order != null) {
+                        order.product.name.contains(searchQuery.value, ignoreCase = true) &&
+                                checkBoxResult.isNotEmpty() && checkBoxResult.contains(order.product.category)
+                    } else {
+                        false
+                    }
+                }
+
+                if (filteredOrders != null) {
+                    if (filteredOrders.isNotEmpty()) {
+                        LazyColumn(
+                            modifier = modifier
+                                .fillMaxWidth()
+                        ) {
+                            items(items = filteredOrders, key = { order ->
+                                order?.id ?: "empty-${System.currentTimeMillis()}"
+                            }, itemContent = { order ->
+                                if (order != null) {
+                                    SelectOrderRCard(viewModel, order, modifier)
+                                }
+                                Spacer(modifier = modifier.height(8.dp))
+                            })
+                        }
+                    } else {
+                        NotFoundScreen(modifier = modifier)
+                    }
+                }
+
+                if (showSheet.value) {
+                    BottomSheetProduct(
+                        optionList = null,
+                        checkBoxResult = checkBoxResult,
+                        checkBoxStates = checkBoxStates,
+                        showSheet = showSheet,
+                        modifier = modifier
+                    )
+                }
+
+                if (showLoadingDialog.value) {
+                    LoadingDialog(showLoadingDialog, modifier)
+                }
+
+                if (showErrorDialog.value) {
+                    AlertErrorDialog(
+                        message = message ?: "Unknown error",
+                        showDialog = showErrorDialog,
+                        modifier = modifier
+                    )
+                }
             }
         }
+
     }
 }
 

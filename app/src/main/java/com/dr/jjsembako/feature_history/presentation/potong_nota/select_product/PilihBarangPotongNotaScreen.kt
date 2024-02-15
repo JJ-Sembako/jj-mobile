@@ -230,6 +230,14 @@ private fun PilihBarangPotongNotaContent(
                 .padding(contentPadding)
                 .pullRefresh(pullRefreshState)
         ) {
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height((pullRefreshState.progress * 100).roundToInt().dp)
+            )
+
             Column(
                 modifier = modifier
                     .fillMaxSize()
@@ -244,14 +252,6 @@ private fun PilihBarangPotongNotaContent(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PullRefreshIndicator(
-                    refreshing = isRefreshing,
-                    state = pullRefreshState,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .height((pullRefreshState.progress * 100).roundToInt().dp)
-                )
-
                 SearchFilter(
                     placeholder = stringResource(R.string.search_product),
                     activeSearch,
