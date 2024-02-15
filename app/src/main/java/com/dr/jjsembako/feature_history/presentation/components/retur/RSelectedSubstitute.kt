@@ -22,11 +22,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.data.model.SelectSubstituteItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.feature_history.presentation.components.card.SelectedSubsRCard
+import com.dr.jjsembako.feature_history.presentation.retur.create.ReturViewModel
 
 @Composable
 fun RSelectedSubstitute(
+    data: SelectSubstituteItem? = null,
+    viewModel: ReturViewModel,
     onSelectSubstitute: () -> Unit,
     modifier: Modifier
 ) {
@@ -39,7 +45,7 @@ fun RSelectedSubstitute(
             onSelectSubstitute = { onSelectSubstitute() },
             modifier = modifier
         )
-        RSelectedSubstituteContent(modifier = modifier)
+        RSelectedSubstituteContent(data = data, viewModel = viewModel, modifier = modifier)
     }
 }
 
@@ -73,13 +79,20 @@ private fun RSelectedSubstituteHeader(onSelectSubstitute: () -> Unit, modifier: 
 
 @Composable
 private fun RSelectedSubstituteContent(
+    data: SelectSubstituteItem? = null,
+    viewModel: ReturViewModel,
     modifier: Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = modifier.height(128.dp))
+        if (data == null) Spacer(modifier = modifier.height(128.dp))
+        else {
+            Spacer(modifier = modifier.height(8.dp))
+            SelectedSubsRCard(viewModel, data, modifier)
+            Spacer(modifier = modifier.height(8.dp))
+        }
     }
     Divider(
         modifier = modifier
@@ -93,7 +106,9 @@ private fun RSelectedSubstituteContent(
 @Composable
 private fun RSelectedSubstitutePreview() {
     JJSembakoTheme {
+        val viewModel: ReturViewModel = hiltViewModel()
         RSelectedSubstitute(
+            viewModel = viewModel,
             onSelectSubstitute = {},
             modifier = Modifier
         )

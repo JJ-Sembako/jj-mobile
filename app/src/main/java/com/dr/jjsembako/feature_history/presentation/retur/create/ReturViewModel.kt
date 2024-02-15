@@ -66,10 +66,10 @@ class ReturViewModel @Inject constructor(
     val orderData: DetailOrderData? get() = _orderData.value
 
     private val _productOrder = MutableLiveData<List<SelectPNRItem?>?>()
-    val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder
+    private val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder
 
     private val _dataProducts = MutableLiveData<List<SelectSubstituteItem?>>()
-    val dataProducts: LiveData<List<SelectSubstituteItem?>> get() = _dataProducts
+    private val dataProducts: LiveData<List<SelectSubstituteItem?>> get() = _dataProducts
 
     private val _returData = MutableLiveData<ReturStore?>()
     val returData: LiveData<ReturStore?> get() = _returData

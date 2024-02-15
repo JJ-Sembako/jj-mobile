@@ -13,11 +13,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_history.presentation.components.PNRSelectProductHeader
+import com.dr.jjsembako.feature_history.presentation.components.card.SelectedOrderRCard
+import com.dr.jjsembako.feature_history.presentation.retur.create.ReturViewModel
 
 @Composable
 fun RSelectedProduct(
+    data: SelectPNRItem? = null,
+    viewModel: ReturViewModel,
     onSelectProduct: () -> Unit,
     modifier: Modifier
 ) {
@@ -27,19 +33,26 @@ fun RSelectedProduct(
             .padding(bottom = 16.dp)
     ) {
         PNRSelectProductHeader(onSelectProduct = { onSelectProduct() }, modifier = modifier)
-        RSelectedProductContent(modifier = modifier)
+        RSelectedProductContent(data = data, viewModel = viewModel, modifier = modifier)
     }
 }
 
 @Composable
 private fun RSelectedProductContent(
+    data: SelectPNRItem? = null,
+    viewModel: ReturViewModel,
     modifier: Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = modifier.height(128.dp))
+        if (data == null) Spacer(modifier = modifier.height(128.dp))
+        else {
+            Spacer(modifier = modifier.height(8.dp))
+            SelectedOrderRCard(viewModel, data, modifier)
+            Spacer(modifier = modifier.height(8.dp))
+        }
     }
     Divider(
         modifier = modifier
@@ -53,7 +66,9 @@ private fun RSelectedProductContent(
 @Composable
 private fun RSelectedProductPreview() {
     JJSembakoTheme {
+        val viewModel: ReturViewModel = hiltViewModel()
         RSelectedProduct(
+            viewModel = viewModel,
             onSelectProduct = {},
             modifier = Modifier
         )

@@ -60,25 +60,25 @@ import com.dr.jjsembako.feature_history.presentation.retur.select_substitute.PPR
 @Composable
 fun SelectSubsRCard(
     viewModel: PPReturViewModel,
-    product: SelectSubstituteItem,
+    data: SelectSubstituteItem,
     modifier: Modifier
 ) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = 8.dp)
     ) {
         Row(
             modifier = modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ProductImage(product, modifier)
+            ProductImage(data, modifier)
             Spacer(modifier = modifier.width(16.dp))
-            ProductInfo(product, modifier)
+            ProductInfo(data, modifier)
         }
-        OrderContent(viewModel, product, modifier)
+        OrderContent(viewModel, data, modifier)
     }
 }
 
@@ -290,7 +290,7 @@ private fun SelectSubsRCardPreview() {
         val viewModel: PPReturViewModel = hiltViewModel()
         SelectSubsRCard(
             viewModel = viewModel,
-            product = dataSelectSubstituteItem,
+            data = dataSelectSubstituteItem,
             modifier = Modifier
         )
     }

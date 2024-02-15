@@ -300,9 +300,19 @@ private fun ReturContent(
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
-            RSelectedProduct(onSelectProduct = { onSelectProduct() }, modifier = modifier)
+            RSelectedProduct(
+                data = selectedDataR,
+                viewModel = viewModel,
+                onSelectProduct = { onSelectProduct() },
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(16.dp))
-            RSelectedSubstitute(onSelectSubstitute = { onSelectSubstitute() }, modifier = modifier)
+            RSelectedSubstitute(
+                data = selectedDataS,
+                viewModel = viewModel,
+                onSelectSubstitute = { onSelectSubstitute() },
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(16.dp))
             ChangeTotalPayment(
                 orderCost = orderData.actualTotalPrice,
