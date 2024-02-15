@@ -10,6 +10,8 @@ import com.dr.jjsembako.feature_auth.domain.usecase.HandleUpdatePasswordFromReco
 import com.dr.jjsembako.feature_auth.domain.usecase.HandleUpdatePasswordFromRecoveryUseCase
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginInteractor
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginUseCase
+import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustOrdersInteractor
+import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustOrdersUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustomersInteractor
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustomersUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchDetailCustomerInteractor
@@ -139,6 +141,10 @@ abstract class AppModule {
     @Binds
     @ViewModelScoped
     abstract fun provideHandleDeleteCustomerUseCase(handleDeleteCustomerInteractor: HandleDeleteCustomerInteractor): HandleDeleteCustomerUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchCustOrdersUseCase(fetchCustOrdersInteractor: FetchCustOrdersInteractor): FetchCustOrdersUseCase
 
     /****************************
      * Order

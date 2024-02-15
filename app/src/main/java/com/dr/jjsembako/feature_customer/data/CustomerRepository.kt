@@ -9,6 +9,7 @@ import com.dr.jjsembako.core.data.remote.response.customer.DeleteHandleDeleteCus
 import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
 import com.dr.jjsembako.core.data.remote.response.customer.PostHandleCreateCustomerResponse
 import com.dr.jjsembako.core.data.remote.response.customer.PutHandleUpdateCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.feature_customer.domain.repository.ICustomerRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,7 @@ import javax.inject.Singleton
 class CustomerRepository @Inject constructor(
     private val customerDataSource: CustomerDataSource,
     private val customerPagingSource: CustomerPagingSource,
+    private val custOrdersPagingSource: CustOrdersPagingSource,
     private val gson: Gson
 ) : ICustomerRepository {
 
@@ -247,5 +249,25 @@ class CustomerRepository @Inject constructor(
                 }
             }
         }.flowOn(Dispatchers.IO)
+
+    override suspend fun fetchOrders(
+        search: String?,
+        minDate: String?,
+        maxDate: String?,
+        me: Int?,
+        customerId: String
+    ): Flow<PagingData<OrderDataItem>> {
+        return Pager(
+            config = PagingConfig(pageSize = 5),
+            pagingSourceFactory = {
+                custOrdersPagingSource.apply {
+                    setParams(
+                        search = search, minDate = minDate, maxDate = maxDate,
+                        me = me, customerId = customerId
+                    )
+                }
+            }
+        ).flow
+    }
 
 }
