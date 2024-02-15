@@ -6,19 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.SubstituteStore
-import com.dr.jjsembako.core.common.Resource
-import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.SelectSubstituteItem
-import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.utils.DataMapper.mapListDataCategoryToListFilterOption
 import com.dr.jjsembako.core.utils.DataMapper.mapSelectSubstituteItemToSubstituteStore
 import com.dr.jjsembako.feature_history.data.SocketReturHandler
-import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,27 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PPReturViewModel @Inject constructor(
     private val socketReturHandler: SocketReturHandler,
-    private val substituteStore: DataStore<SubstituteStore>,
-    private val fetchOrderUseCase: FetchOrderUseCase
+    private val substituteStore: DataStore<SubstituteStore>
 ) : ViewModel() {
-
-    private val _stateFirst = MutableLiveData<StateResponse?>()
-    val stateFirst: LiveData<StateResponse?> = _stateFirst
-
-    private val _stateSecond = MutableLiveData<StateResponse?>()
-    val stateSecond: LiveData<StateResponse?> = _stateSecond
-
-    private val _stateRefresh = MutableLiveData<StateResponse?>()
-    val stateRefresh: LiveData<StateResponse?> = _stateRefresh
-
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
-
-    private val _statusCode = MutableLiveData<Int?>()
-    val statusCode: LiveData<Int?> = _statusCode
-
-    private val _message = MutableLiveData<String?>()
-    val message: LiveData<String?> = _message
 
     private val _loadingState = MutableLiveData(true)
     val loadingState: LiveData<Boolean> get() = _loadingState
@@ -66,45 +40,17 @@ class PPReturViewModel @Inject constructor(
     private val _dataProducts = MutableLiveData<List<SelectSubstituteItem?>>()
     val dataProducts: LiveData<List<SelectSubstituteItem?>> get() = _dataProducts
 
-    private val _orderData = MutableLiveData<DetailOrderData?>()
-    val orderData: DetailOrderData? get() = _orderData.value
-
     private val _selectedData = MutableLiveData<SelectSubstituteItem?>()
     private val selectedData: LiveData<SelectSubstituteItem?> get() = _selectedData
 
     private val _substituteData = MutableLiveData<SubstituteStore?>()
     val substituteData: LiveData<SubstituteStore?> get() = _substituteData
 
-    private var _id: String? = null
-
     init {
         viewModelScope.launch {
             _substituteData.value = getSubstituteStore()
         }
         initSocket()
-    }
-
-    fun setId(id: String) {
-        _id = id
-        init()
-    }
-
-    fun setStateSecond(state: StateResponse?) {
-        _stateSecond.value = state
-    }
-
-    fun setStateRefresh(state: StateResponse?) {
-        _stateRefresh.value = state
-    }
-
-    private fun init() {
-        refresh()
-    }
-
-    fun refresh() {
-        val id = _id ?: return
-        fetchOrder(id)
-        recoveryData()
     }
 
     fun saveData() {
@@ -138,34 +84,6 @@ class PPReturViewModel @Inject constructor(
             }
         }
         _substituteData.value = substituteStore.data.first() // Update UI state
-    }
-
-    fun fetchOrder(id: String) {
-        viewModelScope.launch {
-            fetchOrderUseCase.fetchOrder(id).collect {
-                when (it) {
-                    is Resource.Loading -> {
-                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.LOADING
-                        else _stateRefresh.value = StateResponse.LOADING
-                    }
-
-                    is Resource.Success -> {
-                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.SUCCESS
-                        else _stateRefresh.value = StateResponse.SUCCESS
-                        _message.value = it.message
-                        _statusCode.value = it.status
-                        _orderData.value = it.data
-                    }
-
-                    is Resource.Error -> {
-                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.ERROR
-                        else _stateRefresh.value = StateResponse.ERROR
-                        _message.value = it.message
-                        _statusCode.value = it.status
-                    }
-                }
-            }
-        }
     }
 
     private fun recoveryData() {
