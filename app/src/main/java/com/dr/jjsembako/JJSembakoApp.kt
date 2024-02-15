@@ -279,6 +279,13 @@ fun JJSembakoApp() {
             val keyword = it.arguments?.getString("keyword") ?: ""
             DetailPelangganScreen(
                 idCust = id,
+                context = context,
+                clipboardManager = clipboardManager,
+                onNavigateToDetail = { idOrder ->
+                    navController.navigate(Screen.DetailRiwayat.createRoute(idOrder)) {
+                        launchSingleTop = true
+                    }
+                },
                 onNavigateBack = {
                     navController.navigate(Screen.Pelanggan.createRoute(keyword)) {
                         popUpTo(Screen.Pelanggan.route) { inclusive = true }
