@@ -53,7 +53,7 @@ import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.DataMapper.mapOrderDataItemToDataOrderHistoryCard
 import com.dr.jjsembako.core.utils.initializeDateValues
-import com.dr.jjsembako.feature_history.presentation.components.BottomSheetHistory
+import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetOrderHistory
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -207,7 +207,7 @@ fun RiwayatScreen(
             }
 
             if (showSheet.value) {
-                BottomSheetHistory(
+                BottomSheetOrderHistory(
                     fromDate = fromDate,
                     untilDate = untilDate,
                     isFilterOn = isFilterOn,

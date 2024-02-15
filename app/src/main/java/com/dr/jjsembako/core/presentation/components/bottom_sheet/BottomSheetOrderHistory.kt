@@ -1,4 +1,4 @@
-package com.dr.jjsembako.feature_history.presentation.components
+package com.dr.jjsembako.core.presentation.components.bottom_sheet
 
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -50,7 +50,7 @@ import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheetHistory(
+fun BottomSheetOrderHistory(
     fromDate: MutableState<String>,
     untilDate: MutableState<String>,
     isFilterOn: MutableState<Boolean>,
@@ -296,9 +296,9 @@ private fun DateFilter(
 
 @Composable
 @Preview(showBackground = true)
-private fun BottomSheetCustomerPreview() {
+private fun BottomSheetOrderHistoryPreview() {
     JJSembakoTheme {
-        BottomSheetHistory(
+        BottomSheetOrderHistory(
             fromDate = remember { mutableStateOf("10-12-2023") },
             untilDate = remember { mutableStateOf("12-12-2023") },
             isFilterOn = remember { mutableStateOf(false) },
