@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
@@ -30,6 +32,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -58,17 +61,21 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
-import com.dr.jjsembako.core.presentation.components.dialog.AlertDeleteDialog
-import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetOrder
 import com.dr.jjsembako.core.presentation.components.card.CustomerInfo
-import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.dialog.AlertDeleteDialog
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_customer.presentation.components.CustomerButtonInfo
+import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
+import eu.bambooapps.material3.pullrefresh.pullRefresh
+import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @Composable
 fun DetailPelangganScreen(
@@ -80,15 +87,16 @@ fun DetailPelangganScreen(
     chatWA: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val detailPelangganViewModel: DetailPelangganViewModel = hiltViewModel()
-    val stateFirst = detailPelangganViewModel.stateFirst.observeAsState().value
-    val statusCode = detailPelangganViewModel.statusCode.observeAsState().value
-    val message = detailPelangganViewModel.message.observeAsState().value
-    val customerData = detailPelangganViewModel.customerData
+    val tag = "DetailPelanggan-S"
+    val viewModel: DetailPelangganViewModel = hiltViewModel()
+    val stateFirst = viewModel.stateFirst.observeAsState().value
+    val statusCode = viewModel.statusCode.observeAsState().value
+    val message = viewModel.message.observeAsState().value
+    val customerData = viewModel.customerData
 
     // Set id for the first time Composable is rendered
     LaunchedEffect(idCust) {
-        detailPelangganViewModel.setId(idCust)
+        viewModel.setId(idCust)
     }
 
     when (stateFirst) {
@@ -97,14 +105,14 @@ fun DetailPelangganScreen(
         }
 
         StateResponse.ERROR -> {
-            Log.e("DetailPelanggan", "Error")
-            Log.e("DetailPelanggan", "state: $stateFirst")
-            Log.e("DetailPelanggan", "Error: $message")
-            Log.e("DetailPelanggan", "statusCode: $statusCode")
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateFirst")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
             ErrorScreen(
                 onNavigateBack = { onNavigateBack() },
                 onReload = {
-                    detailPelangganViewModel.fetchDetailCustomer(idCust)
+                    viewModel.fetchDetailCustomer(idCust)
                 },
                 message = message ?: "Unknown error",
                 modifier = modifier
@@ -115,14 +123,14 @@ fun DetailPelangganScreen(
             if (customerData == null) {
                 ErrorScreen(
                     onNavigateBack = { onNavigateBack() },
-                    onReload = { detailPelangganViewModel.fetchDetailCustomer(idCust) },
+                    onReload = { viewModel.fetchDetailCustomer(idCust) },
                     message = "Server Error",
                     modifier = modifier
                 )
             } else {
                 DetailPelangganContent(
                     cust = customerData,
-                    detailPelangganViewModel = detailPelangganViewModel,
+                    viewModel = viewModel,
                     onNavigateBack = { onNavigateBack() },
                     onNavigateToEditCust = { onNavigateToEditCust() },
                     openMaps = { url -> openMaps(url) },
@@ -141,7 +149,7 @@ fun DetailPelangganScreen(
 @Composable
 private fun DetailPelangganContent(
     cust: DataCustomer,
-    detailPelangganViewModel: DetailPelangganViewModel,
+    viewModel: DetailPelangganViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToEditCust: () -> Unit,
     openMaps: (String) -> Unit,
@@ -149,9 +157,12 @@ private fun DetailPelangganContent(
     chatWA: (String) -> Unit,
     modifier: Modifier
 ) {
-    val stateSecond = detailPelangganViewModel.stateSecond.observeAsState().value
-    val statusCode = detailPelangganViewModel.statusCode.observeAsState().value
-    val message = detailPelangganViewModel.message.observeAsState().value
+    val tag = "DetailPelanggan-C"
+    val stateSecond = viewModel.stateSecond.observeAsState().value
+    val stateRefresh = viewModel.stateRefresh.observeAsState().value
+    val statusCode = viewModel.statusCode.observeAsState().value
+    val message = viewModel.message.observeAsState().value
+    val isRefreshing by viewModel.isRefreshing.collectAsState(initial = false)
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -173,6 +184,9 @@ private fun DetailPelangganContent(
     val (selectedOptionOrder, onOptionSelectedOrder) = remember { mutableStateOf(radioOptionsOrder[0]) }
     val searchQuery = remember { mutableStateOf("") }
     val activeSearch = remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = { viewModel.refresh() })
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_empty))
     val progress by animateLottieCompositionAsState(
@@ -192,20 +206,44 @@ private fun DetailPelangganContent(
         }
 
         StateResponse.ERROR -> {
-            Log.e("DetailPelanggan", "Error")
-            Log.e("DetailPelanggan", "state: $stateSecond")
-            Log.e("DetailPelanggan", "Error: $message")
-            Log.e("DetailPelanggan", "statusCode: $statusCode")
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateSecond")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
             showLoadingDialog.value = false
             showErrorDialog.value = true
-            detailPelangganViewModel.setStateSecond(null)
+            viewModel.setStateSecond(null)
         }
 
         StateResponse.SUCCESS -> {
             showLoadingDialog.value = false
             showErrorDialog.value = false
-            detailPelangganViewModel.setStateSecond(null)
+            viewModel.setStateSecond(null)
             onNavigateBack()
+        }
+
+        else -> {}
+    }
+
+    when (stateRefresh) {
+        StateResponse.LOADING -> {
+            showLoadingDialog.value = true
+        }
+
+        StateResponse.ERROR -> {
+            Log.e(tag, "Error")
+            Log.e(tag, "state: $stateRefresh")
+            Log.e(tag, "Error: $message")
+            Log.e(tag, "statusCode: $statusCode")
+            showLoadingDialog.value = false
+            showErrorDialog.value = true
+            viewModel.setStateRefresh(null)
+        }
+
+        StateResponse.SUCCESS -> {
+            showLoadingDialog.value = false
+            showErrorDialog.value = false
+            viewModel.setStateRefresh(null)
         }
 
         else -> {}
@@ -255,87 +293,101 @@ private fun DetailPelangganContent(
             )
         }
     ) { contentPadding ->
-        Column(
+        Box(
             modifier = modifier
-                .verticalScroll(scrollState)
                 .fillMaxSize()
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = {
-                        keyboardController?.hide()
-                        activeSearch.value = false
-                        focusManager.clearFocus()
-                    })
                 .padding(contentPadding)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .pullRefresh(pullRefreshState)
         ) {
-            CustomerInfo(
-                onNavigateToDetailCust = {},
-                customer = cust,
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
                 modifier = modifier
+                    .fillMaxWidth()
+                    .height((pullRefreshState.progress * 100).roundToInt().dp)
             )
-            CustomerButtonInfo(
-                cust = cust,
-                openMaps = { url -> openMaps(url) },
-                call = { uri -> call(uri) },
-                chatWA = { url -> chatWA(url) },
+            Column(
                 modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            Text(
-                text = stringResource(R.string.order_history),
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            SearchFilter(
-                placeholder = stringResource(R.string.search_cust),
-                activeSearch,
-                searchQuery,
-                searchFunction = {},
-                openFilter = { showSheet.value = !showSheet.value },
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            LottieAnimation(
-                enableMergePaths = true,
-                composition = composition,
-                progress = { progress },
-                modifier = modifier.size(150.dp)
-            )
-            Spacer(modifier = modifier.height(48.dp))
-            if (showSheet.value) {
-                BottomSheetOrder(
-                    optionListPayment = radioOptionsPayment,
-                    optionListOrder = radioOptionsOrder,
-                    selectedOptionPayment = selectedOptionPayment,
-                    selectedOptionOrder = selectedOptionOrder,
-                    onOptionSelectedPayment = onOptionSelectedPayment,
-                    onOptionSelectedOrder = onOptionSelectedOrder,
-                    showSheet = showSheet,
+                    .verticalScroll(scrollState)
+                    .fillMaxSize()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            keyboardController?.hide()
+                            activeSearch.value = false
+                            focusManager.clearFocus()
+                        })
+                    .padding(contentPadding)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CustomerInfo(
+                    onNavigateToDetailCust = {},
+                    customer = cust,
                     modifier = modifier
                 )
-            }
-            if (showDialog.value) {
-                AlertDeleteDialog(
-                    onDelete = { detailPelangganViewModel.handleDeleteCustomer(cust.id) },
-                    showDialog = showDialog,
+                CustomerButtonInfo(
+                    cust = cust,
+                    openMaps = { url -> openMaps(url) },
+                    call = { uri -> call(uri) },
+                    chatWA = { url -> chatWA(url) },
                     modifier = modifier
                 )
-            }
+                Spacer(modifier = modifier.height(16.dp))
+                Text(
+                    text = stringResource(R.string.order_history),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = modifier.height(16.dp))
+                SearchFilter(
+                    placeholder = stringResource(R.string.search_cust),
+                    activeSearch,
+                    searchQuery,
+                    searchFunction = {},
+                    openFilter = { showSheet.value = !showSheet.value },
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(16.dp))
+                LottieAnimation(
+                    enableMergePaths = true,
+                    composition = composition,
+                    progress = { progress },
+                    modifier = modifier.size(150.dp)
+                )
+                Spacer(modifier = modifier.height(48.dp))
+                if (showSheet.value) {
+                    BottomSheetOrder(
+                        optionListPayment = radioOptionsPayment,
+                        optionListOrder = radioOptionsOrder,
+                        selectedOptionPayment = selectedOptionPayment,
+                        selectedOptionOrder = selectedOptionOrder,
+                        onOptionSelectedPayment = onOptionSelectedPayment,
+                        onOptionSelectedOrder = onOptionSelectedOrder,
+                        showSheet = showSheet,
+                        modifier = modifier
+                    )
+                }
+                if (showDialog.value) {
+                    AlertDeleteDialog(
+                        onDelete = { viewModel.handleDeleteCustomer(cust.id) },
+                        showDialog = showDialog,
+                        modifier = modifier
+                    )
+                }
 
-            if (showLoadingDialog.value) {
-                LoadingDialog(showLoadingDialog, modifier)
-            }
+                if (showLoadingDialog.value) {
+                    LoadingDialog(showLoadingDialog, modifier)
+                }
 
-            if (showErrorDialog.value) {
-                AlertErrorDialog(
-                    message = message ?: stringResource(id = R.string.error_msg_default),
-                    showDialog = showErrorDialog,
-                    modifier = modifier
-                )
+                if (showErrorDialog.value) {
+                    AlertErrorDialog(
+                        message = message ?: stringResource(id = R.string.error_msg_default),
+                        showDialog = showErrorDialog,
+                        modifier = modifier
+                    )
+                }
             }
         }
     }
