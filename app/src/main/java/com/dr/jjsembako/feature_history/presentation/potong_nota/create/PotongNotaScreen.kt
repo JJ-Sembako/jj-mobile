@@ -286,17 +286,15 @@ private fun PotongNotaContent(
                 modifier = modifier
             )
             Spacer(modifier = modifier.height(16.dp))
-            if (canceledData != null) {
-                PNSelectedProduct(
-                    data = if (canceledData.idProduct == null) null else {
-                        if (productOrder.isNullOrEmpty()) null
-                        else productOrder.find { it!!.id == canceledData.idProduct }
-                    },
-                    viewModel = viewModel,
-                    onSelectProduct = { onSelectProduct() },
-                    modifier = modifier
-                )
-            }
+            PNSelectedProduct(
+                data = if (canceledData == null) null else {
+                    if (productOrder.isNullOrEmpty()) null
+                    else productOrder.find { it!!.id == canceledData.idProduct }
+                },
+                viewModel = viewModel,
+                onSelectProduct = { onSelectProduct() },
+                modifier = modifier
+            )
             Spacer(modifier = modifier.height(16.dp))
             ChangeTotalPayment(
                 orderCost = orderData.actualTotalPrice,
