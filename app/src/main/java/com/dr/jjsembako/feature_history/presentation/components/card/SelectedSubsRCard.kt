@@ -187,12 +187,12 @@ private fun OrderContent(
                     }) {
                     Icon(
                         Icons.Default.AddShoppingCart,
-                        stringResource(R.string.add_to_cart),
+                        stringResource(R.string.choose),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                     Spacer(modifier = modifier.size(ButtonDefaults.IconSpacing))
                     Text(
-                        text = stringResource(R.string.add_to_cart),
+                        text = stringResource(R.string.choose),
                         style = TextStyle(
                             platformStyle = PlatformTextStyle(includeFontPadding = false)
                         )
