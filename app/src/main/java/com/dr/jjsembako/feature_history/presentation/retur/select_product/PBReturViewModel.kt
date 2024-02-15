@@ -108,7 +108,7 @@ class PBReturViewModel @Inject constructor(
             setReturStore()
             _returData.value = getReturStore()
         }
-        if (selectedData.value != null) return
+        if (selectedData.value == null) return
         else disableChoose(selectedData.value!!)
     }
 
