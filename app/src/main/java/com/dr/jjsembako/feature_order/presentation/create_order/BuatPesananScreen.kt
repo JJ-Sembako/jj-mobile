@@ -217,7 +217,7 @@ private fun BuatPesananContent(
             buatPesananViewModel.setErrValidationCreateOrder(null)
         }
 
-        else -> { showErrorValidationDialog.value = false }
+        else -> {}
     }
 
     when (stateCreate) {
@@ -368,7 +368,7 @@ private fun BuatPesananContent(
             if (showErrorValidationDialog.value) {
                 AlertErrorDialog(
                     message = msgErrorValidation.value,
-                    showDialog = showErrorDialog,
+                    showDialog = showErrorValidationDialog,
                     modifier = modifier
                 )
             }
