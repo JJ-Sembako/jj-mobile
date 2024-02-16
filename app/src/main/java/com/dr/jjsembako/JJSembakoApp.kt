@@ -32,6 +32,7 @@ import com.dr.jjsembako.feature_auth.presentation.recovery_question.PertanyaanPe
 import com.dr.jjsembako.feature_customer.presentation.add.TambahPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.detail.DetailPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.edit.EditPelangganScreen
+import com.dr.jjsembako.feature_customer.presentation.history_order.PesananPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
 import com.dr.jjsembako.feature_history.presentation.add_product_order.TambahBarangPesananScreen
 import com.dr.jjsembako.feature_history.presentation.detail.DetailTransaksi
@@ -297,6 +298,11 @@ fun JJSembakoApp() {
                         launchSingleTop = true
                     }
                 },
+                onNavigateToCustOrder = {
+                    navController.navigate(Screen.PesananPelanggan.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
                 openMaps = { url -> openMaps(context, url) },
                 call = { uri -> call(context, uri) },
                 chatWA = { url -> chatWA(context, url) }
@@ -312,6 +318,23 @@ fun JJSembakoApp() {
                 idCust = id,
                 onNavigateToDetailCust = { navController.popBackStack() },
                 openMaps = { url -> openMaps(context, url) })
+        }
+
+        composable(
+            route = Screen.PesananPelanggan.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+           PesananPelangganScreen(
+               idCust = id,
+               context = context,
+               clipboardManager = clipboardManager,
+               onNavigateBack = { navController.popBackStack() },
+               onNavigateToDetail = { idOrder ->
+                   navController.navigate(Screen.DetailRiwayat.createRoute(idOrder)) {
+                       launchSingleTop = true
+                   }
+               })
         }
 
         composable(Screen.Riwayat.route) {

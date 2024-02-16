@@ -83,6 +83,7 @@ fun DetailPelangganScreen(
     onNavigateToDetail: (String) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToEditCust: () -> Unit,
+    onNavigateToCustOrder: (String) -> Unit,
     openMaps: (String) -> Unit,
     call: (String) -> Unit,
     chatWA: (String) -> Unit,
@@ -137,6 +138,7 @@ fun DetailPelangganScreen(
                     onNavigateToDetail = { id -> onNavigateToDetail(id) },
                     onNavigateBack = { onNavigateBack() },
                     onNavigateToEditCust = { onNavigateToEditCust() },
+                    onNavigateToCustOrder = { idOrder -> onNavigateToCustOrder(idOrder) },
                     openMaps = { url -> openMaps(url) },
                     call = { uri -> call(uri) },
                     chatWA = { url -> chatWA(url) },
@@ -159,6 +161,7 @@ private fun DetailPelangganContent(
     onNavigateToDetail: (String) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToEditCust: () -> Unit,
+    onNavigateToCustOrder: (String) -> Unit,
     openMaps: (String) -> Unit,
     call: (String) -> Unit,
     chatWA: (String) -> Unit,
@@ -341,7 +344,7 @@ private fun DetailPelangganContent(
                 )
                 Spacer(modifier = modifier.height(64.dp))
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { onNavigateToCustOrder(cust.id) },
                     modifier = modifier
                         .fillMaxWidth()
                         .height(80.dp),
@@ -420,6 +423,7 @@ private fun DetailPelangganScreenPreview() {
             onNavigateToDetail = {},
             onNavigateBack = {},
             onNavigateToEditCust = {},
+            onNavigateToCustOrder = {},
             openMaps = {},
             call = {},
             chatWA = {}

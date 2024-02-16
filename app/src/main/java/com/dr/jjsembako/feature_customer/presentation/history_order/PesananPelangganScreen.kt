@@ -26,12 +26,14 @@ fun PesananPelangganScreen(
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
+    onNavigateToDetail: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     PesananPelangganContent(
         context = context,
         clipboardManager = clipboardManager,
         onNavigateBack = { onNavigateBack() },
+        onNavigateToDetail = { id -> onNavigateToDetail(id) },
         modifier = modifier
     )
 }
@@ -42,6 +44,7 @@ private fun PesananPelangganContent(
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateBack: () -> Unit,
+    onNavigateToDetail: (String) -> Unit,
     modifier: Modifier
 ) {
     Scaffold(
