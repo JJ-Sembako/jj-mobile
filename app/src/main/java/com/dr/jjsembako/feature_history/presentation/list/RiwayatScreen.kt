@@ -51,6 +51,7 @@ import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.DataMapper.mapOrderDataItemToDataOrderHistoryCard
+import com.dr.jjsembako.core.utils.formatDateString
 import com.dr.jjsembako.core.utils.initializeDateValues
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -63,9 +64,9 @@ fun RiwayatScreen(
     modifier: Modifier = Modifier
 ) {
     val tag = "RiwayatScreen"
-    val riwayatViewModel: RiwayatViewModel = hiltViewModel()
+    val viewModel: RiwayatViewModel = hiltViewModel()
     val orderPagingItems: LazyPagingItems<OrderDataItem> =
-        riwayatViewModel.orderState.collectAsLazyPagingItems()
+        viewModel.orderState.collectAsLazyPagingItems()
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -81,21 +82,21 @@ fun RiwayatScreen(
         initializeDateValues(fromDate, untilDate)
     }
 
-    LaunchedEffect(searchQuery) {
-        if (searchQuery.value.isNotEmpty()) {
-            if (isFilterOn.value) riwayatViewModel.fetchOrders(
-                searchQuery.value,
-                fromDate.value,
-                untilDate.value
-            )
-            else riwayatViewModel.fetchOrders(searchQuery.value, null, null)
-        } else {
-            if (isFilterOn.value) riwayatViewModel.fetchOrders(
+    LaunchedEffect(searchQuery.value, fromDate.value, untilDate.value, isFilterOn.value) {
+        if (searchQuery.value.isEmpty()) {
+            if (isFilterOn.value) viewModel.fetchOrders(
                 null,
-                fromDate.value,
-                untilDate.value
+                formatDateString(fromDate.value),
+                formatDateString(untilDate.value)
             )
-            else riwayatViewModel.fetchOrders(null, null, null)
+            else viewModel.fetchOrders(null, null, null)
+        } else {
+            if (isFilterOn.value) viewModel.fetchOrders(
+                searchQuery.value,
+                formatDateString(fromDate.value),
+                formatDateString(untilDate.value)
+            )
+            else viewModel.fetchOrders(searchQuery.value, null, null)
         }
     }
 
@@ -159,19 +160,19 @@ fun RiwayatScreen(
                         onNavigateBack = { },
                         onReload = {
                             if (searchQuery.value.isNotEmpty()) {
-                                if (isFilterOn.value) riwayatViewModel.fetchOrders(
+                                if (isFilterOn.value) viewModel.fetchOrders(
                                     searchQuery.value,
                                     fromDate.value,
                                     untilDate.value
                                 )
-                                else riwayatViewModel.fetchOrders(searchQuery.value, null, null)
+                                else viewModel.fetchOrders(searchQuery.value, null, null)
                             } else {
-                                if (isFilterOn.value) riwayatViewModel.fetchOrders(
+                                if (isFilterOn.value) viewModel.fetchOrders(
                                     null,
                                     fromDate.value,
                                     untilDate.value
                                 )
-                                else riwayatViewModel.fetchOrders(null, null, null)
+                                else viewModel.fetchOrders(null, null, null)
                             }
                         },
                         message = error.error.localizedMessage ?: "Unknown error",

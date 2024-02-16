@@ -14,13 +14,13 @@ import javax.inject.Inject
 class RiwayatViewModel @Inject constructor(private val fetchOrdersUseCase: FetchOrdersUseCase) :
     ViewModel() {
 
-    init {
-        fetchOrders(search = null, minDate = null, maxDate = null)
-    }
-
     private val _orderState: MutableStateFlow<PagingData<OrderDataItem>> =
         MutableStateFlow(value = PagingData.empty())
     val orderState: MutableStateFlow<PagingData<OrderDataItem>> get() = _orderState
+
+    init {
+        fetchOrders(search = null, minDate = null, maxDate = null)
+    }
 
     fun fetchOrders(
         search: String?,
