@@ -47,6 +47,7 @@ import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.utils.DataMapper.mapOrderDataItemToDataOrderHistoryCard
+import com.dr.jjsembako.core.utils.formatDateString
 import com.dr.jjsembako.core.utils.initializeDateValues
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -83,21 +84,21 @@ fun PesananPelangganScreen(
         initializeDateValues(fromDate, untilDate)
     }
 
-    LaunchedEffect(searchQuery, fromDate, untilDate, isFilterOn) {
-        if (searchQuery.value.isNotEmpty()) {
-            if (isFilterOn.value) viewModel.fetchOrders(
-                searchQuery.value,
-                fromDate.value,
-                untilDate.value
-            )
-            else viewModel.fetchOrders(searchQuery.value, null, null)
-        } else {
+    LaunchedEffect(searchQuery.value, fromDate.value, untilDate.value, isFilterOn.value) {
+        if (searchQuery.value.isEmpty()) {
             if (isFilterOn.value) viewModel.fetchOrders(
                 null,
-                fromDate.value,
-                untilDate.value
+                formatDateString(fromDate.value),
+                formatDateString(untilDate.value)
             )
             else viewModel.fetchOrders(null, null, null)
+        } else {
+            if (isFilterOn.value) viewModel.fetchOrders(
+                searchQuery.value,
+                formatDateString(fromDate.value),
+                formatDateString(untilDate.value)
+            )
+            else viewModel.fetchOrders(searchQuery.value, null, null)
         }
     }
 
@@ -143,7 +144,7 @@ fun PesananPelangganScreen(
                 placeholder = stringResource(R.string.search_transaction),
                 activeSearch,
                 searchQuery,
-                searchFunction = { },
+                searchFunction = {},
                 openFilter = { showSheet.value = !showSheet.value },
                 modifier = modifier
             )

@@ -164,6 +164,15 @@ fun initializeDateValues(fromDate: MutableState<String>, untilDate: MutableState
     }
 }
 
+fun formatDateString(dateString: String): String {
+    val parts = dateString.split("-")
+    return if (parts.size == 3) {
+        "${parts[2]}-${parts[1]}-${parts[0]}"
+    } else {
+        dateString
+    }
+}
+
 fun convertMillisToDate(millis: Long): String {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
