@@ -38,7 +38,7 @@ import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.presentation.components.utils.OrderStatus
 import com.dr.jjsembako.core.presentation.components.utils.PaymentStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.utils.toDateArray
+import com.dr.jjsembako.core.utils.convertTimestampToArray
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -49,7 +49,7 @@ fun OrderInformation(
     clipboardManager: ClipboardManager,
     modifier: Modifier
 ) {
-    val createdDate = data.createdAt.toDateArray()
+    val createdDate = convertTimestampToArray(data.createdAt)
     val toastCopiedIdMsg = stringResource(R.string.copied_invoice)
 
     Column(

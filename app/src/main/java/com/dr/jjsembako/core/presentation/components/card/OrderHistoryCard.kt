@@ -37,8 +37,8 @@ import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.presentation.components.utils.OrderStatus
 import com.dr.jjsembako.core.presentation.components.utils.PaymentStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.convertTimestampToArray
 import com.dr.jjsembako.core.utils.formatRupiah
-import com.dr.jjsembako.core.utils.toDateArray
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -51,7 +51,7 @@ fun OrderHistoryCard(
     modifier: Modifier
 ) {
     val toastCopiedIdMsg = stringResource(R.string.copied_invoice)
-    val createdDate = data.createdAt.toDateArray()
+    val createdDate = convertTimestampToArray(data.createdAt)
 
     OutlinedCard(
         modifier = modifier
@@ -143,7 +143,8 @@ fun OrderHistoryCard(
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = stringResource(R.string.time, createdDate[0], createdDate[1]), fontSize = 12.sp,
+                text = stringResource(R.string.time, createdDate[0], createdDate[1]),
+                fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }

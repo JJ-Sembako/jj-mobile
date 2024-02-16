@@ -22,16 +22,16 @@ import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataOrderTimestamps
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.utils.toDateArray
+import com.dr.jjsembako.core.utils.convertTimestampToArray
 import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
 
 @Composable
 fun OrderTimestamps(data: DataOrderTimestamps, modifier: Modifier) {
-    val createdDate = data.createdAt.toDateArray()
+    val createdDate = convertTimestampToArray(data.createdAt)
     val deliverDate =
-        if (!data.deliverAt.isNullOrEmpty()) data.deliverAt.toDateArray() else arrayOf("", "")
+        if (!data.deliverAt.isNullOrEmpty()) convertTimestampToArray(data.deliverAt) else arrayOf("", "")
     val finishedDate =
-        if (!data.finishedAt.isNullOrEmpty()) data.finishedAt.toDateArray() else arrayOf("", "")
+        if (!data.finishedAt.isNullOrEmpty()) convertTimestampToArray(data.finishedAt) else arrayOf("", "")
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -55,7 +55,7 @@ fun OrderTimestamps(data: DataOrderTimestamps, modifier: Modifier) {
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = "${createdDate[0]} ${createdDate[1]}", fontSize = 12.sp,
+                text = stringResource(R.string.time, createdDate[0], createdDate[1]), fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }
@@ -72,7 +72,7 @@ fun OrderTimestamps(data: DataOrderTimestamps, modifier: Modifier) {
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = "$deliverDate[0]} ${deliverDate[1]}", fontSize = 12.sp,
+                text = stringResource(R.string.time, deliverDate[0], deliverDate[1]), fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }
@@ -89,7 +89,7 @@ fun OrderTimestamps(data: DataOrderTimestamps, modifier: Modifier) {
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
             Text(
-                text = "${finishedDate[0]} ${finishedDate[1]}", fontSize = 12.sp,
+                text = stringResource(R.string.time, finishedDate[0], finishedDate[1]), fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }

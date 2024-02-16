@@ -195,6 +195,7 @@ fun RiwayatScreen(
                                     clipboardManager = clipboardManager,
                                     modifier = modifier
                                 )
+                                Spacer(modifier = modifier.height(8.dp))
                             }
                         }
                     } else {

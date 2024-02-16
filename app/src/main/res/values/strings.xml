@@ -155,7 +155,7 @@
     <string name="invoice">Invocie: %1$s</string>
     <string name="copy_invoice">Salin Invoice pesanan</string>
     <string name="copied_invoice">Invoice pesanan telah tersalin</string>
-    <string name="time">%1$s - %2$s</string>
+    <string name="time">%1$s · %2$s</string>
     <string name="warehouse_info">Informasi Gudang</string>
     <string name="det_order">Detail Transaksi</string>
     <string name="cancel_order">Batalkan Transaksi</string>
