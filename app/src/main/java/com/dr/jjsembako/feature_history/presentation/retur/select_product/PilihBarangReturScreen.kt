@@ -274,15 +274,11 @@ private fun PilihBarangReturContent(
                 Spacer(modifier = modifier.height(16.dp))
 
                 val filteredOrders = productOrder?.filter { order ->
-                    if (order != null) {
-                        order.product.name.contains(searchQuery.value, ignoreCase = true) &&
-                                checkBoxResult.isNotEmpty() && checkBoxResult.contains(order.product.category)
-                    } else {
-                        false
-                    }
-                }
+                    order!!.product.name.contains(searchQuery.value, ignoreCase = true) &&
+                            checkBoxResult.isNotEmpty() && checkBoxResult.contains(order.product.category)
+                } ?: emptyList()
 
-                if (filteredOrders != null) {
+                if (filteredOrders.isNotEmpty()) {
                     Row(
                         modifier = modifier
                             .fillMaxWidth()
@@ -326,7 +322,7 @@ private fun PilihBarangReturContent(
                     } else {
                         NotFoundScreen(modifier = modifier)
                     }
-                }
+                } else NotFoundScreen(modifier = modifier)
 
                 if (showSheet.value) {
                     BottomSheetProduct(
