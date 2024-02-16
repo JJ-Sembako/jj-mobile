@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataOrderDataItem
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 
 @Composable
@@ -68,10 +67,6 @@ fun CustomerInformation(data: DataOrderHistoryCard, modifier: Modifier) {
             Text(
                 text = data.customer.address, fontSize = 12.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
-            )
-            Text(
-                text = stringResource(R.string.total_debt, formatRupiah(data.customer.debt ?: 0L)),
-                fontSize = 12.sp
             )
         }
 
