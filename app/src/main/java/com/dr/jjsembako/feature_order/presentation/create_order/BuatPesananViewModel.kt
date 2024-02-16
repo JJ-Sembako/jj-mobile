@@ -13,9 +13,11 @@ import com.dr.jjsembako.ProductOrderStore
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.DataProductOrder
+import com.dr.jjsembako.core.data.model.OrderRequest
 import com.dr.jjsembako.core.data.model.PreferencesKeys
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.utils.DataMapper
+import com.dr.jjsembako.core.utils.DataMapper.mapListDataProductOrderStoreToListOrderProduct
 import com.dr.jjsembako.feature_order.data.SocketOrderHandler
 import com.dr.jjsembako.feature_order.domain.model.ErrValidationCreateOrder
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
@@ -555,13 +557,18 @@ class BuatPesananViewModel @Inject constructor(
                 Log.e("VM-CreateOrder", "Debt is not 0 and payment is pending")
                 setErrValidationCreateOrder(ErrValidationCreateOrder.ERR_PAYMENT)
             } else {
-                val products = DataMapper.mapListDataProductOrderStoreToListOrderProduct(orderList.value.dataList)
+                val products = mapListDataProductOrderStoreToListOrderProduct(orderList.value.dataList)
                 if (products.isEmpty()){
                     Log.e("VM-CreateOrder", "Product order is empty")
                     setErrValidationCreateOrder(ErrValidationCreateOrder.ERR_PRODUCT)
                 } else {
+                    val orderRequest = OrderRequest(
+                        customerId = idCustomer.value,
+                        products = products,
+                        paymentStatus = payment.value
+                    )
                     setErrValidationCreateOrder(null)
-                    handleCreateOrderUseCase.handleCreateOrder(idCustomer.value, products, payment.value).collect {
+                    handleCreateOrderUseCase.handleCreateOrder(orderRequest).collect {
                         when(it){
                             is Resource.Loading -> {
                                 _stateCreate.value = StateResponse.LOADING

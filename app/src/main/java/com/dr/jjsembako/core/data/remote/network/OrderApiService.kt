@@ -1,6 +1,6 @@
 package com.dr.jjsembako.core.data.remote.network
 
-import com.dr.jjsembako.core.data.model.OrderProduct
+import com.dr.jjsembako.core.data.model.OrderRequest
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteProductOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.GetFetchOrderResponse
@@ -9,6 +9,7 @@ import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdatePayment
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdateProductOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.PostHandleAddProductOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.PostHandleCreateOrderResponse
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -36,12 +37,9 @@ interface OrderApiService {
         @Path("id") id: String
     ): GetFetchOrderResponse
 
-    @FormUrlEncoded
     @POST("order")
     suspend fun handleCreateOrder(
-        @Field("customerId") customerId: String,
-        @Field("products") products: List<OrderProduct>,
-        @Field("paymentStatus") paymentStatus: String
+        @Body orderRequest: OrderRequest
     ): PostHandleCreateOrderResponse
 
     @FormUrlEncoded
