@@ -97,7 +97,7 @@ fun OrderInformation(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Row(
-                    modifier = modifier.width(88.dp),
+                    modifier = modifier.width(128.dp),
                     verticalAlignment = Alignment.Top,
                     horizontalArrangement = Arrangement.Start
                 ) {
@@ -115,7 +115,7 @@ fun OrderInformation(
                 }
                 Spacer(modifier = modifier.width(8.dp))
                 Text(
-                    text = stringResource(R.string.invoice, data.invoice), fontSize = 12.sp,
+                    text = data.invoice, fontSize = 12.sp,
                     style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                     modifier = modifier.weight(1f)
                 )
@@ -129,7 +129,7 @@ fun OrderInformation(
                 Text(
                     text = stringResource(R.string.created), fontSize = 12.sp,
                     style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
-                    modifier = modifier.width(88.dp)
+                    modifier = modifier.width(128.dp)
                 )
                 Spacer(modifier = modifier.width(8.dp))
                 Text(
@@ -146,7 +146,7 @@ fun OrderInformation(
                 Text(
                     text = stringResource(R.string.time_detail), fontSize = 12.sp,
                     style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
-                    modifier = modifier.width(88.dp)
+                    modifier = modifier.width(128.dp)
                 )
                 Spacer(modifier = modifier.width(8.dp))
                 Text(

@@ -445,6 +445,7 @@ private fun DetailTransaksiContent(
 
             if (showCantPNRDialog.value) {
                 AlertErrorDialog(
+                    header = stringResource(R.string.action_denied),
                     message = msgErrorPNR.value,
                     showDialog = showCantPNRDialog,
                     modifier = modifier
@@ -453,6 +454,7 @@ private fun DetailTransaksiContent(
 
             if (showCantModifyOrderDialog.value) {
                 AlertErrorDialog(
+                    header = stringResource(R.string.action_denied),
                     message = stringResource(R.string.err_edit_order),
                     showDialog = showCantModifyOrderDialog,
                     modifier = modifier
@@ -461,6 +463,7 @@ private fun DetailTransaksiContent(
 
             if (showCantDelOrderDialog.value) {
                 AlertErrorDialog(
+                    header = stringResource(R.string.action_denied),
                     message = stringResource(R.string.err_del_order),
                     showDialog = showCantDelOrderDialog,
                     modifier = modifier

@@ -39,6 +39,7 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun AlertErrorDialog(
+    header: String? = null,
     message: String = "",
     showDialog: MutableState<Boolean>,
     modifier: Modifier,
@@ -68,7 +69,7 @@ fun AlertErrorDialog(
             )
             Spacer(modifier = modifier.height(16.dp))
             Text(
-                text = stringResource(R.string.error),
+                text = header ?: stringResource(R.string.error),
                 fontWeight = FontWeight.Medium,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
