@@ -4,12 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
-import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
-import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustOrdersUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchDetailCustomerUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailPelangganViewModel @Inject constructor(
     private val fetchDetailCustomerUseCase: FetchDetailCustomerUseCase,
-    private val handleDeleteCustomerUseCase: HandleDeleteCustomerUseCase,
-    private val fetchCustOrdersUseCase: FetchCustOrdersUseCase
+    private val handleDeleteCustomerUseCase: HandleDeleteCustomerUseCase
 ) : ViewModel() {
 
     private val _stateFirst = MutableLiveData<StateResponse?>()
@@ -46,10 +42,6 @@ class DetailPelangganViewModel @Inject constructor(
 
     private val _customerData = MutableLiveData<DataCustomer?>()
     val customerData: DataCustomer? get() = _customerData.value
-
-    private val _orderState: MutableStateFlow<PagingData<OrderDataItem>> =
-        MutableStateFlow(value = PagingData.empty())
-    val orderState: MutableStateFlow<PagingData<OrderDataItem>> get() = _orderState
 
     private var _id: String? = null
     fun setId(id: String) {
@@ -90,7 +82,6 @@ class DetailPelangganViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                         _customerData.value = it.data
-                        fetchOrders(search = null, minDate = null, maxDate = null)
                     }
 
                     is Resource.Error -> {
@@ -121,21 +112,6 @@ class DetailPelangganViewModel @Inject constructor(
                         _statusCode.value = it.status
                     }
                 }
-            }
-        }
-    }
-
-    fun fetchOrders(
-        search: String?,
-        minDate: String?,
-        maxDate: String?,
-    ) {
-        if (customerData != null) {
-            viewModelScope.launch {
-                fetchCustOrdersUseCase.fetchOrders(
-                    search = search, minDate = minDate, maxDate = maxDate,
-                    me = 0, customerId = customerData!!.id
-                ).collect { _orderState.value = it }
             }
         }
     }

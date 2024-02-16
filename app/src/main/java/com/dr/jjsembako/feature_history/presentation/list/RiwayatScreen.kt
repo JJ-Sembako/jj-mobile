@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,6 +43,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
+import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetOrderHistory
 import com.dr.jjsembako.core.presentation.components.card.OrderHistoryCard
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
@@ -53,7 +52,6 @@ import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.DataMapper.mapOrderDataItemToDataOrderHistoryCard
 import com.dr.jjsembako.core.utils.initializeDateValues
-import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetOrderHistory
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -71,7 +69,6 @@ fun RiwayatScreen(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val scrollState = rememberScrollState()
 
     val showSheet = remember { mutableStateOf(false) }
     val isFilterOn = rememberSaveable { mutableStateOf(false) }
@@ -128,7 +125,6 @@ fun RiwayatScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },

@@ -1,6 +1,5 @@
 package com.dr.jjsembako.feature_customer.presentation.detail
 
-import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -45,22 +44,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
-import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
-import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetOrderHistory
 import com.dr.jjsembako.core.presentation.components.card.CustomerInfo
 import com.dr.jjsembako.core.presentation.components.dialog.AlertDeleteDialog
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
@@ -68,19 +60,14 @@ import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.utils.initializeDateValues
 import com.dr.jjsembako.feature_customer.presentation.components.CustomerButtonInfo
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
-import kotlin.math.roundToInt
 
 @Composable
 fun DetailPelangganScreen(
     idCust: String,
-    context: Context,
-    clipboardManager: ClipboardManager,
-    onNavigateToDetail: (String) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToEditCust: () -> Unit,
     onNavigateToCustOrder: (String) -> Unit,
@@ -133,9 +120,6 @@ fun DetailPelangganScreen(
                 DetailPelangganContent(
                     cust = customerData,
                     viewModel = viewModel,
-                    context = context,
-                    clipboardManager = clipboardManager,
-                    onNavigateToDetail = { id -> onNavigateToDetail(id) },
                     onNavigateBack = { onNavigateBack() },
                     onNavigateToEditCust = { onNavigateToEditCust() },
                     onNavigateToCustOrder = { idOrder -> onNavigateToCustOrder(idOrder) },
@@ -156,9 +140,6 @@ fun DetailPelangganScreen(
 private fun DetailPelangganContent(
     cust: DataCustomer,
     viewModel: DetailPelangganViewModel,
-    context: Context,
-    clipboardManager: ClipboardManager,
-    onNavigateToDetail: (String) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToEditCust: () -> Unit,
     onNavigateToCustOrder: (String) -> Unit,
@@ -173,8 +154,6 @@ private fun DetailPelangganContent(
     val statusCode = viewModel.statusCode.observeAsState().value
     val message = viewModel.message.observeAsState().value
     val isRefreshing by viewModel.isRefreshing.collectAsState(initial = false)
-    val orderPagingItems: LazyPagingItems<OrderDataItem> =
-        viewModel.orderState.collectAsLazyPagingItems()
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -184,37 +163,9 @@ private fun DetailPelangganContent(
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
     val showDialog = remember { mutableStateOf(false) }
-    val showSheet = remember { mutableStateOf(false) }
-    val isFilterOn = rememberSaveable { mutableStateOf(false) }
-    val searchQuery = rememberSaveable { mutableStateOf("") }
-    val activeSearch = remember { mutableStateOf(false) }
-    val fromDate = rememberSaveable { mutableStateOf("") }
-    val untilDate = rememberSaveable { mutableStateOf("") }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.refresh() })
-
-    LaunchedEffect(Unit) {
-        initializeDateValues(fromDate, untilDate)
-    }
-
-    LaunchedEffect(searchQuery) {
-        if (searchQuery.value.isNotEmpty()) {
-            if (isFilterOn.value) viewModel.fetchOrders(
-                searchQuery.value,
-                fromDate.value,
-                untilDate.value
-            )
-            else viewModel.fetchOrders(searchQuery.value, null, null)
-        } else {
-            if (isFilterOn.value) viewModel.fetchOrders(
-                null,
-                fromDate.value,
-                untilDate.value
-            )
-            else viewModel.fetchOrders(null, null, null)
-        }
-    }
 
     when (stateSecond) {
         StateResponse.LOADING -> {
@@ -324,7 +275,6 @@ private fun DetailPelangganContent(
                         interactionSource = remember { MutableInteractionSource() },
                         onClick = {
                             keyboardController?.hide()
-                            activeSearch.value = false
                             focusManager.clearFocus()
                         })
                     .padding(16.dp),
@@ -373,15 +323,6 @@ private fun DetailPelangganContent(
                 }
                 Spacer(modifier = modifier.height(32.dp))
 
-                if (showSheet.value) {
-                    BottomSheetOrderHistory(
-                        fromDate = fromDate,
-                        untilDate = untilDate,
-                        isFilterOn = isFilterOn,
-                        showSheet = showSheet,
-                        modifier = modifier
-                    )
-                }
                 if (showDialog.value) {
                     AlertDeleteDialog(
                         onDelete = { viewModel.handleDeleteCustomer(cust.id) },
@@ -418,9 +359,6 @@ private fun DetailPelangganScreenPreview() {
     JJSembakoTheme {
         DetailPelangganScreen(
             idCust = "",
-            context = LocalContext.current,
-            clipboardManager = LocalClipboardManager.current,
-            onNavigateToDetail = {},
             onNavigateBack = {},
             onNavigateToEditCust = {},
             onNavigateToCustOrder = {},
