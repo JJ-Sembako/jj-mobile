@@ -4,18 +4,25 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.NavigateNext
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,12 +51,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dr.jjsembako.R
@@ -58,16 +62,12 @@ import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetOrderHistory
 import com.dr.jjsembako.core.presentation.components.card.CustomerInfo
-import com.dr.jjsembako.core.presentation.components.card.OrderHistoryCard
 import com.dr.jjsembako.core.presentation.components.dialog.AlertDeleteDialog
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
-import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
-import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.utils.DataMapper.mapOrderDataItemToDataOrderHistoryCard
 import com.dr.jjsembako.core.utils.initializeDateValues
 import com.dr.jjsembako.feature_customer.presentation.components.CustomerButtonInfo
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
@@ -175,6 +175,7 @@ private fun DetailPelangganContent(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState()
 
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
@@ -310,14 +311,8 @@ private fun DetailPelangganContent(
                 .fillMaxSize()
                 .padding(contentPadding)
                 .pullRefresh(pullRefreshState)
+                .verticalScroll(scrollState),
         ) {
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
-                state = pullRefreshState,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height((pullRefreshState.progress * 100).roundToInt().dp)
-            )
             Column(
                 modifier = modifier
                     .fillMaxSize()
@@ -329,7 +324,6 @@ private fun DetailPelangganContent(
                             activeSearch.value = false
                             focusManager.clearFocus()
                         })
-                    .padding(contentPadding)
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -345,81 +339,37 @@ private fun DetailPelangganContent(
                     chatWA = { url -> chatWA(url) },
                     modifier = modifier
                 )
-                Spacer(modifier = modifier.height(16.dp))
-                Text(
-                    text = stringResource(R.string.order_history),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = modifier.height(16.dp))
-                SearchFilter(
-                    placeholder = stringResource(R.string.search_cust),
-                    activeSearch,
-                    searchQuery,
-                    searchFunction = {},
-                    openFilter = { showSheet.value = !showSheet.value },
+                Spacer(modifier = modifier.height(64.dp))
+                Button(
+                    onClick = { /*TODO*/ },
                     modifier = modifier
-                )
-                Spacer(modifier = modifier.height(16.dp))
-
-                when (orderPagingItems.loadState.refresh) {
-                    LoadState.Loading -> {
-                        LoadingScreen(modifier = modifier)
-                    }
-
-                    is LoadState.Error -> {
-                        val error = orderPagingItems.loadState.refresh as LoadState.Error
-                        Log.e(tag, "Error")
-                        ErrorScreen(
-                            onNavigateBack = { },
-                            onReload = {
-                                if (searchQuery.value.isNotEmpty()) {
-                                    if (isFilterOn.value) viewModel.fetchOrders(
-                                        searchQuery.value,
-                                        fromDate.value,
-                                        untilDate.value
-                                    )
-                                    else viewModel.fetchOrders(searchQuery.value, null, null)
-                                } else {
-                                    if (isFilterOn.value) viewModel.fetchOrders(
-                                        null,
-                                        fromDate.value,
-                                        untilDate.value
-                                    )
-                                    else viewModel.fetchOrders(null, null, null)
-                                }
-                            },
-                            message = error.error.localizedMessage ?: "Unknown error",
-                            showButtonBack = false,
-                            modifier = modifier
+                        .fillMaxWidth()
+                        .height(80.dp),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Row(
+                        modifier = modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Default.History,
+                                stringResource(R.string.history),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                            Spacer(modifier = modifier.width(8.dp))
+                            Text(stringResource(R.string.open_history_order))
+                        }
+                        Icon(
+                            Icons.Default.NavigateNext,
+                            stringResource(R.string.open_history_order),
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
-
-                    else -> {
-                        if (orderPagingItems.itemCount > 0) {
-                            LazyColumn(
-                                modifier = modifier
-                                    .fillMaxWidth()
-                            ) {
-                                items(orderPagingItems.itemCount) { index ->
-                                    OrderHistoryCard(
-                                        data = mapOrderDataItemToDataOrderHistoryCard(
-                                            orderPagingItems[index]!!
-                                        ),
-                                        context = context,
-                                        onNavigateToDetail = { id -> onNavigateToDetail(id) },
-                                        clipboardManager = clipboardManager,
-                                        modifier = modifier
-                                    )
-                                }
-                            }
-                        } else {
-                            NotFoundScreen(modifier = modifier)
-                        }
-                    }
                 }
+                Spacer(modifier = modifier.height(32.dp))
 
-                Spacer(modifier = modifier.height(48.dp))
                 if (showSheet.value) {
                     BottomSheetOrderHistory(
                         fromDate = fromDate,
@@ -449,6 +399,12 @@ private fun DetailPelangganContent(
                     )
                 }
             }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }
