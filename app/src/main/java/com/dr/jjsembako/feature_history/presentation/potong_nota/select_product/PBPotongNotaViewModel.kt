@@ -58,10 +58,10 @@ class PBPotongNotaViewModel @Inject constructor(
     val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder
 
     private val _selectedData = MutableLiveData<SelectPNRItem?>()
-    private val selectedData: LiveData<SelectPNRItem?> get() = _selectedData
+    val selectedData: LiveData<SelectPNRItem?> get() = _selectedData
 
     private val _canceledData = MutableLiveData<CanceledStore?>()
-    val canceledData: LiveData<CanceledStore?> get() = _canceledData
+    private val canceledData: LiveData<CanceledStore?> get() = _canceledData
 
     private var _id: String? = null
 
@@ -82,16 +82,11 @@ class PBPotongNotaViewModel @Inject constructor(
 
     private fun init() {
         refresh()
-        updateCategories(orderData?.orderToProducts.orEmpty())
     }
 
     fun refresh() {
         val id = _id ?: return
-        viewModelScope.launch {
-            _canceledData.value = getCanceledStore()
-        }
         fetchOrder(id)
-        recoveryData()
     }
 
     fun saveData() {
@@ -129,6 +124,7 @@ class PBPotongNotaViewModel @Inject constructor(
 
     fun fetchOrder(id: String) {
         viewModelScope.launch {
+            _canceledData.value = getCanceledStore()
             fetchOrderUseCase.fetchOrder(id).collect {
                 when (it) {
                     is Resource.Loading -> {
@@ -144,6 +140,8 @@ class PBPotongNotaViewModel @Inject constructor(
                         _orderData.value = it.data
                         _productOrder.value =
                             mapListOrderToProductsItemToListSelectPNRItem(it.data!!.orderToProducts)
+                        updateCategories(it.data.orderToProducts)
+                        recoveryData()
                     }
 
                     is Resource.Error -> {

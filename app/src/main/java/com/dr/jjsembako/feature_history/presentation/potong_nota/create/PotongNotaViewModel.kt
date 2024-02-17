@@ -54,10 +54,10 @@ class PotongNotaViewModel @Inject constructor(
     val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder
 
     private val _selectedData = MutableLiveData<SelectPNRItem?>()
-    private val selectedData: LiveData<SelectPNRItem?> get() = _selectedData
+    val selectedData: LiveData<SelectPNRItem?> get() = _selectedData
 
     private val _canceledData = MutableLiveData<CanceledStore>()
-    val canceledData: LiveData<CanceledStore?> get() = _canceledData
+    private val canceledData: LiveData<CanceledStore?> get() = _canceledData
 
     private var _id: String? = null
 
@@ -86,11 +86,7 @@ class PotongNotaViewModel @Inject constructor(
 
     fun refresh() {
         val id = _id ?: return
-        viewModelScope.launch {
-            _canceledData.value = getCanceledStore()
-        }
         fetchOrder(id)
-        recoveryData()
     }
 
     fun reset() {
@@ -119,6 +115,7 @@ class PotongNotaViewModel @Inject constructor(
 
     fun fetchOrder(id: String) {
         viewModelScope.launch {
+            _canceledData.value = getCanceledStore()
             fetchOrderUseCase.fetchOrder(id).collect {
                 when (it) {
                     is Resource.Loading -> {
@@ -134,6 +131,7 @@ class PotongNotaViewModel @Inject constructor(
                         _orderData.value = it.data
                         _productOrder.value =
                             mapListOrderToProductsItemToListSelectPNRItem(it.data!!.orderToProducts)
+                        recoveryData()
                     }
 
                     is Resource.Error -> {

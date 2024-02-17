@@ -9,7 +9,7 @@ import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
-import com.dr.jjsembako.core.utils.DataMapper
+import com.dr.jjsembako.core.utils.DataMapper.mapListDataCategoryToListFilterOption
 import com.dr.jjsembako.feature_history.data.SocketModifyOrderHandler
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.HandleAddProductOrderUseCase
@@ -414,8 +414,7 @@ class TambahBarangPesananViewModel @Inject constructor(
             }
 
             _dataRawCategories.value = currentCategories.toList()
-            _dataCategories.value =
-                DataMapper.mapListDataCategoryToListFilterOption(dataRawCategories.value)
+            _dataCategories.value = mapListDataCategoryToListFilterOption(dataRawCategories.value)
         }
     }
 

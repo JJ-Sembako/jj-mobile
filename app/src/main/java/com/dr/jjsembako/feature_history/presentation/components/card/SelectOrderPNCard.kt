@@ -50,6 +50,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -162,7 +163,7 @@ private fun OrderContent(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val canceledData = viewModel.canceledData.observeAsState().value
+    val selectedData = viewModel.selectedData.observeAsState().value
     var selectedAmount by rememberSaveable { mutableStateOf(data.amountSelected.toString()) }
 
     LaunchedEffect(data) {
@@ -179,7 +180,7 @@ private fun OrderContent(
         if (data.status == 0) {
             if (!data.isChosen) {
                 Button(
-                    enabled = canceledData == null,
+                    enabled = selectedData == null,
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
@@ -279,11 +280,11 @@ private fun OrderContent(
         } else {
             Text(
                 text = stringResource(R.string.already_pnr),
-                fontSize = 12.sp, fontWeight = FontWeight.Normal,
+                fontSize = 12.sp, fontWeight = FontWeight.Normal, textAlign = TextAlign.Center,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false),
                     color = Color.Red
-                )
+                ), modifier = modifier.padding(8.dp)
             )
             if (selectedAmount.toInt() > 0) {
                 Spacer(modifier = modifier.height(16.dp))

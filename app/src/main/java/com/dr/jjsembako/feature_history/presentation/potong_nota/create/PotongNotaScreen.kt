@@ -143,8 +143,7 @@ private fun PotongNotaContent(
     val isRefreshing by viewModel.isRefreshing.collectAsState(initial = false)
     val statusCode = viewModel.statusCode.observeAsState().value
     val message = viewModel.message.observeAsState().value
-    val productOrder = viewModel.productOrder.observeAsState().value
-    val canceledData = viewModel.canceledData.observeAsState().value
+    val selectedData = viewModel.selectedData.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -159,14 +158,10 @@ private fun PotongNotaContent(
     val changeCost = rememberSaveable { mutableLongStateOf(0L) }
     val changeQty = rememberSaveable { mutableIntStateOf(0) }
 
-    LaunchedEffect(Unit, canceledData) {
-        if (canceledData != null) {
-            val orderInfo = orderData.orderToProducts.find { it.id == canceledData.idProduct }
-            if (orderInfo != null) {
-                changeQty.intValue = canceledData.amountSelected - orderInfo.actualAmount
-                changeCost.longValue =
-                    -1 * canceledData.amountSelected * orderInfo.selledPrice
-            }
+    LaunchedEffect(Unit, selectedData) {
+        if (selectedData != null) {
+            changeQty.intValue = -1 * selectedData.amountSelected
+            changeCost.longValue = -1 * selectedData.amountSelected * selectedData.selledPrice
         } else {
             changeCost.longValue = 0L
             changeQty.intValue = 0
@@ -243,7 +238,7 @@ private fun PotongNotaContent(
                 },
                 actions = {
                     IconButton(onClick = {
-                        if (canceledData != null) viewModel.handleCreateCanceled()
+                        if (selectedData != null) viewModel.handleCreateCanceled()
                         else showErrCantCanceled.value = true
                     }) {
                         Icon(
@@ -287,10 +282,7 @@ private fun PotongNotaContent(
             )
             Spacer(modifier = modifier.height(16.dp))
             PNSelectedProduct(
-                data = if (canceledData == null) null else {
-                    if (productOrder.isNullOrEmpty()) null
-                    else productOrder.find { it!!.id == canceledData.idProduct }
-                },
+                data = selectedData,
                 viewModel = viewModel,
                 onSelectProduct = { onSelectProduct() },
                 modifier = modifier

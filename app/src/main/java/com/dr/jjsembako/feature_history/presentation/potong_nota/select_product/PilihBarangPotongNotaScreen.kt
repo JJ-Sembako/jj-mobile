@@ -139,7 +139,7 @@ private fun PilihBarangPotongNotaContent(
     val message = viewModel.message.observeAsState().value
     val option = viewModel.dataCategories.observeAsState().value
     val productOrder = viewModel.productOrder.observeAsState().value
-    val canceledData = viewModel.canceledData.observeAsState().value
+    val selectedData = viewModel.selectedData.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -154,6 +154,10 @@ private fun PilihBarangPotongNotaContent(
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.refresh() })
+
+    LaunchedEffect(selectedData){
+        Log.e("selectedData", selectedData.toString())
+    }
 
     LaunchedEffect(Unit) {
         if (!option.isNullOrEmpty()) {
@@ -274,12 +278,8 @@ private fun PilihBarangPotongNotaContent(
                 Spacer(modifier = modifier.height(16.dp))
 
                 val filteredOrders = productOrder?.filter { order ->
-                    if (order != null) {
-                        order.product.name.contains(searchQuery.value, ignoreCase = true) &&
-                                checkBoxResult.isNotEmpty() && checkBoxResult.contains(order.product.category)
-                    } else {
-                        false
-                    }
+                    order!!.product.name.contains(searchQuery.value, ignoreCase = true) &&
+                            checkBoxResult.isNotEmpty() && checkBoxResult.contains(order.product.category)
                 }
 
                 if (filteredOrders != null) {
@@ -291,7 +291,7 @@ private fun PilihBarangPotongNotaContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = if (canceledData == null) stringResource(R.string.select_not) else stringResource(
+                            text = if (selectedData == null) stringResource(R.string.select_not) else stringResource(
                                 R.string.select_already
                             ),
                             fontSize = 16.sp, fontWeight = FontWeight.Light,
@@ -330,7 +330,7 @@ private fun PilihBarangPotongNotaContent(
 
                 if (showSheet.value) {
                     BottomSheetProduct(
-                        optionList = null,
+                        optionList = option,
                         checkBoxResult = checkBoxResult,
                         checkBoxStates = checkBoxStates,
                         showSheet = showSheet,
