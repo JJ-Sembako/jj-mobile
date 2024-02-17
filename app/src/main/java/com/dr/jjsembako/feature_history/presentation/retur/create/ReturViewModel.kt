@@ -112,11 +112,7 @@ class ReturViewModel @Inject constructor(
 
     fun refresh() {
         val id = _id ?: return
-        viewModelScope.launch {
-            _returData.value = getReturStore()
-        }
         fetchOrder(id)
-        recoveryData()
     }
 
     fun reset() {
@@ -162,6 +158,7 @@ class ReturViewModel @Inject constructor(
 
     fun fetchOrder(id: String) {
         viewModelScope.launch {
+            _returData.value = getReturStore()
             fetchOrderUseCase.fetchOrder(id).collect {
                 when (it) {
                     is Resource.Loading -> {
@@ -177,6 +174,7 @@ class ReturViewModel @Inject constructor(
                         _orderData.value = it.data
                         _productOrder.value =
                             mapListOrderToProductsItemToListSelectPNRItem(it.data!!.orderToProducts)
+                        recoveryData()
                     }
 
                     is Resource.Error -> {
