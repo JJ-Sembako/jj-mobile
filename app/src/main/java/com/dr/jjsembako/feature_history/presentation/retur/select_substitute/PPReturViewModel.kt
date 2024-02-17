@@ -41,10 +41,10 @@ class PPReturViewModel @Inject constructor(
     val dataProducts: LiveData<List<SelectSubstituteItem?>> get() = _dataProducts
 
     private val _selectedData = MutableLiveData<SelectSubstituteItem?>()
-    private val selectedData: LiveData<SelectSubstituteItem?> get() = _selectedData
+    val selectedData: LiveData<SelectSubstituteItem?> get() = _selectedData
 
     private val _substituteData = MutableLiveData<SubstituteStore?>()
-    val substituteData: LiveData<SubstituteStore?> get() = _substituteData
+    private val substituteData: LiveData<SubstituteStore?> get() = _substituteData
 
     init {
         viewModelScope.launch {

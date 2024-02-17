@@ -54,7 +54,7 @@ fun CartContentRS(
     val loadingState = viewModel.loadingState.observeAsState().value
     val errorState = viewModel.errorState.observeAsState().value
     val errorMsg = viewModel.errorMsg.observeAsState().value
-    val substitueData = viewModel.substituteData.observeAsState().value
+    val selectedData = viewModel.selectedData.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -98,7 +98,7 @@ fun CartContentRS(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = if (substitueData == null) stringResource(R.string.select_not) else stringResource(
+                            text = if (selectedData == null) stringResource(R.string.select_not) else stringResource(
                                 R.string.select_already
                             ),
                             fontSize = 16.sp, fontWeight = FontWeight.Light,

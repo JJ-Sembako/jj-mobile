@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -163,6 +164,7 @@ private fun OrderContent(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "IDR")
+    val selectedData = viewModel.selectedData.observeAsState().value
     var selledPrice by rememberSaveable { mutableStateOf(product.selledPrice.toString()) }
 
     LaunchedEffect(product) {
@@ -178,11 +180,13 @@ private fun OrderContent(
     ) {
         if (product.stockInUnit > 0) {
             if (!product.isChosen) {
-                Button(onClick = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                    viewModel.enableOrder(product)
-                }) {
+                Button(
+                    enabled = selectedData == null,
+                    onClick = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        viewModel.enableOrder(product)
+                    }) {
                     Icon(
                         Icons.Default.AddShoppingCart,
                         stringResource(R.string.choose),
