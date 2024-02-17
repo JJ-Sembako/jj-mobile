@@ -66,7 +66,6 @@ import com.dr.jjsembako.feature_history.presentation.components.card.SelectOrder
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
-import kotlin.math.roundToInt
 
 @Composable
 fun PilihBarangReturScreen(
@@ -139,7 +138,7 @@ private fun PilihBarangReturContent(
     val message = viewModel.message.observeAsState().value
     val option = viewModel.dataCategories.observeAsState().value
     val productOrder = viewModel.productOrder.observeAsState().value
-    val returData = viewModel.returData.observeAsState().value
+    val selectedData = viewModel.selectedData.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -241,14 +240,6 @@ private fun PilihBarangReturContent(
                 .padding(contentPadding)
                 .pullRefresh(pullRefreshState)
         ) {
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
-                state = pullRefreshState,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height((pullRefreshState.progress * 100).roundToInt().dp)
-            )
-
             Column(
                 modifier = modifier
                     .fillMaxSize()
@@ -276,9 +267,9 @@ private fun PilihBarangReturContent(
                 val filteredOrders = productOrder?.filter { order ->
                     order!!.product.name.contains(searchQuery.value, ignoreCase = true) &&
                             checkBoxResult.isNotEmpty() && checkBoxResult.contains(order.product.category)
-                } ?: emptyList()
+                }
 
-                if (filteredOrders.isNotEmpty()) {
+                if (filteredOrders != null) {
                     Row(
                         modifier = modifier
                             .fillMaxWidth()
@@ -287,7 +278,7 @@ private fun PilihBarangReturContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = if (returData == null) stringResource(R.string.select_not) else stringResource(
+                            text = if (selectedData == null) stringResource(R.string.select_not) else stringResource(
                                 R.string.select_already
                             ),
                             fontSize = 16.sp, fontWeight = FontWeight.Light,
@@ -326,7 +317,7 @@ private fun PilihBarangReturContent(
 
                 if (showSheet.value) {
                     BottomSheetProduct(
-                        optionList = null,
+                        optionList = option,
                         checkBoxResult = checkBoxResult,
                         checkBoxStates = checkBoxStates,
                         showSheet = showSheet,
@@ -346,6 +337,12 @@ private fun PilihBarangReturContent(
                     )
                 }
             }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = modifier.align(Alignment.TopCenter)
+            )
         }
 
     }

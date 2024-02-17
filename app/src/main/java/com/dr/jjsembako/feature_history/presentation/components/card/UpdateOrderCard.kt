@@ -53,6 +53,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -405,11 +406,11 @@ private fun OrderContent(
         } else {
             Text(
                 text = stringResource(R.string.stock_empty),
-                fontSize = 12.sp, fontWeight = FontWeight.Normal,
+                fontSize = 12.sp, fontWeight = FontWeight.Normal, textAlign = TextAlign.Center,
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false),
                     color = Color.Red
-                )
+                ), modifier = modifier.padding(8.dp)
             )
             if (orderQty.toInt() > 0) {
                 Spacer(modifier = modifier.height(16.dp))

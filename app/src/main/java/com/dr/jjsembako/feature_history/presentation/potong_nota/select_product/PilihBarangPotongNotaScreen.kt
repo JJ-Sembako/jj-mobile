@@ -66,7 +66,6 @@ import com.dr.jjsembako.feature_history.presentation.components.card.SelectOrder
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
-import kotlin.math.roundToInt
 
 @Composable
 fun PilihBarangPotongNotaScreen(
@@ -241,14 +240,6 @@ private fun PilihBarangPotongNotaContent(
                 .padding(contentPadding)
                 .pullRefresh(pullRefreshState)
         ) {
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
-                state = pullRefreshState,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height((pullRefreshState.progress * 100).roundToInt().dp)
-            )
-
             Column(
                 modifier = modifier
                     .fillMaxSize()
@@ -322,7 +313,7 @@ private fun PilihBarangPotongNotaContent(
                     } else {
                         NotFoundScreen(modifier = modifier)
                     }
-                }
+                } else NotFoundScreen(modifier = modifier)
 
                 if (showSheet.value) {
                     BottomSheetProduct(
@@ -346,7 +337,14 @@ private fun PilihBarangPotongNotaContent(
                     )
                 }
             }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = modifier.align(Alignment.TopCenter)
+            )
         }
+
     }
 }
 
