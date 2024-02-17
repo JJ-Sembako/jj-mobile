@@ -93,7 +93,7 @@ fun DetailTransaksi(
     val stateFirst = detailTransaksiViewModel.stateFirst.observeAsState().value
     val statusCode = detailTransaksiViewModel.statusCode.observeAsState().value
     val message = detailTransaksiViewModel.message.observeAsState().value
-    val orderData = detailTransaksiViewModel.orderData
+    val orderData = detailTransaksiViewModel.orderData.observeAsState().value
 
     // Set id for the first time Composable is rendered
     LaunchedEffect(id) {

@@ -155,10 +155,6 @@ private fun PilihBarangPotongNotaContent(
         refreshing = isRefreshing,
         onRefresh = { viewModel.refresh() })
 
-    LaunchedEffect(selectedData){
-        Log.e("selectedData", selectedData.toString())
-    }
-
     LaunchedEffect(Unit) {
         if (!option.isNullOrEmpty()) {
             if (checkBoxResult.isEmpty()) {

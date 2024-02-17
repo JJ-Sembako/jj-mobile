@@ -60,7 +60,7 @@ class DetailTransaksiViewModel @Inject constructor(
     val message: LiveData<String?> = _message
 
     private val _orderData = MutableLiveData<DetailOrderData?>()
-    val orderData: DetailOrderData? get() = _orderData.value
+    val orderData: LiveData<DetailOrderData?> get() = _orderData
 
     private var _id: String? = null
 
@@ -94,8 +94,7 @@ class DetailTransaksiViewModel @Inject constructor(
     }
 
     private fun init() {
-        val id = _id ?: return
-        fetchOrder(id)
+        refresh()
     }
 
     fun refresh() {
@@ -108,12 +107,14 @@ class DetailTransaksiViewModel @Inject constructor(
             fetchOrderUseCase.fetchOrder(id).collect {
                 when (it) {
                     is Resource.Loading -> {
-                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.LOADING
+                        if (orderData.value?.id.isNullOrEmpty()) _stateFirst.value =
+                            StateResponse.LOADING
                         else _stateRefresh.value = StateResponse.LOADING
                     }
 
                     is Resource.Success -> {
-                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.SUCCESS
+                        if (orderData.value?.id.isNullOrEmpty()) _stateFirst.value =
+                            StateResponse.SUCCESS
                         else _stateRefresh.value = StateResponse.SUCCESS
                         _message.value = it.message
                         _statusCode.value = it.status
@@ -121,7 +122,8 @@ class DetailTransaksiViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        if (orderData?.id.isNullOrEmpty()) _stateFirst.value = StateResponse.ERROR
+                        if (orderData.value?.id.isNullOrEmpty()) _stateFirst.value =
+                            StateResponse.ERROR
                         else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
@@ -144,7 +146,7 @@ class DetailTransaksiViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                         val oldValue = orderData
-                        val newValue = oldValue!!.copy(
+                        val newValue = oldValue.value!!.copy(
                             paymentStatus = 1
                         )
                         _orderData.value = newValue
@@ -171,7 +173,7 @@ class DetailTransaksiViewModel @Inject constructor(
                         _stateSecond.value = StateResponse.SUCCESS
                         _message.value = it.message
                         _statusCode.value = it.status
-                        val oldValue = orderData
+                        val oldValue = orderData.value
                         val newOrderToProducts = oldValue!!.orderToProducts.filter { data ->
                             data.product.id != productId
                         }
@@ -179,7 +181,7 @@ class DetailTransaksiViewModel @Inject constructor(
                             orderToProducts = newOrderToProducts
                         )
                         _orderData.value = newValue
-                        if (orderData!!.orderToProducts.isEmpty()) {
+                        if (orderData.value!!.orderToProducts.isEmpty()) {
                             _stateUpdate.value = UpdateStateOrder.DEL_ORDER
                         } else {
                             _stateUpdate.value = UpdateStateOrder.DEL_PRODUCT
@@ -231,13 +233,18 @@ class DetailTransaksiViewModel @Inject constructor(
                         _stateUpdate.value = UpdateStateOrder.DEL_CANCELED
                         _message.value = it.message
                         _statusCode.value = it.status
-                        val oldValue = orderData
+                        val oldValue = orderData.value
                         if (oldValue?.canceled != null) {
                             val newCanceled = oldValue.canceled.filter { data ->
                                 data!!.id != canceledId
                             }
+                            val delCanceled = oldValue.canceled.first { data ->
+                                data!!.id == canceledId
+                            }
                             val newValue = oldValue.copy(
-                                canceled = newCanceled
+                                canceled = newCanceled,
+                                actualTotalPrice = oldValue.actualTotalPrice + ((delCanceled?.selledPrice
+                                    ?: 0L) * (delCanceled?.amount ?: 0))
                             )
                             _orderData.value = newValue
                         }
@@ -264,13 +271,19 @@ class DetailTransaksiViewModel @Inject constructor(
                         _stateUpdate.value = UpdateStateOrder.DEL_RETUR
                         _message.value = it.message
                         _statusCode.value = it.status
-                        val oldValue = orderData
+                        val oldValue = orderData.value
                         if (oldValue?.retur != null) {
                             val newRetur = oldValue.retur.filter { data ->
                                 data!!.id != returId
                             }
+                            val delRetur = oldValue.retur.first { data ->
+                                data!!.id == returId
+                            }
                             val newValue = oldValue.copy(
-                                retur = newRetur
+                                retur = newRetur,
+                                actualTotalPrice = oldValue.actualTotalPrice +
+                                        (((delRetur?.oldSelledPrice ?: 0L) - (delRetur?.selledPrice
+                                            ?: 0L)) * (delRetur?.amount ?: 0))
                             )
                             _orderData.value = newValue
                         }
