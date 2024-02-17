@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material3.Icon
@@ -59,17 +58,16 @@ fun CartContentAdd(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-
     val changeCost = rememberSaveable { mutableLongStateOf(0L) }
 
-    LaunchedEffect(Unit, selectedData) {
-        if (selectedData != null) {
-            val orderInfo = orderData.orderToProducts.find { it.id == selectedData.id }
-            if (orderInfo != null) {
-                changeCost.longValue =
-                    selectedData.orderTotalPrice - (orderInfo.actualAmount * orderInfo.selledPrice)
-            }
-        }
+    LaunchedEffect(
+        Unit,
+        selectedData?.orderQty,
+        selectedData?.orderPrice,
+        selectedData?.orderTotalPrice
+    ) {
+        if (selectedData != null) changeCost.longValue = selectedData.orderTotalPrice
+        else changeCost.longValue = 0L
     }
 
     Column(
@@ -103,45 +101,52 @@ fun CartContentAdd(
                 }
 
                 if (filteredProducts.isNotEmpty()) {
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Default.DeleteSweep,
-                            contentDescription = stringResource(R.string.clear_data),
-                            tint = Color.Red,
-                            modifier = modifier
-                                .size(32.dp)
-                                .clickable { viewModel.reset() }
-                        )
-                    }
-
-                    Spacer(modifier = modifier.height(16.dp))
-
                     LazyColumn(
                         modifier = modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                     ) {
-                        items(items = filteredProducts, key = { product ->
-                            product?.id ?: "empty-${System.currentTimeMillis()}"
-                        }, itemContent = { product ->
-                            if (product != null) {
-                                AddOrderCard(viewModel, product, modifier)
+                        item {
+                            Row(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 24.dp),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.DeleteSweep,
+                                    contentDescription = stringResource(R.string.clear_data),
+                                    tint = Color.Red,
+                                    modifier = modifier
+                                        .size(32.dp)
+                                        .clickable { viewModel.reset() }
+                                )
                             }
-                            Spacer(modifier = modifier.height(8.dp))
-                        })
+                            Spacer(modifier = modifier.height(16.dp))
+                        }
+                        item {
+                            Column(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
+                            ) {
+                                filteredProducts.first().let { product ->
+                                    if (product != null) {
+                                        AddOrderCard(viewModel, product, modifier)
+                                    }
+                                    Spacer(modifier = modifier.height(8.dp))
+                                }
+                            }
+                        }
+                        item {
+                            Spacer(modifier = modifier.height(16.dp))
+                            ChangeTotalPayment(
+                                orderCost = orderData.actualTotalPrice,
+                                changeCost = changeCost.longValue,
+                                modifier = modifier
+                            )
+                        }
                     }
-                    Spacer(modifier = modifier.height(16.dp))
-                    ChangeTotalPayment(
-                        orderCost = orderData.actualTotalPrice,
-                        changeCost = changeCost.longValue,
-                        modifier = modifier
-                    )
 
                 } else {
                     NotFoundScreen(modifier = modifier)
