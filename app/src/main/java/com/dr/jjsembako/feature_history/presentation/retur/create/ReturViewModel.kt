@@ -72,10 +72,10 @@ class ReturViewModel @Inject constructor(
     private val dataProducts: LiveData<List<SelectSubstituteItem?>> get() = _dataProducts
 
     private val _returData = MutableLiveData<ReturStore?>()
-    val returData: LiveData<ReturStore?> get() = _returData
+    private val returData: LiveData<ReturStore?> get() = _returData
 
     private val _substituteData = MutableLiveData<SubstituteStore?>()
-    val substituteData: LiveData<SubstituteStore?> get() = _substituteData
+    private val substituteData: LiveData<SubstituteStore?> get() = _substituteData
 
     private val _selectedDataR = MutableLiveData<SelectPNRItem?>()
     val selectedDataR: LiveData<SelectPNRItem?> get() = _selectedDataR
@@ -122,8 +122,8 @@ class ReturViewModel @Inject constructor(
             _returData.value = getReturStore()
             _substituteData.value = getSubstituteStore()
         }
-        if (selectedDataR.value != null) disableChoose(selectedDataR.value!!)
-        if (selectedDataS.value != null) disableOrder(selectedDataS.value!!)
+        if (selectedDataR.value != null) disableChoose()
+        if (selectedDataS.value != null) disableOrder()
     }
 
     private suspend fun getReturStore(): ReturStore {
@@ -159,6 +159,7 @@ class ReturViewModel @Inject constructor(
     fun fetchOrder(id: String) {
         viewModelScope.launch {
             _returData.value = getReturStore()
+            _substituteData.value = getSubstituteStore()
             fetchOrderUseCase.fetchOrder(id).collect {
                 when (it) {
                     is Resource.Loading -> {
@@ -266,130 +267,60 @@ class ReturViewModel @Inject constructor(
 
     fun updateSelectedAmount(product: SelectPNRItem, qty: String) {
         viewModelScope.launch {
-            val currentList = _productOrder.value.orEmpty().toMutableList()
-            val productIndex = currentList.indexOfFirst { it?.id == product.id }
-
-            if (productIndex != -1) {
-                val existingProduct = currentList[productIndex]!!
-
-                if (qty.isNotEmpty()) {
-                    val amount = qty.toInt()
-                    if (amount != existingProduct.amountSelected) {
-                        val updatedExistingProduct = existingProduct.copy(
-                            amountSelected = amount
-                        )
-                        currentList[productIndex] = updatedExistingProduct
-                        currentList.remove(existingProduct)
-                        setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
-                        _returData.value = getReturStore()
-                        _selectedDataR.value = updatedExistingProduct
-                        _productOrder.value = currentList
-                    }
-                } else {
-                    disableChoose(existingProduct)
-                }
-            }
+            if (qty.isNotEmpty()) {
+                val updateData = product.copy(
+                    amountSelected = qty.toInt()
+                )
+                setReturStore(mapSelectPNRItemToReturStore(updateData))
+                _returData.value = getReturStore()
+                _selectedDataR.value = updateData
+            } else disableChoose()
         }
     }
 
     fun minusSelectedAmount(product: SelectPNRItem) {
         viewModelScope.launch {
-            val currentList = _productOrder.value.orEmpty().toMutableList()
-            val productIndex = currentList.indexOfFirst { it?.id == product.id }
-
-            if (productIndex != -1) {
-                val existingProduct = currentList[productIndex]!!
-
-                if (existingProduct.amountSelected > 0) {
-                    val updatedExistingProduct = existingProduct.copy(
-                        amountSelected = existingProduct.amountSelected - 1
-                    )
-                    if (updatedExistingProduct.amountSelected == 0) disableChoose(existingProduct)
-                    else {
-                        currentList[productIndex] = updatedExistingProduct
-                        currentList.remove(existingProduct)
-                        setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
-                        _returData.value = getReturStore()
-                        _selectedDataR.value = updatedExistingProduct
-                    }
-
-                    _productOrder.value = currentList
-                }
-            }
+            if (product.amountSelected > 0) {
+                val updateData = product.copy(
+                    amountSelected = product.amountSelected - 1
+                )
+                setReturStore(mapSelectPNRItemToReturStore(updateData))
+                _returData.value = getReturStore()
+                _selectedDataR.value = updateData
+            } else disableChoose()
         }
     }
 
     fun plusSelectedAmount(product: SelectPNRItem) {
         viewModelScope.launch {
-            val currentList = _productOrder.value.orEmpty().toMutableList()
-            val productIndex = currentList.indexOfFirst { it?.id == product.id }
-
-            if (productIndex != -1) {
-                val existingProduct = currentList[productIndex]!!
-
-                if (existingProduct.amountSelected in 1..999) {
-                    val updatedExistingProduct = existingProduct.copy(
-                        amountSelected = existingProduct.amountSelected + 1
-                    )
-                    currentList[productIndex] = updatedExistingProduct
-                    currentList.remove(existingProduct)
-                    setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
-                    _returData.value = getReturStore()
-                    _selectedDataR.value = updatedExistingProduct
-                    _productOrder.value = currentList
-                } else {
-                    enableChoose(existingProduct)
-                }
-            }
+            if (product.amountSelected in 1..999) {
+                val updateData = product.copy(
+                    amountSelected = product.amountSelected + 1
+                )
+                setReturStore(mapSelectPNRItemToReturStore(updateData))
+                _returData.value = getReturStore()
+                _selectedDataR.value = updateData
+            } else enableChoose(product)
         }
     }
 
     fun enableChoose(product: SelectPNRItem) {
         viewModelScope.launch {
-            val currentList = _productOrder.value.orEmpty().toMutableList()
-            val productIndex = currentList.indexOfFirst { it?.id == product.id }
-
-            if (productIndex != -1) {
-                val existingProduct = currentList[productIndex]!!
-
-                if (!existingProduct.isChosen) {
-                    val updatedExistingProduct = existingProduct.copy(
-                        isChosen = true,
-                        amountSelected = 1
-                    )
-                    currentList[productIndex] = updatedExistingProduct
-                    currentList.remove(existingProduct)
-                    setReturStore(mapSelectPNRItemToReturStore(updatedExistingProduct))
-                    _returData.value = getReturStore()
-                    _selectedDataR.value = updatedExistingProduct
-                }
-
-                _productOrder.value = currentList
-            }
+            val updateData = product.copy(
+                isChosen = true,
+                amountSelected = 1
+            )
+            setReturStore(mapSelectPNRItemToReturStore(updateData))
+            _returData.value = getReturStore()
+            _selectedDataR.value = updateData
         }
     }
 
-    fun disableChoose(product: SelectPNRItem) {
+    fun disableChoose() {
         viewModelScope.launch {
-            val currentList = _productOrder.value.orEmpty().toMutableList()
-            val productIndex = currentList.indexOfFirst { it?.id == product.id }
-
-            if (productIndex != -1) {
-                val existingProduct = currentList[productIndex]!!
-
-                if (existingProduct.isChosen) {
-                    val updatedExistingProduct = existingProduct.copy(
-                        isChosen = false,
-                        amountSelected = 0
-                    )
-                    currentList[productIndex] = updatedExistingProduct
-                    setReturStore()
-                    _returData.value = getReturStore()
-                    _selectedDataR.value = null
-                }
-
-                _productOrder.value = currentList
-            }
+            setReturStore()
+            _returData.value = getReturStore()
+            _selectedDataR.value = null
         }
     }
 
@@ -414,10 +345,14 @@ class ReturViewModel @Inject constructor(
                             stockInPcs = updatedProduct.stockInPcs,
                             stockInUnit = updatedProduct.stockInUnit,
                             stockInPcsRemaining = updatedProduct.stockInPcsRemaining,
-                            selledPrice = updatedProduct.standardPrice,
+                            selledPrice = existingProduct.selledPrice,
                             isChosen = true
                         )
-
+                        setSubstituteStore(
+                            mapSelectSubstituteItemToSubstituteStore(updatedExistingProduct)
+                        )
+                        _substituteData.value = getSubstituteStore()
+                        _selectedDataS.value = updatedExistingProduct
                         currentList[index] = updatedExistingProduct
                         currentList.remove(existingProduct)
                     } else {
@@ -449,87 +384,34 @@ class ReturViewModel @Inject constructor(
 
     fun updateOrderPrice(product: SelectSubstituteItem, price: String) {
         viewModelScope.launch {
-            val currentList = _dataProducts.value.orEmpty().toMutableList()
-            val productIndex = currentList.indexOfFirst { it?.id == product.id }
-
-            if (productIndex != -1) {
-                val existingProduct = currentList[productIndex]!!
-
-                if (price.isNotEmpty()) {
-                    val orderPrice = price.toLong()
-                    if (orderPrice != existingProduct.selledPrice) {
-                        val updatedExistingProduct = existingProduct.copy(
-                            selledPrice = orderPrice
-                        )
-                        currentList[productIndex] = updatedExistingProduct
-                        currentList.remove(existingProduct)
-                        setSubstituteStore(
-                            mapSelectSubstituteItemToSubstituteStore(
-                                updatedExistingProduct
-                            )
-                        )
-                        _substituteData.value = getSubstituteStore()
-                        _selectedDataS.value = updatedExistingProduct
-                        _dataProducts.value = currentList
-                    }
-                } else {
-                    disableOrder(existingProduct)
-                }
-            }
+            if (price.isNotEmpty()) {
+                val updateData = product.copy(
+                    selledPrice = price.toLong()
+                )
+                setSubstituteStore(mapSelectSubstituteItemToSubstituteStore(updateData))
+                _substituteData.value = getSubstituteStore()
+                _selectedDataS.value = updateData
+            } else disableOrder()
         }
     }
 
     fun enableOrder(product: SelectSubstituteItem) {
         viewModelScope.launch {
-            val currentList = _dataProducts.value.orEmpty().toMutableList()
-            val productIndex = currentList.indexOfFirst { it?.id == product.id }
-
-            if (productIndex != -1) {
-                val existingProduct = currentList[productIndex]!!
-
-                if (!existingProduct.isChosen) {
-                    val updatedExistingProduct = existingProduct.copy(
-                        isChosen = true,
-                        selledPrice = existingProduct.standardPrice,
-                    )
-                    currentList[productIndex] = updatedExistingProduct
-                    currentList.remove(existingProduct)
-                    setSubstituteStore(
-                        mapSelectSubstituteItemToSubstituteStore(
-                            updatedExistingProduct
-                        )
-                    )
-                    _substituteData.value = getSubstituteStore()
-                    _selectedDataS.value = updatedExistingProduct
-                }
-
-                _dataProducts.value = currentList
-            }
+            val updateData = product.copy(
+                isChosen = true,
+                selledPrice = product.selledPrice
+            )
+            setSubstituteStore(mapSelectSubstituteItemToSubstituteStore(updateData))
+            _substituteData.value = getSubstituteStore()
+            _selectedDataS.value = updateData
         }
     }
 
-    fun disableOrder(product: SelectSubstituteItem) {
+    fun disableOrder() {
         viewModelScope.launch {
-            val currentList = _dataProducts.value.orEmpty().toMutableList()
-            val productIndex = currentList.indexOfFirst { it?.id == product.id }
-
-            if (productIndex != -1) {
-                val existingProduct = currentList[productIndex]!!
-
-                if (existingProduct.isChosen) {
-                    val updatedExistingProduct = existingProduct.copy(
-                        isChosen = false,
-                        selledPrice = 0
-                    )
-                    currentList[productIndex] = updatedExistingProduct
-                    currentList.remove(existingProduct)
-                    setSubstituteStore()
-                    _substituteData.value = getSubstituteStore()
-                    _selectedDataS.value = null
-                }
-
-                _dataProducts.value = currentList
-            }
+            setSubstituteStore()
+            _substituteData.value = getSubstituteStore()
+            _selectedDataS.value = null
         }
     }
 

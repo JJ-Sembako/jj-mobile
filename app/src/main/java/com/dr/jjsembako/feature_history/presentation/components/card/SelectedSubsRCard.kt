@@ -163,7 +163,7 @@ private fun OrderContent(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "IDR")
-    val substituteData = viewModel.substituteData.observeAsState().value
+    val selectedDataS = viewModel.selectedDataS.observeAsState().value
     var selledPrice by rememberSaveable { mutableStateOf(product.selledPrice.toString()) }
 
     LaunchedEffect(product) {
@@ -180,7 +180,7 @@ private fun OrderContent(
         if (product.stockInUnit > 0) {
             if (!product.isChosen) {
                 Button(
-                    enabled = substituteData == null,
+                    enabled = selectedDataS == null,
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
@@ -232,7 +232,7 @@ private fun OrderContent(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.disableOrder(product)
+                        viewModel.disableOrder()
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(
@@ -264,7 +264,7 @@ private fun OrderContent(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.disableOrder(product)
+                        viewModel.disableOrder()
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(

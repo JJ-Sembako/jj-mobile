@@ -163,7 +163,7 @@ private fun OrderContent(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val returdData = viewModel.returData.observeAsState().value
+    val selectedDataR = viewModel.selectedDataR.observeAsState().value
     var selectedAmount by rememberSaveable { mutableStateOf(data.amountSelected.toString()) }
 
     LaunchedEffect(data) {
@@ -180,7 +180,7 @@ private fun OrderContent(
         if (data.status == 0) {
             if (!data.isChosen) {
                 Button(
-                    enabled = returdData == null,
+                    enabled = selectedDataR == null,
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
@@ -260,7 +260,7 @@ private fun OrderContent(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.disableChoose(data)
+                        viewModel.disableChoose()
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(
@@ -292,7 +292,7 @@ private fun OrderContent(
                     onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.disableChoose(data)
+                        viewModel.disableChoose()
                     }, colors = ButtonDefaults.buttonColors(Color.Red)
                 ) {
                     Icon(
