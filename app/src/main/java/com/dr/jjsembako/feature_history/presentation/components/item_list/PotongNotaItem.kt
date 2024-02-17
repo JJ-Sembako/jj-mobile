@@ -102,7 +102,7 @@ private fun StatusAndOption(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
     ) {
-        PotongNotaStatus(status = 0, modifier = modifier)
+        PotongNotaStatus(status = status, modifier = modifier)
         IconButton(onClick = { expanded.value = !expanded.value }) {
             Icon(
                 Icons.Default.MoreVert,

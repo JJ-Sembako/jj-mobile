@@ -99,7 +99,7 @@ private fun StatusAndOption(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
     ) {
-        ReturStatus(status = 1, modifier = modifier)
+        ReturStatus(status = status, modifier = modifier)
         IconButton(onClick = { expanded.value = !expanded.value }) {
             Icon(
                 Icons.Default.MoreVert,
