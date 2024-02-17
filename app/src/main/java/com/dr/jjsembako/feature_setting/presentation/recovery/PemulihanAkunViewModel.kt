@@ -23,10 +23,6 @@ class PemulihanAkunViewModel @Inject constructor(
     private val deactivateAccountRecoveryUseCase: DeactivateAccountRecoveryUseCase
 ) : ViewModel() {
 
-    init {
-        fetchAccountRecoveryQuestions()
-    }
-
     private val _stateFirst = MutableLiveData<StateResponse?>()
     val stateFirst: LiveData<StateResponse?> = _stateFirst
 
@@ -53,6 +49,10 @@ class PemulihanAkunViewModel @Inject constructor(
 
     private val _idQuestion = MutableLiveData<String?>()
     val idQuestion: String? get() = _idQuestion.value
+
+    init {
+        fetchAccountRecoveryQuestions()
+    }
 
     fun setStateThird(state: StateResponse?) {
         _stateThird.value = state
