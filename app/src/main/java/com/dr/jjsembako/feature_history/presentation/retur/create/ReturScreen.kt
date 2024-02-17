@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -61,7 +61,6 @@ import com.dr.jjsembako.feature_history.presentation.components.retur.RSelectedS
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
-import kotlin.math.roundToInt
 
 @Composable
 fun ReturScreen(
@@ -260,87 +259,91 @@ private fun ReturContent(
             )
         }
     ) { contentPadding ->
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                    })
+                .padding(contentPadding)
                 .pullRefresh(pullRefreshState)
-                .verticalScroll(scrollState)
-                .padding(contentPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .verticalScroll(scrollState),
         ) {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                        }),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                if (showErrMinus.value) {
+                    HeaderError(modifier = modifier, message = stringResource(R.string.err_minus_retur))
+                    Spacer(modifier = modifier.height(4.dp))
+                }
+
+                if (errorState == true && !errorMsg.isNullOrEmpty()) {
+                    HeaderError(modifier = modifier, message = errorMsg)
+                    Spacer(modifier = modifier.height(16.dp))
+                }
+
+                PNRHeader(
+                    data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
+                    context = context,
+                    clipboardManager = clipboardManager,
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(16.dp))
+                RSelectedProduct(
+                    data = selectedDataR,
+                    viewModel = viewModel,
+                    onSelectProduct = { onSelectProduct() },
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(16.dp))
+                RSelectedSubstitute(
+                    data = selectedDataS,
+                    viewModel = viewModel,
+                    onSelectSubstitute = { onSelectSubstitute() },
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(16.dp))
+                ChangeTotalPayment(
+                    orderCost = orderData.actualTotalPrice,
+                    changeCost = changeCost.longValue,
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(16.dp))
+
+                if (showLoadingDialog.value) {
+                    LoadingDialog(showLoadingDialog, modifier)
+                }
+
+                if (showErrorDialog.value) {
+                    AlertErrorDialog(
+                        message = message ?: "Unknown error",
+                        showDialog = showErrorDialog,
+                        modifier = modifier
+                    )
+                }
+
+                if (showErrCantRetur.value) {
+                    AlertErrorDialog(
+                        message = stringResource(R.string.err_fill_data_first),
+                        showDialog = showErrCantRetur,
+                        modifier = modifier
+                    )
+                }
+            }
+
             PullRefreshIndicator(
                 refreshing = isRefreshing,
                 state = pullRefreshState,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height((pullRefreshState.progress * 100).roundToInt().dp)
+                modifier = modifier.align(Alignment.TopCenter)
             )
-
-            if (showErrMinus.value) {
-                HeaderError(modifier = modifier, message = stringResource(R.string.err_minus_retur))
-                Spacer(modifier = modifier.height(4.dp))
-            }
-
-            if (errorState == true && !errorMsg.isNullOrEmpty()) {
-                HeaderError(modifier = modifier, message = errorMsg)
-                Spacer(modifier = modifier.height(16.dp))
-            }
-
-            PNRHeader(
-                data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
-                context = context,
-                clipboardManager = clipboardManager,
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            RSelectedProduct(
-                data = selectedDataR,
-                viewModel = viewModel,
-                onSelectProduct = { onSelectProduct() },
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            RSelectedSubstitute(
-                data = selectedDataS,
-                viewModel = viewModel,
-                onSelectSubstitute = { onSelectSubstitute() },
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            ChangeTotalPayment(
-                orderCost = orderData.actualTotalPrice,
-                changeCost = changeCost.longValue,
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-
-            if (showLoadingDialog.value) {
-                LoadingDialog(showLoadingDialog, modifier)
-            }
-
-            if (showErrorDialog.value) {
-                AlertErrorDialog(
-                    message = message ?: "Unknown error",
-                    showDialog = showErrorDialog,
-                    modifier = modifier
-                )
-            }
-
-            if (showErrCantRetur.value) {
-                AlertErrorDialog(
-                    message = stringResource(R.string.err_fill_data_first),
-                    showDialog = showErrCantRetur,
-                    modifier = modifier
-                )
-            }
         }
+
     }
 }
 
