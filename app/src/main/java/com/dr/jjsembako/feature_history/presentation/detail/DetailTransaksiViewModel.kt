@@ -1,9 +1,13 @@
 package com.dr.jjsembako.feature_history.presentation.detail
 
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dr.jjsembako.CanceledStore
+import com.dr.jjsembako.ReturStore
+import com.dr.jjsembako.SubstituteStore
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
@@ -23,6 +27,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailTransaksiViewModel @Inject constructor(
+    private val canceledStore: DataStore<CanceledStore>,
+    private val returStore: DataStore<ReturStore>,
+    private val substituteStore: DataStore<SubstituteStore>,
     private val fetchOrderUseCase: FetchOrderUseCase,
     private val handleUpdatePaymentStatusUseCase: HandleUpdatePaymentStatusUseCase,
     private val handleDeleteProductOrderUseCase: HandleDeleteProductOrderUseCase,
@@ -56,6 +63,13 @@ class DetailTransaksiViewModel @Inject constructor(
     val orderData: DetailOrderData? get() = _orderData.value
 
     private var _id: String? = null
+
+    init {
+        viewModelScope.launch {
+            resetDataStorePNR()
+        }
+    }
+
     fun setId(id: String) {
         _id = id
         init()
@@ -71,6 +85,12 @@ class DetailTransaksiViewModel @Inject constructor(
 
     fun setStateRefresh(state: StateResponse?) {
         _stateRefresh.value = state
+    }
+
+    private suspend fun resetDataStorePNR() {
+        returStore.updateData { ReturStore.getDefaultInstance() }
+        canceledStore.updateData { CanceledStore.getDefaultInstance() }
+        substituteStore.updateData { SubstituteStore.getDefaultInstance() }
     }
 
     private fun init() {

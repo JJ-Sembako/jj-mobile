@@ -525,11 +525,7 @@ class ReturViewModel @Inject constructor(
                     )
                     currentList[productIndex] = updatedExistingProduct
                     currentList.remove(existingProduct)
-                    setSubstituteStore(
-                        mapSelectSubstituteItemToSubstituteStore(
-                            updatedExistingProduct
-                        )
-                    )
+                    setSubstituteStore()
                     _substituteData.value = getSubstituteStore()
                     _selectedDataS.value = null
                 }
