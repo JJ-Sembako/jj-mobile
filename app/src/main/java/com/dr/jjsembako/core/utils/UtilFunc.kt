@@ -8,6 +8,7 @@ import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import java.text.NumberFormat
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
@@ -162,6 +163,15 @@ fun initializeDateValues(fromDate: MutableState<String>, untilDate: MutableState
     }
 }
 
+fun formatDateString(dateString: String): String {
+    val parts = dateString.split("-")
+    return if (parts.size == 3) {
+        "${parts[2]}-${parts[1]}-${parts[0]}"
+    } else {
+        dateString
+    }
+}
+
 fun convertMillisToDate(millis: Long): String {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
@@ -202,5 +212,22 @@ fun convertDateStringToCalendar(
         }
     } catch (e: Exception) {
         e.printStackTrace()
+    }
+}
+fun convertTimestampToArray(timestamp: String): Array<String> {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+    val outputDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+    val outputTimeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+    try {
+        val date = inputFormat.parse(timestamp)
+        val formattedDate = outputDateFormat.format(date)
+        val formattedTime = outputTimeFormat.format(date)
+
+        return arrayOf(formattedDate, formattedTime)
+    } catch (e: ParseException) {
+        e.printStackTrace()
+        Log.e("toDateArray", "Error converting date:", e)
+        return arrayOf("ERR CONVERT DATE", "ERR CONVERT TIME")
     }
 }

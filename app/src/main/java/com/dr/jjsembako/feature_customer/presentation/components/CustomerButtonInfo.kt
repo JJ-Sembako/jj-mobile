@@ -51,8 +51,7 @@ fun CustomerButtonInfo(
         Spacer(modifier = modifier.height(16.dp))
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
         Spacer(modifier = modifier.height(16.dp))
         Button(
@@ -126,8 +125,7 @@ fun CustomerButtonInfo(
         Spacer(modifier = modifier.height(16.dp))
         Divider(
             modifier = modifier
-                .fillMaxWidth()
-                .width(1.dp), color = MaterialTheme.colorScheme.tertiary
+                .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
         Spacer(modifier = modifier.height(16.dp))
     }

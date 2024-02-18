@@ -10,6 +10,8 @@ import com.dr.jjsembako.feature_auth.domain.usecase.HandleUpdatePasswordFromReco
 import com.dr.jjsembako.feature_auth.domain.usecase.HandleUpdatePasswordFromRecoveryUseCase
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginInteractor
 import com.dr.jjsembako.feature_auth.domain.usecase.LoginUseCase
+import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustOrdersInteractor
+import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustOrdersUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustomersInteractor
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchCustomersUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchDetailCustomerInteractor
@@ -20,6 +22,34 @@ import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerInte
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerInteractor
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleCreateCanceledInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleCreateCanceledUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleDeleteCanceledInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleDeleteCanceledUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrdersInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrdersUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleAddProductOrderInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleAddProductOrderUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteOrderInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteOrderUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteProductOrderInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleDeleteProductOrderUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdatePaymentStatusInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdatePaymentStatusUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdateProductOrderInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.order.HandleUpdateProductOrderUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleCreateReturInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleCreateReturUseCase
+import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleDeleteReturInteractor
+import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleDeleteReturUseCase
+import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustInteractor
+import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
+import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustInteractor
+import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustUseCase
+import com.dr.jjsembako.feature_order.domain.usecase.HandleCreateOrderInteractor
+import com.dr.jjsembako.feature_order.domain.usecase.HandleCreateOrderUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryInteractor
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.ChangePasswordInteractor
@@ -29,7 +59,7 @@ import com.dr.jjsembako.feature_setting.domain.usecase.DeactivateAccountRecovery
 import com.dr.jjsembako.feature_setting.domain.usecase.GetAllRecoveryQuestionInteractor
 import com.dr.jjsembako.feature_setting.domain.usecase.GetAllRecoveryQuestionUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.GetDataAccountRecoveryInteractor
-import com.dr.jjsembako.feature_setting.domain.usecase.GetDataAccountRecoveryUSeCase
+import com.dr.jjsembako.feature_setting.domain.usecase.GetDataAccountRecoveryUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -57,7 +87,7 @@ abstract class AppModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun provideGetDataAccountRecoveryUSeCase(getDataAccountRecoveryInteractor: GetDataAccountRecoveryInteractor): GetDataAccountRecoveryUSeCase
+    abstract fun provideGetDataAccountRecoveryUseCase(getDataAccountRecoveryInteractor: GetDataAccountRecoveryInteractor): GetDataAccountRecoveryUseCase
 
     @Binds
     @ViewModelScoped
@@ -111,4 +141,77 @@ abstract class AppModule {
     @Binds
     @ViewModelScoped
     abstract fun provideHandleDeleteCustomerUseCase(handleDeleteCustomerInteractor: HandleDeleteCustomerInteractor): HandleDeleteCustomerUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchCustOrdersUseCase(fetchCustOrdersInteractor: FetchCustOrdersInteractor): FetchCustOrdersUseCase
+
+    /****************************
+     * Order
+     ***************************/
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleCreateOrderUseCase(handleCreateOrderInteractor: HandleCreateOrderInteractor): HandleCreateOrderUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchSelectCustUseCase(fetchSelectCustInteractor: FetchSelectCustInteractor): FetchSelectCustUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchDetailSelectedCustUseCase(fetchDetailSelectedCustInteractor: FetchDetailSelectedCustInteractor): FetchDetailSelectedCustUseCase
+
+    /****************************
+     * History
+     ***************************/
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchOrdersUseCase(fetchOrdersInteractor: FetchOrdersInteractor): FetchOrdersUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchOrderUseCase(fetchOrdesInteractor: FetchOrderInteractor): FetchOrderUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleAddProductOrderUseCase(handleAddProductOrderInteractor: HandleAddProductOrderInteractor): HandleAddProductOrderUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleUpdateProductOrderUseCase(handleUpdateProductOrderInteractor: HandleUpdateProductOrderInteractor): HandleUpdateProductOrderUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleUpdatePaymentStatusUseCase(handleUpdatePaymentStatusInteractor: HandleUpdatePaymentStatusInteractor): HandleUpdatePaymentStatusUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleDeleteProductOrder(handleDeleteProductOrderInteractor: HandleDeleteProductOrderInteractor): HandleDeleteProductOrderUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleDeleteOrder(handleDeleteOrderInteractor: HandleDeleteOrderInteractor): HandleDeleteOrderUseCase
+
+    /****************************
+     * Canceled
+     ***************************/
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleCreateCanceledUseCase(handleCreateCanceledInteractor: HandleCreateCanceledInteractor): HandleCreateCanceledUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleDeleteCanceledUseCase(handleDeleteCanceledInteractor: HandleDeleteCanceledInteractor): HandleDeleteCanceledUseCase
+
+    /****************************
+     * Retur
+     ***************************/
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleCreateReturUseCase(handleCreateReturInteractor: HandleCreateReturInteractor): HandleCreateReturUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHandleDeleteReturUseCase(handleDeleteReturUseInteractor: HandleDeleteReturInteractor): HandleDeleteReturUseCase
+
 }

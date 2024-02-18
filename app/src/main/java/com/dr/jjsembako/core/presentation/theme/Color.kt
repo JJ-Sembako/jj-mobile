@@ -17,3 +17,28 @@ val MyGrey = Color(0xFFBDBDBD)
 val DarkOrange = Color(0xFFF28928)
 val DarkOrangeGrey = Color(0xFF685E51)
 val MyDarkGrey = Color(0xFF555555)
+
+val CardSelectedLight = Color(0xFFA8F5A6)
+val OnCardSelectedLight = Color(0xFF002105)
+
+val CardSelectedDark = Color(0xFF005318)
+val OnCardSelectedDark = CardSelectedLight
+
+val StatusNotFoundBg = Color(0XFFFFE5E5)
+val StatusNotFoundText =Color(0XFFD3180C)
+val StatusWaitConfirmBg = Color(0XFFFFEFD7)
+val StatusWaitConfirmText = Color(0XFFA05E03)
+val StatusPackedBg = Color(0XFFC9F0FF)
+val StatusPackedText = Color(0XFF0065D0)
+val StatusShippingBg = Color(0XFFEDD7FF)
+val statusShippingText = Color(0XFF6E03A0)
+val StatusDeliveredBg = Color(0XFFECFCE5)
+val StatusDeliveredText = Color(0XFF198155)
+val StatusConfirmedReturBg = StatusPackedBg
+val StatusConfirmedReturText = StatusPackedText
+val StatusConfirmedPotongNotaBg = StatusDeliveredBg
+val StatusConfirmedPotongNotaText = StatusDeliveredText
+val PaymentNotPaidOffBg = StatusNotFoundBg
+val PaymentNotPaidOffText = StatusNotFoundText
+val PaymentPaidOffBg = StatusDeliveredBg
+val PaymentPaidOffText = StatusDeliveredText

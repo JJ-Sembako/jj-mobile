@@ -4,9 +4,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
-import com.dr.jjsembako.core.data.remote.response.account.PostHandleLoginResponse
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.customer.DeleteHandleDeleteCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.customer.PostHandleCreateCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.customer.PutHandleUpdateCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.feature_customer.domain.repository.ICustomerRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +24,9 @@ import javax.inject.Singleton
 @Singleton
 class CustomerRepository @Inject constructor(
     private val customerDataSource: CustomerDataSource,
-    private val customerPagingSource: CustomerPagingSource
+    private val customerPagingSource: CustomerPagingSource,
+    private val custOrdersPagingSource: CustOrdersPagingSource,
+    private val gson: Gson
 ) : ICustomerRepository {
 
     override suspend fun fetchCustomers(searchQuery: String): Flow<PagingData<DataCustomer>> {
@@ -78,7 +83,7 @@ class CustomerRepository @Inject constructor(
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                        gson.fromJson(errorResponse, PostHandleCreateCustomerResponse::class.java)
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -124,7 +129,7 @@ class CustomerRepository @Inject constructor(
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                        gson.fromJson(errorResponse, GetFetchDetailCustomerResponse::class.java)
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -184,7 +189,7 @@ class CustomerRepository @Inject constructor(
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                        gson.fromJson(errorResponse, PutHandleUpdateCustomerResponse::class.java)
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -231,7 +236,10 @@ class CustomerRepository @Inject constructor(
 
                     if (errorResponse != null) {
                         val errorResponseObj =
-                            Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                            gson.fromJson(
+                                errorResponse,
+                                DeleteHandleDeleteCustomerResponse::class.java
+                            )
                         emit(Resource.Error(errorResponseObj.message, statusCode, null))
                     } else {
                         emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -241,5 +249,25 @@ class CustomerRepository @Inject constructor(
                 }
             }
         }.flowOn(Dispatchers.IO)
+
+    override suspend fun fetchOrders(
+        search: String?,
+        minDate: String?,
+        maxDate: String?,
+        me: Int?,
+        customerId: String
+    ): Flow<PagingData<OrderDataItem>> {
+        return Pager(
+            config = PagingConfig(pageSize = 5),
+            pagingSourceFactory = {
+                custOrdersPagingSource.apply {
+                    setParams(
+                        search = search, minDate = minDate, maxDate = maxDate,
+                        me = me, customerId = customerId
+                    )
+                }
+            }
+        ).flow
+    }
 
 }

@@ -59,10 +59,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
-import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
-import com.dr.jjsembako.core.presentation.components.ErrorScreen
-import com.dr.jjsembako.core.presentation.components.LoadingDialog
-import com.dr.jjsembako.core.presentation.components.LoadingScreen
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidLinkMaps
 import com.dr.jjsembako.core.utils.isValidPhoneNumber
@@ -148,8 +148,8 @@ private fun EditPelangganContent(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
-    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var name by rememberSaveable { mutableStateOf(cust.name) }
     var shopName by rememberSaveable { mutableStateOf(cust.shopName) }
@@ -157,17 +157,17 @@ private fun EditPelangganContent(
     var address by rememberSaveable { mutableStateOf(cust.address) }
     var mapsLink by rememberSaveable { mutableStateOf(cust.gmapsLink) }
 
-    var isValidName = rememberSaveable { mutableStateOf(true) }
-    var isValidShopName = rememberSaveable { mutableStateOf(true) }
-    var isValidPhoneNumber = rememberSaveable { mutableStateOf(true) }
-    var isValidAddress = rememberSaveable { mutableStateOf(true) }
-    var isValidMapsLink = rememberSaveable { mutableStateOf(true) }
+    val isValidName = rememberSaveable { mutableStateOf(true) }
+    val isValidShopName = rememberSaveable { mutableStateOf(true) }
+    val isValidPhoneNumber = rememberSaveable { mutableStateOf(true) }
+    val isValidAddress = rememberSaveable { mutableStateOf(true) }
+    val isValidMapsLink = rememberSaveable { mutableStateOf(true) }
 
-    var errMsgName = rememberSaveable { mutableStateOf("") }
-    var errMsgShopName = rememberSaveable { mutableStateOf("") }
-    var errMsgPhoneNumber = rememberSaveable { mutableStateOf("") }
-    var errMsgAddress = rememberSaveable { mutableStateOf("") }
-    var errMsgMapsLink = rememberSaveable { mutableStateOf("") }
+    val errMsgName = rememberSaveable { mutableStateOf("") }
+    val errMsgShopName = rememberSaveable { mutableStateOf("") }
+    val errMsgPhoneNumber = rememberSaveable { mutableStateOf("") }
+    val errMsgAddress = rememberSaveable { mutableStateOf("") }
+    val errMsgMapsLink = rememberSaveable { mutableStateOf("") }
 
     val errInputEmpty = stringResource(R.string.err_input_empty)
     val errInvalidLink = stringResource(R.string.err_invalid_link)

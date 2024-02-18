@@ -10,6 +10,9 @@ import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchDetailCustomerUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleDeleteCustomerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +27,12 @@ class DetailPelangganViewModel @Inject constructor(
 
     private val _stateSecond = MutableLiveData<StateResponse?>()
     val stateSecond: LiveData<StateResponse?> = _stateSecond
+
+    private val _stateRefresh = MutableLiveData<StateResponse?>()
+    val stateRefresh: LiveData<StateResponse?> = _stateRefresh
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
     private val _statusCode = MutableLiveData<Int?>()
     val statusCode: LiveData<Int?> = _statusCode
@@ -45,33 +54,42 @@ class DetailPelangganViewModel @Inject constructor(
         fetchDetailCustomer(id)
     }
 
-    fun setStateFirst(state: StateResponse?) {
-        _stateFirst.value = state
-    }
-
     fun setStateSecond(state: StateResponse?) {
         _stateSecond.value = state
+    }
+
+    fun setStateRefresh(state: StateResponse?) {
+        _stateRefresh.value = state
+    }
+
+    fun refresh() {
+        val id = _id ?: return
+        fetchDetailCustomer(id)
     }
 
     fun fetchDetailCustomer(id: String) {
         viewModelScope.launch {
             fetchDetailCustomerUseCase.fetchDetailCustomer(id).collect {
                 when (it) {
-                    is Resource.Loading -> _stateFirst.value = StateResponse.LOADING
+                    is Resource.Loading -> {
+                        if (customerData == null) _stateFirst.value = StateResponse.LOADING
+                        else _stateRefresh.value = StateResponse.LOADING
+                    }
+
                     is Resource.Success -> {
-                        _stateFirst.value = StateResponse.SUCCESS
+                        if (customerData == null) _stateFirst.value = StateResponse.SUCCESS
+                        else _stateRefresh.value = StateResponse.SUCCESS
                         _message.value = it.message
                         _statusCode.value = it.status
                         _customerData.value = it.data
                     }
 
                     is Resource.Error -> {
-                        _stateFirst.value = StateResponse.ERROR
+                        if (customerData == null) _stateFirst.value = StateResponse.ERROR
+                        else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
@@ -93,11 +111,8 @@ class DetailPelangganViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
     }
-
 }

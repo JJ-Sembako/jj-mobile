@@ -52,8 +52,6 @@ class PemulihanKataSandiViewModel @Inject constructor(private val handleUpdatePa
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }

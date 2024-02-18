@@ -24,9 +24,10 @@ sealed class Screen(val route: String) {
         fun createRoute(keyword: String) = "pelanggan/?keyword=$keyword"
     }
 
-    object TambahPelanggan : Screen("pelanggan/add?keyword={keyword}")  {
+    object TambahPelanggan : Screen("pelanggan/add?keyword={keyword}") {
         fun createRoute(keyword: String) = "pelanggan/add?keyword=$keyword"
     }
+
     object DetailPelanggan : Screen("pelanggan/detail/{id}?keyword={keyword}") {
         fun createRoute(id: String, keyword: String) = "pelanggan/detail/$id?keyword=$keyword"
     }
@@ -35,7 +36,43 @@ sealed class Screen(val route: String) {
         fun createRoute(id: String) = "pelanggan/edit/$id"
     }
 
+    object PesananPelanggan : Screen("pelanggan/{id}/pesanan") {
+        fun createRoute(id: String) = "pelanggan/$id/pesanan"
+    }
+
     object Riwayat : Screen("riwayat")
+    object DetailRiwayat : Screen("riwayat/detail/{id}") {
+        fun createRoute(id: String) = "riwayat/detail/$id"
+    }
+
+    object TambahBarangPesanan : Screen("riwayat/detail/tambah/{id}") {
+        fun createRoute(id: String) = "riwayat/detail/tambah/$id"
+    }
+
+    object EditBarangPesanan : Screen("riwayat/detail/edit/{id}") {
+        fun createRoute(id: String) = "riwayat/detail/edit/$id"
+    }
+
+    object PotongNota : Screen("riwayat/potong-nota/{id}") {
+        fun createRoute(id: String) = "riwayat/potong-nota/$id"
+    }
+
+    object PotongNotaPilihBarang : Screen("riwayat/potong-nota/pilih-barang/{id}") {
+        fun createRoute(id: String) = "riwayat/potong-nota/pilih-barang/$id"
+    }
+
+    object Retur : Screen("riwayat/retur/{id}") {
+        fun createRoute(id: String) = "riwayat/retur/$id"
+    }
+
+    object ReturPilihBarang : Screen("riwayat/retur/pilih-barang/{id}") {
+        fun createRoute(id: String) = "riwayat/retur/pilih-barang/$id"
+    }
+
+    object ReturPilihPengganti : Screen("riwayat/retur/pilih-pengganti/{id}") {
+        fun createRoute(id: String) = "riwayat/retur/pilih-pengganti/$id"
+    }
+
     object Performa : Screen("performa")
 
     object Pengaturan : Screen("pengaturan")

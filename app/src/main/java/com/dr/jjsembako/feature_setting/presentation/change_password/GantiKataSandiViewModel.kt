@@ -48,8 +48,6 @@ class GantiKataSandiViewModel @Inject constructor(private val changePasswordUseC
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }

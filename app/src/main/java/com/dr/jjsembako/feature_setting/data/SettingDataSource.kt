@@ -5,8 +5,11 @@ import com.dr.jjsembako.core.data.remote.network.AccountApiService
 import com.dr.jjsembako.core.data.remote.response.account.DataAccountRecovery
 import com.dr.jjsembako.core.data.remote.response.account.DataActivateAccountRecovery
 import com.dr.jjsembako.core.data.remote.response.account.DataRecoveryQuestion
+import com.dr.jjsembako.core.data.remote.response.account.GetFetchAccountRecoveryQuestionsResponse
+import com.dr.jjsembako.core.data.remote.response.account.GetFetchAccountRecoveryResponse
 import com.dr.jjsembako.core.data.remote.response.account.PatchHandleDeactivateAccountRecoveryResponse
 import com.dr.jjsembako.core.data.remote.response.account.PatchHandleUpdateSelfPasswordResponse
+import com.dr.jjsembako.core.data.remote.response.account.PostHandleActivateAccountRecoveryResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +20,10 @@ import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class SettingDataSource @Inject constructor(private val accountApiService: AccountApiService) {
+class SettingDataSource @Inject constructor(
+    private val accountApiService: AccountApiService,
+    private val gson: Gson
+) {
 
     suspend fun handleUpdateSelfPassword(
         oldPassword: String,
@@ -44,7 +50,7 @@ class SettingDataSource @Inject constructor(private val accountApiService: Accou
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(
+                        gson.fromJson(
                             errorResponse,
                             PatchHandleUpdateSelfPasswordResponse::class.java
                         )
@@ -76,9 +82,9 @@ class SettingDataSource @Inject constructor(private val accountApiService: Accou
 
                     if (errorResponse != null) {
                         val errorResponseObj =
-                            Gson().fromJson(
+                            gson.fromJson(
                                 errorResponse,
-                                PatchHandleUpdateSelfPasswordResponse::class.java
+                                GetFetchAccountRecoveryQuestionsResponse::class.java
                             )
                         emit(Resource.Error(errorResponseObj.message, statusCode, null))
                     } else {
@@ -107,9 +113,9 @@ class SettingDataSource @Inject constructor(private val accountApiService: Accou
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(
+                        gson.fromJson(
                             errorResponse,
-                            PatchHandleUpdateSelfPasswordResponse::class.java
+                            GetFetchAccountRecoveryResponse::class.java
                         )
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
@@ -141,9 +147,9 @@ class SettingDataSource @Inject constructor(private val accountApiService: Accou
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(
+                        gson.fromJson(
                             errorResponse,
-                            PatchHandleUpdateSelfPasswordResponse::class.java
+                            PostHandleActivateAccountRecoveryResponse::class.java
                         )
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
@@ -155,34 +161,35 @@ class SettingDataSource @Inject constructor(private val accountApiService: Accou
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun handleDeactivateAccountRecovery(): Flow<Resource<out PatchHandleDeactivateAccountRecoveryResponse>> = flow {
-        try {
-            val response = accountApiService.handleDeactivateAccountRecovery()
-            emit(Resource.Success(null, response.message, response.statusCode))
-        } catch (e: CancellationException) {
-            // Do nothing, the flow is cancelled
-        } catch (e: IOException) {
-            // Handle IOException (connection issues, timeout, etc.)
-            emit(Resource.Error("Masalah jaringan koneksi internet", 408, null))
-        } catch (e: Exception) {
-            if (e is HttpException) {
-                val errorResponse = e.response()?.errorBody()?.string()
-                val statusCode = e.code()
-                val errorMessage = e.message()
+    suspend fun handleDeactivateAccountRecovery(): Flow<Resource<out PatchHandleDeactivateAccountRecoveryResponse>> =
+        flow {
+            try {
+                val response = accountApiService.handleDeactivateAccountRecovery()
+                emit(Resource.Success(null, response.message, response.statusCode))
+            } catch (e: CancellationException) {
+                // Do nothing, the flow is cancelled
+            } catch (e: IOException) {
+                // Handle IOException (connection issues, timeout, etc.)
+                emit(Resource.Error("Masalah jaringan koneksi internet", 408, null))
+            } catch (e: Exception) {
+                if (e is HttpException) {
+                    val errorResponse = e.response()?.errorBody()?.string()
+                    val statusCode = e.code()
+                    val errorMessage = e.message()
 
-                if (errorResponse != null) {
-                    val errorResponseObj =
-                        Gson().fromJson(
-                            errorResponse,
-                            PatchHandleUpdateSelfPasswordResponse::class.java
-                        )
-                    emit(Resource.Error(errorResponseObj.message, statusCode, null))
+                    if (errorResponse != null) {
+                        val errorResponseObj =
+                            gson.fromJson(
+                                errorResponse,
+                                PatchHandleDeactivateAccountRecoveryResponse::class.java
+                            )
+                        emit(Resource.Error(errorResponseObj.message, statusCode, null))
+                    } else {
+                        emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
+                    }
                 } else {
-                    emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
+                    emit(Resource.Error(e.message ?: "Unknown error", 400, null))
                 }
-            } else {
-                emit(Resource.Error(e.message ?: "Unknown error", 400, null))
             }
-        }
-    }.flowOn(Dispatchers.IO)
+        }.flowOn(Dispatchers.IO)
 }

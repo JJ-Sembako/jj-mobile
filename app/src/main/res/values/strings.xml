@@ -17,22 +17,31 @@
     <string name="update">Perbarui</string>
     <string name="reload">Muat Ulang</string>
     <string name="back">Kembali</string>
+    <string name="next">Selanjutnya</string>
     <string name="edit">Edit</string>
     <string name="are_you_sure">Apakah Anda Yakin?</string>
+    <string name="iam_aware">Saya sadar atas tindakan ini</string>
+    <string name="yes_sure">Ya, saya yakin!</string>
     <string name="content_del">Aksi ini akan menghapus data secara permanen dan tidak dapat dipulihkan kembali.</string>
     <string name="delete">Hapus</string>
     <string name="yes_delete">Ya, Hapus!</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="close">Tutup</string>
     <string name="cancel">Batal</string>
     <string name="clear">Kosongkan</string>
     <string name="clear_data">Kosongkan data</string>
     <string name="menu">Menu</string>
     <string name="alert">Peringatan</string>
+    <string name="info">Informasi</string>
+    <string name="become">Menjadi</string>
     <string name="on_progress">Dalam Proses</string>
     <string name="not_found">Data tidak ditemukan</string>
+    <string name="empty_data">Data kosong</string>
+    <string name="option_not_available">Opsi tidak tersedia</string>
     <string name="please_wait">Mohon bersabar</string>
     <string name="error">Terjadi Kesalahan</string>
+    <string name="success">Berhasil</string>
+    <string name="action_denied">Tindakan Ditolak</string>
     <string name="error_msg_default">Kesalahan sistem terjadi.</string>
     <string name="err_input_empty">Inputan Wajib diisi!</string>
     <string name="err_username">Username minimal 5 karakter diawali huruf diikuti karakter huruf, angka, underscore, atau strip!</string>
@@ -103,10 +112,133 @@
     <string name="select_payment">Pilih Metode Pembayaran</string>
     <string name="select_product">Pilih Barang</string>
     <string name="total_payment">Total Biaya Pesanan</string>
+    <string name="original_cost">Biaya Asli Pesanan</string>
+    <string name="change_cost">Perubahan Biaya</string>
+    <string name="final_cost">Biaya Akhir Pesanan</string>
+    <string name="change_qty">Perubahan Jumlah Pesanan</string>
+
+    <string name="selected_data">Data Terpilih</string>
+    <string name="selected_num">Terpilih: %1$d produk</string>
+    <string name="cart">Keranjang</string>
+    <string name="catalog">Katalog</string>
+    <string name="stock_empty">Stok habis</string>
+    <string name="add_to_cart">Masukkan keranjang</string>
+    <string name="minus_order_qty">Kurangi jumlah pembelian produk %1$s</string>
+    <string name="plus_order_qty">Tambah jumlah pembelian produk %1$s</string>
+    <string name="qty">Qty</string>
+    <string name="price">Harga Jual</string>
+    <string name="total_price">Total Harga</string>
+    <string name="err_order_customer">Silakan pilih pelanggan terlebih dahulu!</string>
+    <string name="err_order_payment">Pelanggan yang mempunyai utang dilarang membayar secara tempo!</string>
+    <string name="err_order_product">Silakan pilih barang pesanan terlebih dahulu!</string>
+    <string name="open_history_order">Lihat Riwayat Pesanan</string>
 
     <string name="history">Riwayat</string>
     <string name="search_transaction">Cari transaksi</string>
     <string name="from_date">Dari tanggal</string>
     <string name="until_date">Sampai tanggal</string>
     <string name="activate_filter">Aktifkan filter</string>
+
+    <string name="status_not_found">Status tidak diketahui</string>
+    <string name="payment_not_paid_off">Belum Lunas</string>
+    <string name="payment_paid_off">Lunas</string>
+    <string name="status_wait_confirm">Menunggu Konfirmasi</string>
+    <string name="status_packed">Dikemas</string>
+    <string name="status_shipping">Dikirim</string>
+    <string name="status_delivered">Diterima</string>
+    <string name="status_confirmed">Dikonfirmasi</string>
+
+    <string name="invoice_detail">Invoice Pesanan</string>
+    <string name="time_detail">Tanggal Pesan</string>
+    <string name="created">Dibuat</string>
+    <string name="created_by">Dibuat: %1$s</string>
+    <string name="invoice">Invocie: %1$s</string>
+    <string name="copy_invoice">Salin Invoice pesanan</string>
+    <string name="copied_invoice">Invoice pesanan telah tersalin</string>
+    <string name="time">%1$s · %2$s</string>
+    <string name="warehouse_info">Informasi Gudang</string>
+    <string name="det_order">Detail Transaksi</string>
+    <string name="cancel_order">Batalkan Transaksi</string>
+    <string name="time_order_created">Waktu Pemesanan</string>
+    <string name="time_order_delivered">Waktu Pengiriman</string>
+    <string name="time_order_finished">Waktu Pesanan Selesai</string>
+    <string name="menu_open_maps">Buka Maps</string>
+    <string name="menu_call">Telepon</string>
+    <string name="menu_chat_wa">Chat WA</string>
+    <string name="menu_confirm_payment">Konfirmasi Pembayaran</string>
+    <string name="menu_retur">Ajukan Retur</string>
+    <string name="menu_potong_nota">Ajukan Potong Nota</string>
+    <string name="add_product_order">Tambah Barang Pesanan</string>
+    <string name="edit_product_order">Edit Barang Pesanan</string>
+    <string name="del_product_order">Hapus Barang Pesanan</string>
+    <string name="cancel_retur">Batalkan Retur</string>
+    <string name="cancel_potong_nota">Batalkan Potong Nota</string>
+    <string name="order_qty">x%1$d</string>
+    <string name="order_information">Informasi Pesanan</string>
+    <string name="cost_information">Informasi Biaya Pesanan</string>
+    <string name="ordered_product_detail">Detail Barang Pesanan</string>
+    <string name="retur_potong_nota_detail">Detail Pengajuan Retur &amp; Potong Nota</string>
+    <string name="final_total_price">Total Biaya Akhir\n Setelah Retur dan/atau Potong Nota</string>
+    <string name="retur">Retur</string>
+    <string name="potong_nota">Potong Nota</string>
+    <string name="replaced">Digantikan</string>
+    <string name="retur_status">Status Retur</string>
+    <string name="potong_nota_status">Status Potong Nota</string>
+    <string name="select_substitute">Pilih Pengganti</string>
+    <string name="payment">Pembayaran</string>
+    <string name="retur_potong_nota_schema">Skema Retur dan Potong Nota</string>
+    <string name="info_payment">Status pembayaran tidak bisa diubah jika sudah dinyatakan lunas.
+        Jika terdapat penambahan biaya diluar biaya pesanan atau kesalahan konfirmasi maka catat
+        secara manual dan laporkan ke atasan. Selain itu, jika sudah lunas dan terjadi retur maka
+        pelanggan diharuskan membayar secara langsung saat menerima barang retur. Jika belum lunas
+        dan terjadi retur maka akan ditagih diakhir bersamaan dengan tagihan pesanan.
+    </string>
+    <string name="info_schema">Setiap pesanan yang belum lunas dapat melakukan retur dan potong nota,
+        sedangkan jika sudah lunas maka hanya bisa melakukan retur saja. Retur atau potong nota
+        hanya dapat dilakukan sekali untuk setiap barang pesanan. Jika sebuah barang sudah dilakukan
+        retur maka sudah tidak bisa dilakukan potong nota pada barang tersebut dan sebaliknya.
+        Pada retur, setiap barang yang akan diretur hanya bisa digantikan oleh satu produk
+        barang pengganti saja dan total biayanya minimal setara atau lebih mahal.
+    </string>
+    <string name="info_cannot_pnr">
+        Tindakan retur atau potong nota tidak bisa dilakukan sebelum status pesanan diterima!
+    </string>
+    <string name="info_cannot_pn">
+        Tindakan potong nota tidak bisa dilakukan karena pembayaran sudah lunas!
+    </string>
+    <string name="err_payment">Pembayaran pesanan sudah lunas!</string>
+    <string name="confirm_payment_text">
+        Konfirmasi pembayaran pesanan hanya bisa dilakukan sekali dan tidak dapat diubah kembali.
+    </string>
+    <string name="err_del_product">Barang pesanan tidak bisa dibatalkan ketika sudah dikirim maupun diterima!</string>
+    <string name="confirm_del_product_text">
+        Pembatalan barang pesanan akan menghapus data barang dari pesanan dan mengubah informasi
+        pesanan. Tindakan ini tidak dapat dipulihkan.
+    </string>
+    <string name="err_edit_order">Transaksi pesanan tidak bisa diubah ketika sudah dikirim maupun diterima!</string>
+    <string name="err_del_order">Transaksi pesanan tidak dapat dibatalkan ketika sudah dikirim maupun diterima!</string>
+    <string name="success_payment">Pembayaran berhasil diganti menjadi lunas!</string>
+    <string name="success_delete_product">Hapus barang pesanan berhasil!</string>
+    <string name="success_delete_retur">Retur berhasil dibatalkan!</string>
+    <string name="success_delete_pn">Potong nota berhasil dibatalkan!</string>
+    <string name="err_del_retur">Retur tidak bisa dibatalkan ketika sudah dikonfirmasi maupun diterima!</string>
+    <string name="err_del_pn">Potong nota tidak bisa dibatalkan ketika sudah dikonfirmasi!</string>
+    <string name="confirm_del_retur_text">
+        Pembatalan retur akan menghapus data retur dari pesanan dan mengubah informasi pesanan.
+        Tindakan ini tidak dapat dipulihkan.
+    </string>
+    <string name="confirm_del_pn_text">
+        Pembatalan potong nota akan menghapus data potong nota dari pesanan dan mengubah
+        informasi pesanan. Tindakan ini tidak dapat dipulihkan.
+    </string>
+    <string name="minus_amount_selected">Kurangi jumlah terpilih produk %1$s</string>
+    <string name="plus_amount_selected">Tambah jumlah terpilih produk %1$s</string>
+    <string name="already_pnr">
+        Tidak dapat dipilih karena produk ini sudah pernah dilakukan retur atau potong nota!
+    </string>
+    <string name="err_minus_retur">Perubahan biaya untuk retur tidak boleh minus!</string>
+    <string name="err_fill_data_first">Lengkapi semua data terlebih dahulu!</string>
+    <string name="select_already">Sudah memilih</string>
+    <string name="select_not">Belum memilih</string>
+    <string name="choose">Pilih</string>
 </resources>

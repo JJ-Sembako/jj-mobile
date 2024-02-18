@@ -10,7 +10,7 @@ import com.dr.jjsembako.core.data.remote.response.account.DataRecoveryQuestion
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.DeactivateAccountRecoveryUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.GetAllRecoveryQuestionUseCase
-import com.dr.jjsembako.feature_setting.domain.usecase.GetDataAccountRecoveryUSeCase
+import com.dr.jjsembako.feature_setting.domain.usecase.GetDataAccountRecoveryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,14 +18,10 @@ import javax.inject.Inject
 @HiltViewModel
 class PemulihanAkunViewModel @Inject constructor(
     private val getAllRecoveryQuestionUseCase: GetAllRecoveryQuestionUseCase,
-    private val getDataAccountRecoveryUSeCase: GetDataAccountRecoveryUSeCase,
+    private val getDataAccountRecoveryUseCase: GetDataAccountRecoveryUseCase,
     private val activateAccountRecoveryUseCase: ActivateAccountRecoveryUseCase,
     private val deactivateAccountRecoveryUseCase: DeactivateAccountRecoveryUseCase
 ) : ViewModel() {
-
-    init {
-        fetchAccountRecoveryQuestions()
-    }
 
     private val _stateFirst = MutableLiveData<StateResponse?>()
     val stateFirst: LiveData<StateResponse?> = _stateFirst
@@ -54,12 +50,8 @@ class PemulihanAkunViewModel @Inject constructor(
     private val _idQuestion = MutableLiveData<String?>()
     val idQuestion: String? get() = _idQuestion.value
 
-    fun setStateFirst(state: StateResponse?) {
-        _stateFirst.value = state
-    }
-
-    fun setStateSecond(state: StateResponse?) {
-        _stateSecond.value = state
+    init {
+        fetchAccountRecoveryQuestions()
     }
 
     fun setStateThird(state: StateResponse?) {
@@ -84,8 +76,6 @@ class PemulihanAkunViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
@@ -93,7 +83,7 @@ class PemulihanAkunViewModel @Inject constructor(
 
     fun fetchAccountRecovery() {
         viewModelScope.launch {
-            getDataAccountRecoveryUSeCase.fetchAccountRecovery().collect {
+            getDataAccountRecoveryUseCase.fetchAccountRecovery().collect {
                 when (it) {
                     is Resource.Loading -> _stateSecond.value = StateResponse.LOADING
                     is Resource.Success -> {
@@ -110,8 +100,6 @@ class PemulihanAkunViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }
@@ -134,8 +122,6 @@ class PemulihanAkunViewModel @Inject constructor(
                             _message.value = it.message
                             _statusCode.value = it.status
                         }
-
-                        else -> {}
                     }
                 }
         }
@@ -157,8 +143,6 @@ class PemulihanAkunViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
-
-                    else -> {}
                 }
             }
         }

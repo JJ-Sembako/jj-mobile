@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Devices
@@ -31,8 +32,17 @@ import com.dr.jjsembako.feature_auth.presentation.recovery_question.PertanyaanPe
 import com.dr.jjsembako.feature_customer.presentation.add.TambahPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.detail.DetailPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.edit.EditPelangganScreen
+import com.dr.jjsembako.feature_customer.presentation.history_order.PesananPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
+import com.dr.jjsembako.feature_history.presentation.add_product_order.TambahBarangPesananScreen
+import com.dr.jjsembako.feature_history.presentation.detail.DetailTransaksi
+import com.dr.jjsembako.feature_history.presentation.edit_product_order.EditBarangPesananScreen
 import com.dr.jjsembako.feature_history.presentation.list.RiwayatScreen
+import com.dr.jjsembako.feature_history.presentation.potong_nota.create.PotongNotaScreen
+import com.dr.jjsembako.feature_history.presentation.potong_nota.select_product.PilihBarangPotongNotaScreen
+import com.dr.jjsembako.feature_history.presentation.retur.create.ReturScreen
+import com.dr.jjsembako.feature_history.presentation.retur.select_product.PilihBarangReturScreen
+import com.dr.jjsembako.feature_history.presentation.retur.select_substitute.PilihPenggantiReturScreen
 import com.dr.jjsembako.feature_home.presentation.HomeScreen
 import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananScreen
 import com.dr.jjsembako.feature_order.presentation.select_cust.PilihPelangganScreen
@@ -49,6 +59,7 @@ fun JJSembakoApp() {
     val token by tokenViewModel.token.collectAsState()
     val username by tokenViewModel.username.collectAsState()
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
     val activity = (LocalLifecycleOwner.current as ComponentActivity)
     val navController = rememberNavController()
     val startDestination = if (token.isEmpty()) Screen.Login.route else Screen.Home.route
@@ -187,7 +198,14 @@ fun JJSembakoApp() {
                     navController.navigate(Screen.BuatPesananPilihBarang.route) {
                         launchSingleTop = true
                     }
-                })
+                },
+                onNavigateToDetailTransaction = { id ->
+                    navController.navigate(Screen.DetailRiwayat.createRoute(id)) {
+                        popUpTo(Screen.BuatPesanan.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
 
         composable(Screen.BuatPesananPilihPelangan.route) {
@@ -273,6 +291,11 @@ fun JJSembakoApp() {
                         launchSingleTop = true
                     }
                 },
+                onNavigateToCustOrder = {
+                    navController.navigate(Screen.PesananPelanggan.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
                 openMaps = { url -> openMaps(context, url) },
                 call = { uri -> call(context, uri) },
                 chatWA = { url -> chatWA(context, url) }
@@ -290,8 +313,200 @@ fun JJSembakoApp() {
                 openMaps = { url -> openMaps(context, url) })
         }
 
+        composable(
+            route = Screen.PesananPelanggan.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+           PesananPelangganScreen(
+               idCust = id,
+               context = context,
+               clipboardManager = clipboardManager,
+               onNavigateBack = { navController.popBackStack() },
+               onNavigateToDetail = { idOrder ->
+                   navController.navigate(Screen.DetailRiwayat.createRoute(idOrder)) {
+                       launchSingleTop = true
+                   }
+               })
+        }
+
         composable(Screen.Riwayat.route) {
-            RiwayatScreen(onNavigateBack = { navController.popBackStack() })
+            RiwayatScreen(
+                context = context,
+                clipboardManager = clipboardManager,
+                onNavigateToDetail = { id ->
+                    navController.navigate(Screen.DetailRiwayat.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = Screen.DetailRiwayat.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            DetailTransaksi(
+                id = id,
+                context = context,
+                clipboardManager = clipboardManager,
+                openMaps = { url -> openMaps(context, url) },
+                call = { uri -> call(context, uri) },
+                chatWA = { url -> chatWA(context, url) },
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToAddProductOrder = {
+                    navController.navigate(Screen.TambahBarangPesanan.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToEditProductOrder = {
+                    navController.navigate(Screen.EditBarangPesanan.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToPotongNota = {
+                    navController.navigate(Screen.PotongNota.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToRetur = {
+                    navController.navigate(Screen.Retur.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.TambahBarangPesanan.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            TambahBarangPesananScreen(
+                id = id,
+                onNavigateBack = {
+                    navController.navigate(Screen.DetailRiwayat.createRoute(id)) {
+                        popUpTo(Screen.DetailRiwayat.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.EditBarangPesanan.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            EditBarangPesananScreen(
+                id = id,
+                onNavigateBack = {
+                    navController.navigate(Screen.DetailRiwayat.createRoute(id)) {
+                        popUpTo(Screen.DetailRiwayat.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.PotongNota.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            PotongNotaScreen(
+                id = id,
+                context = context,
+                clipboardManager = clipboardManager,
+                onNavigateBack = {
+                    navController.navigate(Screen.DetailRiwayat.createRoute(id)) {
+                        popUpTo(Screen.DetailRiwayat.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onSelectProduct = {
+                    navController.navigate(Screen.PotongNotaPilihBarang.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.PotongNotaPilihBarang.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            PilihBarangPotongNotaScreen(
+                id = id,
+                onNavigateBack = {
+                    navController.navigate(Screen.PotongNota.createRoute(id)) {
+                        popUpTo(Screen.PotongNota.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.Retur.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            ReturScreen(
+                id = id,
+                context = context,
+                clipboardManager = clipboardManager,
+                onNavigateBack = {
+                    navController.navigate(Screen.DetailRiwayat.createRoute(id)) {
+                        popUpTo(Screen.DetailRiwayat.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onSelectProduct = {
+                    navController.navigate(Screen.ReturPilihBarang.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                },
+                onSelectSubstitute = {
+                    navController.navigate(Screen.ReturPilihPengganti.createRoute(id)) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.ReturPilihBarang.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            PilihBarangReturScreen(
+                id = id,
+                onNavigateBack = {
+                    navController.navigate(Screen.Retur.createRoute(id)) {
+                        popUpTo(Screen.Retur.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.ReturPilihPengganti.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            val id = it.arguments?.getString("id") ?: ""
+            PilihPenggantiReturScreen(
+                onNavigateBack = {
+                    navController.navigate(Screen.Retur.createRoute(id)) {
+                        popUpTo(Screen.Retur.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
 
         composable(Screen.Performa.route) {

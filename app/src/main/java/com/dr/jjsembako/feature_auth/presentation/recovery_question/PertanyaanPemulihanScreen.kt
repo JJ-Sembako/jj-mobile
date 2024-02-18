@@ -53,10 +53,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
-import com.dr.jjsembako.core.presentation.components.ErrorScreen
-import com.dr.jjsembako.core.presentation.components.LoadingDialog
-import com.dr.jjsembako.core.presentation.components.LoadingScreen
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
+import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidAnswer
 import kotlinx.coroutines.launch
@@ -150,13 +150,13 @@ fun PertanyaanPemulihanContent(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
-    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
-    var question by rememberSaveable { mutableStateOf(recoveryQuestion) }
+    val question by rememberSaveable { mutableStateOf(recoveryQuestion) }
     var answer by rememberSaveable { mutableStateOf("") }
-    var isValidAnswer = rememberSaveable { mutableStateOf(false) }
-    var errMsgAnswer = rememberSaveable { mutableStateOf("") }
+    val isValidAnswer = rememberSaveable { mutableStateOf(false) }
+    val errMsgAnswer = rememberSaveable { mutableStateOf("") }
 
     val errQuestionNotFound = stringResource(R.string.err_question_not_found)
     val errAnswerMin3Char = stringResource(R.string.err_answer)

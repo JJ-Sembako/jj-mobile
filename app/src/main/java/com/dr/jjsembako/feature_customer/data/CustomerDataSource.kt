@@ -2,9 +2,11 @@ package com.dr.jjsembako.feature_customer.data
 
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
-import com.dr.jjsembako.core.data.remote.response.account.PostHandleLoginResponse
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.customer.DeleteHandleDeleteCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.customer.PostHandleCreateCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.customer.PutHandleUpdateCustomerResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +17,10 @@ import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class CustomerDataSource @Inject constructor(private val customerApiService: CustomerApiService) {
+class CustomerDataSource @Inject constructor(
+    private val customerApiService: CustomerApiService,
+    private val gson: Gson
+) {
 
     suspend fun handleCreateCustomer(
         name: String,
@@ -46,7 +51,7 @@ class CustomerDataSource @Inject constructor(private val customerApiService: Cus
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                        gson.fromJson(errorResponse, PostHandleCreateCustomerResponse::class.java)
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -74,7 +79,7 @@ class CustomerDataSource @Inject constructor(private val customerApiService: Cus
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                        gson.fromJson(errorResponse, GetFetchDetailCustomerResponse::class.java)
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -116,7 +121,7 @@ class CustomerDataSource @Inject constructor(private val customerApiService: Cus
 
                 if (errorResponse != null) {
                     val errorResponseObj =
-                        Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                        gson.fromJson(errorResponse, PutHandleUpdateCustomerResponse::class.java)
                     emit(Resource.Error(errorResponseObj.message, statusCode, null))
                 } else {
                     emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))
@@ -145,7 +150,10 @@ class CustomerDataSource @Inject constructor(private val customerApiService: Cus
 
                     if (errorResponse != null) {
                         val errorResponseObj =
-                            Gson().fromJson(errorResponse, PostHandleLoginResponse::class.java)
+                            gson.fromJson(
+                                errorResponse,
+                                DeleteHandleDeleteCustomerResponse::class.java
+                            )
                         emit(Resource.Error(errorResponseObj.message, statusCode, null))
                     } else {
                         emit(Resource.Error(errorMessage ?: "Unknown error", statusCode, null))

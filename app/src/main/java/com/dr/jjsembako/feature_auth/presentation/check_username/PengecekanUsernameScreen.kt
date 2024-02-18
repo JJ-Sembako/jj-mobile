@@ -54,10 +54,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.presentation.components.AlertErrorDialog
-import com.dr.jjsembako.core.presentation.components.LoadingDialog
-import com.dr.jjsembako.core.utils.isValidUsername
+import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
+import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.utils.isValidUsername
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -78,12 +78,12 @@ fun PengecekanUsernameScreen(
     val coroutineScope = rememberCoroutineScope()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
 
-    var showLoadingDialog = rememberSaveable { mutableStateOf(false) }
-    var showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
+    val showErrorDialog = rememberSaveable { mutableStateOf(false) }
 
     var username by rememberSaveable { mutableStateOf("") }
-    var isValidUsername = rememberSaveable { mutableStateOf(false) }
-    var errMsgUsername = rememberSaveable { mutableStateOf("") }
+    val isValidUsername = rememberSaveable { mutableStateOf(false) }
+    val errMsgUsername = rememberSaveable { mutableStateOf("") }
 
     val errUsernameConstraint = stringResource(R.string.err_username)
 

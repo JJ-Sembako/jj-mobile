@@ -26,13 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.model.Product
+import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
 fun ProductOnWarehouseInfo(
-    product: Product,
+    product: DataProduct,
     modifier: Modifier
 ) {
     OutlinedCard(
@@ -55,10 +55,10 @@ fun ProductOnWarehouseInfo(
 
 @Composable
 private fun ProductImage(
-    product: Product,
+    product: DataProduct,
     modifier: Modifier
 ) {
-    if (product.image.isEmpty()) {
+    if (product.image.isEmpty() || product.image.contains("default")) {
         Image(
             painter = painterResource(id = R.drawable.ic_default),
             contentDescription = stringResource(R.string.product_description, product.name),
@@ -73,7 +73,7 @@ private fun ProductImage(
         AsyncImage(
             model = product.image,
             contentDescription = stringResource(R.string.product_description, product.name),
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
                 .padding(8.dp)
@@ -86,7 +86,7 @@ private fun ProductImage(
 
 @Composable
 private fun ProductInfo(
-    product: Product,
+    product: DataProduct,
     modifier: Modifier
 ) {
     Column {
@@ -108,7 +108,7 @@ private fun ProductInfo(
             )
         }
         Text(
-            text = stringResource(R.string.stock, product.stock, product.unit.lowercase()),
+            text = stringResource(R.string.stock, product.stockInUnit, product.unit.lowercase()),
             fontSize = 12.sp
         )
         Text(
@@ -128,15 +128,17 @@ private fun ProductInfo(
 private fun ProductOnWarehouseInfoPreview() {
     JJSembakoTheme {
         ProductOnWarehouseInfo(
-            product = Product(
+            product = DataProduct(
                 id = "bc3bbd9e",
                 name = "Air Cahaya",
-                stock = 256,
+                image = "",
+                category = "Air Mineral",
+                unit = "karton",
                 standardPrice = 55000,
                 amountPerUnit = 16,
-                image = "",
-                unit = "karton",
-                category = "Air Mineral"
+                stockInPcs = 256,
+                stockInUnit = 16,
+                stockInPcsRemaining = 0
             ),
             modifier = Modifier
         )

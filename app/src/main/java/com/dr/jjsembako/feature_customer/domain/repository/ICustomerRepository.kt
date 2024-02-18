@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
 import com.dr.jjsembako.core.data.remote.response.customer.DeleteHandleDeleteCustomerResponse
+import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import kotlinx.coroutines.flow.Flow
 
 interface ICustomerRepository {
@@ -30,4 +31,12 @@ interface ICustomerRepository {
     ): Flow<Resource<out DataCustomer?>>
 
     suspend fun handleDeleteCustomer(id: String): Flow<Resource<out DeleteHandleDeleteCustomerResponse>>
+
+    suspend fun fetchOrders(
+        search: String? = null,
+        minDate: String? = null,
+        maxDate: String? = null,
+        me: Int? = null,
+        customerId: String
+    ): Flow<PagingData<OrderDataItem>>
 }
