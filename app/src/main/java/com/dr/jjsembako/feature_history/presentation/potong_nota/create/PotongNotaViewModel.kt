@@ -56,7 +56,7 @@ class PotongNotaViewModel @Inject constructor(
     private val _selectedData = MutableLiveData<SelectPNRItem?>()
     val selectedData: LiveData<SelectPNRItem?> get() = _selectedData
 
-    private val _canceledData = MutableLiveData<CanceledStore>()
+    private val _canceledData = MutableLiveData<CanceledStore?>()
     private val canceledData: LiveData<CanceledStore?> get() = _canceledData
 
     private var _id: String? = null
