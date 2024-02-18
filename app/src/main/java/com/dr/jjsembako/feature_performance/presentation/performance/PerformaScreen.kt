@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.getCurrentYearInGmt7
+import com.dr.jjsembako.feature_performance.presentation.components.YearPickerDialog
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -61,6 +62,7 @@ fun PerformaScreen(
 
     val selectedYear = rememberSaveable { mutableIntStateOf(0) }
     val thisYear = rememberSaveable { mutableIntStateOf(0) }
+    val maxRange = 10
     val showYearPickerDialog = rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -113,50 +115,52 @@ fun PerformaScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowCircleLeft,
-                    contentDescription = stringResource(R.string.min_year),
-                    tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
-                    else MaterialTheme.colorScheme.tertiary,
-                    modifier = modifier
-                        .size(32.dp)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = {
-                                if (selectedYear.intValue != 2023) selectedYear.intValue =
-                                    selectedYear.intValue - 1
-                            })
-                )
+                IconButton(
+                    enabled = selectedYear.intValue != 2023,
+                    onClick = {selectedYear.intValue = selectedYear.intValue - 1 }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowCircleLeft,
+                        contentDescription = stringResource(R.string.min_year),
+                        tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
+                        else MaterialTheme.colorScheme.tertiary,
+                        modifier = modifier.size(32.dp)
+                    )
+                }
                 Spacer(modifier = modifier.width(32.dp))
                 Text(
-                    text = selectedYear.intValue.toString(),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = modifier.wrapContentSize(Alignment.Center)
+                    text = selectedYear.intValue.toString(), fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp, textAlign = TextAlign.Center,
+                    modifier = modifier
+                        .wrapContentSize(Alignment.Center)
+                        .clickable {
+                            showYearPickerDialog.value = true
+                        }
                 )
                 Spacer(modifier = modifier.width(32.dp))
-                Icon(
-                    imageVector = Icons.Default.ArrowCircleRight,
-                    contentDescription = stringResource(R.string.add_year),
-                    tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
-                    else MaterialTheme.colorScheme.tertiary,
-                    modifier = modifier
-                        .size(32.dp)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = {
-                                if (selectedYear.intValue != (thisYear.intValue + 10)) selectedYear.intValue =
-                                    selectedYear.intValue + 1
-                            })
-                )
+                IconButton(
+                    enabled = selectedYear.intValue != (thisYear.intValue + maxRange),
+                    onClick = {selectedYear.intValue = selectedYear.intValue + 1 }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowCircleRight,
+                        contentDescription = stringResource(R.string.add_year),
+                        tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
+                        else MaterialTheme.colorScheme.tertiary,
+                        modifier = modifier.size(32.dp)
+                    )
+                }
             }
 
             if (showYearPickerDialog.value) {
                 Log.d(tag, "Show Year Picker Dialog")
-                // YearPickerDialog
+                YearPickerDialog(
+                    thisYear = thisYear.intValue,
+                    maxRange = maxRange,
+                    selectedYear = selectedYear,
+                    showDialog = showYearPickerDialog,
+                    modifier = modifier
+                )
             }
         }
     }

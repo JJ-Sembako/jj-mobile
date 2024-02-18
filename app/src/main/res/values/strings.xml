@@ -245,4 +245,5 @@
     <string name="performance">Performa</string>
     <string name="add_year">Tambah tahun</string>
     <string name="min_year">Kurangi tahun</string>
+    <string name="choose_year">Pilih Tahun</string>
 </resources>
