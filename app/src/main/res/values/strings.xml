@@ -241,4 +241,8 @@
     <string name="select_already">Sudah memilih</string>
     <string name="select_not">Belum memilih</string>
     <string name="choose">Pilih</string>
+
+    <string name="performance">Performa</string>
+    <string name="add_year">Tambah tahun</string>
+    <string name="min_year">Kurangi tahun</string>
 </resources>

@@ -3,7 +3,6 @@ package com.dr.jjsembako
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -47,6 +46,7 @@ import com.dr.jjsembako.feature_home.presentation.HomeScreen
 import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananScreen
 import com.dr.jjsembako.feature_order.presentation.select_cust.PilihPelangganScreen
 import com.dr.jjsembako.feature_order.presentation.select_product.PilihBarangScreen
+import com.dr.jjsembako.feature_performance.presentation.performance.PerformaScreen
 import com.dr.jjsembako.feature_setting.presentation.change_password.GantiKataSandiScreen
 import com.dr.jjsembako.feature_setting.presentation.recovery.PemulihanAkunScreen
 import com.dr.jjsembako.feature_setting.presentation.setting.PengaturanScreen
@@ -514,7 +514,7 @@ fun JJSembakoApp() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Performa")
+                PerformaScreen(onNavigateBack = { navController.popBackStack() })
             }
         }
 

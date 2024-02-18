@@ -231,3 +231,11 @@ fun convertTimestampToArray(timestamp: String): Array<String> {
         return arrayOf("ERR CONVERT DATE", "ERR CONVERT TIME")
     }
 }
+
+/**
+ * Toolkits Performa
+ */
+fun getCurrentYearInGmt7(): Int {
+    val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+7"))
+    return calendar.get(Calendar.YEAR)
+}
