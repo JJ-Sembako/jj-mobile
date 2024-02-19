@@ -139,7 +139,6 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.2.0")
 
     //chart
-    implementation("co.yml:ycharts:2.1.0")
 }
 
 // Datastore schema

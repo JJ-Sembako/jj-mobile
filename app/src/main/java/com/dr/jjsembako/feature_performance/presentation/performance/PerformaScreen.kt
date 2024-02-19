@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -32,13 +33,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
-import com.dr.jjsembako.core.utils.getCurrentYearInGmt7
-import com.dr.jjsembako.feature_performance.presentation.components.HeaderYearSection
-import com.dr.jjsembako.feature_performance.presentation.components.YearPickerDialog
+import com.dr.jjsembako.core.utils.getCurrentYearMonthInGmt7
+import com.dr.jjsembako.feature_performance.presentation.components.HeaderMonthYearSection
+import com.dr.jjsembako.feature_performance.presentation.components.MonthYearPickerDialog
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -51,14 +55,18 @@ fun PerformaScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val selectedYear = rememberSaveable { mutableIntStateOf(0) }
+    val selectedMonth = rememberSaveable { mutableIntStateOf(0) }
     val thisYear = rememberSaveable { mutableIntStateOf(0) }
     val maxRange = 10
     val showYearPickerDialog = rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        val year = getCurrentYearInGmt7()
-        selectedYear.intValue = year
-        thisYear.intValue = year
+        if (thisYear.intValue == 0) {
+            val time = getCurrentYearMonthInGmt7()
+            selectedYear.intValue = time[0]
+            thisYear.intValue = time[0]
+            selectedMonth.intValue = time[1]
+        }
     }
 
     Scaffold(
@@ -98,10 +106,17 @@ fun PerformaScreen(
                 .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            HeaderYearSection(
+            Text(
+                text = stringResource(R.string.omzet_last_year), fontWeight = FontWeight.Bold,
+                fontSize = 18.sp, textAlign = TextAlign.Center,
+                modifier = modifier.wrapContentSize(Alignment.Center).padding(top = 16.dp)
+            )
+            Spacer(modifier = modifier.height(32.dp))
+            HeaderMonthYearSection(
                 thisYear = thisYear.intValue,
                 maxRange = maxRange,
                 selectedYear = selectedYear,
+                selectedMonth = selectedMonth,
                 showDialog = showYearPickerDialog,
                 modifier = modifier
             )
@@ -109,10 +124,11 @@ fun PerformaScreen(
 
             if (showYearPickerDialog.value) {
                 Log.d(tag, "Show Year Picker Dialog")
-                YearPickerDialog(
+                MonthYearPickerDialog(
                     thisYear = thisYear.intValue,
                     maxRange = maxRange,
                     selectedYear = selectedYear,
+                    selectedMonth = selectedMonth,
                     showDialog = showYearPickerDialog,
                     modifier = modifier
                 )

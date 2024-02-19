@@ -29,13 +29,23 @@ import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 
 @Composable
-fun HeaderYearSection(
+fun HeaderMonthYearSection(
     thisYear: Int,
     maxRange: Int,
     selectedYear: MutableState<Int>,
+    selectedMonth: MutableState<Int>,
     showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
+    val month = listOf(
+        stringResource(R.string.month_01), stringResource(R.string.month_02),
+        stringResource(R.string.month_03), stringResource(R.string.month_04),
+        stringResource(R.string.month_05), stringResource(R.string.month_06),
+        stringResource(R.string.month_07), stringResource(R.string.month_08),
+        stringResource(R.string.month_09), stringResource(R.string.month_10),
+        stringResource(R.string.month_11), stringResource(R.string.month_12),
+    )
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -44,12 +54,19 @@ fun HeaderYearSection(
         horizontalArrangement = Arrangement.Center
     ) {
         IconButton(
-            enabled = selectedYear.value != 2023,
-            onClick = { selectedYear.value = selectedYear.value - 1 }
+            enabled = !(selectedYear.value == 2023 && selectedMonth.value == 0),
+            onClick = {
+                if (selectedMonth.value == 0) {
+                    selectedYear.value = selectedYear.value - 1
+                    selectedMonth.value = 11
+                } else {
+                    selectedMonth.value = selectedMonth.value - 1
+                }
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowCircleLeft,
-                contentDescription = stringResource(R.string.min_year),
+                contentDescription = stringResource(R.string.min_time),
                 tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
                 else MaterialTheme.colorScheme.tertiary,
                 modifier = modifier.size(32.dp)
@@ -57,7 +74,7 @@ fun HeaderYearSection(
         }
         Spacer(modifier = modifier.width(32.dp))
         Text(
-            text = selectedYear.value.toString(), fontWeight = FontWeight.Bold,
+            text = "${month[selectedMonth.value]} ${selectedYear.value}", fontWeight = FontWeight.Bold,
             fontSize = 18.sp, textAlign = TextAlign.Center,
             modifier = modifier
                 .wrapContentSize(Alignment.Center)
@@ -65,12 +82,18 @@ fun HeaderYearSection(
         )
         Spacer(modifier = modifier.width(32.dp))
         IconButton(
-            enabled = selectedYear.value != (thisYear + maxRange),
-            onClick = { selectedYear.value = selectedYear.value + 1 }
+            enabled = !(selectedYear.value == (thisYear + maxRange) && selectedMonth.value == 11),
+            onClick = {
+                if (selectedMonth.value == 11){
+                    selectedYear.value = selectedYear.value + 1
+                    selectedMonth.value = 0
+                } else {
+                    selectedMonth.value = selectedMonth.value + 1                }
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowCircleRight,
-                contentDescription = stringResource(R.string.add_year),
+                contentDescription = stringResource(R.string.add_time),
                 tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
                 else MaterialTheme.colorScheme.tertiary,
                 modifier = modifier.size(32.dp)

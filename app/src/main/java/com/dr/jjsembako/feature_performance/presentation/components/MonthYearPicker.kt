@@ -5,13 +5,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -40,21 +44,34 @@ import com.dr.jjsembako.core.presentation.theme.dialogMinWidth
 import kotlinx.coroutines.launch
 
 @Composable
-fun YearPickerDialog(
+fun MonthYearPickerDialog(
     thisYear: Int,
     maxRange: Int,
     selectedYear: MutableState<Int>,
+    selectedMonth: MutableState<Int>,
     showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
     val yearRange = 2023..(thisYear + maxRange)
-    val lazyListState = rememberLazyListState()
+    val lazyListStateYear = rememberLazyListState()
+    val lazyListStateMonth = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    val month = listOf(
+        stringResource(R.string.month_01), stringResource(R.string.month_02),
+        stringResource(R.string.month_03), stringResource(R.string.month_04),
+        stringResource(R.string.month_05), stringResource(R.string.month_06),
+        stringResource(R.string.month_07), stringResource(R.string.month_08),
+        stringResource(R.string.month_09), stringResource(R.string.month_10),
+        stringResource(R.string.month_11), stringResource(R.string.month_12),
+    )
 
     SideEffect {
         coroutineScope.launch {
             val indexOfSelectedYear = yearRange.indexOf(selectedYear.value)
-            lazyListState.scrollToItem(indexOfSelectedYear)
+            val indexOfSelectedMonth = selectedMonth.value
+            lazyListStateYear.scrollToItem(indexOfSelectedYear)
+            lazyListStateMonth.scrollToItem(indexOfSelectedMonth)
         }
     }
 
@@ -68,37 +85,64 @@ fun YearPickerDialog(
                 .sizeIn(
                     minWidth = dialogMinWidth,
                     maxWidth = dialogMaxWidth
-                )
-                .padding(24.dp),
+                ),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = modifier.height(16.dp))
-            Text(
-                text = stringResource(R.string.choose_year),
-                fontWeight = FontWeight.Medium,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                modifier = modifier.wrapContentSize(Alignment.Center)
-            )
-            Spacer(modifier = modifier.height(24.dp))
-
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier.size(100.dp, 150.dp),
-                verticalArrangement = Arrangement.Center,
+            Column(
+                modifier
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.secondary)
+                    .padding(16.dp), verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                yearRange.forEach { year ->
-                    item {
-                        YearPickerItem(year, year == selectedYear.value) {
-                            selectedYear.value = year
-                            showDialog.value = false
+                Text(
+                    text = stringResource(R.string.choose_time),
+                    fontWeight = FontWeight.Normal,textAlign = TextAlign.Center,
+                    fontSize = 10.sp, color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = modifier.wrapContentSize(Alignment.Center)
+                )
+                Text(
+                    text = "${month[selectedMonth.value]} ${selectedYear.value}",
+                    fontWeight = FontWeight.Medium, textAlign = TextAlign.Center,
+                    fontSize = 32.sp, color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = modifier.wrapContentSize(Alignment.Center)
+                )
+            }
+            Spacer(modifier = modifier.height(24.dp))
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                LazyColumn(
+                    state = lazyListStateMonth,
+                    modifier = Modifier.size(100.dp, 150.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    itemsIndexed(month) { index, monthItem ->
+                        MonthPickerItem(monthItem, index == selectedMonth.value) {
+                            selectedMonth.value = index
+                        }
+
+                    }
+                }
+                Spacer(modifier = modifier.width(16.dp))
+                LazyColumn(
+                    state = lazyListStateYear,
+                    modifier = Modifier.size(100.dp, 150.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    yearRange.forEach { year ->
+                        item {
+                            YearPickerItem(year, year == selectedYear.value) {
+                                selectedYear.value = year
+                            }
                         }
                     }
                 }
             }
-
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = { showDialog.value = false },
@@ -142,6 +186,37 @@ private fun YearPickerItem(
         ) {
             Text(
                 year.toString(),
+                fontSize = 18.sp,
+                color = if (selected)
+                    MaterialTheme.colorScheme.onPrimary
+                else
+                    MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+private fun MonthPickerItem(
+    month: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Box(contentAlignment = Alignment.Center) {
+        Box(
+            Modifier
+                .size(88.dp, 48.dp)
+                .background(
+                    if (selected)
+                        MaterialTheme.colorScheme.primary
+                    else
+                        MaterialTheme.colorScheme.surface
+                )
+                .clickable { onClick() },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                month,
                 fontSize = 18.sp,
                 color = if (selected)
                     MaterialTheme.colorScheme.onPrimary

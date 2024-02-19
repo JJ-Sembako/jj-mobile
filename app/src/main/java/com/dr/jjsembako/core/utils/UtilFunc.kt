@@ -235,7 +235,7 @@ fun convertTimestampToArray(timestamp: String): Array<String> {
 /**
  * Toolkits Performa
  */
-fun getCurrentYearInGmt7(): Int {
+fun getCurrentYearMonthInGmt7(): List<Int> {
     val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+7"))
-    return calendar.get(Calendar.YEAR)
+    return listOf(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH))
 }
