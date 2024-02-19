@@ -43,6 +43,7 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.getCurrentYearMonthInGmt7
 import com.dr.jjsembako.feature_performance.presentation.components.HeaderMonthYearSection
 import com.dr.jjsembako.feature_performance.presentation.components.MonthYearPickerDialog
+import com.dr.jjsembako.feature_performance.presentation.components.OmzetChartSection
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -109,8 +110,12 @@ fun PerformaScreen(
             Text(
                 text = stringResource(R.string.omzet_last_year), fontWeight = FontWeight.Bold,
                 fontSize = 18.sp, textAlign = TextAlign.Center,
-                modifier = modifier.wrapContentSize(Alignment.Center).padding(top = 16.dp)
+                modifier = modifier
+                    .wrapContentSize(Alignment.Center)
+                    .padding(top = 16.dp)
             )
+            Spacer(modifier = modifier.height(32.dp))
+            OmzetChartSection(modifier)
             Spacer(modifier = modifier.height(32.dp))
             HeaderMonthYearSection(
                 thisYear = thisYear.intValue,

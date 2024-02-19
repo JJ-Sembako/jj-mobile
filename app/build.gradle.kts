@@ -139,6 +139,9 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.2.0")
 
     //chart
+    implementation("com.patrykandpatrick.vico:compose:1.13.1")
+    implementation("com.patrykandpatrick.vico:compose-m3:1.13.1")
+    implementation("com.patrykandpatrick.vico:core:1.13.1")
 }
 
 // Datastore schema

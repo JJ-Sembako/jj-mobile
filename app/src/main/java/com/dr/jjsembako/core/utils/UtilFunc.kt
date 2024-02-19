@@ -65,6 +65,29 @@ fun formatRupiah(total: Long): String {
     return "Rp${formatter.format(total)},00"
 }
 
+fun formatShortRupiah(total: Long): String {
+    val formatter = NumberFormat.getInstance(Locale("id", "ID"))
+    formatter.maximumFractionDigits = 1
+    val absTotal = Math.abs(total)
+    return when {
+        absTotal >= 1_000_000_000 -> {
+            val miliar = absTotal / 1_000_000_000.0
+            formatter.format(miliar).replace(",", ".") + "M"
+        }
+        absTotal >= 1_000_000 -> {
+            val juta = absTotal / 1_000_000.0
+            formatter.format(juta).replace(",", ".") + "Jt"
+        }
+        absTotal >= 1_000 -> {
+            val ribu = absTotal / 1_000.0
+            formatter.format(ribu).replace(",", ".") + "Rb"
+        }
+        else -> {
+            formatter.format(total)
+        }
+    }
+}
+
 fun formatTotal(total: Int): String {
     val formatter = NumberFormat.getInstance(Locale("id", "ID"))
     return formatter.format(total)
