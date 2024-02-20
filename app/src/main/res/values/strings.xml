@@ -241,4 +241,27 @@
     <string name="select_already">Sudah memilih</string>
     <string name="select_not">Belum memilih</string>
     <string name="choose">Pilih</string>
+
+    <string name="performance">Performa</string>
+    <string name="add_time">Tambah waktu</string>
+    <string name="min_time">Kurangi waktu</string>
+    <string name="choose_time">Pilih Waktu</string>
+    <string name="no_omzet_data">Belum Terdapat Data Omzet</string>
+    <string name="omzet_last_year">Omzet\n Setahun Terakhir</string>
+    <string name="month_01">JAN</string>
+    <string name="month_02">FEB</string>
+    <string name="month_03">MAR</string>
+    <string name="month_04">APR</string>
+    <string name="month_05">MEI</string>
+    <string name="month_06">JUN</string>
+    <string name="month_07">JUL</string>
+    <string name="month_08">AGU</string>
+    <string name="month_09">SEP</string>
+    <string name="month_10">OKT</string>
+    <string name="month_11">NOV</string>
+    <string name="month_12">DES</string>
+    <string name="omzet_monthly">Omzet bulan ini: %1$s</string>
+    <string name="total_selled_monthly">Total penjualan bulan ini: %1$d item</string>
+    <string name="selled_info">Terjual:</string>
+    <string name="selled_info_det">%1$d %2$s</string>
 </resources>
