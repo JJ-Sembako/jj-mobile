@@ -50,6 +50,12 @@ import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustInteractor
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.HandleCreateOrderInteractor
 import com.dr.jjsembako.feature_order.domain.usecase.HandleCreateOrderUseCase
+import com.dr.jjsembako.feature_performance.domain.usecase.FetchOmzetInteactor
+import com.dr.jjsembako.feature_performance.domain.usecase.FetchOmzetMonthlyInteractor
+import com.dr.jjsembako.feature_performance.domain.usecase.FetchOmzetMonthlyUseCase
+import com.dr.jjsembako.feature_performance.domain.usecase.FetchOmzetUseCase
+import com.dr.jjsembako.feature_performance.domain.usecase.FetchSelledProductMonthlyInteractor
+import com.dr.jjsembako.feature_performance.domain.usecase.FetchSelledProductMonthlyUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryInteractor
 import com.dr.jjsembako.feature_setting.domain.usecase.ActivateAccountRecoveryUseCase
 import com.dr.jjsembako.feature_setting.domain.usecase.ChangePasswordInteractor
@@ -213,5 +219,20 @@ abstract class AppModule {
     @Binds
     @ViewModelScoped
     abstract fun provideHandleDeleteReturUseCase(handleDeleteReturUseInteractor: HandleDeleteReturInteractor): HandleDeleteReturUseCase
+
+    /****************************
+     * Performance
+     ***************************/
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchOmzetUseCase(fetchOmzetInteactor: FetchOmzetInteactor): FetchOmzetUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchOmzetMonthlyUseCase(fetchOmzetMonthlyIteractor: FetchOmzetMonthlyInteractor): FetchOmzetMonthlyUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideFetchSelledProductMonthlyUseCase(fetchSelledProductMonthlyInteractor: FetchSelledProductMonthlyInteractor): FetchSelledProductMonthlyUseCase
 
 }

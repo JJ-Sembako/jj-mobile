@@ -6,6 +6,7 @@ import com.dr.jjsembako.core.data.remote.network.AccountApiService
 import com.dr.jjsembako.core.data.remote.network.CanceledApiService
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
 import com.dr.jjsembako.core.data.remote.network.OrderApiService
+import com.dr.jjsembako.core.data.remote.network.PerformanceApiService
 import com.dr.jjsembako.core.data.remote.network.ProductApiService
 import com.dr.jjsembako.core.data.remote.network.ReturApiService
 import com.google.gson.Gson
@@ -104,5 +105,10 @@ class NetworkModule {
     @Provides
     fun provideCanceledService(retrofit: Retrofit): CanceledApiService {
         return retrofit.create(CanceledApiService::class.java)
+    }
+
+    @Provides
+    fun providePerformanceService(retrofit: Retrofit): PerformanceApiService {
+        return retrofit.create(PerformanceApiService::class.java)
     }
 }

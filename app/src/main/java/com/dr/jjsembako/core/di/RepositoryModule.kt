@@ -12,6 +12,8 @@ import com.dr.jjsembako.feature_history.domain.repository.IReturRepository
 import com.dr.jjsembako.feature_order.data.OrderRepository
 import com.dr.jjsembako.feature_order.domain.repository.IOrderRepository
 import com.dr.jjsembako.feature_order.domain.repository.ISelectCustRepository
+import com.dr.jjsembako.feature_performance.data.PerformanceRepository
+import com.dr.jjsembako.feature_performance.domain.repository.IPerformanceRepository
 import com.dr.jjsembako.feature_setting.data.SettingRepository
 import com.dr.jjsembako.feature_setting.domain.repository.IRecoveryRepository
 import com.dr.jjsembako.feature_setting.domain.repository.ISettingRepository
@@ -52,5 +54,8 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun provideReturRepository(historyRepository: HistoryRepository): IReturRepository
+
+    @Binds
+    abstract fun providePerformanceRepository(performanceRepository: PerformanceRepository): IPerformanceRepository
 
 }
