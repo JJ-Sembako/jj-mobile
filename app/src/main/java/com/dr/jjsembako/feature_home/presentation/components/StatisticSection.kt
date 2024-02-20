@@ -21,11 +21,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.utils.formatTotal
+import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
-fun StatisticSection(totalPesanan: Int = 0, totalBarang: Int = 0, modifier: Modifier) {
+fun StatisticSection(
+    totalPesanan: Int = 0, totalBarang: Int = 0,
+    stateSecond: StateResponse? = null,
+    stateFourth: StateResponse? = null,
+    modifier: Modifier
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -33,13 +38,18 @@ fun StatisticSection(totalPesanan: Int = 0, totalBarang: Int = 0, modifier: Modi
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        StatisticCard(totalPesanan, true, modifier)
-        StatisticCard(totalBarang, false, modifier)
+        StatisticCard(totalPesanan, true, stateSecond, stateFourth, modifier)
+        StatisticCard(totalBarang, false, stateSecond, stateFourth, modifier)
     }
 }
 
 @Composable
-private fun StatisticCard(total: Int, isPesanan: Boolean, modifier: Modifier) {
+private fun StatisticCard(
+    total: Int, isPesanan: Boolean,
+    stateSecond: StateResponse? = null,
+    stateFourth: StateResponse? = null,
+    modifier: Modifier
+) {
     val text = if (isPesanan) {
         stringResource(R.string.orders_made_this_month)
     } else stringResource(R.string.items_sold_this_month)
@@ -60,11 +70,27 @@ private fun StatisticCard(total: Int, isPesanan: Boolean, modifier: Modifier) {
                 fontSize = 14.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
-            Text(
-                text = formatTotal(total),
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp
-            )
+            if(stateFourth == StateResponse.ERROR && isPesanan) {
+                Text(
+                    text = stringResource(R.string.error_string),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold, fontSize = 24.sp,
+                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
+                )
+            } else if(stateSecond == StateResponse.ERROR && !isPesanan) {
+                Text(
+                    text = stringResource(R.string.error_string),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold, fontSize = 24.sp,
+                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
+                )
+            } else {
+                Text(
+                    text = total.toString(),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp
+                )
+            }
         }
     }
 }

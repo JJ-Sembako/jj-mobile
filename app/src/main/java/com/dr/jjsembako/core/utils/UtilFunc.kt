@@ -89,11 +89,6 @@ fun formatShortRupiah(total: Long): String {
     }
 }
 
-fun formatTotal(total: Int): String {
-    val formatter = NumberFormat.getInstance(Locale("id", "ID"))
-    return formatter.format(total)
-}
-
 /**
  * Toolkits Pemulihan
  */

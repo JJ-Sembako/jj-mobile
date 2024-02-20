@@ -44,6 +44,14 @@ import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleCreateReturIn
 import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleCreateReturUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleDeleteReturInteractor
 import com.dr.jjsembako.feature_history.domain.usecase.retur.HandleDeleteReturUseCase
+import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOmzetInteractor
+import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOmzetUseCase
+import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOrdersInteractor
+import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOrdersMonthlyInteractor
+import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOrdersMonthlyUseCase
+import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOrdersUseCase
+import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchSelledProductInteractor
+import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchSelledProductUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustInteractor
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustInteractor
@@ -229,10 +237,29 @@ abstract class AppModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun provideFetchOmzetMonthlyUseCase(fetchOmzetMonthlyIteractor: FetchOmzetMonthlyInteractor): FetchOmzetMonthlyUseCase
+    abstract fun provideFetchOmzetMonthlyUseCase(fetchOmzetMonthlyInteractor: FetchOmzetMonthlyInteractor): FetchOmzetMonthlyUseCase
 
     @Binds
     @ViewModelScoped
     abstract fun provideFetchSelledProductMonthlyUseCase(fetchSelledProductMonthlyInteractor: FetchSelledProductMonthlyInteractor): FetchSelledProductMonthlyUseCase
+
+    /****************************
+     * Home
+     ***************************/
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHomeFetchOmzetUseCase(homeFetchOmzetInteractor: HomeFetchOmzetInteractor): HomeFetchOmzetUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHomeFetchSelledProductUseCase(homeFetchSelledProductInteractor: HomeFetchSelledProductInteractor): HomeFetchSelledProductUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHomeFetchOrdersUseCase(homeFetchOrdersInteractor: HomeFetchOrdersInteractor): HomeFetchOrdersUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideHomeFetchOrdersMonthlyUseCase(homeFetchOrdersMonthlyInteractor: HomeFetchOrdersMonthlyInteractor): HomeFetchOrdersMonthlyUseCase
 
 }

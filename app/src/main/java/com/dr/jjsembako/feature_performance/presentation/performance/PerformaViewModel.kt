@@ -157,7 +157,7 @@ class PerformaViewModel @Inject constructor(
                     is Resource.Loading -> {
                         if(dataSelledProductMonthly.value.isNullOrEmpty()) {
                             _stateThird.value = StateResponse.LOADING
-                        } else _stateRefresh.value = StateResponse.SUCCESS
+                        }
                     }
 
                     is Resource.Success -> {

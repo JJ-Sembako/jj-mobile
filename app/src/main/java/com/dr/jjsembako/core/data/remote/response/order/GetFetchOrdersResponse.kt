@@ -17,6 +17,9 @@ data class GetFetchOrdersResponse(
 
     @field:SerializedName("count")
     val count: Int? = null,
+
+    @field:SerializedName("totalData")
+    val totalData: Int? = null,
 )
 
 data class OrderDataItem(

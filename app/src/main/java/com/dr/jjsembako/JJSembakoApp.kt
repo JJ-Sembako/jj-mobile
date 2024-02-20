@@ -142,6 +142,13 @@ fun JJSembakoApp() {
             } else {
                 HomeScreen(
                     username = username,
+                    context = context,
+                    clipboardManager = clipboardManager,
+                    onNavigateToDetail = { id ->
+                        navController.navigate(Screen.DetailRiwayat.createRoute(id)) {
+                            launchSingleTop = true
+                        }
+                    },
                     onNavigateToCreateOrder = {
                         navController.navigate(Screen.BuatPesanan.route) {
                             launchSingleTop = true
