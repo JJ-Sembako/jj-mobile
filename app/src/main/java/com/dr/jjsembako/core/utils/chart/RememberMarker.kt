@@ -1,6 +1,8 @@
 package com.dr.jjsembako.core.utils.chart
 
 import android.graphics.Typeface
+import android.text.Layout
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -14,7 +16,6 @@ import com.patrykandpatrick.vico.compose.component.textComponent
 import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
 import com.patrykandpatrick.vico.core.chart.dimensions.HorizontalDimensions
 import com.patrykandpatrick.vico.core.chart.insets.Insets
-import com.patrykandpatrick.vico.core.component.marker.MarkerComponent
 import com.patrykandpatrick.vico.core.component.shape.DashedShape
 import com.patrykandpatrick.vico.core.component.shape.ShapeComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
@@ -25,7 +26,7 @@ import com.patrykandpatrick.vico.core.extension.copyColor
 import com.patrykandpatrick.vico.core.marker.Marker
 
 @Composable
-internal fun rememberMarker(): Marker {
+internal fun rememberMarker(labelXString: List<String>): Marker {
     val labelBackgroundColor = MaterialTheme.colorScheme.surface
     val labelBackground = remember(labelBackgroundColor) {
         ShapeComponent(labelBackgroundShape, labelBackgroundColor.toArgb()).setShadow(
@@ -34,12 +35,24 @@ internal fun rememberMarker(): Marker {
             applyElevationOverlay = true,
         )
     }
-    val label = textComponent(
-        background = labelBackground,
-        lineCount = LABEL_LINE_COUNT,
-        padding = labelPadding,
-        typeface = Typeface.MONOSPACE,
-    )
+    val label = if(isSystemInDarkTheme()){
+        textComponent(
+            background = labelBackground,
+            lineCount = LABEL_LINE_COUNT,
+            padding = labelPadding,
+            typeface = Typeface.MONOSPACE,
+            textAlignment = Layout.Alignment.ALIGN_CENTER,
+            color = Color.White
+        )
+    } else {
+        textComponent(
+            background = labelBackground,
+            lineCount = LABEL_LINE_COUNT,
+            padding = labelPadding,
+            typeface = Typeface.MONOSPACE,
+            textAlignment = Layout.Alignment.ALIGN_CENTER
+        )
+    }
     val indicatorInnerComponent =
         shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.surface)
     val indicatorCenterComponent = shapeComponent(Shapes.pillShape, Color.White)
@@ -59,7 +72,7 @@ internal fun rememberMarker(): Marker {
         guidelineShape,
     )
     return remember(label, indicator, guideline) {
-        object : MarkerComponent(label, indicator, guideline) {
+        object : CustomMarkerComponent(label, labelXString, indicator, guideline) {
             init {
                 indicatorSizeDp = INDICATOR_SIZE_DP
                 onApplyEntryColor = { entryColor ->
@@ -74,6 +87,24 @@ internal fun rememberMarker(): Marker {
                     }
                 }
             }
+
+//            override fun draw(
+//                context: DrawContext,
+//                bounds: RectF,
+//                markedEntries: List<Marker.EntryModel>,
+//                chartValuesProvider: ChartValuesProvider
+//            ) {
+//                super.draw(context, bounds, emptyList(), chartValuesProvider)
+//
+//                markedEntries.forEach { entryModel ->
+//                    val value = entryModel.entry.y
+//                    val myLabel = labelXString[entryModel.entry.x.toInt()]
+//                    val formattedText = "$myLabel:\n ${ formatRupiah(value.toLong()) }"
+//                    val labelX = entryModel.location.x
+//                    val labelY = entryModel.location.y - bounds.height() / 4 // Adjust label position to be above the indicator
+//                    label.drawText(context, formattedText, labelX, labelY)
+//                }
+//            }
 
             override fun getInsets(
                 context: MeasureContext,
@@ -90,7 +121,7 @@ internal fun rememberMarker(): Marker {
 
 private const val LABEL_BACKGROUND_SHADOW_RADIUS = 4f
 private const val LABEL_BACKGROUND_SHADOW_DY = 2f
-private const val LABEL_LINE_COUNT = 1
+private const val LABEL_LINE_COUNT = 2
 private const val GUIDELINE_ALPHA = .2f
 private const val INDICATOR_SIZE_DP = 36f
 private const val INDICATOR_OUTER_COMPONENT_ALPHA = 32

@@ -28,7 +28,7 @@ fun OmzetChartSection(
         "APR 2024", "MEI 2024", "JUN 2024", "JUL 2024",
         "AGU 2024", "SEP 2024", "OKT 2024", "NOV 2024"
     )
-    val marker = rememberMarker()
+    val marker = rememberMarker(time)
     Chart(
         chart = lineChart(),
         model = chartEntryModel,
