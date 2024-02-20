@@ -23,5 +23,5 @@ data class OmzetData(
 	val month: Int,
 
 	@field:SerializedName("omzet")
-	val omzet: Int
+	val omzet: Long
 )

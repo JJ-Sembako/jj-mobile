@@ -32,6 +32,7 @@ import com.dr.jjsembako.R
 fun HeaderMonthYearSection(
     thisYear: Int,
     maxRange: Int,
+    isTimeChange: MutableState<Boolean>,
     selectedYear: MutableState<Int>,
     selectedMonth: MutableState<Int>,
     showDialog: MutableState<Boolean>,
@@ -56,6 +57,7 @@ fun HeaderMonthYearSection(
         IconButton(
             enabled = !(selectedYear.value == 2023 && selectedMonth.value == 0),
             onClick = {
+                if(!isTimeChange.value) isTimeChange.value = true
                 if (selectedMonth.value == 0) {
                     selectedYear.value = selectedYear.value - 1
                     selectedMonth.value = 11
@@ -84,6 +86,7 @@ fun HeaderMonthYearSection(
         IconButton(
             enabled = !(selectedYear.value == (thisYear + maxRange) && selectedMonth.value == 11),
             onClick = {
+                if(!isTimeChange.value) isTimeChange.value = true
                 if (selectedMonth.value == 11){
                     selectedYear.value = selectedYear.value + 1
                     selectedMonth.value = 0

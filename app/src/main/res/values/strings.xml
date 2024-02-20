@@ -246,6 +246,7 @@
     <string name="add_time">Tambah waktu</string>
     <string name="min_time">Kurangi waktu</string>
     <string name="choose_time">Pilih Waktu</string>
+    <string name="no_omzet_data">Belum Terdapat Data Omzet</string>
     <string name="omzet_last_year">Omzet\n Setahun Terakhir</string>
     <string name="month_01">JAN</string>
     <string name="month_02">FEB</string>
@@ -259,4 +260,8 @@
     <string name="month_10">OKT</string>
     <string name="month_11">NOV</string>
     <string name="month_12">DES</string>
+    <string name="omzet_monthly">Omzet bulan ini: %1$s</string>
+    <string name="total_selled_monthly">Total penjualan bulan ini: %1$d item</string>
+    <string name="selled_info">Terjual:</string>
+    <string name="selled_info_det">%1$d %2$s</string>
 </resources>

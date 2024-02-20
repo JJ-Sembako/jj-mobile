@@ -25,8 +25,14 @@ class PerformaViewModel @Inject constructor(
     private val fetchSelledProductMonthlyUseCase: FetchSelledProductMonthlyUseCase
 ) : ViewModel() {
 
-    private val _state = MutableLiveData<StateResponse?>()
-    val state: LiveData<StateResponse?> = _state
+    private val _stateFirst = MutableLiveData<StateResponse?>()
+    val stateFirst: LiveData<StateResponse?> = _stateFirst
+
+    private val _stateSecond = MutableLiveData<StateResponse?>()
+    val stateSecond: LiveData<StateResponse?> = _stateSecond
+
+    private val _stateThird = MutableLiveData<StateResponse?>()
+    val stateThird: LiveData<StateResponse?> = _stateThird
 
     private val _stateRefresh = MutableLiveData<StateResponse?>()
     val stateRefresh: LiveData<StateResponse?> = _stateRefresh
@@ -43,11 +49,17 @@ class PerformaViewModel @Inject constructor(
     private val _dataOmzet = MutableLiveData<List<OmzetData?>?>()
     val dataOmzet: LiveData<List<OmzetData?>?> get() = _dataOmzet
 
+    private val _dataOmzetOld = MutableLiveData<List<OmzetData?>?>()
+    private val dataOmzetOld: LiveData<List<OmzetData?>?> get() = _dataOmzetOld
+
     private val _dataOmzetMonthly = MutableLiveData<OmzetData?>()
     val dataOmzetMonthly: LiveData<OmzetData?> get() = _dataOmzetMonthly
 
     private val _dataSelledProductMonthly = MutableLiveData<List<SelledData?>?>()
     val dataSelledProductMonthly: LiveData<List<SelledData?>?> get() = _dataSelledProductMonthly
+
+    private val _totalSelledProductMonthly = MutableLiveData(0)
+    val totalSelledProductMonthly: LiveData<Int> get() = _totalSelledProductMonthly
 
     private var _month: Int? = null
     private var _year: Int? = null
@@ -73,25 +85,31 @@ class PerformaViewModel @Inject constructor(
             fetchOmzetUseCase.fetchOmzet().collect {
                 when (it) {
                     is Resource.Loading -> {
-                        if (dataOmzet.value.isNullOrEmpty()) _state.value =
+                        if (dataOmzetOld.value.isNullOrEmpty()) _stateFirst.value =
                             StateResponse.LOADING
                         else _stateRefresh.value = StateResponse.LOADING
                     }
 
                     is Resource.Success -> {
-                        if (dataOmzet.value.isNullOrEmpty()) _state.value =
-                            StateResponse.LOADING
-                        else _stateRefresh.value = StateResponse.LOADING
+                        if (dataOmzetOld.value.isNullOrEmpty()) {
+                            _stateFirst.value = StateResponse.SUCCESS
+                            _dataOmzetOld.value = it.data?.reversed()
+                            _dataOmzet.value = dataOmzetOld.value
+                        }
                         _message.value = it.message
                         _statusCode.value = it.status
-                        _dataOmzet.value = it.data
+                        if(dataOmzetOld.value != it.data?.reversed()) {
+                            _dataOmzetOld.value = it.data?.reversed()
+                            _dataOmzet.value = dataOmzetOld.value
+                        }
                         fetchOmzetMonthly(month, year)
                     }
 
                     is Resource.Error -> {
-                        if (dataOmzet.value.isNullOrEmpty()) _state.value =
-                            StateResponse.ERROR
-                        else _stateRefresh.value = StateResponse.ERROR
+                        if (dataOmzetOld.value.isNullOrEmpty()) {
+                            _stateFirst.value = StateResponse.ERROR
+                            _stateThird.value = StateResponse.ERROR
+                        } else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
@@ -105,15 +123,15 @@ class PerformaViewModel @Inject constructor(
             fetchOmzetMonthlyUseCase.fetchOmzetMonthly(month, year).collect {
                 when (it) {
                     is Resource.Loading -> {
-                        if (dataOmzet.value.isNullOrEmpty()) _state.value =
-                            StateResponse.LOADING
-                        else _stateRefresh.value = StateResponse.LOADING
+                        if (dataOmzetMonthly.value == null) {
+                            _stateSecond.value = StateResponse.LOADING
+                        }
                     }
 
                     is Resource.Success -> {
-                        if (dataOmzet.value.isNullOrEmpty()) _state.value =
-                            StateResponse.LOADING
-                        else _stateRefresh.value = StateResponse.LOADING
+                        if (dataOmzetMonthly.value == null) {
+                            _stateSecond.value = StateResponse.SUCCESS
+                        }
                         _message.value = it.message
                         _statusCode.value = it.status
                         _dataOmzetMonthly.value = it.data
@@ -121,9 +139,9 @@ class PerformaViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        if (dataOmzet.value.isNullOrEmpty()) _state.value =
-                            StateResponse.ERROR
-                        else _stateRefresh.value = StateResponse.ERROR
+                        if (dataOmzetMonthly.value == null) {
+                            _stateSecond.value = StateResponse.ERROR
+                        } else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
                     }
@@ -137,24 +155,26 @@ class PerformaViewModel @Inject constructor(
             fetchSelledProductMonthlyUseCase.fetchSelledProductMonthly(month, year).collect {
                 when (it) {
                     is Resource.Loading -> {
-                        if (dataOmzet.value.isNullOrEmpty()) _state.value =
-                            StateResponse.LOADING
-                        else _stateRefresh.value = StateResponse.LOADING
+                        if(dataSelledProductMonthly.value.isNullOrEmpty()) {
+                            _stateThird.value = StateResponse.LOADING
+                        } else _stateRefresh.value = StateResponse.SUCCESS
                     }
 
                     is Resource.Success -> {
-                        if (dataOmzet.value.isNullOrEmpty()) _state.value =
-                            StateResponse.SUCCESS
-                        else _stateRefresh.value = StateResponse.SUCCESS
+                        if(dataSelledProductMonthly.value.isNullOrEmpty()) {
+                            _stateThird.value = StateResponse.SUCCESS
+                        } else _stateRefresh.value = StateResponse.SUCCESS
                         _message.value = it.message
                         _statusCode.value = it.status
                         _dataSelledProductMonthly.value = it.data
+                        _totalSelledProductMonthly.value = it.data?.filterNotNull()
+                            ?.sumOf { product -> product.numOfSelled } ?: 0
                     }
 
                     is Resource.Error -> {
-                        if (dataOmzet.value.isNullOrEmpty()) _state.value =
-                            StateResponse.ERROR
-                        else _stateRefresh.value = StateResponse.ERROR
+                        if(dataSelledProductMonthly.value.isNullOrEmpty()) {
+                            _stateThird.value = StateResponse.ERROR
+                        } else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
                     }

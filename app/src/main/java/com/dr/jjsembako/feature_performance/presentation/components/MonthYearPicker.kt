@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,11 +49,15 @@ import kotlinx.coroutines.launch
 fun MonthYearPickerDialog(
     thisYear: Int,
     maxRange: Int,
+    isTimeChange: MutableState<Boolean>,
     selectedYear: MutableState<Int>,
     selectedMonth: MutableState<Int>,
     showDialog: MutableState<Boolean>,
     modifier: Modifier
 ) {
+    val tempSelectedYear = remember { mutableIntStateOf(selectedYear.value) }
+    val tempSelectedMonth = remember { mutableIntStateOf(selectedMonth.value) }
+
     val yearRange = 2023..(thisYear + maxRange)
     val lazyListStateYear = rememberLazyListState()
     val lazyListStateMonth = rememberLazyListState()
@@ -98,7 +104,7 @@ fun MonthYearPickerDialog(
             ) {
                 Text(
                     text = stringResource(R.string.choose_time),
-                    fontWeight = FontWeight.Normal,textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Normal, textAlign = TextAlign.Center,
                     fontSize = 10.sp, color = MaterialTheme.colorScheme.onPrimary,
                     modifier = modifier.wrapContentSize(Alignment.Center)
                 )
@@ -121,8 +127,8 @@ fun MonthYearPickerDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     itemsIndexed(month) { index, monthItem ->
-                        MonthPickerItem(monthItem, index == selectedMonth.value) {
-                            selectedMonth.value = index
+                        MonthPickerItem(monthItem, index == tempSelectedMonth.intValue) {
+                            tempSelectedMonth.intValue = index
                         }
 
                     }
@@ -136,8 +142,8 @@ fun MonthYearPickerDialog(
                 ) {
                     yearRange.forEach { year ->
                         item {
-                            YearPickerItem(year, year == selectedYear.value) {
-                                selectedYear.value = year
+                            YearPickerItem(year, year == tempSelectedYear.intValue) {
+                                tempSelectedYear.intValue = year
                             }
                         }
                     }
@@ -145,7 +151,12 @@ fun MonthYearPickerDialog(
             }
             Spacer(modifier = Modifier.height(24.dp))
             Button(
-                onClick = { showDialog.value = false },
+                onClick = {
+                    showDialog.value = false
+                    if(!isTimeChange.value) isTimeChange.value = true
+                    selectedYear.value = tempSelectedYear.intValue
+                    selectedMonth.value = tempSelectedMonth.intValue
+                },
                 colors = ButtonDefaults.buttonColors(
                     contentColor = Color.Red,
                     containerColor = Color.Red
@@ -155,8 +166,7 @@ fun MonthYearPickerDialog(
             ) {
                 Text(
                     text = stringResource(R.string.close),
-                    color = Color.White,
-                    fontSize = 12.sp,
+                    color = Color.White, fontSize = 12.sp,
                     modifier = modifier.padding(horizontal = 4.dp, vertical = 4.dp),
                     style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
                 )

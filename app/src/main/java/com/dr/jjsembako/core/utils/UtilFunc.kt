@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -261,4 +262,18 @@ fun convertTimestampToArray(timestamp: String): Array<String> {
 fun getCurrentYearMonthInGmt7(): List<Int> {
     val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+7"))
     return listOf(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH))
+}
+
+fun labelPerformance(data: List<OmzetData?>?, month: List<String>): List<String> {
+    if (data.isNullOrEmpty()) return emptyList()
+    else {
+        return data.mapNotNull { omzetData ->
+            val monthIndex = omzetData?.month?.minus(1) ?: -1
+            if (monthIndex in 0 until month.size) {
+                "${month[monthIndex]} ${omzetData?.year}"
+            } else {
+                null
+            }
+        }
+    }
 }
