@@ -86,6 +86,10 @@ class HomeViewModel @Inject constructor(
         fetchOmzetMonthly(month + 1, year)
     }
 
+    fun setStateFourth(state: StateResponse?) {
+        _stateFourth.value = state
+    }
+
     fun setStateRefresh(state: StateResponse?) {
         _stateRefresh.value = state
     }
@@ -114,7 +118,7 @@ class HomeViewModel @Inject constructor(
                     is Resource.Error -> {
                         if (dataOmzetMonthly.value == null) {
                             _stateFirst.value = StateResponse.ERROR
-                            _stateFourth.value = null
+                            _stateFourth.value = StateResponse.ERROR
                         } else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
@@ -149,7 +153,7 @@ class HomeViewModel @Inject constructor(
                     is Resource.Error -> {
                         if(dataSelledProductMonthly.value.isNullOrEmpty()) {
                             _stateSecond.value = StateResponse.ERROR
-                            _stateFourth.value = null
+                            _stateFourth.value = StateResponse.ERROR
                         } else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status
@@ -185,7 +189,7 @@ class HomeViewModel @Inject constructor(
                     is Resource.Error -> {
                         if(dataOrders.value.isNullOrEmpty()) {
                             _stateThird.value = StateResponse.ERROR
-                            _stateFourth.value = null
+                            _stateFourth.value = StateResponse.ERROR
                         } else _stateRefresh.value = StateResponse.ERROR
                         _message.value = it.message
                         _statusCode.value = it.status

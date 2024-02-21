@@ -21,14 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun StatisticSection(
     totalPesanan: Int = 0, totalBarang: Int = 0,
-    stateSecond: StateResponse? = null,
-    stateFourth: StateResponse? = null,
+    isErrorInit: Boolean = false,
     modifier: Modifier
 ) {
     Row(
@@ -38,16 +36,15 @@ fun StatisticSection(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        StatisticCard(totalPesanan, true, stateSecond, stateFourth, modifier)
-        StatisticCard(totalBarang, false, stateSecond, stateFourth, modifier)
+        StatisticCard(totalPesanan, true, isErrorInit, modifier)
+        StatisticCard(totalBarang, false, isErrorInit, modifier)
     }
 }
 
 @Composable
 private fun StatisticCard(
     total: Int, isPesanan: Boolean,
-    stateSecond: StateResponse? = null,
-    stateFourth: StateResponse? = null,
+    isErrorInit: Boolean = false,
     modifier: Modifier
 ) {
     val text = if (isPesanan) {
@@ -70,14 +67,7 @@ private fun StatisticCard(
                 fontSize = 14.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
-            if(stateFourth == StateResponse.ERROR && isPesanan) {
-                Text(
-                    text = stringResource(R.string.error_string),
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold, fontSize = 24.sp,
-                    style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
-                )
-            } else if(stateSecond == StateResponse.ERROR && !isPesanan) {
+            if(isErrorInit) {
                 Text(
                     text = stringResource(R.string.error_string),
                     textAlign = TextAlign.Center,

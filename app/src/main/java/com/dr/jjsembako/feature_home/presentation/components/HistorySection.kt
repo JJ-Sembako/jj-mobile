@@ -27,7 +27,6 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
 import com.dr.jjsembako.core.presentation.components.card.OrderHistoryCard
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -35,7 +34,7 @@ import com.dr.jjsembako.core.utils.DataMapper.mapOrderDataItemToDataOrderHistory
 
 @Composable
 fun HistorySection(
-    stateThird: StateResponse? = null,
+    isErrorInit: Boolean = false,
     dataOrders: List<OrderDataItem?>? = null,
     context: Context,
     clipboardManager: ClipboardManager,
@@ -67,7 +66,7 @@ fun HistorySection(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (stateThird == StateResponse.ERROR) {
+            if (isErrorInit) {
                 LottieAnimation(
                     enableMergePaths = true,
                     composition = composition2,
@@ -77,7 +76,7 @@ fun HistorySection(
                 Spacer(modifier = modifier.height(16.dp))
                 Text(
                     text = stringResource(id = R.string.error),
-                    fontSize = 24.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = modifier
                         .padding(bottom = 16.dp)

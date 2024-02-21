@@ -14,12 +14,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
-fun OmzetSection(omzet: Long = 0, stateFirst: StateResponse? = null,  modifier: Modifier) {
+fun OmzetSection(omzet: Long = 0, isErrorInit: Boolean = false, modifier: Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -32,7 +31,7 @@ fun OmzetSection(omzet: Long = 0, stateFirst: StateResponse? = null,  modifier: 
             Text(
                 text = stringResource(R.string.turnover_this_month), fontWeight = FontWeight.Bold
             )
-            if (stateFirst == StateResponse.ERROR){
+            if (isErrorInit){
                 Text(text = stringResource(R.string.error_string))
             } else Text(text = formatRupiah(omzet))
         }

@@ -85,6 +85,7 @@ fun HomeScreen(
     val thisMonth = rememberSaveable { mutableIntStateOf(0) }
     val minDate = rememberSaveable { mutableStateOf("") }
     val maxDate = rememberSaveable { mutableStateOf("") }
+    val isErrorInit = remember { mutableStateOf(false) }
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(
@@ -112,8 +113,6 @@ fun HomeScreen(
             Log.e(tag, "state: $stateFirst")
             Log.e(tag, "Error: $message")
             Log.e(tag, "statusCode: $statusCode")
-            showLoadingDialog.value = false
-            showErrorDialog.value = true
         }
 
         else -> {}
@@ -125,8 +124,6 @@ fun HomeScreen(
             Log.e(tag, "state: $stateSecond")
             Log.e(tag, "Error: $message")
             Log.e(tag, "statusCode: $statusCode")
-            showLoadingDialog.value = false
-            showErrorDialog.value = true
         }
 
         else -> {}
@@ -138,8 +135,6 @@ fun HomeScreen(
             Log.e(tag, "state: $stateThird")
             Log.e(tag, "Error: $message")
             Log.e(tag, "statusCode: $statusCode")
-            showLoadingDialog.value = false
-            showErrorDialog.value = true
         }
 
         else -> {}
@@ -157,11 +152,14 @@ fun HomeScreen(
             Log.e(tag, "statusCode: $statusCode")
             showLoadingDialog.value = false
             showErrorDialog.value = true
+            isErrorInit.value = true
+            viewModel.setStateFourth(null)
         }
 
         StateResponse.SUCCESS -> {
             showLoadingDialog.value = false
             showErrorDialog.value = false
+            isErrorInit.value = false
         }
 
         else -> {}
@@ -219,15 +217,14 @@ fun HomeScreen(
                     Spacer(modifier = modifier.height(8.dp))
                     OmzetSection(
                         omzet = dataOmzetMonthly?.omzet ?: 0L,
-                        stateFirst = stateFirst,
+                        isErrorInit = isErrorInit.value,
                         modifier = modifier
                     )
                     Spacer(modifier = modifier.height(8.dp))
                     StatisticSection(
                         totalPesanan = totalOrders ?: 0,
                         totalBarang = totalSelledProductMonthly ?: 0,
-                        stateSecond = stateSecond,
-                        stateFourth = stateFourth,
+                        isErrorInit = isErrorInit.value,
                         modifier = modifier
                     )
                 }
@@ -245,7 +242,7 @@ fun HomeScreen(
                 )
                 Spacer(modifier = modifier.height(24.dp))
                 HistorySection(
-                    stateThird = stateThird,
+                    isErrorInit = isErrorInit.value,
                     dataOrders = dataOrders,
                     context = context,
                     clipboardManager = clipboardManager,
