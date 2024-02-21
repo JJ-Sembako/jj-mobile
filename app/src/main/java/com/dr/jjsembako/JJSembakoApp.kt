@@ -34,7 +34,7 @@ import com.dr.jjsembako.feature_customer.presentation.edit.EditPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.history_order.PesananPelangganScreen
 import com.dr.jjsembako.feature_customer.presentation.list.PelangganScreen
 import com.dr.jjsembako.feature_history.presentation.add_product_order.TambahBarangPesananScreen
-import com.dr.jjsembako.feature_history.presentation.detail.DetailTransaksi
+import com.dr.jjsembako.feature_history.presentation.detail.DetailTransaksiScreen
 import com.dr.jjsembako.feature_history.presentation.edit_product_order.EditBarangPesananScreen
 import com.dr.jjsembako.feature_history.presentation.list.RiwayatScreen
 import com.dr.jjsembako.feature_history.presentation.potong_nota.create.PotongNotaScreen
@@ -355,7 +355,7 @@ fun JJSembakoApp() {
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
             val id = it.arguments?.getString("id") ?: ""
-            DetailTransaksi(
+            DetailTransaksiScreen(
                 id = id,
                 context = context,
                 clipboardManager = clipboardManager,
