@@ -245,6 +245,7 @@ fun JJSembakoApp() {
             val keyword = it.arguments?.getString("keyword") ?: ""
             PelangganScreen(
                 keyword = keyword,
+                context = context,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToDetailCust = { id, latestKeyword ->
                     navController.navigate(Screen.DetailPelanggan.createRoute(id, latestKeyword)) {

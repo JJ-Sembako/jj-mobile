@@ -76,6 +76,7 @@
     <string name="version">Versi %1$s</string>
 
     <string name="search">Pencarian</string>
+    <string name="feature_not_dev">Fitur ini belum tersedia!</string>
     <string name="close_search">Tutup pencarian</string>
     <string name="filter">Filter</string>
     <string name="search_cust">Cari pelanggan</string>

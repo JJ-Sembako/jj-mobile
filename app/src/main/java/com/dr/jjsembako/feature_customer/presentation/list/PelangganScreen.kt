@@ -1,6 +1,8 @@
 package com.dr.jjsembako.feature_customer.presentation.list
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -31,6 +33,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -55,6 +58,7 @@ import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 @Composable
 fun PelangganScreen(
     keyword: String,
+    context: Context,
     onNavigateBack: () -> Unit,
     onNavigateToDetailCust: (String, String) -> Unit,
     onNavigateToAddCust: (String) -> Unit,
@@ -197,6 +201,9 @@ fun PelangganScreen(
             }
 
             if (showSheet.value) {
+                Toast.makeText(
+                    context, stringResource(R.string.feature_not_dev), Toast.LENGTH_SHORT
+                ).show()
                 BottomSheetCustomer(
                     optionList = radioOptions,
                     selectedOption = selectedOption,
@@ -220,6 +227,7 @@ private fun PelangganScreenPreview() {
     JJSembakoTheme {
         PelangganScreen(
             keyword = "",
+            context = LocalContext.current,
             onNavigateBack = {},
             onNavigateToDetailCust = { id, keyword ->
                 Log.d(
