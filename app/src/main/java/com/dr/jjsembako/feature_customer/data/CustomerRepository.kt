@@ -54,7 +54,7 @@ class CustomerRepository @Inject constructor(
             ).first()
 
             when (response.status) {
-                200 -> {
+                201 -> {
                     val data = response.data
                     emit(
                         Resource.Success(
