@@ -104,7 +104,7 @@ fun HomeScreen(
                 thisMonth.intValue, thisYear.intValue,
                 formatDateString(minDate.value), formatDateString(maxDate.value)
             )
-        }
+        } else viewModel.refresh()
     }
 
     when (stateFirst) {

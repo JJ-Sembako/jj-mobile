@@ -124,13 +124,15 @@ fun convertToChatWA(phone: String): String {
         cleanedPhoneNumber
     }
 
-    // Membuat link
-    val waLink = when {
-        formattedPhoneNumber.startsWith("62") -> "https://wa.me/$formattedPhoneNumber"
-        formattedPhoneNumber.startsWith("+62") -> "https://wa.me/$formattedPhoneNumber"
-        formattedPhoneNumber.startsWith("0") -> "https://wa.me/62$formattedPhoneNumber"
-        else -> "https://wa.me/$formattedPhoneNumber"
+    // Tambahkan prefix +62 jika nomor telepon tidak memiliki prefix
+    val phoneNumberWithPrefix = when {
+        formattedPhoneNumber.startsWith("+62") -> formattedPhoneNumber
+        formattedPhoneNumber.startsWith("62") -> "+$formattedPhoneNumber"
+        else -> "+62$formattedPhoneNumber"
     }
+
+    // Membuat link WhatsApp
+    val waLink = "https://wa.me/$phoneNumberWithPrefix"
 
     return waLink
 }

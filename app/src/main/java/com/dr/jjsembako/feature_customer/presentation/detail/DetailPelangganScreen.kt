@@ -87,6 +87,10 @@ fun DetailPelangganScreen(
     LaunchedEffect(idCust) {
         viewModel.setId(idCust)
     }
+    // Handle data updated
+    LaunchedEffect(Unit) {
+        viewModel.refresh()
+    }
 
     when (stateFirst) {
         StateResponse.LOADING -> {
