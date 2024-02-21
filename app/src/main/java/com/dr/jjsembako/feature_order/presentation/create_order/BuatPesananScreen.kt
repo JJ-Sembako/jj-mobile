@@ -82,6 +82,10 @@ fun BuatPesananScreen(
     val statusCode = buatPesananViewModel.statusCode.observeAsState().value
     val idCust = buatPesananViewModel.idCustomer.collectAsState().value
 
+    LaunchedEffect(Unit){
+        buatPesananViewModel.refresh()
+    }
+
     if (idCust.isEmpty()) {
         BuatPesananContent(
             buatPesananViewModel = buatPesananViewModel,
