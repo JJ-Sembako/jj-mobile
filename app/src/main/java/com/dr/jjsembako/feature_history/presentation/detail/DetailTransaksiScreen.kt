@@ -2,10 +2,10 @@ package com.dr.jjsembako.feature_history.presentation.detail
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -71,10 +71,9 @@ import com.dr.jjsembako.feature_history.presentation.components.dialog.PaymentDi
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
-import kotlin.math.roundToInt
 
 @Composable
-fun DetailTransaksi(
+fun DetailTransaksiScreen(
     id: String,
     context: Context,
     clipboardManager: ClipboardManager,
@@ -359,177 +358,180 @@ private fun DetailTransaksiContent(
             )
         }
     ) { contentPadding ->
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
+                .padding(contentPadding)
                 .pullRefresh(pullRefreshState)
                 .verticalScroll(scrollState)
-                .padding(contentPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OrderInformation(
+                    data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
+                    context = context,
+                    clipboardManager = clipboardManager,
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(16.dp))
+                OrderButtonMenu(
+                    data = orderInfo,
+                    showCantPNRDialog = showCantPNRDialog,
+                    showPaymentDialog = showPaymentDialog,
+                    msgErrorPNR = msgErrorPNR,
+                    openMaps = { url -> openMaps(url) },
+                    call = { uri -> call(uri) },
+                    chatWA = { url -> chatWA(url) },
+                    onNavigateToPotongNota = { onNavigateToPotongNota() },
+                    onNavigateToRetur = { onNavigateToRetur() },
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(16.dp))
+                CustomerInformation(
+                    data = orderInfo,
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(16.dp))
+                OrderedProductList(
+                    data = orderData.orderToProducts,
+                    totalPrice = orderData.totalPrice,
+                    showDialog = showDeleteProductOrderDialog,
+                    idDeleteProductOrder = idDeleteProductOrder,
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(16.dp))
+                OrderTimestamps(
+                    data = mapDetailOrderDataToDataOrderTimestamps(orderData),
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(64.dp))
+                ReturPotongNotaInformation(
+                    dataCanceled = orderData.canceled,
+                    dataRetur = orderData.retur,
+                    actualTotalPrice = orderData.actualTotalPrice,
+                    showDialogCanceled = showDeleteCanceledDialog,
+                    showDialogRetur = showDeleteReturDialog,
+                    idDeleteCanceled = idDeleteCanceled,
+                    idDeleteRetur = idDeleteRetur,
+                    statusCanceled = statusCanceled,
+                    statusRetur = statusRetur,
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.height(16.dp))
+
+                if (showLoadingDialog.value) {
+                    LoadingDialog(showLoadingDialog, modifier)
+                }
+
+                if (showErrorDialog.value) {
+                    AlertErrorDialog(
+                        message = message ?: "Unknown error",
+                        showDialog = showErrorDialog,
+                        modifier = modifier
+                    )
+                }
+
+                if (showInfoDialog.value) {
+                    OrderInformationDialog(showDialog = showInfoDialog, modifier = modifier)
+                }
+
+                if (showCantPNRDialog.value) {
+                    AlertErrorDialog(
+                        header = stringResource(R.string.action_denied),
+                        message = msgErrorPNR.value,
+                        showDialog = showCantPNRDialog,
+                        modifier = modifier
+                    )
+                }
+
+                if (showCantModifyOrderDialog.value) {
+                    AlertErrorDialog(
+                        header = stringResource(R.string.action_denied),
+                        message = stringResource(R.string.err_edit_order),
+                        showDialog = showCantModifyOrderDialog,
+                        modifier = modifier
+                    )
+                }
+
+                if (showCantDelOrderDialog.value) {
+                    AlertErrorDialog(
+                        header = stringResource(R.string.action_denied),
+                        message = stringResource(R.string.err_del_order),
+                        showDialog = showCantDelOrderDialog,
+                        modifier = modifier
+                    )
+                }
+
+                if (showPaymentDialog.value) {
+                    PaymentDialog(
+                        paymentStatus = orderData.paymentStatus,
+                        showDialog = showPaymentDialog,
+                        handleUpdatePaymentStatus = { detailTransaksiViewModel.handleUpdatePaymentStatus() },
+                        modifier = modifier
+                    )
+                }
+
+                if (showDeleteProductOrderDialog.value) {
+                    DeleteProductDialog(
+                        orderStatus = orderData.orderStatus,
+                        showDialog = showDeleteProductOrderDialog,
+                        handleDeleteProductOrder = {
+                            detailTransaksiViewModel.handleDeleteProductOrder(
+                                idDeleteProductOrder.value
+                            )
+                        },
+                        modifier = modifier
+                    )
+                }
+
+                if (showDeleteCanceledDialog.value) {
+                    CancelPotongNotaDialog(
+                        status = statusCanceled.intValue,
+                        showDialog = showDeleteCanceledDialog,
+                        handleDeleteCanceled = {
+                            detailTransaksiViewModel.handleDeleteCanceled(
+                                idDeleteCanceled.value
+                            )
+                        },
+                        modifier = modifier
+                    )
+                }
+
+                if (showDeleteReturDialog.value) {
+                    CancelReturDialog(
+                        status = statusRetur.intValue,
+                        showDialog = showDeleteReturDialog,
+                        handleDeleteRetur = { detailTransaksiViewModel.handleDeleteRetur(idDeleteRetur.value) },
+                        modifier = modifier
+                    )
+                }
+
+                if (showDeleteOrder.value) {
+                    AlertDeleteDialog(
+                        onDelete = { detailTransaksiViewModel.handleDeleteOrder() },
+                        showDialog = showDeleteOrder,
+                        modifier = modifier
+                    )
+                }
+
+                if (showSuccessDialog.value) {
+                    SuccessDialog(
+                        message = msgSuccess.value,
+                        showDialog = showSuccessDialog,
+                        modifier = modifier
+                    )
+                }
+            }
+
             PullRefreshIndicator(
                 refreshing = isRefreshing,
                 state = pullRefreshState,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height((pullRefreshState.progress * 100).roundToInt().dp)
+                modifier = modifier.align(Alignment.TopCenter)
             )
-
-            OrderInformation(
-                data = mapDetailOrderDataToDataOrderHistoryCard(orderData),
-                context = context,
-                clipboardManager = clipboardManager,
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            OrderButtonMenu(
-                data = orderInfo,
-                showCantPNRDialog = showCantPNRDialog,
-                showPaymentDialog = showPaymentDialog,
-                msgErrorPNR = msgErrorPNR,
-                openMaps = { url -> openMaps(url) },
-                call = { uri -> call(uri) },
-                chatWA = { url -> chatWA(url) },
-                onNavigateToPotongNota = { onNavigateToPotongNota() },
-                onNavigateToRetur = { onNavigateToRetur() },
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            CustomerInformation(
-                data = orderInfo,
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            OrderedProductList(
-                data = orderData.orderToProducts,
-                totalPrice = orderData.totalPrice,
-                showDialog = showDeleteProductOrderDialog,
-                idDeleteProductOrder = idDeleteProductOrder,
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            OrderTimestamps(
-                data = mapDetailOrderDataToDataOrderTimestamps(orderData),
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(64.dp))
-            ReturPotongNotaInformation(
-                dataCanceled = orderData.canceled,
-                dataRetur = orderData.retur,
-                actualTotalPrice = orderData.actualTotalPrice,
-                showDialogCanceled = showDeleteCanceledDialog,
-                showDialogRetur = showDeleteReturDialog,
-                idDeleteCanceled = idDeleteCanceled,
-                idDeleteRetur = idDeleteRetur,
-                statusCanceled = statusCanceled,
-                statusRetur = statusRetur,
-                modifier = modifier
-            )
-            Spacer(modifier = modifier.height(16.dp))
-
-            if (showLoadingDialog.value) {
-                LoadingDialog(showLoadingDialog, modifier)
-            }
-
-            if (showErrorDialog.value) {
-                AlertErrorDialog(
-                    message = message ?: "Unknown error",
-                    showDialog = showErrorDialog,
-                    modifier = modifier
-                )
-            }
-
-            if (showInfoDialog.value) {
-                OrderInformationDialog(showDialog = showInfoDialog, modifier = modifier)
-            }
-
-            if (showCantPNRDialog.value) {
-                AlertErrorDialog(
-                    header = stringResource(R.string.action_denied),
-                    message = msgErrorPNR.value,
-                    showDialog = showCantPNRDialog,
-                    modifier = modifier
-                )
-            }
-
-            if (showCantModifyOrderDialog.value) {
-                AlertErrorDialog(
-                    header = stringResource(R.string.action_denied),
-                    message = stringResource(R.string.err_edit_order),
-                    showDialog = showCantModifyOrderDialog,
-                    modifier = modifier
-                )
-            }
-
-            if (showCantDelOrderDialog.value) {
-                AlertErrorDialog(
-                    header = stringResource(R.string.action_denied),
-                    message = stringResource(R.string.err_del_order),
-                    showDialog = showCantDelOrderDialog,
-                    modifier = modifier
-                )
-            }
-
-            if (showPaymentDialog.value) {
-                PaymentDialog(
-                    paymentStatus = orderData.paymentStatus,
-                    showDialog = showPaymentDialog,
-                    handleUpdatePaymentStatus = { detailTransaksiViewModel.handleUpdatePaymentStatus() },
-                    modifier = modifier
-                )
-            }
-
-            if (showDeleteProductOrderDialog.value) {
-                DeleteProductDialog(
-                    orderStatus = orderData.orderStatus,
-                    showDialog = showDeleteProductOrderDialog,
-                    handleDeleteProductOrder = {
-                        detailTransaksiViewModel.handleDeleteProductOrder(
-                            idDeleteProductOrder.value
-                        )
-                    },
-                    modifier = modifier
-                )
-            }
-
-            if (showDeleteCanceledDialog.value) {
-                CancelPotongNotaDialog(
-                    status = statusCanceled.intValue,
-                    showDialog = showDeleteCanceledDialog,
-                    handleDeleteCanceled = {
-                        detailTransaksiViewModel.handleDeleteCanceled(
-                            idDeleteCanceled.value
-                        )
-                    },
-                    modifier = modifier
-                )
-            }
-
-            if (showDeleteReturDialog.value) {
-                CancelReturDialog(
-                    status = statusRetur.intValue,
-                    showDialog = showDeleteReturDialog,
-                    handleDeleteRetur = { detailTransaksiViewModel.handleDeleteRetur(idDeleteRetur.value) },
-                    modifier = modifier
-                )
-            }
-
-            if (showDeleteOrder.value) {
-                AlertDeleteDialog(
-                    onDelete = { detailTransaksiViewModel.handleDeleteOrder() },
-                    showDialog = showDeleteOrder,
-                    modifier = modifier
-                )
-            }
-
-            if (showSuccessDialog.value) {
-                SuccessDialog(
-                    message = msgSuccess.value,
-                    showDialog = showSuccessDialog,
-                    modifier = modifier
-                )
-            }
         }
+
     }
 }
 
@@ -537,7 +539,7 @@ private fun DetailTransaksiContent(
 @Preview(showBackground = true)
 private fun DetailTransaksiPreview() {
     JJSembakoTheme {
-        DetailTransaksi(
+        DetailTransaksiScreen(
             id = "",
             context = LocalContext.current,
             clipboardManager = LocalClipboardManager.current,

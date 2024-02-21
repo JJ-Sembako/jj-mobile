@@ -89,11 +89,7 @@ class BuatPesananViewModel @Inject constructor(
 
     init {
         initSocket()
-        viewModelScope.launch {
-            _idCustomer.value = getIdCustomer()
-            _payment.value = getPayment()
-            _orderList.value = getProductOrderList()
-        }
+        refresh()
     }
 
     fun reset() {

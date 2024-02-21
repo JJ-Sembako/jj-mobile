@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -65,9 +66,27 @@ fun formatRupiah(total: Long): String {
     return "Rp${formatter.format(total)},00"
 }
 
-fun formatTotal(total: Int): String {
+fun formatShortRupiah(total: Long): String {
     val formatter = NumberFormat.getInstance(Locale("id", "ID"))
-    return formatter.format(total)
+    formatter.maximumFractionDigits = 1
+    val absTotal = Math.abs(total)
+    return when {
+        absTotal >= 1_000_000_000 -> {
+            val miliar = absTotal / 1_000_000_000.0
+            formatter.format(miliar).replace(",", ".") + "M"
+        }
+        absTotal >= 1_000_000 -> {
+            val juta = absTotal / 1_000_000.0
+            formatter.format(juta).replace(",", ".") + "Jt"
+        }
+        absTotal >= 1_000 -> {
+            val ribu = absTotal / 1_000.0
+            formatter.format(ribu).replace(",", ".") + "Rb"
+        }
+        else -> {
+            formatter.format(total)
+        }
+    }
 }
 
 /**
@@ -229,5 +248,27 @@ fun convertTimestampToArray(timestamp: String): Array<String> {
         e.printStackTrace()
         Log.e("toDateArray", "Error converting date:", e)
         return arrayOf("ERR CONVERT DATE", "ERR CONVERT TIME")
+    }
+}
+
+/**
+ * Toolkits Performa
+ */
+fun getCurrentYearMonthInGmt7(): List<Int> {
+    val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+7"))
+    return listOf(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH))
+}
+
+fun labelPerformance(data: List<OmzetData?>?, month: List<String>): List<String> {
+    if (data.isNullOrEmpty()) return emptyList()
+    else {
+        return data.mapNotNull { omzetData ->
+            val monthIndex = omzetData?.month?.minus(1) ?: -1
+            if (monthIndex in 0 until month.size) {
+                "${month[monthIndex]} ${omzetData?.year}"
+            } else {
+                null
+            }
+        }
     }
 }

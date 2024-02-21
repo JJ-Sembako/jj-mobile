@@ -11,11 +11,11 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val Orange = Color(0xFFF6AC3C)
-val OrangeGrey = Color(0xFFC2B98A)
+val OrangeGrey = Color(0xFFCC8216)
 val MyGrey = Color(0xFFBDBDBD)
 
 val DarkOrange = Color(0xFFF28928)
-val DarkOrangeGrey = Color(0xFF685E51)
+val DarkOrangeGrey = Color(0xFFDA7519)
 val MyDarkGrey = Color(0xFF555555)
 
 val CardSelectedLight = Color(0xFFA8F5A6)

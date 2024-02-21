@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -65,7 +66,6 @@ import com.dr.jjsembako.feature_order.presentation.components.TotalPayment
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
-import kotlin.math.roundToInt
 
 @Composable
 fun BuatPesananScreen(
@@ -81,6 +81,10 @@ fun BuatPesananScreen(
     val message = buatPesananViewModel.message.observeAsState().value
     val statusCode = buatPesananViewModel.statusCode.observeAsState().value
     val idCust = buatPesananViewModel.idCustomer.collectAsState().value
+
+    LaunchedEffect(Unit){
+        buatPesananViewModel.refresh()
+    }
 
     if (idCust.isEmpty()) {
         BuatPesananContent(
@@ -157,6 +161,7 @@ private fun BuatPesananContent(
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState()
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -281,98 +286,102 @@ private fun BuatPesananContent(
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { contentPadding ->
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
+                .padding(contentPadding)
                 .pullRefresh(pullRefreshState)
-                .verticalScroll(rememberScrollState())
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                    })
-                .padding(contentPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .verticalScroll(scrollState)
         ) {
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
-                state = pullRefreshState,
+            Column(
                 modifier = modifier
-                    .fillMaxWidth()
-                    .height((pullRefreshState.progress * 100).roundToInt().dp)
-            )
-
-            if (errorState == true && !errorMsg.isNullOrEmpty()) {
-                HeaderError(modifier = modifier, message = errorMsg)
-                Spacer(modifier = modifier.height(16.dp))
-            }
-
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
+                    .fillMaxSize()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                        }),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                if (errorState == true && !errorMsg.isNullOrEmpty()) {
+                    HeaderError(modifier = modifier, message = errorMsg)
+                    Spacer(modifier = modifier.height(16.dp))
+                }
+
                 Row(
-                    modifier = modifier
-                        .clickable { buatPesananViewModel.reset() }
-                        .padding(horizontal = 8.dp, vertical = 16.dp),
+                    modifier = modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.clear),
-                        color = Color.Red,
-                        fontSize = 14.sp
+                    Row(
+                        modifier = modifier
+                            .clickable { buatPesananViewModel.reset() }
+                            .padding(horizontal = 8.dp, vertical = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.clear),
+                            color = Color.Red,
+                            fontSize = 14.sp
+                        )
+                        Spacer(modifier = modifier.width(16.dp))
+                        Icon(
+                            Icons.Default.DeleteSweep,
+                            contentDescription = stringResource(R.string.clear_data),
+                            tint = Color.Red
+                        )
+                    }
+                }
+                SelectCustomer(
+                    customer = selectedCustomer,
+                    onSelectCustomer = { onNavigateToSelectCustomer() },
+                    modifier = modifier
+                )
+                SelectPayment(
+                    buatPesananViewModel = buatPesananViewModel,
+                    paymentList = paymentList,
+                    selectedOption = selectedOption,
+                    modifier = modifier
+                )
+                SelectProduct(
+                    buatPesananViewModel = buatPesananViewModel,
+                    onSelectProduct = { onNavigateToSelectProduct() },
+                    modifier = modifier
+                )
+                TotalPayment(buatPesananViewModel = buatPesananViewModel, modifier = modifier)
+                Spacer(modifier = modifier.height(32.dp))
+
+                if (showLoadingDialog.value) {
+                    LoadingDialog(showLoadingDialog, modifier)
+                }
+
+                if (showErrorDialog.value) {
+                    AlertErrorDialog(
+                        message = message ?: stringResource(id = R.string.error_msg_default),
+                        showDialog = showErrorDialog,
+                        modifier = modifier
                     )
-                    Spacer(modifier = modifier.width(16.dp))
-                    Icon(
-                        Icons.Default.DeleteSweep,
-                        contentDescription = stringResource(R.string.clear_data),
-                        tint = Color.Red
+                }
+
+                if (showErrorValidationDialog.value) {
+                    AlertErrorDialog(
+                        message = msgErrorValidation.value,
+                        showDialog = showErrorValidationDialog,
+                        modifier = modifier
                     )
                 }
             }
-            SelectCustomer(
-                customer = selectedCustomer,
-                onSelectCustomer = { onNavigateToSelectCustomer() },
-                modifier = modifier
-            )
-            SelectPayment(
-                buatPesananViewModel = buatPesananViewModel,
-                paymentList = paymentList,
-                selectedOption = selectedOption,
-                modifier = modifier
-            )
-            SelectProduct(
-                buatPesananViewModel = buatPesananViewModel,
-                onSelectProduct = { onNavigateToSelectProduct() },
-                modifier = modifier
-            )
-            TotalPayment(buatPesananViewModel = buatPesananViewModel, modifier = modifier)
-            Spacer(modifier = modifier.height(32.dp))
 
-            if (showLoadingDialog.value) {
-                LoadingDialog(showLoadingDialog, modifier)
-            }
-
-            if (showErrorDialog.value) {
-                AlertErrorDialog(
-                    message = message ?: stringResource(id = R.string.error_msg_default),
-                    showDialog = showErrorDialog,
-                    modifier = modifier
-                )
-            }
-
-            if (showErrorValidationDialog.value) {
-                AlertErrorDialog(
-                    message = msgErrorValidation.value,
-                    showDialog = showErrorValidationDialog,
-                    modifier = modifier
-                )
-            }
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = modifier.align(Alignment.TopCenter)
+            )
         }
+
     }
 }
 
