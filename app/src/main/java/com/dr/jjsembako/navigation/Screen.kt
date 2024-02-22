@@ -32,12 +32,12 @@ sealed class Screen(val route: String) {
         fun createRoute(id: String, keyword: String) = "pelanggan/detail/$id?keyword=$keyword"
     }
 
-    object EditPelanggan : Screen("pelanggan/edit/{id}") {
-        fun createRoute(id: String) = "pelanggan/edit/$id"
+    object EditPelanggan : Screen("pelanggan/edit/{id}?keyword={keyword}") {
+        fun createRoute(id: String, keyword: String) = "pelanggan/edit/$id?keyword=$keyword"
     }
 
-    object PesananPelanggan : Screen("pelanggan/{id}/pesanan") {
-        fun createRoute(id: String) = "pelanggan/$id/pesanan"
+    object PesananPelanggan : Screen("pelanggan/{id}/pesanan?keywordCust={keywordCust}") {
+        fun createRoute(id: String, keywordCust: String) = "pelanggan/$id/pesanan?keywordCust=$keywordCust"
     }
 
     object Riwayat : Screen("riwayat")

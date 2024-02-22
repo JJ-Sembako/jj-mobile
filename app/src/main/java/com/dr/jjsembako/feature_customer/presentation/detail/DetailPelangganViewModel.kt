@@ -46,12 +46,7 @@ class DetailPelangganViewModel @Inject constructor(
     private var _id: String? = null
     fun setId(id: String) {
         _id = id
-        init()
-    }
-
-    private fun init() {
-        val id = _id ?: return
-        fetchDetailCustomer(id)
+        refresh()
     }
 
     fun setStateSecond(state: StateResponse?) {

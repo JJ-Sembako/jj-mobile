@@ -295,12 +295,12 @@ fun JJSembakoApp() {
                     }
                 },
                 onNavigateToEditCust = {
-                    navController.navigate(Screen.EditPelanggan.createRoute(id)) {
+                    navController.navigate(Screen.EditPelanggan.createRoute(id, keyword)) {
                         launchSingleTop = true
                     }
                 },
                 onNavigateToCustOrder = {
-                    navController.navigate(Screen.PesananPelanggan.createRoute(id)) {
+                    navController.navigate(Screen.PesananPelanggan.createRoute(id, keyword)) {
                         launchSingleTop = true
                     }
                 },
@@ -312,25 +312,43 @@ fun JJSembakoApp() {
 
         composable(
             route = Screen.EditPelanggan.route,
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
+            arguments = listOf(
+                navArgument("id") { type = NavType.StringType },
+                navArgument("keyword") { type = NavType.StringType }
+            )
         ) {
             val id = it.arguments?.getString("id") ?: ""
+            val keyword = it.arguments?.getString("keyword") ?: ""
             EditPelangganScreen(
                 idCust = id,
-                onNavigateToDetailCust = { navController.popBackStack() },
+                onNavigateToDetailCust = {
+                    navController.navigate(Screen.DetailPelanggan.createRoute(id, keyword)) {
+                        popUpTo(Screen.DetailPelanggan.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
                 openMaps = { url -> openMaps(context, url) })
         }
 
         composable(
             route = Screen.PesananPelanggan.route,
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
+            arguments = listOf(
+                navArgument("id") { type = NavType.StringType },
+                navArgument("keywordCust") { type = NavType.StringType }
+            )
         ) {
             val id = it.arguments?.getString("id") ?: ""
+            val keywordCust = it.arguments?.getString("keywordCust") ?: ""
            PesananPelangganScreen(
                idCust = id,
                context = context,
                clipboardManager = clipboardManager,
-               onNavigateBack = { navController.popBackStack() },
+               onNavigateBack = {
+                   navController.navigate(Screen.DetailPelanggan.createRoute(id, keywordCust)) {
+                       popUpTo(Screen.DetailPelanggan.route) { inclusive = true }
+                       launchSingleTop = true
+                   }
+               },
                onNavigateToDetail = { idOrder ->
                    navController.navigate(Screen.DetailRiwayat.createRoute(idOrder)) {
                        launchSingleTop = true

@@ -83,13 +83,9 @@ fun DetailPelangganScreen(
     val message = viewModel.message.observeAsState().value
     val customerData = viewModel.customerData
 
-    // Set id for the first time Composable is rendered
-    LaunchedEffect(idCust) {
+    // Set id for the first time Composable is rendered & Handle data updated
+    LaunchedEffect(idCust, Unit) {
         viewModel.setId(idCust)
-    }
-    // Handle data updated
-    LaunchedEffect(Unit) {
-        viewModel.refresh()
     }
 
     when (stateFirst) {
