@@ -62,7 +62,7 @@
     <string name="err_question_not_found">Pertanyaan tidak ditemukan</string>
     <string name="err_answer">Jawaban minimal 3 karakter</string>
 
-    <string name="turnover_this_month">Omset Penjualan Bulan Ini</string>
+    <string name="turnover_this_month">Omzet Penjualan Bulan Ini</string>
     <string name="orders_made_this_month">Pesanan Dibuat\n Bulan Ini</string>
     <string name="items_sold_this_month">Barang Dijual\n Bulan Ini</string>
     <string name="latest_sale">Penjualan Terakhir</string>

@@ -59,7 +59,7 @@ fun OrderedProductItem(
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
     ) {
-        Option(data.id, expanded, showDialog, idDeleteProductOrder, modifier)
+        Option(data.product.id, expanded, showDialog, idDeleteProductOrder, modifier)
         Row(
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,

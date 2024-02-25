@@ -174,11 +174,17 @@ class DetailTransaksiViewModel @Inject constructor(
                         _message.value = it.message
                         _statusCode.value = it.status
                         val oldValue = orderData.value
-                        val newOrderToProducts = oldValue!!.orderToProducts.filter { data ->
+                        val deletedProduct = oldValue!!.orderToProducts.first { data ->
+                            data.product.id == productId
+                        }
+                        val newTotalPrice = oldValue.totalPrice - (deletedProduct.selledPrice * deletedProduct.actualAmount)
+                        val newOrderToProducts = oldValue.orderToProducts.filter { data ->
                             data.product.id != productId
                         }
                         val newValue = oldValue.copy(
-                            orderToProducts = newOrderToProducts
+                            orderToProducts = newOrderToProducts,
+                            totalPrice = newTotalPrice,
+                            actualTotalPrice = newTotalPrice
                         )
                         _orderData.value = newValue
                         if (orderData.value!!.orderToProducts.isEmpty()) {
