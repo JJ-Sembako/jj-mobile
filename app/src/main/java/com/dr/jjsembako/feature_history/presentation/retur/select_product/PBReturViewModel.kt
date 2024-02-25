@@ -73,27 +73,26 @@ class PBReturViewModel @Inject constructor(
 
     fun setId(id: String) {
         _id = id
-        init()
+        refresh()
     }
 
     fun setStateRefresh(state: StateResponse?) {
         _stateRefresh.value = state
     }
 
-    private fun init() {
-        refresh()
-    }
-
     fun refresh() {
+        viewModelScope.launch {
+            _returData.value = getReturStore()
+        }
         val id = _id ?: return
         fetchOrder(id)
     }
 
     fun saveData() {
-        if (returData.value == null) return
+        if (selectedData.value == null || selectedData.value?.id.isNullOrEmpty()) return
         else {
             viewModelScope.launch {
-                setReturStore(returData.value)
+                setReturStore(mapSelectPNRItemToReturStore(selectedData.value!!))
             }
         }
     }

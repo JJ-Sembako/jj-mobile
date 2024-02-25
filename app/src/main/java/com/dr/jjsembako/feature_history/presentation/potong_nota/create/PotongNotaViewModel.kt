@@ -69,7 +69,7 @@ class PotongNotaViewModel @Inject constructor(
 
     fun setId(id: String) {
         _id = id
-        init()
+        refresh()
     }
 
     fun setStateSecond(state: StateResponse?) {
@@ -80,11 +80,10 @@ class PotongNotaViewModel @Inject constructor(
         _stateRefresh.value = state
     }
 
-    private fun init() {
-        refresh()
-    }
-
     fun refresh() {
+        viewModelScope.launch {
+            _canceledData.value = getCanceledStore()
+        }
         val id = _id ?: return
         fetchOrder(id)
     }

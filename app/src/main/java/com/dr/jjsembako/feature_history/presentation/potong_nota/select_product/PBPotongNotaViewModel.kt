@@ -73,27 +73,26 @@ class PBPotongNotaViewModel @Inject constructor(
 
     fun setId(id: String) {
         _id = id
-        init()
+        refresh()
     }
 
     fun setStateRefresh(state: StateResponse?) {
         _stateRefresh.value = state
     }
 
-    private fun init() {
-        refresh()
-    }
-
     fun refresh() {
+        viewModelScope.launch {
+            _canceledData.value = getCanceledStore()
+        }
         val id = _id ?: return
         fetchOrder(id)
     }
 
     fun saveData() {
-        if (canceledData.value == null) return
+        if (selectedData.value == null || selectedData.value?.id.isNullOrEmpty()) return
         else {
             viewModelScope.launch {
-                setCanceledStore(canceledData.value)
+                setCanceledStore(mapSelectPNRItemToCanceledStore(selectedData.value!!))
             }
         }
     }

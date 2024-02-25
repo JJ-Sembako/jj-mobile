@@ -81,7 +81,7 @@ fun PilihBarangPotongNotaScreen(
     val orderData = viewModel.orderData
 
     // Set id for the first time Composable is rendered
-    LaunchedEffect(id) {
+    LaunchedEffect(id, Unit) {
         viewModel.setId(id)
     }
 
