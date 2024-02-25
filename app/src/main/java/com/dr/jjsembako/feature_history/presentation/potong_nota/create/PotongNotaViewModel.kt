@@ -178,7 +178,7 @@ class PotongNotaViewModel @Inject constructor(
             if (productOrder.value?.isEmpty() == true) return
             else {
                 val currentList = _productOrder.value.orEmpty().toMutableList()
-                val index = currentList.indexOfFirst { it?.id == canceledData.value!!.idProduct }
+                val index = currentList.indexOfFirst { it?.id == canceledData.value!!.id }
                 if (index != -1) {
                     val existingProduct = currentList[index]!!
                     val updatedExistingProduct = existingProduct.copy(

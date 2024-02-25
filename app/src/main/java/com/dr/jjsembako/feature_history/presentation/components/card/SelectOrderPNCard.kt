@@ -178,7 +178,7 @@ private fun OrderContent(
         verticalArrangement = Arrangement.Center
     ) {
         if (data.status == 0) {
-            if (!data.isChosen) {
+            if (!data.isChosen && (selectedData?.id != data.id)) {
                 Button(
                     enabled = selectedData == null,
                     onClick = {
