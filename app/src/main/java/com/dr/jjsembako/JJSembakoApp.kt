@@ -1,11 +1,13 @@
 package com.dr.jjsembako
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -13,6 +15,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.asLiveData
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -58,6 +61,8 @@ fun JJSembakoApp() {
     val tokenViewModel: TokenViewModel = hiltViewModel()
     val token by tokenViewModel.token.collectAsState()
     val username by tokenViewModel.username.collectAsState()
+    val role = tokenViewModel.role.asLiveData().observeAsState().value
+    val currentRole = tokenViewModel.currentRole.asLiveData().observeAsState().value
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
     val activity = (LocalLifecycleOwner.current as ComponentActivity)
@@ -89,6 +94,13 @@ fun JJSembakoApp() {
                     setUsername = { username ->
                         tokenViewModel.setUsername(username)
                         tokenViewModel.updateStateUsername()
+                    },
+                    setRole = { newRole ->
+                        tokenViewModel.setRole(newRole)
+                        tokenViewModel.updateStateRole()
+                        tokenViewModel.setCurrentRole(newRole)
+                        tokenViewModel.updateStateCurrentRole()
+                        Log.d("JJSembakoApp", "role: $role & currentRole: $currentRole")
                     }
                 )
             }
@@ -185,8 +197,12 @@ fun JJSembakoApp() {
                         }
                         tokenViewModel.setToken("")
                         tokenViewModel.setUsername("username")
+                        tokenViewModel.setRole("")
+                        tokenViewModel.setCurrentRole("")
                         tokenViewModel.updateStateToken()
                         tokenViewModel.updateStateUsername()
+                        tokenViewModel.updateStateRole()
+                        tokenViewModel.updateStateCurrentRole()
                     },
                     backHandler = { activity.finish() }
                 )
@@ -553,8 +569,12 @@ fun JJSembakoApp() {
                     }
                     tokenViewModel.setToken("")
                     tokenViewModel.setUsername("username")
+                    tokenViewModel.setRole("")
+                    tokenViewModel.setCurrentRole("")
                     tokenViewModel.updateStateToken()
                     tokenViewModel.updateStateUsername()
+                    tokenViewModel.updateStateRole()
+                    tokenViewModel.updateStateCurrentRole()
                 },
                 onNavigateToChangePassword = {
                     navController.navigate(Screen.GantiKataSandi.route) {

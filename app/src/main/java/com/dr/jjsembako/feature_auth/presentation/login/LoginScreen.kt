@@ -70,14 +70,16 @@ fun LoginScreen(
     onNavigateToCheckUsername: () -> Unit,
     setToken: (String) -> Unit,
     setUsername: (String) -> Unit,
+    setRole: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val loginViewModel: LoginViewModel = hiltViewModel()
-    val state = loginViewModel.state.observeAsState().value
-    val statusCode = loginViewModel.statusCode.observeAsState().value
-    val token = loginViewModel.token.observeAsState().value
-    val message = loginViewModel.message.observeAsState().value
-    val trueUsername = loginViewModel.username.observeAsState().value
+    val viewModel: LoginViewModel = hiltViewModel()
+    val state = viewModel.state.observeAsState().value
+    val statusCode = viewModel.statusCode.observeAsState().value
+    val token = viewModel.token.observeAsState().value
+    val message = viewModel.message.observeAsState().value
+    val trueUsername = viewModel.username.observeAsState().value
+    val role = viewModel.role.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -129,15 +131,16 @@ fun LoginScreen(
             Log.e("LoginScreen", "statusCode: $statusCode")
             showLoadingDialog.value = false
             showErrorDialog.value = true
-            loginViewModel.setState(null)
+            viewModel.setState(null)
         }
 
         StateResponse.SUCCESS -> {
-            loginViewModel.setState(null)
+            viewModel.setState(null)
             showLoadingDialog.value = false
             showErrorDialog.value = false
             setUsername(trueUsername!!)
             setToken(token!!)
+            setRole(role!!)
             onLoginSuccess()
         }
 
@@ -253,7 +256,7 @@ fun LoginScreen(
         Button(
             onClick = {
                 keyboardController?.hide()
-                loginViewModel.handleLogin(username, password)
+                viewModel.handleLogin(username, password)
             },
             enabled = isValidUsername.value && isValidPassword.value && state != StateResponse.LOADING,
             modifier = modifier
@@ -300,6 +303,8 @@ private fun LoginScreenPreview() {
             onLoginSuccess = {},
             onNavigateToCheckUsername = {},
             setToken = {},
-            setUsername = {})
+            setUsername = {},
+            setRole = {},
+        )
     }
 }
