@@ -1,6 +1,7 @@
 package com.dr.jjsembako.feature_history.presentation.components.item_list
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,6 +52,9 @@ import com.dr.jjsembako.core.utils.formatRupiah
 fun PotongNotaItem(
     data: CanceledItem,
     showDialogCanceled: MutableState<Boolean>,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     idDeleteCanceled: MutableState<String>,
     statusCanceled: MutableState<Int>,
     modifier: Modifier
@@ -64,20 +68,15 @@ fun PotongNotaItem(
             .padding(horizontal = 8.dp)
     ) {
         StatusAndOption(
-            data.id,
-            data.status,
-            showDialogCanceled,
-            idDeleteCanceled,
-            statusCanceled,
-            expanded,
-            modifier
+            data.id, data.status, showDialogCanceled,
+            idDeleteCanceled, statusCanceled, expanded, modifier
         )
         Row(
             modifier = modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ProductImage(data, modifier)
+            ProductImage(data, showDialogPreview, previewProductName, previewProductImage, modifier)
             PotongNotaInfo(data, modifier)
         }
         Spacer(modifier = modifier.height(4.dp))
@@ -132,6 +131,9 @@ private fun StatusAndOption(
 @Composable
 private fun ProductImage(
     data: CanceledItem,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     if (data.product.image.isEmpty() || data.product.image.contains("default")) {
@@ -140,6 +142,11 @@ private fun ProductImage(
             contentDescription = stringResource(R.string.product_description, data.product.name),
             contentScale = ContentScale.Crop,
             modifier = modifier
+                .clickable {
+                    previewProductName.value = data.product.name
+                    previewProductImage.value = data.product.image
+                    showDialogPreview.value = true
+                }
                 .padding(8.dp)
                 .width(30.dp)
                 .height(40.dp)
@@ -152,6 +159,11 @@ private fun ProductImage(
             contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
+                .clickable {
+                    previewProductName.value = data.product.name
+                    previewProductImage.value = data.product.image
+                    showDialogPreview.value = true
+                }
                 .padding(8.dp)
                 .width(30.dp)
                 .height(40.dp)
@@ -206,6 +218,9 @@ private fun PotongNotaItemPreview() {
             PotongNotaItem(
                 data = dataCanceled[0],
                 showDialogCanceled = remember { mutableStateOf(true) },
+                showDialogPreview = remember { mutableStateOf(true) },
+                previewProductName = remember { mutableStateOf("") },
+                previewProductImage = remember { mutableStateOf("") },
                 idDeleteCanceled = remember { mutableStateOf("") },
                 statusCanceled = remember { mutableIntStateOf(0) },
                 modifier = Modifier

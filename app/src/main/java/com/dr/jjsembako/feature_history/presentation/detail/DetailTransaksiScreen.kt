@@ -51,6 +51,7 @@ import com.dr.jjsembako.core.presentation.components.dialog.AlertDeleteDialog
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.dialog.OrderInformationDialog
+import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
 import com.dr.jjsembako.core.presentation.components.dialog.SuccessDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
@@ -188,11 +189,14 @@ private fun DetailTransaksiContent(
     val showCantModifyOrderDialog = remember { mutableStateOf(false) }
     val showCantDelOrderDialog = remember { mutableStateOf(false) }
     val showCantPNRDialog = remember { mutableStateOf(false) }
+    val showPreviewImageDialog = remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
 
     val idDeleteProductOrder = remember { mutableStateOf("") }
     val idDeleteCanceled = remember { mutableStateOf("") }
     val idDeleteRetur = remember { mutableStateOf("") }
+    val previewProductName = remember { mutableStateOf("") }
+    val previewProductImage = remember { mutableStateOf("") }
     val statusCanceled = remember { mutableIntStateOf(0) }
     val statusRetur = remember { mutableIntStateOf(0) }
     val msgErrorPNR = rememberSaveable { mutableStateOf("") }
@@ -397,7 +401,10 @@ private fun DetailTransaksiContent(
                 OrderedProductList(
                     data = orderData.orderToProducts,
                     totalPrice = orderData.totalPrice,
-                    showDialog = showDeleteProductOrderDialog,
+                    showDialogDelete = showDeleteProductOrderDialog,
+                    showDialogPreview = showPreviewImageDialog,
+                    previewProductName = previewProductName,
+                    previewProductImage = previewProductImage,
                     idDeleteProductOrder = idDeleteProductOrder,
                     modifier = modifier
                 )
@@ -413,6 +420,9 @@ private fun DetailTransaksiContent(
                     actualTotalPrice = orderData.actualTotalPrice,
                     showDialogCanceled = showDeleteCanceledDialog,
                     showDialogRetur = showDeleteReturDialog,
+                    showDialogPreview = showPreviewImageDialog,
+                    previewProductName = previewProductName,
+                    previewProductImage = previewProductImage,
                     idDeleteCanceled = idDeleteCanceled,
                     idDeleteRetur = idDeleteRetur,
                     statusCanceled = statusCanceled,
@@ -520,6 +530,15 @@ private fun DetailTransaksiContent(
                     SuccessDialog(
                         message = msgSuccess.value,
                         showDialog = showSuccessDialog,
+                        modifier = modifier
+                    )
+                }
+
+                if (showPreviewImageDialog.value) {
+                    PreviewImageDialog(
+                        name = previewProductName.value,
+                        image = previewProductImage.value,
+                        showDialog = showPreviewImageDialog,
                         modifier = modifier
                     )
                 }
