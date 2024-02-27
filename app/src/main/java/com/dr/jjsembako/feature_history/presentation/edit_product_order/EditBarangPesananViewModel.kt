@@ -356,7 +356,7 @@ class EditBarangPesananViewModel @Inject constructor(
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
-            val orderInfo = orderData?.orderToProducts?.find { it.id == product.id }
+            val orderInfo = orderData?.orderToProducts?.find { it.product.id == product.id }
 
             if (productIndex != -1 && orderInfo != null) {
                 val existingProduct = currentList[productIndex]!!
