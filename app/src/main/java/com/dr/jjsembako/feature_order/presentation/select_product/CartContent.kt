@@ -20,7 +20,9 @@ import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -45,7 +47,13 @@ import com.dr.jjsembako.feature_order.presentation.components.ProductOnOrder
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) {
+fun CartContent(
+    pilihBarangViewModel: PilihBarangViewModel,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
+    modifier: Modifier
+) {
     val tag = "Cart Content"
     val dataProducts = pilihBarangViewModel.dataProducts.observeAsState().value
     val loadingState = pilihBarangViewModel.loadingState.observeAsState().value
@@ -119,7 +127,10 @@ fun CartContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) 
                             product?.id ?: "empty-${System.currentTimeMillis()}"
                         }, itemContent = { product ->
                             if (product != null) {
-                                ProductOnOrder(pilihBarangViewModel, product, modifier)
+                                ProductOnOrder(
+                                    pilihBarangViewModel, product, showDialog,
+                                    previewProductName, previewProductImage, modifier
+                                )
                             }
                             Spacer(modifier = modifier.height(8.dp))
                         })
@@ -139,6 +150,9 @@ private fun CartContentPreview() {
         val pilihBarangViewModel: PilihBarangViewModel = hiltViewModel()
         CartContent(
             pilihBarangViewModel = pilihBarangViewModel,
+            showDialog = remember { mutableStateOf(true) },
+            previewProductName = remember { mutableStateOf("") },
+            previewProductImage = remember { mutableStateOf("") },
             modifier = Modifier
         )
     }

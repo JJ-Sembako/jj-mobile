@@ -18,8 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.key
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,6 +37,9 @@ import com.dr.jjsembako.feature_order.presentation.create_order.BuatPesananViewM
 @Composable
 fun SelectProduct(
     buatPesananViewModel: BuatPesananViewModel,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     onSelectProduct: () -> Unit,
     modifier: Modifier
 ) {
@@ -43,7 +49,10 @@ fun SelectProduct(
             .padding(bottom = 16.dp)
     ) {
         SelectProductHeader(onSelectProduct, modifier)
-        SelectProductContent(buatPesananViewModel, modifier)
+        SelectProductContent(
+            buatPesananViewModel, showDialog,
+            previewProductName, previewProductImage, modifier
+        )
     }
 }
 
@@ -78,6 +87,9 @@ private fun SelectProductHeader(onSelectProduct: () -> Unit, modifier: Modifier)
 @Composable
 private fun SelectProductContent(
     buatPesananViewModel: BuatPesananViewModel,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     val dataProducts = buatPesananViewModel.dataProducts.observeAsState().value
@@ -111,7 +123,10 @@ private fun SelectProductContent(
                         filteredProducts.forEach { product ->
                             key(product?.id ?: "empty-${System.currentTimeMillis()}") {
                                 if (product != null) {
-                                    ProductOnSelected(buatPesananViewModel, product, modifier)
+                                    ProductOnSelected(
+                                        buatPesananViewModel, product, showDialog,
+                                        previewProductName, previewProductImage, modifier
+                                    )
                                 }
                                 Spacer(modifier = modifier.height(8.dp))
                             }
@@ -139,6 +154,9 @@ private fun SelectProductPreview() {
     JJSembakoTheme {
         SelectProduct(
             buatPesananViewModel = hiltViewModel(),
+            showDialog = remember { mutableStateOf(true) },
+            previewProductName = remember { mutableStateOf("") },
+            previewProductImage = remember { mutableStateOf("") },
             onSelectProduct = {},
             modifier = Modifier
         )

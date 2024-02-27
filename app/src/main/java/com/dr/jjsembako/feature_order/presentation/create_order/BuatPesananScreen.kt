@@ -54,6 +54,7 @@ import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.utils.HeaderError
@@ -82,7 +83,7 @@ fun BuatPesananScreen(
     val statusCode = buatPesananViewModel.statusCode.observeAsState().value
     val idCust = buatPesananViewModel.idCustomer.collectAsState().value
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         buatPesananViewModel.refresh()
     }
 
@@ -149,7 +150,8 @@ private fun BuatPesananContent(
     val tag = "Buat Pesanan Content"
     val stateRefresh = buatPesananViewModel.stateRefresh.observeAsState().value
     val stateCreate = buatPesananViewModel.stateCreate.observeAsState().value
-    val errValidationCreateOrder = buatPesananViewModel.errValidationCreateOrder.observeAsState().value
+    val errValidationCreateOrder =
+        buatPesananViewModel.errValidationCreateOrder.observeAsState().value
     val errorState = buatPesananViewModel.errorState.observeAsState().value
     val errorMsg = buatPesananViewModel.errorMsg.observeAsState().value
     val isRefreshing by buatPesananViewModel.isRefreshing.collectAsState(initial = false)
@@ -171,6 +173,9 @@ private fun BuatPesananContent(
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorValidationDialog = rememberSaveable { mutableStateOf(false) }
+    val showPreviewImageDialog = remember { mutableStateOf(false) }
+    val previewProductName = remember { mutableStateOf("") }
+    val previewProductImage = remember { mutableStateOf("") }
     val msgErrorValidation = rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(errorState) {
@@ -348,6 +353,9 @@ private fun BuatPesananContent(
                 )
                 SelectProduct(
                     buatPesananViewModel = buatPesananViewModel,
+                    showDialog = showPreviewImageDialog,
+                    previewProductName = previewProductName,
+                    previewProductImage = previewProductImage,
                     onSelectProduct = { onNavigateToSelectProduct() },
                     modifier = modifier
                 )
@@ -370,6 +378,15 @@ private fun BuatPesananContent(
                     AlertErrorDialog(
                         message = msgErrorValidation.value,
                         showDialog = showErrorValidationDialog,
+                        modifier = modifier
+                    )
+                }
+
+                if (showPreviewImageDialog.value) {
+                    PreviewImageDialog(
+                        name = previewProductName.value,
+                        image = previewProductImage.value,
+                        showDialog = showPreviewImageDialog,
                         modifier = modifier
                     )
                 }
