@@ -55,6 +55,7 @@ import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetProduct
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
@@ -145,11 +146,14 @@ private fun PilihBarangReturContent(
 
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = remember { mutableStateOf(false) }
+    val showPreviewImageDialog = remember { mutableStateOf(false) }
     val showSheet = remember { mutableStateOf(false) }
+    val activeSearch = remember { mutableStateOf(false) }
+    val previewProductName = remember { mutableStateOf("") }
+    val previewProductImage = remember { mutableStateOf("") }
+    val searchQuery = rememberSaveable { mutableStateOf("") }
     val checkBoxResult = rememberMutableStateListOf<String>()
     val checkBoxStates = rememberMutableStateMapOf<String, Boolean>()
-    val searchQuery = rememberSaveable { mutableStateOf("") }
-    val activeSearch = remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.refresh() })
@@ -305,7 +309,10 @@ private fun PilihBarangReturContent(
                                 order?.id ?: "empty-${System.currentTimeMillis()}"
                             }, itemContent = { order ->
                                 if (order != null) {
-                                    SelectOrderRCard(viewModel, order, modifier)
+                                    SelectOrderRCard(
+                                        viewModel, order, showPreviewImageDialog,
+                                        previewProductName, previewProductImage, modifier
+                                    )
                                 }
                                 Spacer(modifier = modifier.height(8.dp))
                             })
@@ -333,6 +340,15 @@ private fun PilihBarangReturContent(
                     AlertErrorDialog(
                         message = message ?: "Unknown error",
                         showDialog = showErrorDialog,
+                        modifier = modifier
+                    )
+                }
+
+                if (showPreviewImageDialog.value) {
+                    PreviewImageDialog(
+                        name = previewProductName.value,
+                        image = previewProductImage.value,
+                        showDialog = showPreviewImageDialog,
                         modifier = modifier
                     )
                 }
