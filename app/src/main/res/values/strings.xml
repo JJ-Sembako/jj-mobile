@@ -68,6 +68,8 @@
     <string name="latest_sale">Penjualan Terakhir</string>
     <string name="icon_of_menu">Ikon dari menu %1$s</string>
     <string name="error_string">Error</string>
+    <string name="hidden_value">*****</string>
+    <string name="change_visibility_omzet">Atur ketelihatan omzet</string>
 
     <string name="change_password">Ganti Kata Sandi</string>
     <string name="account_recovery">Pemulihan Akun</string>
