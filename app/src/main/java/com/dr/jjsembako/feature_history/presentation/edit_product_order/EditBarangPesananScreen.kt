@@ -47,6 +47,7 @@ import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -138,6 +139,9 @@ private fun EditBarangPesananContent(
 
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = remember { mutableStateOf(false) }
+    val showPreviewImageDialog = remember { mutableStateOf(false) }
+    val previewProductName = remember { mutableStateOf("") }
+    val previewProductImage = remember { mutableStateOf("") }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.refresh() })
@@ -263,11 +267,13 @@ private fun EditBarangPesananContent(
                 ) { index ->
                     when (index) {
                         0 -> CartContentEdit(
-                            orderData = orderData, viewModel = viewModel, modifier = modifier
+                            orderData, viewModel, showPreviewImageDialog,
+                            previewProductName, previewProductImage, modifier
                         )
 
                         1 -> CatalogContentEdit(
-                            orderData = orderData, viewModel = viewModel, modifier = modifier
+                            orderData, viewModel, showPreviewImageDialog,
+                            previewProductName, previewProductImage, modifier
                         )
 
                         else -> {}
@@ -282,6 +288,15 @@ private fun EditBarangPesananContent(
                     AlertErrorDialog(
                         message = message ?: "Unknown error",
                         showDialog = showErrorDialog,
+                        modifier = modifier
+                    )
+                }
+
+                if (showPreviewImageDialog.value) {
+                    PreviewImageDialog(
+                        name = previewProductName.value,
+                        image = previewProductImage.value,
+                        showDialog = showPreviewImageDialog,
                         modifier = modifier
                     )
                 }

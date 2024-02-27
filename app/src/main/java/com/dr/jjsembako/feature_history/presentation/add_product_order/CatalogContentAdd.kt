@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,9 @@ import com.dr.jjsembako.feature_history.presentation.components.card.AddOrderCar
 fun CatalogContentAdd(
     orderData: DetailOrderData,
     viewModel: TambahBarangPesananViewModel,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     val tag = "Catalog Content"
@@ -123,7 +127,7 @@ fun CatalogContentAdd(
                     product!!.name.contains(searchQuery.value, ignoreCase = true) &&
                             checkBoxResult.isNotEmpty()
                             && checkBoxResult.contains(product.category)
-                            && !orderData.orderToProducts.any { it.id == product.id }
+                            && !orderData.orderToProducts.any { it.product.id == product.id }
                 }
 
                 if (filteredProducts.isNotEmpty()) {
@@ -135,7 +139,10 @@ fun CatalogContentAdd(
                             product?.id ?: "empty-${System.currentTimeMillis()}"
                         }, itemContent = { product ->
                             if (product != null) {
-                                AddOrderCard(viewModel, product, modifier)
+                                AddOrderCard(
+                                    viewModel, product, showDialog,
+                                    previewProductName, previewProductImage, modifier
+                                )
                             }
                             Spacer(modifier = modifier.height(8.dp))
                         })
@@ -165,6 +172,9 @@ private fun CatalogContentAddPreview() {
         CatalogContentAdd(
             orderData = detailOrderData,
             viewModel = hiltViewModel(),
+            showDialog = remember { mutableStateOf(true) },
+            previewProductName = remember { mutableStateOf("") },
+            previewProductImage = remember { mutableStateOf("") },
             modifier = Modifier
         )
     }
