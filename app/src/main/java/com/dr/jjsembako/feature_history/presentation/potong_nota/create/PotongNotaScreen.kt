@@ -50,6 +50,7 @@ import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -151,6 +152,9 @@ private fun PotongNotaContent(
     val showErrCantCanceled = rememberSaveable { mutableStateOf(false) }
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showPreviewImageDialog = remember { mutableStateOf(false) }
+    val previewProductName = remember { mutableStateOf("") }
+    val previewProductImage = remember { mutableStateOf("") }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.refresh() })
@@ -284,6 +288,9 @@ private fun PotongNotaContent(
             PNSelectedProduct(
                 data = selectedData,
                 viewModel = viewModel,
+                showDialog = showPreviewImageDialog,
+                previewProductName = previewProductName,
+                previewProductImage = previewProductImage,
                 onSelectProduct = { onSelectProduct() },
                 modifier = modifier
             )
@@ -313,6 +320,15 @@ private fun PotongNotaContent(
                 AlertErrorDialog(
                     message = stringResource(R.string.err_fill_data_first),
                     showDialog = showErrorDialog,
+                    modifier = modifier
+                )
+            }
+
+            if (showPreviewImageDialog.value) {
+                PreviewImageDialog(
+                    name = previewProductName.value,
+                    image = previewProductImage.value,
+                    showDialog = showPreviewImageDialog,
                     modifier = modifier
                 )
             }
