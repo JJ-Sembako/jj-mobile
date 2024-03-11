@@ -3,6 +3,7 @@ package com.dr.jjsembako.feature_history.presentation.components.card
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -163,14 +164,16 @@ private fun OrderedProductInfo(
                 text = formatRupiah(data.selledPrice),
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.tertiary
+                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
+                else Color.Black
             )
             Spacer(modifier = modifier.width(2.dp))
             Text(
                 text = stringResource(R.string.order_qty, data.amount),
                 fontSize = 12.sp, fontWeight = FontWeight.Bold,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
-                color = MaterialTheme.colorScheme.tertiary
+                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
+                else Color.Black
             )
         }
     }

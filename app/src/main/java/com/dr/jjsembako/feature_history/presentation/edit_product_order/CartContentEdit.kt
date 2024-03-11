@@ -75,7 +75,7 @@ fun CartContentEdit(
         selectedData?.orderTotalPrice
     ) {
         if (selectedData != null) {
-            val orderInfo = orderData.orderToProducts.find { it.id == selectedData.id }
+            val orderInfo = orderData.orderToProducts.find { it.product.id == selectedData.id }
             if (orderInfo != null) {
                 changeQty.intValue = selectedData.orderQty - orderInfo.actualAmount
                 changeCost.longValue =
