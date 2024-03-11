@@ -95,7 +95,7 @@ class ReturViewModel @Inject constructor(
 
     fun setId(id: String) {
         _id = id
-        init()
+        refresh()
     }
 
     fun setStateSecond(state: StateResponse?) {
@@ -106,11 +106,11 @@ class ReturViewModel @Inject constructor(
         _stateRefresh.value = state
     }
 
-    private fun init() {
-        refresh()
-    }
-
     fun refresh() {
+        viewModelScope.launch {
+            _returData.value = getReturStore()
+            _substituteData.value = getSubstituteStore()
+        }
         val id = _id ?: return
         fetchOrder(id)
     }
@@ -231,7 +231,7 @@ class ReturViewModel @Inject constructor(
             if (productOrder.value?.isEmpty() == true) return
             else {
                 val currentList = _productOrder.value.orEmpty().toMutableList()
-                val index = currentList.indexOfFirst { it?.id == returData.value!!.idProduct }
+                val index = currentList.indexOfFirst { it?.id == returData.value!!.id }
                 if (index != -1) {
                     val existingProduct = currentList[index]!!
                     val updatedExistingProduct = existingProduct.copy(

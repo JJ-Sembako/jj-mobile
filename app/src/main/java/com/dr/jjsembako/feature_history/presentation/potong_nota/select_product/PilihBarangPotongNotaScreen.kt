@@ -55,6 +55,7 @@ import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetProduct
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
@@ -81,7 +82,7 @@ fun PilihBarangPotongNotaScreen(
     val orderData = viewModel.orderData
 
     // Set id for the first time Composable is rendered
-    LaunchedEffect(id) {
+    LaunchedEffect(id, Unit) {
         viewModel.setId(id)
     }
 
@@ -146,10 +147,13 @@ private fun PilihBarangPotongNotaContent(
     val showLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showErrorDialog = remember { mutableStateOf(false) }
     val showSheet = remember { mutableStateOf(false) }
+    val activeSearch = remember { mutableStateOf(false) }
+    val showPreviewImageDialog = remember { mutableStateOf(false) }
+    val previewProductName = remember { mutableStateOf("") }
+    val previewProductImage = remember { mutableStateOf("") }
+    val searchQuery = rememberSaveable { mutableStateOf("") }
     val checkBoxResult = rememberMutableStateListOf<String>()
     val checkBoxStates = rememberMutableStateMapOf<String, Boolean>()
-    val searchQuery = rememberSaveable { mutableStateOf("") }
-    val activeSearch = remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.refresh() })
@@ -305,7 +309,10 @@ private fun PilihBarangPotongNotaContent(
                                 order?.id ?: "empty-${System.currentTimeMillis()}"
                             }, itemContent = { order ->
                                 if (order != null) {
-                                    SelectOrderPNCard(viewModel, order, modifier)
+                                    SelectOrderPNCard(
+                                        viewModel, order, showPreviewImageDialog,
+                                        previewProductName, previewProductImage, modifier
+                                    )
                                 }
                                 Spacer(modifier = modifier.height(8.dp))
                             })
@@ -333,6 +340,15 @@ private fun PilihBarangPotongNotaContent(
                     AlertErrorDialog(
                         message = message ?: "Unknown error",
                         showDialog = showErrorDialog,
+                        modifier = modifier
+                    )
+                }
+
+                if (showPreviewImageDialog.value) {
+                    PreviewImageDialog(
+                        name = previewProductName.value,
+                        image = previewProductImage.value,
+                        showDialog = showPreviewImageDialog,
                         modifier = modifier
                     )
                 }

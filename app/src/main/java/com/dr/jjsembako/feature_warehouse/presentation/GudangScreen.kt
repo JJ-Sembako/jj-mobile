@@ -39,13 +39,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetProduct
+import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
+import com.dr.jjsembako.core.presentation.components.utils.HeaderError
 import com.dr.jjsembako.core.presentation.components.utils.SearchFilter
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.rememberMutableStateListOf
 import com.dr.jjsembako.core.utils.rememberMutableStateMapOf
-import com.dr.jjsembako.core.presentation.components.utils.HeaderError
 import com.dr.jjsembako.feature_warehouse.presentation.components.ProductOnWarehouseInfo
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -67,6 +68,9 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     val checkBoxStates = rememberMutableStateMapOf<String, Boolean>()
     val searchQuery = rememberSaveable { mutableStateOf("") }
     val activeSearch = remember { mutableStateOf(false) }
+    val showPreviewImageDialog = remember { mutableStateOf(false) }
+    val previewProductName = remember { mutableStateOf("") }
+    val previewProductImage = remember { mutableStateOf("") }
 
     LaunchedEffect(errorState) {
         if (errorState == true && !errorMsg.isNullOrEmpty()) {
@@ -170,7 +174,13 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
                                 product?.id ?: "empty-${System.currentTimeMillis()}"
                             }, itemContent = { product ->
                                 if (product != null) {
-                                    ProductOnWarehouseInfo(product = product, modifier = modifier)
+                                    ProductOnWarehouseInfo(
+                                        product = product,
+                                        showDialog = showPreviewImageDialog,
+                                        previewProductName = previewProductName,
+                                        previewProductImage = previewProductImage,
+                                        modifier = modifier
+                                    )
                                 }
                                 Spacer(modifier = modifier.height(8.dp))
                             })
@@ -187,6 +197,15 @@ fun GudangScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
                     checkBoxResult = checkBoxResult,
                     checkBoxStates = checkBoxStates,
                     showSheet = showSheet,
+                    modifier = modifier
+                )
+            }
+
+            if (showPreviewImageDialog.value) {
+                PreviewImageDialog(
+                    name = previewProductName.value,
+                    image = previewProductImage.value,
+                    showDialog = showPreviewImageDialog,
                     modifier = modifier
                 )
             }

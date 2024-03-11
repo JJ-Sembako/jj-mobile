@@ -1,6 +1,7 @@
 package com.dr.jjsembako.feature_history.presentation.components.card
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,9 +26,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,6 +66,9 @@ import com.dr.jjsembako.feature_history.presentation.retur.select_substitute.PPR
 fun SelectSubsRCard(
     viewModel: PPReturViewModel,
     data: SelectSubstituteItem,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     OutlinedCard(
@@ -76,7 +82,7 @@ fun SelectSubsRCard(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ProductImage(data, modifier)
+            ProductImage(data, showDialog, previewProductName, previewProductImage, modifier)
             Spacer(modifier = modifier.width(16.dp))
             ProductInfo(data, modifier)
         }
@@ -87,6 +93,9 @@ fun SelectSubsRCard(
 @Composable
 private fun ProductImage(
     product: SelectSubstituteItem,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     if (product.image.isEmpty() || product.image.contains("default")) {
@@ -95,6 +104,11 @@ private fun ProductImage(
             contentDescription = stringResource(R.string.product_description, product.name),
             contentScale = ContentScale.Crop,
             modifier = modifier
+                .clickable {
+                    previewProductName.value = product.name
+                    previewProductImage.value = product.image
+                    showDialog.value = true
+                }
                 .padding(8.dp)
                 .width(60.dp)
                 .height(80.dp)
@@ -107,6 +121,11 @@ private fun ProductImage(
             contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
+                .clickable {
+                    previewProductName.value = product.name
+                    previewProductImage.value = product.image
+                    showDialog.value = true
+                }
                 .padding(8.dp)
                 .width(60.dp)
                 .height(80.dp)
@@ -296,6 +315,9 @@ private fun SelectSubsRCardPreview() {
         SelectSubsRCard(
             viewModel = viewModel,
             data = dataSelectSubstituteItem,
+            showDialog = remember { mutableStateOf(true) },
+            previewProductName = remember { mutableStateOf("") },
+            previewProductImage = remember { mutableStateOf("") },
             modifier = Modifier
         )
     }

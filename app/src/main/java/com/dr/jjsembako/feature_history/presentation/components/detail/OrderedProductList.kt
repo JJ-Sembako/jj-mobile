@@ -35,7 +35,10 @@ import com.dr.jjsembako.feature_history.presentation.components.item_list.Ordere
 fun OrderedProductList(
     data: List<OrderToProductsItem>,
     totalPrice: Long,
-    showDialog: MutableState<Boolean>,
+    showDialogDelete: MutableState<Boolean>,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     idDeleteProductOrder: MutableState<String>,
     modifier: Modifier
 ) {
@@ -72,7 +75,10 @@ fun OrderedProductList(
                 key(item.id) {
                     OrderedProductItem(
                         data = item,
-                        showDialog = showDialog,
+                        showDialogDelete = showDialogDelete,
+                        showDialogPreview = showDialogPreview,
+                        previewProductName = previewProductName,
+                        previewProductImage = previewProductImage,
                         idDeleteProductOrder = idDeleteProductOrder,
                         modifier = modifier
                     )
@@ -125,7 +131,10 @@ private fun OrderedProductListPreview() {
             OrderedProductList(
                 data = dataOrderToProductsItem,
                 totalPrice = 168_000L,
-                showDialog = remember { mutableStateOf(true) },
+                showDialogDelete = remember { mutableStateOf(true) },
+                showDialogPreview = remember { mutableStateOf(true) },
+                previewProductName = remember { mutableStateOf("") },
+                previewProductImage = remember { mutableStateOf("") },
                 idDeleteProductOrder = remember { mutableStateOf("") },
                 modifier = Modifier
             )

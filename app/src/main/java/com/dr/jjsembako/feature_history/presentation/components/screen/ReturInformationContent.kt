@@ -25,6 +25,9 @@ import com.dr.jjsembako.feature_history.presentation.components.item_list.ReturI
 fun ReturInformationContent(
     dataRetur: List<ReturItem?>?,
     showDialogRetur: MutableState<Boolean>,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     idDeleteRetur: MutableState<String>,
     statusRetur: MutableState<Int>,
     modifier: Modifier
@@ -42,7 +45,10 @@ fun ReturInformationContent(
             dataRetur.forEach { item ->
                 if (item != null) {
                     key(item.id) {
-                        ReturItem(item, showDialogRetur, idDeleteRetur, statusRetur, modifier)
+                        ReturItem(
+                            item, showDialogRetur, showDialogPreview, previewProductName,
+                            previewProductImage, idDeleteRetur, statusRetur, modifier
+                        )
                         Spacer(modifier = modifier.height(8.dp))
                     }
                 }
@@ -64,6 +70,9 @@ private fun ReturInformationContentPreview() {
             ReturInformationContent(
                 dataRetur = null,
                 showDialogRetur = remember { mutableStateOf(true) },
+                showDialogPreview = remember { mutableStateOf(true) },
+                previewProductName = remember { mutableStateOf("") },
+                previewProductImage = remember { mutableStateOf("") },
                 idDeleteRetur = remember { mutableStateOf("") },
                 statusRetur = remember { mutableIntStateOf(0) },
                 modifier = Modifier

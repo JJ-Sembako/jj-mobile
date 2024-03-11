@@ -20,7 +20,9 @@ import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -47,6 +49,9 @@ import com.dr.jjsembako.feature_history.presentation.components.card.SelectSubsR
 @Composable
 fun CartContentRS(
     viewModel: PPReturViewModel,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     val tag = "Cart Content"
@@ -125,7 +130,10 @@ fun CartContentRS(
                             product?.id ?: "empty-${System.currentTimeMillis()}"
                         }, itemContent = { product ->
                             if (product != null) {
-                                SelectSubsRCard(viewModel, product, modifier)
+                                SelectSubsRCard(
+                                    viewModel, product, showDialog,
+                                    previewProductName, previewProductImage, modifier
+                                )
                             }
                             Spacer(modifier = modifier.height(8.dp))
                         })
@@ -146,6 +154,9 @@ private fun CartContentRSPreview() {
     JJSembakoTheme {
         CartContentRS(
             viewModel = hiltViewModel(),
+            showDialog = remember { mutableStateOf(true) },
+            previewProductName = remember { mutableStateOf("") },
+            previewProductImage = remember { mutableStateOf("") },
             modifier = Modifier
         )
     }

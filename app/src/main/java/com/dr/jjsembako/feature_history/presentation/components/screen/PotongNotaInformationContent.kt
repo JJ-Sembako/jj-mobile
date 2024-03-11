@@ -25,6 +25,9 @@ import com.dr.jjsembako.feature_history.presentation.components.item_list.Potong
 fun PotongNotaInformationContent(
     dataCanceled: List<CanceledItem?>?,
     showDialogCanceled: MutableState<Boolean>,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     idDeleteCanceled: MutableState<String>,
     statusCanceled: MutableState<Int>,
     modifier: Modifier
@@ -42,7 +45,10 @@ fun PotongNotaInformationContent(
             dataCanceled.forEach { item ->
                 if (item != null) {
                     key(item.id) {
-                        PotongNotaItem(item, showDialogCanceled, idDeleteCanceled, statusCanceled, modifier)
+                        PotongNotaItem(
+                            item, showDialogCanceled, showDialogPreview, previewProductName,
+                            previewProductImage, idDeleteCanceled, statusCanceled, modifier
+                        )
                         Spacer(modifier = modifier.height(8.dp))
                     }
                 }
@@ -64,6 +70,9 @@ private fun PotongNotaInformationContentPreview() {
             PotongNotaInformationContent(
                 dataCanceled = null,
                 showDialogCanceled = remember { mutableStateOf(true) },
+                showDialogPreview = remember { mutableStateOf(true) },
+                previewProductName = remember { mutableStateOf("") },
+                previewProductImage = remember { mutableStateOf("") },
                 idDeleteCanceled = remember { mutableStateOf("") },
                 statusCanceled = remember { mutableIntStateOf(0) },
                 modifier = Modifier

@@ -2,6 +2,7 @@ package com.dr.jjsembako.feature_history.presentation.components.card
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -74,11 +76,14 @@ fun UpdateOrderCard(
     viewModel: EditBarangPesananViewModel,
     data: OrderToProductsItem,
     product: DataProductOrder,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     val changeAmount = rememberSaveable { mutableIntStateOf(0) }
 
-    LaunchedEffect(product.orderQty){
+    LaunchedEffect(product.orderQty) {
         changeAmount.intValue = product.orderQty - data.amount
     }
 
@@ -96,14 +101,14 @@ fun UpdateOrderCard(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ProductImage(product = product, modifier = modifier)
+            ProductImage(product, showDialog, previewProductName, previewProductImage, modifier)
             OrderedProductInfo(data, modifier)
         }
         Divider(
             modifier = modifier
                 .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
         )
-        ProductInfo(product = product, modifier = modifier)
+        ProductInfo(product, modifier)
         Divider(
             modifier = modifier
                 .fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary
@@ -115,6 +120,9 @@ fun UpdateOrderCard(
 @Composable
 private fun ProductImage(
     product: DataProductOrder,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     if (product.image.isEmpty() || product.image.contains("default")) {
@@ -123,6 +131,11 @@ private fun ProductImage(
             contentDescription = stringResource(R.string.product_description, product.name),
             contentScale = ContentScale.Crop,
             modifier = modifier
+                .clickable {
+                    previewProductName.value = product.name
+                    previewProductImage.value = product.image
+                    showDialog.value = true
+                }
                 .padding(8.dp)
                 .width(60.dp)
                 .height(80.dp)
@@ -135,6 +148,11 @@ private fun ProductImage(
             contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
+                .clickable {
+                    previewProductName.value = product.name
+                    previewProductImage.value = product.image
+                    showDialog.value = true
+                }
                 .padding(8.dp)
                 .width(60.dp)
                 .height(80.dp)
@@ -186,7 +204,9 @@ private fun ProductInfo(
             .padding(8.dp),
     ) {
         Text(
-            text = stringResource(R.string.warehouse_info), fontWeight = FontWeight.Bold, fontSize = 14.sp,
+            text = stringResource(R.string.warehouse_info),
+            fontWeight = FontWeight.Bold,
+            fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
         )
         Spacer(modifier = modifier.height(8.dp))
@@ -451,6 +471,9 @@ private fun UpdateOrderCardPreview() {
             viewModel = viewModel,
             data = dataOrderToProductsItem[0],
             product = dataProductOrder,
+            showDialog = remember { mutableStateOf(true) },
+            previewProductName = remember { mutableStateOf("") },
+            previewProductImage = remember { mutableStateOf("") },
             modifier = Modifier
         )
     }

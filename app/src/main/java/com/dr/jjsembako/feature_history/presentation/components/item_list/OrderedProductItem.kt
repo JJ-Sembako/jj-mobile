@@ -1,6 +1,7 @@
 package com.dr.jjsembako.feature_history.presentation.components.item_list
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,7 +48,10 @@ import com.dr.jjsembako.core.utils.formatRupiah
 @Composable
 fun OrderedProductItem(
     data: OrderToProductsItem,
-    showDialog: MutableState<Boolean>,
+    showDialogDelete: MutableState<Boolean>,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     idDeleteProductOrder: MutableState<String>,
     modifier: Modifier
 ) {
@@ -59,12 +63,12 @@ fun OrderedProductItem(
             .clip(RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp)
     ) {
-        Option(data.id, expanded, showDialog, idDeleteProductOrder, modifier)
+        Option(data.product.id, expanded, showDialogDelete, idDeleteProductOrder, modifier)
         Row(
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ProductImage(data, modifier)
+            ProductImage(data, showDialogPreview, previewProductName, previewProductImage, modifier)
             OrderedProductInfo(data, modifier)
         }
         Spacer(modifier = modifier.height(4.dp))
@@ -75,7 +79,7 @@ fun OrderedProductItem(
 private fun Option(
     id: String,
     expanded: MutableState<Boolean>,
-    showDialog: MutableState<Boolean>,
+    showDialogDelete: MutableState<Boolean>,
     idDeleteProductOrder: MutableState<String>,
     modifier: Modifier
 ) {
@@ -106,7 +110,7 @@ private fun Option(
                         onClick = {
                             expanded.value = false
                             idDeleteProductOrder.value = id
-                            showDialog.value = true
+                            showDialogDelete.value = true
                         })
                 }
             }
@@ -117,6 +121,9 @@ private fun Option(
 @Composable
 private fun ProductImage(
     data: OrderToProductsItem,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     if (data.product.image.isEmpty() || data.product.image.contains("default")) {
@@ -125,6 +132,11 @@ private fun ProductImage(
             contentDescription = stringResource(R.string.product_description, data.product.name),
             contentScale = ContentScale.Crop,
             modifier = modifier
+                .clickable {
+                    previewProductName.value = data.product.name
+                    previewProductImage.value = data.product.image
+                    showDialogPreview.value = true
+                }
                 .padding(8.dp)
                 .width(30.dp)
                 .height(40.dp)
@@ -137,6 +149,11 @@ private fun ProductImage(
             contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
+                .clickable {
+                    previewProductName.value = data.product.name
+                    previewProductImage.value = data.product.image
+                    showDialogPreview.value = true
+                }
                 .padding(8.dp)
                 .width(30.dp)
                 .height(40.dp)
@@ -190,7 +207,10 @@ private fun OrderedProductItemPreview() {
         ) {
             OrderedProductItem(
                 data = dataOrderToProductsItem[0],
-                showDialog = remember { mutableStateOf(true) },
+                showDialogDelete = remember { mutableStateOf(true) },
+                showDialogPreview = remember { mutableStateOf(true) },
+                previewProductName = remember { mutableStateOf("") },
+                previewProductImage = remember { mutableStateOf("") },
                 idDeleteProductOrder = remember { mutableStateOf("") },
                 modifier = Modifier
             )

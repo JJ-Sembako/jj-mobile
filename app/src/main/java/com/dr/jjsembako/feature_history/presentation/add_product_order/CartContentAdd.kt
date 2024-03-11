@@ -18,8 +18,10 @@ import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -47,6 +49,9 @@ import com.dr.jjsembako.feature_history.presentation.components.card.AddOrderCar
 fun CartContentAdd(
     orderData: DetailOrderData,
     viewModel: TambahBarangPesananViewModel,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     val tag = "Cart Content"
@@ -132,7 +137,10 @@ fun CartContentAdd(
                             ) {
                                 filteredProducts.first().let { product ->
                                     if (product != null) {
-                                        AddOrderCard(viewModel, product, modifier)
+                                        AddOrderCard(
+                                            viewModel, product, showDialog,
+                                            previewProductName, previewProductImage, modifier
+                                        )
                                     }
                                     Spacer(modifier = modifier.height(8.dp))
                                 }
@@ -163,6 +171,9 @@ private fun CartContentAddPreview() {
         CartContentAdd(
             orderData = detailOrderData,
             viewModel = hiltViewModel(),
+            showDialog = remember { mutableStateOf(true) },
+            previewProductName = remember { mutableStateOf("") },
+            previewProductImage = remember { mutableStateOf("") },
             modifier = Modifier
         )
     }

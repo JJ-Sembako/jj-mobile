@@ -1,6 +1,7 @@
 package com.dr.jjsembako.feature_history.presentation.components.item_list
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,6 +54,9 @@ import com.dr.jjsembako.core.utils.formatRupiah
 fun ReturItem(
     data: ReturItem,
     showDialogRetur: MutableState<Boolean>,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     idDeleteRetur: MutableState<String>,
     statusRetur: MutableState<Int>,
     modifier: Modifier
@@ -66,17 +70,18 @@ fun ReturItem(
             .padding(horizontal = 8.dp)
     ) {
         StatusAndOption(
-            data.id,
-            data.status,
-            showDialogRetur,
-            idDeleteRetur,
-            statusRetur,
-            expanded,
-            modifier
+            data.id, data.status, showDialogRetur, idDeleteRetur,
+            statusRetur, expanded, modifier
         )
-        ProductOnReturnedItem(data, modifier)
+        ProductOnReturnedItem(
+            data, showDialogPreview, previewProductName,
+            previewProductImage, modifier
+        )
         DividerInfo(modifier)
-        ProductSubstituteItem(data, modifier)
+        ProductSubstituteItem(
+            data, showDialogPreview, previewProductName,
+            previewProductImage, modifier
+        )
         Spacer(modifier = modifier.height(4.dp))
     }
 }
@@ -156,6 +161,9 @@ private fun DividerInfo(modifier: Modifier) {
 @Composable
 private fun ProductOnReturnedItem(
     data: ReturItem,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     Row(
@@ -163,7 +171,10 @@ private fun ProductOnReturnedItem(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ProductImage(data.returnedProduct.name, data.returnedProduct.image, modifier)
+        ProductImage(
+            data.returnedProduct.name, data.returnedProduct.image,
+            showDialogPreview, previewProductName, previewProductImage, modifier
+        )
         ProductInfo(true, data.returnedProduct.name, data.amount, data.oldSelledPrice, modifier)
     }
 }
@@ -171,6 +182,9 @@ private fun ProductOnReturnedItem(
 @Composable
 private fun ProductSubstituteItem(
     data: ReturItem,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     Row(
@@ -178,7 +192,10 @@ private fun ProductSubstituteItem(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ProductImage(data.returedProduct.name, data.returedProduct.image, modifier)
+        ProductImage(
+            data.returedProduct.name, data.returedProduct.image,
+            showDialogPreview, previewProductName, previewProductImage, modifier
+        )
         ProductInfo(false, data.returedProduct.name, data.amount, data.selledPrice, modifier)
     }
 }
@@ -187,6 +204,9 @@ private fun ProductSubstituteItem(
 private fun ProductImage(
     name: String,
     image: String,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     if (image.isEmpty() || image.contains("default")) {
@@ -195,6 +215,11 @@ private fun ProductImage(
             contentDescription = stringResource(R.string.product_description, name),
             contentScale = ContentScale.Crop,
             modifier = modifier
+                .clickable {
+                    previewProductName.value = name
+                    previewProductImage.value = image
+                    showDialogPreview.value = true
+                }
                 .padding(8.dp)
                 .width(30.dp)
                 .height(40.dp)
@@ -207,6 +232,11 @@ private fun ProductImage(
             contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.ic_error),
             modifier = modifier
+                .clickable {
+                    previewProductName.value = name
+                    previewProductImage.value = image
+                    showDialogPreview.value = true
+                }
                 .padding(8.dp)
                 .width(30.dp)
                 .height(40.dp)
@@ -262,6 +292,9 @@ private fun ReturItemPreview() {
             ReturItem(
                 data = dataRetur[0],
                 showDialogRetur = remember { mutableStateOf(true) },
+                showDialogPreview = remember { mutableStateOf(true) },
+                previewProductName = remember { mutableStateOf("") },
+                previewProductImage = remember { mutableStateOf("") },
                 idDeleteRetur = remember { mutableStateOf("") },
                 statusRetur = remember { mutableIntStateOf(0) },
                 modifier = Modifier

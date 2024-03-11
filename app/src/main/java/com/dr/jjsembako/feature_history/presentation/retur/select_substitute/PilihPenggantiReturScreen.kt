@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @OptIn(
@@ -56,6 +58,9 @@ fun PilihPenggantiReturScreen(
     var tabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabs = listOf(stringResource(R.string.cart), stringResource(R.string.catalog))
     val pagerState = rememberPagerState { tabs.size }
+    val showPreviewImageDialog = remember { mutableStateOf(false) }
+    val previewProductName = remember { mutableStateOf("") }
+    val previewProductImage = remember { mutableStateOf("") }
 
     LaunchedEffect(tabIndex) {
         pagerState.animateScrollToPage(tabIndex)
@@ -127,10 +132,27 @@ fun PilihPenggantiReturScreen(
                     .fillMaxWidth()
             ) { index ->
                 when (index) {
-                    0 -> CartContentRS(viewModel, modifier)
-                    1 -> CatalogContentRS(viewModel, modifier)
+                    0 -> CartContentRS(
+                        viewModel, showPreviewImageDialog,
+                        previewProductName, previewProductImage, modifier
+                    )
+
+                    1 -> CatalogContentRS(
+                        viewModel, showPreviewImageDialog,
+                        previewProductName, previewProductImage, modifier
+                    )
+
                     else -> {}
                 }
+            }
+
+            if (showPreviewImageDialog.value) {
+                PreviewImageDialog(
+                    name = previewProductName.value,
+                    image = previewProductImage.value,
+                    showDialog = showPreviewImageDialog,
+                    modifier = modifier
+                )
             }
         }
     }

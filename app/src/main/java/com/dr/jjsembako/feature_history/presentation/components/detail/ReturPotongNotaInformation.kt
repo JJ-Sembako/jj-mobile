@@ -50,6 +50,9 @@ fun ReturPotongNotaInformation(
     actualTotalPrice: Long,
     showDialogCanceled: MutableState<Boolean>,
     showDialogRetur: MutableState<Boolean>,
+    showDialogPreview: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     idDeleteCanceled: MutableState<String>,
     idDeleteRetur: MutableState<String>,
     statusCanceled: MutableState<Int>,
@@ -105,19 +108,13 @@ fun ReturPotongNotaInformation(
         ) { index ->
             when (index) {
                 0 -> ReturInformationContent(
-                    dataRetur,
-                    showDialogRetur,
-                    idDeleteRetur,
-                    statusRetur,
-                    modifier
+                    dataRetur, showDialogRetur, showDialogPreview, previewProductName,
+                    previewProductImage, idDeleteRetur, statusRetur, modifier
                 )
 
                 1 -> PotongNotaInformationContent(
-                    dataCanceled,
-                    showDialogCanceled,
-                    idDeleteCanceled,
-                    statusCanceled,
-                    modifier
+                    dataCanceled, showDialogCanceled, showDialogPreview, previewProductName,
+                    previewProductImage, idDeleteCanceled, statusCanceled, modifier
                 )
 
                 else -> {}
@@ -171,6 +168,9 @@ private fun ReturPotongNotaInformationPreview() {
                 actualTotalPrice = 1_500_000L,
                 showDialogCanceled = remember { mutableStateOf(true) },
                 showDialogRetur = remember { mutableStateOf(true) },
+                showDialogPreview = remember { mutableStateOf(true) },
+                previewProductName = remember { mutableStateOf("") },
+                previewProductImage = remember { mutableStateOf("") },
                 idDeleteCanceled = remember { mutableStateOf("") },
                 idDeleteRetur = remember { mutableStateOf("") },
                 statusCanceled = remember { mutableIntStateOf(0) },

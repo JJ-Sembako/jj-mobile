@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,7 +40,13 @@ import com.dr.jjsembako.feature_order.presentation.components.ProductOnOrder
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CatalogContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifier) {
+fun CatalogContent(
+    pilihBarangViewModel: PilihBarangViewModel,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
+    modifier: Modifier
+) {
     val tag = "Catalog Content"
     val dataProducts = pilihBarangViewModel.dataProducts.observeAsState().value
     val option = pilihBarangViewModel.dataCategories.observeAsState().value
@@ -128,7 +135,10 @@ fun CatalogContent(pilihBarangViewModel: PilihBarangViewModel, modifier: Modifie
                             product?.id ?: "empty-${System.currentTimeMillis()}"
                         }, itemContent = { product ->
                             if (product != null) {
-                                ProductOnOrder(pilihBarangViewModel, product, modifier)
+                                ProductOnOrder(
+                                    pilihBarangViewModel, product, showDialog,
+                                    previewProductName, previewProductImage, modifier
+                                )
                             }
                             Spacer(modifier = modifier.height(8.dp))
                         })
@@ -158,6 +168,9 @@ private fun ProductListContentPreview() {
         val pilihBarangViewModel: PilihBarangViewModel = hiltViewModel()
         CatalogContent(
             pilihBarangViewModel = pilihBarangViewModel,
+            showDialog = remember { mutableStateOf(true) },
+            previewProductName = remember { mutableStateOf("") },
+            previewProductImage = remember { mutableStateOf("") },
             modifier = Modifier
         )
     }

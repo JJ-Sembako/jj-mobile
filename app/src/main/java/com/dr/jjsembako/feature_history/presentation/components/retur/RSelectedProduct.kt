@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +27,9 @@ import com.dr.jjsembako.feature_history.presentation.retur.create.ReturViewModel
 fun RSelectedProduct(
     data: SelectPNRItem? = null,
     viewModel: ReturViewModel,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     onSelectProduct: () -> Unit,
     modifier: Modifier
 ) {
@@ -33,7 +39,11 @@ fun RSelectedProduct(
             .padding(bottom = 16.dp)
     ) {
         PNRSelectProductHeader(onSelectProduct = { onSelectProduct() }, modifier = modifier)
-        RSelectedProductContent(data = data, viewModel = viewModel, modifier = modifier)
+        RSelectedProductContent(
+            data = data, viewModel = viewModel, showDialog = showDialog,
+            previewProductName = previewProductName, previewProductImage = previewProductImage,
+            modifier = modifier
+        )
     }
 }
 
@@ -41,6 +51,9 @@ fun RSelectedProduct(
 private fun RSelectedProductContent(
     data: SelectPNRItem? = null,
     viewModel: ReturViewModel,
+    showDialog: MutableState<Boolean>,
+    previewProductName: MutableState<String>,
+    previewProductImage: MutableState<String>,
     modifier: Modifier
 ) {
     Column(
@@ -50,7 +63,10 @@ private fun RSelectedProductContent(
         if (data == null) Spacer(modifier = modifier.height(128.dp))
         else {
             Spacer(modifier = modifier.height(8.dp))
-            SelectedOrderRCard(viewModel, data, modifier)
+            SelectedOrderRCard(
+                viewModel, data, showDialog,
+                previewProductName, previewProductImage, modifier
+            )
             Spacer(modifier = modifier.height(8.dp))
         }
     }
@@ -69,6 +85,9 @@ private fun RSelectedProductPreview() {
         val viewModel: ReturViewModel = hiltViewModel()
         RSelectedProduct(
             viewModel = viewModel,
+            showDialog = remember { mutableStateOf(true) },
+            previewProductName = remember { mutableStateOf("") },
+            previewProductImage = remember { mutableStateOf("") },
             onSelectProduct = {},
             modifier = Modifier
         )
