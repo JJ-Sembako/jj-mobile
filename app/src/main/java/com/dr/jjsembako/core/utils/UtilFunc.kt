@@ -245,7 +245,7 @@ fun convertTimestampToArray(timestamp: String): Array<String> {
         val formattedDate = outputDateFormat.format(date)
         val formattedTime = outputTimeFormat.format(date)
 
-        return arrayOf(formattedDate, formattedTime)
+        return arrayOf(formattedDate, formattedTime + " WIB")
     } catch (e: ParseException) {
         e.printStackTrace()
         Log.e("toDateArray", "Error converting date:", e)

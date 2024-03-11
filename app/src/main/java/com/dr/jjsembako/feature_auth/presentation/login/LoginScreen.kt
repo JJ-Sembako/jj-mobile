@@ -54,10 +54,12 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.dr.jjsembako.BuildConfig
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.utils.DevMode
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidPassword
 import com.dr.jjsembako.core.utils.isValidUsername
@@ -70,14 +72,16 @@ fun LoginScreen(
     onNavigateToCheckUsername: () -> Unit,
     setToken: (String) -> Unit,
     setUsername: (String) -> Unit,
+    setRole: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val loginViewModel: LoginViewModel = hiltViewModel()
-    val state = loginViewModel.state.observeAsState().value
-    val statusCode = loginViewModel.statusCode.observeAsState().value
-    val token = loginViewModel.token.observeAsState().value
-    val message = loginViewModel.message.observeAsState().value
-    val trueUsername = loginViewModel.username.observeAsState().value
+    val viewModel: LoginViewModel = hiltViewModel()
+    val state = viewModel.state.observeAsState().value
+    val statusCode = viewModel.statusCode.observeAsState().value
+    val token = viewModel.token.observeAsState().value
+    val message = viewModel.message.observeAsState().value
+    val trueUsername = viewModel.username.observeAsState().value
+    val role = viewModel.role.observeAsState().value
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -129,15 +133,16 @@ fun LoginScreen(
             Log.e("LoginScreen", "statusCode: $statusCode")
             showLoadingDialog.value = false
             showErrorDialog.value = true
-            loginViewModel.setState(null)
+            viewModel.setState(null)
         }
 
         StateResponse.SUCCESS -> {
-            loginViewModel.setState(null)
+            viewModel.setState(null)
             showLoadingDialog.value = false
             showErrorDialog.value = false
             setUsername(trueUsername!!)
             setToken(token!!)
+            setRole(role!!)
             onLoginSuccess()
         }
 
@@ -163,6 +168,11 @@ fun LoginScreen(
         )
 
         Spacer(modifier = modifier.height(16.dp))
+
+        if(BuildConfig.BUILD_TYPE == "debug") {
+            DevMode(modifier)
+            Spacer(modifier = modifier.height(8.dp))
+        }
 
         Text(
             text = stringResource(id = R.string.welcome),
@@ -253,7 +263,7 @@ fun LoginScreen(
         Button(
             onClick = {
                 keyboardController?.hide()
-                loginViewModel.handleLogin(username, password)
+                viewModel.handleLogin(username, password)
             },
             enabled = isValidUsername.value && isValidPassword.value && state != StateResponse.LOADING,
             modifier = modifier
@@ -300,6 +310,8 @@ private fun LoginScreenPreview() {
             onLoginSuccess = {},
             onNavigateToCheckUsername = {},
             setToken = {},
-            setUsername = {})
+            setUsername = {},
+            setRole = {},
+        )
     }
 }

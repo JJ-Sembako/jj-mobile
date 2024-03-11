@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.StatusDeliveredText
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
@@ -91,7 +92,7 @@ private fun ChangePaymentContent(
         Text(
             text = changeCostText, fontWeight = FontWeight.Bold, fontSize = 14.sp,
             style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
-            color = if (changeCost >= 0L) Color.Green else Color.Red
+            color = if (changeCost >= 0L) StatusDeliveredText else Color.Red
         )
     }
     Spacer(modifier = modifier.height(8.dp))
@@ -129,7 +130,7 @@ private fun ChangePaymentContent(
                 color = MaterialTheme.colorScheme.tertiary
             )
             Text(
-                text = changeQty.toString(), fontWeight = FontWeight.Bold, fontSize = 14.sp,
+                text = if(changeQty > 0) "+$changeQty" else changeQty.toString(), fontWeight = FontWeight.Bold, fontSize = 14.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }

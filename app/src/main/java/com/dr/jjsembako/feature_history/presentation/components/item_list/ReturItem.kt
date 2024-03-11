@@ -48,6 +48,7 @@ import com.dr.jjsembako.core.data.dummy.dataRetur
 import com.dr.jjsembako.core.data.remote.response.order.ReturItem
 import com.dr.jjsembako.core.presentation.components.utils.ReturStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.StatusDeliveredText
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
@@ -110,7 +111,7 @@ private fun StatusAndOption(
                 Icons.Default.MoreVert,
                 stringResource(R.string.menu),
                 tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
-                else MaterialTheme.colorScheme.tertiary,
+                else Color.Black
             )
         }
         Box(modifier = modifier.padding(top = 16.dp), contentAlignment = Alignment.TopEnd) {
@@ -267,14 +268,15 @@ private fun ProductInfo(
                 text = if (isReturned) "-${formatRupiah(price)}" else formatRupiah(price),
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
-                color = if (isReturned) Color.Red else MaterialTheme.colorScheme.tertiary
+                color = if (isReturned) Color.Red else StatusDeliveredText
             )
             Spacer(modifier = modifier.width(2.dp))
             Text(
                 text = stringResource(R.string.order_qty, amount),
                 fontSize = 12.sp, fontWeight = FontWeight.Bold,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
-                color = MaterialTheme.colorScheme.tertiary
+                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
+                else Color.Black
             )
         }
     }

@@ -107,7 +107,7 @@ private fun StatusAndOption(
                 Icons.Default.MoreVert,
                 stringResource(R.string.menu),
                 tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
-                else MaterialTheme.colorScheme.tertiary,
+                else Color.Black
             )
         }
         Box(modifier = modifier.padding(top = 16.dp), contentAlignment = Alignment.TopEnd) {
@@ -198,7 +198,8 @@ private fun PotongNotaInfo(
                 text = stringResource(R.string.order_qty, data.amount),
                 fontSize = 12.sp, fontWeight = FontWeight.Bold,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
-                color = MaterialTheme.colorScheme.tertiary
+                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
+                else Color.Black
             )
         }
     }

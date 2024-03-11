@@ -29,6 +29,9 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
     private val _username = MutableLiveData<String?>()
     val username: LiveData<String?> = _username
 
+    private val _role = MutableLiveData<String?>()
+    val role: LiveData<String?> = _role
+
     fun setState(state: StateResponse?) {
         _state.value = state
     }
@@ -46,6 +49,7 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
                             _state.value = StateResponse.SUCCESS
                             _token.value = data.token
                             _username.value = data.username
+                            _role.value = data.role
                         } else {
                             _state.value = StateResponse.ERROR
                             _message.value = "Akses ditolak!\n Aplikasi ini khusus untuk SALES"

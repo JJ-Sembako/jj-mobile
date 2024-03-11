@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
+import com.dr.jjsembako.core.presentation.theme.StatusDeliveredText
 import com.dr.jjsembako.core.presentation.theme.dialogMaxWidth
 import com.dr.jjsembako.core.presentation.theme.dialogMinWidth
 
@@ -69,7 +70,7 @@ fun SuccessDialog(
             Text(
                 text = stringResource(R.string.success),
                 fontWeight = FontWeight.Medium,
-                fontSize = 20.sp, color = Color.Green,
+                fontSize = 20.sp, color = StatusDeliveredText,
                 textAlign = TextAlign.Center,
                 modifier = modifier.wrapContentSize(Alignment.Center)
             )

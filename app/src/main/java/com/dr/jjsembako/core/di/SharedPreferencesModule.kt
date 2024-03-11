@@ -16,6 +16,8 @@ class SharedPreferencesModule {
         val PREFS_NAME = "auth_pref"
         val TOKEN_KEY = "token"
         val USERNAME_KEY = "username"
+        val ROLE_KEY = "role"
+        val CURRENT_ROLE_KEY = "role"
     }
 
     @Singleton
@@ -34,5 +36,17 @@ class SharedPreferencesModule {
     @Provides
     fun provideUsername(sharedPreferences: SharedPreferences): String {
         return sharedPreferences.getString(USERNAME_KEY, "") ?: "username"
+    }
+
+    @Singleton
+    @Provides
+    fun provideRole(sharedPreferences: SharedPreferences): String {
+        return sharedPreferences.getString(ROLE_KEY, "") ?: ""
+    }
+
+    @Singleton
+    @Provides
+    fun provideCurrentRole(sharedPreferences: SharedPreferences): String {
+        return sharedPreferences.getString(CURRENT_ROLE_KEY, "") ?: ""
     }
 }
