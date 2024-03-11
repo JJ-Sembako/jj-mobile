@@ -130,7 +130,7 @@ private fun ChangePaymentContent(
                 color = MaterialTheme.colorScheme.tertiary
             )
             Text(
-                text = changeQty.toString(), fontWeight = FontWeight.Bold, fontSize = 14.sp,
+                text = if(changeQty > 0) "+$changeQty" else changeQty.toString(), fontWeight = FontWeight.Bold, fontSize = 14.sp,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
             )
         }
