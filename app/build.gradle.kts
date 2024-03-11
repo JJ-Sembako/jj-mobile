@@ -43,8 +43,8 @@ android {
                 "proguard-rules.pro"
             )
             // API Base URL - Production
-            buildConfigField("String", "BASE_URL", "\"https://jumanjaya.site/\"")
-            buildConfigField("String", "WS_URL", "\"https://jumanjaya.site/ws/\"")
+            buildConfigField("String", "BASE_URL", "\"https://www.jumanjaya.site/\"")
+            buildConfigField("String", "WS_URL", "\"https://www.jumanjaya.site/ws/\"")
         }
     }
     compileOptions {
