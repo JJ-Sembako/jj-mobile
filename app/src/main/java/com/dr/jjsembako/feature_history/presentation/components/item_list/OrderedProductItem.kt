@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -97,7 +98,7 @@ private fun Option(
                     Icons.Default.MoreVert,
                     stringResource(R.string.menu),
                     tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
-                    else MaterialTheme.colorScheme.tertiary,
+                    else Color.Black,
                 )
             }
             Box(modifier = modifier.padding(top = 16.dp), contentAlignment = Alignment.TopEnd) {
@@ -181,14 +182,16 @@ private fun OrderedProductInfo(
                 text = formatRupiah(data.selledPrice),
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.tertiary
+                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
+                else Color.Black
             )
             Spacer(modifier = modifier.width(2.dp))
             Text(
                 text = stringResource(R.string.order_qty, data.amount),
                 fontSize = 12.sp, fontWeight = FontWeight.Bold,
                 style = TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)),
-                color = MaterialTheme.colorScheme.tertiary
+                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary
+                else Color.Black
             )
         }
     }
