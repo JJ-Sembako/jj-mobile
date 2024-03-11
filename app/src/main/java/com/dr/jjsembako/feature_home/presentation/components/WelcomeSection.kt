@@ -5,9 +5,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Icon
@@ -22,7 +24,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dr.jjsembako.BuildConfig
 import com.dr.jjsembako.R
+import com.dr.jjsembako.core.presentation.components.utils.DevMode
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
@@ -58,13 +62,22 @@ private fun Greetings(name: String, modifier: Modifier) {
                 .padding(end = 8.dp)
         )
         Column {
-            Text(
-                text = stringResource(R.string.app_name),
-                fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontWeight = FontWeight.Bold,
-                modifier = modifier.padding(bottom = 4.dp)
-            )
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.app_name),
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = modifier.padding(bottom = 4.dp)
+                )
+                if(BuildConfig.BUILD_TYPE == "debug"){
+                    Spacer(modifier = modifier.width(8.dp))
+                    DevMode(modifier)
+                }
+            }
             Text(text = "Hi, $name", color = MaterialTheme.colorScheme.onPrimary)
         }
     }

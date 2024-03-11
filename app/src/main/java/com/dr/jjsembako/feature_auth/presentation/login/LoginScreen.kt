@@ -54,10 +54,12 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.dr.jjsembako.BuildConfig
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
+import com.dr.jjsembako.core.presentation.components.utils.DevMode
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidPassword
 import com.dr.jjsembako.core.utils.isValidUsername
@@ -166,6 +168,11 @@ fun LoginScreen(
         )
 
         Spacer(modifier = modifier.height(16.dp))
+
+        if(BuildConfig.BUILD_TYPE == "debug") {
+            DevMode(modifier)
+            Spacer(modifier = modifier.height(8.dp))
+        }
 
         Text(
             text = stringResource(id = R.string.welcome),
