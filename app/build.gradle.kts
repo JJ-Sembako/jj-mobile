@@ -22,19 +22,29 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        // API Base URL
-        buildConfigField("String", "BASE_URL", "\"http://54.251.20.182/\"")
-        buildConfigField("String", "WS_URL", "\"http://54.251.20.182:3000/ws/\"")
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            // API Base URL - Development
+            buildConfigField("String", "BASE_URL", "\"http://18.142.208.126:3003/\"")
+            buildConfigField("String", "WS_URL", "\"http://18.142.208.126:3003/ws/\"")
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // API Base URL - Production
+            buildConfigField("String", "BASE_URL", "\"http://18.142.208.126:3000/\"")
+            buildConfigField("String", "WS_URL", "\"http://18.142.208.126:3000/ws/\"")
         }
     }
     compileOptions {
