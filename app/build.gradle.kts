@@ -44,7 +44,7 @@ android {
             )
             // API Base URL - Production
             buildConfigField("String", "BASE_URL", "\"https://www.jumanjaya.site/\"")
-            buildConfigField("String", "WS_URL", "\"https://www.jumanjaya.site/ws/\"")
+            buildConfigField("String", "WS_URL", "\"http://18.142.208.126:3000/ws/\"")
         }
     }
     compileOptions {
