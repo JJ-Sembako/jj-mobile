@@ -13,9 +13,9 @@ JJ Sembako Mobile App adalah aplikasi yang dimiliki oleh CV Nurhalim Jaya Teksti
 ## Preview Mobile App
 Preview yang disediakan adalah screenshot dari versi 1.0.0 yang diambil pada tanggal 13 Maret 2023 pada build type variant debug. Hal yang membedakan antara build type variant debug dan release adalah penanda "DEV MODE" dan url API yang digunakan. Berikut ini adalah beberapa tampilan yang disediakan:
 1. Tampilan home screen
-	- Light Mode
-		[Link]
-	- Dark Mode
-		[Link]
-2. Tampilan detail transaksi
-	[Link]
+	- Light Mode\
+		<img src="https://github.com/JJ-Sembako/jj-mobile/blob/dev/screenshot/1.HomeScreen-LightMode.jpeg" width="240">
+	- Dark Mode\
+		<img src="https://github.com/JJ-Sembako/jj-mobile/blob/dev/screenshot/2.HomeScreen-DarkMode.jpeg" width="240">
+2. Tampilan detail transaksi\
+	<img src="https://github.com/JJ-Sembako/jj-mobile/blob/dev/screenshot/3.DetailTransaksiScreen.jpeg" width="240">
