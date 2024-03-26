@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
+import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
@@ -130,7 +130,7 @@ fun PotongNotaScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun PotongNotaContent(
-    orderData: DetailOrderData,
+    orderData: DataDetailOrder,
     viewModel: PotongNotaViewModel,
     context: Context,
     clipboardManager: ClipboardManager,

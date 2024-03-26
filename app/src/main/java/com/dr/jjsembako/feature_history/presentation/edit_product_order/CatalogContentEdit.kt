@@ -28,8 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.dummy.detailOrderData
-import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
+import com.dr.jjsembako.core.data.dummy.dataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetProduct
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
@@ -43,7 +43,7 @@ import com.dr.jjsembako.feature_history.presentation.components.card.UpdateOrder
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CatalogContentEdit(
-    orderData: DetailOrderData,
+    orderData: DataDetailOrder,
     viewModel: EditBarangPesananViewModel,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
@@ -174,7 +174,7 @@ fun CatalogContentEdit(
 private fun CatalogContentEditPreview() {
     JJSembakoTheme {
         CatalogContentEdit(
-            orderData = detailOrderData,
+            orderData = dataDetailOrder,
             viewModel = hiltViewModel(),
             showDialog = remember { mutableStateOf(true) },
             previewProductName = remember { mutableStateOf("") },

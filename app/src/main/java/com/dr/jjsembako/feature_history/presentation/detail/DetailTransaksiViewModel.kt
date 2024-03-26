@@ -10,7 +10,7 @@ import com.dr.jjsembako.ReturStore
 import com.dr.jjsembako.SubstituteStore
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
+import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
 import com.dr.jjsembako.feature_history.domain.model.UpdateStateOrder
 import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleDeleteCanceledUseCase
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
@@ -59,8 +59,8 @@ class DetailTransaksiViewModel @Inject constructor(
     private val _message = MutableLiveData<String?>()
     val message: LiveData<String?> = _message
 
-    private val _orderData = MutableLiveData<DetailOrderData?>()
-    val orderData: LiveData<DetailOrderData?> get() = _orderData
+    private val _orderData = MutableLiveData<DataDetailOrder?>()
+    val orderData: LiveData<DataDetailOrder?> get() = _orderData
 
     private var _id: String? = null
 
