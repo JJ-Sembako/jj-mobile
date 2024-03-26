@@ -58,13 +58,13 @@ data class DataDetailOrder(
     val orderToProducts: List<OrderToProductsItem>,
 
     @field:SerializedName("canceled")
-    val canceled: List<CanceledItem?>? = null,
+    val canceled: List<CanceledData?>? = null,
 
     @field:SerializedName("retur")
     val retur: List<ReturItem?>? = null
 )
 
-data class CanceledItem(
+data class CanceledData(
 
     @field:SerializedName("id")
     val id: String,
