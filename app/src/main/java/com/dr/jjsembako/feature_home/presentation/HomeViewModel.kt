@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderItem
 import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
 import com.dr.jjsembako.core.data.remote.response.performance.SelledData
 import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOmzetUseCase
@@ -52,8 +52,8 @@ class HomeViewModel @Inject constructor(
     private val _message = MutableLiveData<String?>()
     val message: LiveData<String?> = _message
 
-    private val _dataOrders = MutableLiveData<List<OrderDataItem?>?>()
-    val dataOrders: LiveData<List<OrderDataItem?>?> get() = _dataOrders
+    private val _dataOrders = MutableLiveData<List<OrderItem?>?>()
+    val dataOrders: LiveData<List<OrderItem?>?> get() = _dataOrders
 
     private val _totalOrders = MutableLiveData<Int?>()
     val totalOrders: LiveData<Int?> get() = _totalOrders

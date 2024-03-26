@@ -5,7 +5,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteProductOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
-import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderItem
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdatePaymentStatusResponse
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdateProductOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.PostHandleAddProductOrderResponse
@@ -18,7 +18,7 @@ interface IHistoryRepository {
         minDate: String? = null,
         maxDate: String? = null,
         me: Int? = null,
-    ): Flow<PagingData<OrderDataItem>>
+    ): Flow<PagingData<OrderItem>>
 
     suspend fun fetchOrder(id: String): Flow<Resource<out DetailOrderData?>>
 

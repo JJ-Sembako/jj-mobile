@@ -39,7 +39,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderItem
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetOrderHistory
 import com.dr.jjsembako.core.presentation.components.card.OrderHistoryCard
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
@@ -62,7 +62,7 @@ fun PesananPelangganScreen(
 ) {
     val tag = "PesananPelanggan-S"
     val viewModel: PesananPelangganViewModel = hiltViewModel()
-    val orderPagingItems: LazyPagingItems<OrderDataItem> =
+    val orderPagingItems: LazyPagingItems<OrderItem> =
         viewModel.orderState.collectAsLazyPagingItems()
 
     val focusManager = LocalFocusManager.current

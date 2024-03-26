@@ -10,7 +10,7 @@ import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteOrderR
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteProductOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrderData
 import com.dr.jjsembako.core.data.remote.response.order.GetFetchOrderResponse
-import com.dr.jjsembako.core.data.remote.response.order.OrderDataItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderItem
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdatePaymentStatusResponse
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdateProductOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.PostHandleAddProductOrderResponse
@@ -43,7 +43,7 @@ class HistoryRepository @Inject constructor(
         minDate: String?,
         maxDate: String?,
         me: Int?
-    ): Flow<PagingData<OrderDataItem>> {
+    ): Flow<PagingData<OrderItem>> {
         return Pager(
             config = PagingConfig(pageSize = 5),
             pagingSourceFactory = {
