@@ -17,13 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dr.jjsembako.core.data.remote.response.order.ReturItem
+import com.dr.jjsembako.core.data.remote.response.order.ReturData
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_history.presentation.components.item_list.ReturItem
 
 @Composable
 fun ReturInformationContent(
-    dataRetur: List<ReturItem?>?,
+    dataRetur: List<ReturData?>?,
     showDialogRetur: MutableState<Boolean>,
     showDialogPreview: MutableState<Boolean>,
     previewProductName: MutableState<String>,

@@ -8,7 +8,7 @@ import com.dr.jjsembako.core.data.remote.response.order.Account
 import com.dr.jjsembako.core.data.remote.response.order.CanceledData
 import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
-import com.dr.jjsembako.core.data.remote.response.order.ReturItem
+import com.dr.jjsembako.core.data.remote.response.order.ReturData
 import com.dr.jjsembako.core.data.remote.response.product.Product
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
@@ -88,7 +88,7 @@ val dataOrderToProductsItem = listOf(
 )
 
 val dataRetur = listOf(
-    ReturItem(
+    ReturData(
         id = "60968e57-6b09-4e6d-bc41-54f27650aa30",
         amount = 2,
         status = 0,
