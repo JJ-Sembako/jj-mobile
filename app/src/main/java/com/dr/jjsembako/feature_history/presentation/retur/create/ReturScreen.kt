@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
@@ -132,7 +132,7 @@ fun ReturScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun ReturContent(
-    orderData: DataDetailOrder,
+    orderData: DetailOrder,
     viewModel: ReturViewModel,
     context: Context,
     clipboardManager: ClipboardManager,

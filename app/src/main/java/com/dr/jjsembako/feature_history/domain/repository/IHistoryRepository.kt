@@ -4,7 +4,7 @@ import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteProductOrderResponse
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdatePaymentStatusResponse
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdateProductOrderResponse
@@ -20,7 +20,7 @@ interface IHistoryRepository {
         me: Int? = null,
     ): Flow<PagingData<Order>>
 
-    suspend fun fetchOrder(id: String): Flow<Resource<out DataDetailOrder?>>
+    suspend fun fetchOrder(id: String): Flow<Resource<out DetailOrder?>>
 
     suspend fun handleAddProductOrder(
         id: String,

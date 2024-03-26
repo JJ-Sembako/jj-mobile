@@ -8,7 +8,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.FilterOption
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.utils.DataMapper
 import com.dr.jjsembako.feature_history.data.SocketModifyOrderHandler
 import com.dr.jjsembako.feature_history.domain.usecase.order.FetchOrderUseCase
@@ -63,8 +63,8 @@ class EditBarangPesananViewModel @Inject constructor(
     private val _dataProducts = MutableLiveData<List<DataProductOrder?>>()
     val dataProducts: LiveData<List<DataProductOrder?>> get() = _dataProducts
 
-    private val _orderData = MutableLiveData<DataDetailOrder?>()
-    val orderData: DataDetailOrder? get() = _orderData.value
+    private val _orderData = MutableLiveData<DetailOrder?>()
+    val orderData: DetailOrder? get() = _orderData.value
 
     private val _selectedData = MutableLiveData<DataProductOrder?>()
     val selectedData: LiveData<DataProductOrder?> get() = _selectedData

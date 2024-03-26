@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.presentation.components.dialog.AlertDeleteDialog
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
@@ -153,7 +153,7 @@ fun DetailTransaksiScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailTransaksiContent(
-    orderData: DataDetailOrder,
+    orderData: DetailOrder,
     context: Context,
     clipboardManager: ClipboardManager,
     openMaps: (String) -> Unit,

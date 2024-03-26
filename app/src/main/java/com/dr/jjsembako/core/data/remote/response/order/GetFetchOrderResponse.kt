@@ -13,10 +13,10 @@ data class GetFetchOrderResponse(
     val statusCode: Int,
 
     @field:SerializedName("data")
-    val data: DataDetailOrder? = null
+    val data: DetailOrder? = null
 )
 
-data class DataDetailOrder(
+data class DetailOrder(
 
     @field:SerializedName("id")
     val id: String,

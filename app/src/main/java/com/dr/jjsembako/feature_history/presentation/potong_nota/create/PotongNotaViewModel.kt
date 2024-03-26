@@ -9,7 +9,7 @@ import com.dr.jjsembako.CanceledStore
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.SelectPNRItem
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.utils.DataMapper.mapListOrderToProductsItemToListSelectPNRItem
 import com.dr.jjsembako.core.utils.DataMapper.mapSelectPNRItemToCanceledStore
 import com.dr.jjsembako.feature_history.domain.usecase.canceled.HandleCreateCanceledUseCase
@@ -47,8 +47,8 @@ class PotongNotaViewModel @Inject constructor(
     private val _message = MutableLiveData<String?>()
     val message: LiveData<String?> = _message
 
-    private val _orderData = MutableLiveData<DataDetailOrder?>()
-    val orderData: DataDetailOrder? get() = _orderData.value
+    private val _orderData = MutableLiveData<DetailOrder?>()
+    val orderData: DetailOrder? get() = _orderData.value
 
     private val _productOrder = MutableLiveData<List<SelectPNRItem?>?>()
     val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder

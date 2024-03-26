@@ -35,8 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.dummy.dataDetailOrder
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.dummy.detailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.presentation.components.screen.LoadingScreen
 import com.dr.jjsembako.core.presentation.components.screen.NotFoundScreen
 import com.dr.jjsembako.core.presentation.components.utils.HeaderError
@@ -47,7 +47,7 @@ import com.dr.jjsembako.feature_history.presentation.components.card.AddOrderCar
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CartContentAdd(
-    orderData: DataDetailOrder,
+    orderData: DetailOrder,
     viewModel: TambahBarangPesananViewModel,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
@@ -169,7 +169,7 @@ fun CartContentAdd(
 private fun CartContentAddPreview() {
     JJSembakoTheme {
         CartContentAdd(
-            orderData = dataDetailOrder,
+            orderData = detailOrder,
             viewModel = hiltViewModel(),
             showDialog = remember { mutableStateOf(true) },
             previewProductName = remember { mutableStateOf("") },

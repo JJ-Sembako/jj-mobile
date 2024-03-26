@@ -4,7 +4,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.network.OrderApiService
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteProductOrderResponse
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.GetFetchOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdatePaymentStatusResponse
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdateProductOrderResponse
@@ -24,7 +24,7 @@ class HistoryDataSource @Inject constructor(
     private val gson: Gson
 ) {
 
-    suspend fun fetchOrder(id: String): Flow<Resource<out DataDetailOrder?>> = flow {
+    suspend fun fetchOrder(id: String): Flow<Resource<out DetailOrder?>> = flow {
         try {
             val response = orderApiService.fetchOrder(id)
             emit(Resource.Success(response.data, response.message, response.statusCode))

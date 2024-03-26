@@ -9,7 +9,7 @@ import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.model.SelectSubstituteItem
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
@@ -85,7 +85,7 @@ object DataMapper {
         )
     }
 
-    fun mapDetailOrderDataToDataOrderHistoryCard(data: DataDetailOrder): DataOrderHistoryCard {
+    fun mapDetailOrderDataToDataOrderHistoryCard(data: DetailOrder): DataOrderHistoryCard {
         return DataOrderHistoryCard(
             id = data.id,
             invoice = data.invoice,
@@ -98,7 +98,7 @@ object DataMapper {
         )
     }
 
-    fun mapDetailOrderDataToDataOrderTimestamps(data: DataDetailOrder): DataOrderTimestamps {
+    fun mapDetailOrderDataToDataOrderTimestamps(data: DetailOrder): DataOrderTimestamps {
         return DataOrderTimestamps(
             createdAt = data.createdAt,
             updatedAt = data.updatedAt,

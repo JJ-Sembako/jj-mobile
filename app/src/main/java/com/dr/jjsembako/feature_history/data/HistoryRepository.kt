@@ -8,7 +8,7 @@ import com.dr.jjsembako.core.data.remote.response.canceled.DeleteHandleDeleteCan
 import com.dr.jjsembako.core.data.remote.response.canceled.PostHandleCreateCanceledResponse
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.DeleteHandleDeleteProductOrderResponse
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.GetFetchOrderResponse
 import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.order.PatchHandleUpdatePaymentStatusResponse
@@ -54,7 +54,7 @@ class HistoryRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun fetchOrder(id: String): Flow<Resource<out DataDetailOrder?>> = flow {
+    override suspend fun fetchOrder(id: String): Flow<Resource<out DetailOrder?>> = flow {
         emit(Resource.Loading())
         try {
             val response = historyDataSource.fetchOrder(id).first()

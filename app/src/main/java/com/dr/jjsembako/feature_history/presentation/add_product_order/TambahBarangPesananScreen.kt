@@ -44,7 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
 import com.dr.jjsembako.core.presentation.components.dialog.PreviewImageDialog
@@ -120,7 +120,7 @@ fun TambahBarangPesananScreen(
 )
 @Composable
 private fun TambahBarangPesananContent(
-    orderData: DataDetailOrder,
+    orderData: DetailOrder,
     viewModel: TambahBarangPesananViewModel,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier

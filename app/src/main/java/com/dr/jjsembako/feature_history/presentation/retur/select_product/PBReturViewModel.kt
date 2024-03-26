@@ -10,7 +10,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.SelectPNRItem
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.core.utils.DataMapper.mapListDataCategoryToListFilterOption
 import com.dr.jjsembako.core.utils.DataMapper.mapListOrderToProductsItemToListSelectPNRItem
@@ -51,8 +51,8 @@ class PBReturViewModel @Inject constructor(
     private val _dataCategories = MutableLiveData<List<FilterOption?>>()
     val dataCategories: LiveData<List<FilterOption?>> get() = _dataCategories
 
-    private val _orderData = MutableLiveData<DataDetailOrder?>()
-    val orderData: DataDetailOrder? get() = _orderData.value
+    private val _orderData = MutableLiveData<DetailOrder?>()
+    val orderData: DetailOrder? get() = _orderData.value
 
     private val _productOrder = MutableLiveData<List<SelectPNRItem?>?>()
     val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder

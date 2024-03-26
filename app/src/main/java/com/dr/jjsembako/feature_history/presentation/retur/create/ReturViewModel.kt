@@ -11,7 +11,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.model.SelectSubstituteItem
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.utils.DataMapper.mapListOrderToProductsItemToListSelectPNRItem
 import com.dr.jjsembako.core.utils.DataMapper.mapSelectPNRItemToReturStore
 import com.dr.jjsembako.core.utils.DataMapper.mapSelectSubstituteItemToSubstituteStore
@@ -62,8 +62,8 @@ class ReturViewModel @Inject constructor(
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg: LiveData<String> get() = _errorMsg
 
-    private val _orderData = MutableLiveData<DataDetailOrder?>()
-    val orderData: DataDetailOrder? get() = _orderData.value
+    private val _orderData = MutableLiveData<DetailOrder?>()
+    val orderData: DetailOrder? get() = _orderData.value
 
     private val _productOrder = MutableLiveData<List<SelectPNRItem?>?>()
     private val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder

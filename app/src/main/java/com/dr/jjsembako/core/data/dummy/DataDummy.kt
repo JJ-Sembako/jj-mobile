@@ -6,7 +6,7 @@ import com.dr.jjsembako.core.data.model.SelectSubstituteItem
 import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.data.remote.response.order.Account
 import com.dr.jjsembako.core.data.remote.response.order.CanceledData
-import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
+import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.core.data.remote.response.order.ReturData
 import com.dr.jjsembako.core.data.remote.response.product.Product
@@ -159,7 +159,7 @@ val dataProductOrder = DataProductOrder(
     stockInPcsRemaining = 0
 )
 
-val dataDetailOrder = DataDetailOrder(
+val detailOrder = DetailOrder(
     id = "123",
     invoice = "INV/20240131/13951",
     orderStatus = 0,
