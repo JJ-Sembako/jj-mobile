@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.core.data.model.FilterOption
-import com.dr.jjsembako.core.data.remote.response.product.DataProduct
+import com.dr.jjsembako.core.data.remote.response.product.Product
 import com.dr.jjsembako.core.utils.DataMapper.mapListDataCategoryToListFilterOption
 import com.dr.jjsembako.feature_warehouse.data.SocketWarehouseHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,8 +26,8 @@ class GudangViewModel @Inject constructor(
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg: LiveData<String> get() = _errorMsg
 
-    private val _dataProducts = MutableLiveData<List<DataProduct?>>()
-    val dataProducts: LiveData<List<DataProduct?>> get() = _dataProducts
+    private val _dataProducts = MutableLiveData<List<Product?>>()
+    val dataProducts: LiveData<List<Product?>> get() = _dataProducts
 
     private val _dataRawCategories = MutableLiveData<List<String?>>()
     private val dataRawCategories: LiveData<List<String?>> get() = _dataRawCategories
@@ -39,7 +39,7 @@ class GudangViewModel @Inject constructor(
         initSocket()
     }
 
-    private fun updateCategories(newProducts: List<DataProduct?>) {
+    private fun updateCategories(newProducts: List<Product?>) {
         viewModelScope.launch {
             val newCategories = newProducts.mapNotNull { it?.category }.distinct()
             val currentCategories = _dataRawCategories.value.orEmpty().toMutableSet()

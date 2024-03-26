@@ -1,7 +1,7 @@
 package com.dr.jjsembako.core.data.remote.response.order
 
 import com.dr.jjsembako.core.data.remote.response.customer.Customer
-import com.dr.jjsembako.core.data.remote.response.product.DataProduct
+import com.dr.jjsembako.core.data.remote.response.product.Product
 import com.google.gson.annotations.SerializedName
 
 data class GetFetchOrderResponse(
@@ -85,7 +85,7 @@ data class CanceledItem(
     val updatedAt: String,
 
     @field:SerializedName("product")
-    val product: DataProduct
+    val product: Product
 )
 
 data class ReturItem(
@@ -112,8 +112,8 @@ data class ReturItem(
     val updatedAt: String,
 
     @field:SerializedName("retured_product")
-    val returedProduct: DataProduct,
+    val returedProduct: Product,
 
     @field:SerializedName("returned_product")
-    val returnedProduct: DataProduct
+    val returnedProduct: Product
 )

@@ -63,7 +63,7 @@ import coil.compose.AsyncImage
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataSelectPNRItem
 import com.dr.jjsembako.core.data.model.SelectPNRItem
-import com.dr.jjsembako.core.data.remote.response.product.DataProduct
+import com.dr.jjsembako.core.data.remote.response.product.Product
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.feature_history.presentation.retur.select_product.PBReturViewModel
@@ -103,7 +103,7 @@ fun SelectOrderRCard(
 
 @Composable
 private fun ProductImage(
-    product: DataProduct,
+    product: Product,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,

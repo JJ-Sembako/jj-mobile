@@ -30,13 +30,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.remote.response.product.DataProduct
+import com.dr.jjsembako.core.data.remote.response.product.Product
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
 fun ProductOnWarehouseInfo(
-    product: DataProduct,
+    product: Product,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -62,7 +62,7 @@ fun ProductOnWarehouseInfo(
 
 @Composable
 private fun ProductImage(
-    product: DataProduct,
+    product: Product,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -106,7 +106,7 @@ private fun ProductImage(
 
 @Composable
 private fun ProductInfo(
-    product: DataProduct,
+    product: Product,
     modifier: Modifier
 ) {
     Column {
@@ -148,7 +148,7 @@ private fun ProductInfo(
 private fun ProductOnWarehouseInfoPreview() {
     JJSembakoTheme {
         ProductOnWarehouseInfo(
-            product = DataProduct(
+            product = Product(
                 id = "bc3bbd9e",
                 name = "Air Cahaya",
                 image = "",

@@ -11,7 +11,7 @@ data class GetFetchProductsResponse(
     val statusCode: Int,
 
     @field:SerializedName("data")
-    val data: List<DataProduct?>? = null,
+    val data: List<Product?>? = null,
 
     @field:SerializedName("totalData")
     val totalData: Int? = null,
@@ -20,7 +20,7 @@ data class GetFetchProductsResponse(
     val count: Int? = null
 )
 
-data class DataProduct(
+data class Product(
 
     @field:SerializedName("id")
     val id: String,

@@ -9,7 +9,7 @@ import com.dr.jjsembako.core.data.remote.response.order.CanceledItem
 import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.core.data.remote.response.order.ReturItem
-import com.dr.jjsembako.core.data.remote.response.product.DataProduct
+import com.dr.jjsembako.core.data.remote.response.product.Product
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
 
@@ -51,7 +51,7 @@ val dataOrderToProductsItem = listOf(
         status = 1,
         createdAt = "2023-12-24T01:38:25.095Z",
         updatedAt = "2024-02-04T23:54:00.986Z",
-        product = DataProduct(
+        product = Product(
             id = "9be23a7a-ef7a-4299-92af-29ff955d9cf2",
             name = "Tepung Norin",
             stockInPcs = 90,
@@ -72,7 +72,7 @@ val dataOrderToProductsItem = listOf(
         status = 2,
         createdAt = "2023-12-24T01:38:25.095Z",
         updatedAt = "2024-02-04T23:54:00.986Z",
-        product = DataProduct(
+        product = Product(
             id = "aeb8bbef-1b53-4b96-ad39-904aecca0852",
             name = "Air Cahaya",
             stockInPcs = 168,
@@ -96,7 +96,7 @@ val dataRetur = listOf(
         selledPrice = 26000L,
         createdAt = "2024-02-04T23:54:00.976Z",
         updatedAt = "2024-02-04T23:54:00.976Z",
-        returedProduct = DataProduct(
+        returedProduct = Product(
             id = "9be23a7a-ef7a-4299-92af-29ff955d9cf2",
             name = "Tepung Norin",
             stockInPcs = 90,
@@ -108,7 +108,7 @@ val dataRetur = listOf(
             unit = "Karung",
             category = "Tepung"
         ),
-        returnedProduct = DataProduct(
+        returnedProduct = Product(
             id = "9be23a7a-ef7a-4299-92af-29ff955d9cf2",
             name = "Tepung Norin",
             stockInPcs = 90,
@@ -131,7 +131,7 @@ val dataCanceled = listOf(
         selledPrice = 45000L,
         createdAt = "2024-02-04T23:07:27.000Z",
         updatedAt = "2024-02-04T23:07:27.000Z",
-        product = DataProduct(
+        product = Product(
             id = "aeb8bbef-1b53-4b96-ad39-904aecca0852",
             name = "Air Cahaya",
             stockInPcs = 168,
@@ -192,7 +192,7 @@ val dataDetailOrder = DataDetailOrder(
             status = 1,
             createdAt = "2023-12-24T01:38:25.095Z",
             updatedAt = "2024-02-04T23:54:00.986Z",
-            product = DataProduct(
+            product = Product(
                 id = "9be23a7a-ef7a-4299-92af-29ff955d9cf2",
                 name = "Tepung Norin",
                 stockInPcs = 90,
@@ -213,7 +213,7 @@ val dataDetailOrder = DataDetailOrder(
             status = 2,
             createdAt = "2023-12-24T01:38:25.095Z",
             updatedAt = "2024-02-04T23:54:00.986Z",
-            product = DataProduct(
+            product = Product(
                 id = "aeb8bbef-1b53-4b96-ad39-904aecca0852",
                 name = "Air Cahaya",
                 stockInPcs = 168,
@@ -237,7 +237,7 @@ val dataSelectPNRItem = SelectPNRItem(
     actualAmount = 1,
     selledPrice = 26000L,
     status = 1,
-    product = DataProduct(
+    product = Product(
         id = "9be23a7a-ef7a-4299-92af-29ff955d9cf2",
         name = "Tepung Norin",
         stockInPcs = 90,
