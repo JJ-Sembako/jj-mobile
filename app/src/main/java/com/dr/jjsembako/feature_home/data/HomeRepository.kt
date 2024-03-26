@@ -2,7 +2,7 @@ package com.dr.jjsembako.feature_home.data
 
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.response.order.GetFetchOrdersResponse
-import com.dr.jjsembako.core.data.remote.response.order.OrderItem
+import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetMonthlyResponse
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchSelledProductResponse
 import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
@@ -122,7 +122,7 @@ class HomeRepository @Inject constructor(
     override suspend fun fetchOrders(
         limit: Int?,
         me: Int?
-    ): Flow<Resource<out List<OrderItem?>?>> = flow {
+    ): Flow<Resource<out List<Order?>?>> = flow {
         emit(Resource.Loading())
         try {
             val response = homeDataSource.fetchOrders(limit, me).first()

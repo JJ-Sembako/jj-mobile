@@ -10,7 +10,7 @@ import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.model.SelectSubstituteItem
 import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
-import com.dr.jjsembako.core.data.remote.response.order.OrderItem
+import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
@@ -72,7 +72,7 @@ object DataMapper {
         }
     }
 
-    fun mapOrderDataItemToDataOrderHistoryCard(data: OrderItem): DataOrderHistoryCard {
+    fun mapOrderDataItemToDataOrderHistoryCard(data: Order): DataOrderHistoryCard {
         return DataOrderHistoryCard(
             id = data.id,
             invoice = data.invoice,

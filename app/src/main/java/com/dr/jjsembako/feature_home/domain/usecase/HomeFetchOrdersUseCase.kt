@@ -1,7 +1,7 @@
 package com.dr.jjsembako.feature_home.domain.usecase
 
 import com.dr.jjsembako.core.common.Resource
-import com.dr.jjsembako.core.data.remote.response.order.OrderItem
+import com.dr.jjsembako.core.data.remote.response.order.Order
 import kotlinx.coroutines.flow.Flow
 
 interface HomeFetchOrdersUseCase {
@@ -9,6 +9,6 @@ interface HomeFetchOrdersUseCase {
     suspend fun fetchOrders(
         limit: Int? = null,
         me: Int? = null,
-    ): Flow<Resource<out List<OrderItem?>?>>
+    ): Flow<Resource<out List<Order?>?>>
 
 }

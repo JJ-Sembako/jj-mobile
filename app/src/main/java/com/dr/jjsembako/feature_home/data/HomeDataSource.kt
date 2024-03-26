@@ -4,7 +4,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.network.OrderApiService
 import com.dr.jjsembako.core.data.remote.network.PerformanceApiService
 import com.dr.jjsembako.core.data.remote.response.order.GetFetchOrdersResponse
-import com.dr.jjsembako.core.data.remote.response.order.OrderItem
+import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetMonthlyResponse
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchSelledProductResponse
 import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
@@ -87,7 +87,7 @@ class HomeDataSource @Inject constructor(
     suspend fun fetchOrders(
         limit: Int? = null,
         me: Int? = null,
-    ): Flow<Resource<out List<OrderItem?>?>> = flow {
+    ): Flow<Resource<out List<Order?>?>> = flow {
         try {
             val response = orderApiService.fetchOrders(limit = limit, me=me)
             emit(Resource.Success(response.data, response.message, response.statusCode))

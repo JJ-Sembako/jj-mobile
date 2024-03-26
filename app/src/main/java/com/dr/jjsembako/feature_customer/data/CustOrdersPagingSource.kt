@@ -3,13 +3,13 @@ package com.dr.jjsembako.feature_customer.data
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.dr.jjsembako.core.data.remote.network.OrderApiService
-import com.dr.jjsembako.core.data.remote.response.order.OrderItem
+import com.dr.jjsembako.core.data.remote.response.order.Order
 import kotlinx.coroutines.CancellationException
 import okio.IOException
 import javax.inject.Inject
 
 class CustOrdersPagingSource @Inject constructor(private val orderApiService: OrderApiService) :
-    PagingSource<Int, OrderItem>() {
+    PagingSource<Int, Order>() {
 
     private var search: String? = null
     private var minDate: String? = null
@@ -19,7 +19,7 @@ class CustOrdersPagingSource @Inject constructor(private val orderApiService: Or
     private var currentPage = 0
     private var totalData = 0
 
-    override fun getRefreshKey(state: PagingState<Int, OrderItem>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Order>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val closestPage = state.closestPageToPosition(anchorPosition)
             if (closestPage != null && closestPage.prevKey != null) {
@@ -32,7 +32,7 @@ class CustOrdersPagingSource @Inject constructor(private val orderApiService: Or
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, OrderItem> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Order> {
         try {
             // Mendapatkan nomor halaman yang diminta
             currentPage = params.key ?: 1

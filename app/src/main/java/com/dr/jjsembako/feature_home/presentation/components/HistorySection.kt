@@ -27,7 +27,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.remote.response.order.OrderItem
+import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.presentation.components.card.OrderHistoryCard
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.DataMapper.mapOrderDataItemToDataOrderHistoryCard
@@ -35,7 +35,7 @@ import com.dr.jjsembako.core.utils.DataMapper.mapOrderDataItemToDataOrderHistory
 @Composable
 fun HistorySection(
     isErrorInit: Boolean = false,
-    dataOrders: List<OrderItem?>? = null,
+    dataOrders: List<Order?>? = null,
     context: Context,
     clipboardManager: ClipboardManager,
     onNavigateToDetail: (String) -> Unit,

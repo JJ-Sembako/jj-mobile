@@ -9,7 +9,7 @@ import com.dr.jjsembako.core.data.remote.response.customer.DeleteHandleDeleteCus
 import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
 import com.dr.jjsembako.core.data.remote.response.customer.PostHandleCreateCustomerResponse
 import com.dr.jjsembako.core.data.remote.response.customer.PutHandleUpdateCustomerResponse
-import com.dr.jjsembako.core.data.remote.response.order.OrderItem
+import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.feature_customer.domain.repository.ICustomerRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -256,7 +256,7 @@ class CustomerRepository @Inject constructor(
         maxDate: String?,
         me: Int?,
         customerId: String
-    ): Flow<PagingData<OrderItem>> {
+    ): Flow<PagingData<Order>> {
         return Pager(
             config = PagingConfig(pageSize = 5),
             pagingSourceFactory = {
