@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.data.remote.response.customer.DeleteHandleDeleteCustomerResponse
 import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
 import com.dr.jjsembako.core.data.remote.response.customer.PostHandleCreateCustomerResponse
@@ -29,7 +29,7 @@ class CustomerRepository @Inject constructor(
     private val gson: Gson
 ) : ICustomerRepository {
 
-    override suspend fun fetchCustomers(searchQuery: String): Flow<PagingData<DataCustomer>> {
+    override suspend fun fetchCustomers(searchQuery: String): Flow<PagingData<Customer>> {
         return Pager(
             config = PagingConfig(pageSize = 5),
             pagingSourceFactory = { customerPagingSource.apply { setSearchQuery(searchQuery) } }
@@ -42,7 +42,7 @@ class CustomerRepository @Inject constructor(
         address: String,
         gmapsLink: String,
         phoneNumber: String
-    ): Flow<Resource<out DataCustomer?>> = flow {
+    ): Flow<Resource<out Customer?>> = flow {
         emit(Resource.Loading())
         try {
             val response = customerDataSource.handleCreateCustomer(
@@ -94,7 +94,7 @@ class CustomerRepository @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun fetchDetailCustomer(id: String): Flow<Resource<out DataCustomer?>> = flow {
+    override suspend fun fetchDetailCustomer(id: String): Flow<Resource<out Customer?>> = flow {
         emit(Resource.Loading())
         try {
             val response = customerDataSource.fetchDetailCustomer(id).first()
@@ -147,7 +147,7 @@ class CustomerRepository @Inject constructor(
         address: String,
         gmapsLink: String,
         phoneNumber: String
-    ): Flow<Resource<out DataCustomer?>> = flow {
+    ): Flow<Resource<out Customer?>> = flow {
         emit(Resource.Loading())
         try {
             val response = customerDataSource.handleUpdateCustomer(

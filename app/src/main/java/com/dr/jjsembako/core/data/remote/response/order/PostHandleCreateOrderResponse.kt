@@ -1,6 +1,6 @@
 package com.dr.jjsembako.core.data.remote.response.order
 
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.google.gson.annotations.SerializedName
 
 data class PostHandleCreateOrderResponse(
@@ -26,7 +26,7 @@ data class DataAfterCreateOrder(
     val account: Account,
 
     @field:SerializedName("customer")
-    val customer: DataCustomer,
+    val customer: Customer,
 
     @field:SerializedName("order_status")
     val orderStatus: Int,

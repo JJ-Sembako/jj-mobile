@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 data class PutHandleUpdateCustomerResponse(
 
-	@field:SerializedName("message")
+    @field:SerializedName("message")
 	val message: String,
 
-	@field:SerializedName("statusCode")
+    @field:SerializedName("statusCode")
 	val statusCode: Int,
 
-	@field:SerializedName("data")
-	val data: DataCustomer? = null,
+    @field:SerializedName("data")
+	val data: Customer? = null,
 )

@@ -2,7 +2,7 @@ package com.dr.jjsembako.feature_customer.data
 
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.data.remote.response.customer.DeleteHandleDeleteCustomerResponse
 import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
 import com.dr.jjsembako.core.data.remote.response.customer.PostHandleCreateCustomerResponse
@@ -28,7 +28,7 @@ class CustomerDataSource @Inject constructor(
         address: String,
         gmapsLink: String,
         phoneNumber: String
-    ): Flow<Resource<out DataCustomer?>> = flow {
+    ): Flow<Resource<out Customer?>> = flow {
         try {
             val response = customerApiService.handleCreateCustomer(
                 name,
@@ -62,7 +62,7 @@ class CustomerDataSource @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun fetchDetailCustomer(id: String): Flow<Resource<out DataCustomer?>> = flow {
+    suspend fun fetchDetailCustomer(id: String): Flow<Resource<out Customer?>> = flow {
         try {
             val response = customerApiService.fetchDetailCustomer(id)
             emit(Resource.Success(response.data, response.message, response.statusCode))
@@ -97,7 +97,7 @@ class CustomerDataSource @Inject constructor(
         address: String,
         gmapsLink: String,
         phoneNumber: String
-    ): Flow<Resource<out DataCustomer?>> = flow {
+    ): Flow<Resource<out Customer?>> = flow {
         try {
             val response = customerApiService.handleUpdateCustomer(
                 id,

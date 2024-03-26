@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
 import com.dr.jjsembako.core.presentation.components.dialog.LoadingDialog
@@ -132,7 +132,7 @@ fun EditPelangganScreen(
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun EditPelangganContent(
-    cust: DataCustomer,
+    cust: Customer,
     editPelangganViewModel: EditPelangganViewModel,
     onNavigateToDetailCust: () -> Unit,
     openMaps: (String) -> Unit,

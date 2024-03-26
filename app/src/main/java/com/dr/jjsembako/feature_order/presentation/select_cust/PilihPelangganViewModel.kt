@@ -11,7 +11,7 @@ import androidx.paging.PagingData
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.PreferencesKeys
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.feature_order.domain.usecase.FetchDetailSelectedCustUseCase
 import com.dr.jjsembako.feature_order.domain.usecase.FetchSelectCustUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,15 +44,15 @@ class PilihPelangganViewModel @Inject constructor(
     private val _message = MutableLiveData<String?>()
     val message: LiveData<String?> = _message
 
-    private val _selectedCustomer = MutableLiveData<DataCustomer?>()
-    val selectedCustomer: LiveData<DataCustomer?> get() = _selectedCustomer
+    private val _selectedCustomer = MutableLiveData<Customer?>()
+    val selectedCustomer: LiveData<Customer?> get() = _selectedCustomer
 
     private val _idSelectedCustomer = MutableStateFlow("")
     val idSelectedCustomer: StateFlow<String> get() = _idSelectedCustomer
 
-    private val _customerState: MutableStateFlow<PagingData<DataCustomer>> =
+    private val _customerState: MutableStateFlow<PagingData<Customer>> =
         MutableStateFlow(value = PagingData.empty())
-    val customerState: MutableStateFlow<PagingData<DataCustomer>> get() = _customerState
+    val customerState: MutableStateFlow<PagingData<Customer>> get() = _customerState
 
     init {
         viewModelScope.launch {
@@ -76,8 +76,8 @@ class PilihPelangganViewModel @Inject constructor(
         _idSelectedCustomer.value = idCustomer
     }
 
-    fun setSelectedCustomer(dataCustomer: DataCustomer?) {
-        _selectedCustomer.value = dataCustomer
+    fun setSelectedCustomer(customer: Customer?) {
+        _selectedCustomer.value = customer
     }
 
     fun saveIdCustomer() {

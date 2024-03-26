@@ -11,13 +11,13 @@ data class GetFetchCustomersResponse(
     val statusCode: Int,
 
     @field:SerializedName("data")
-    val data: List<DataCustomer>? = null,
+    val data: List<Customer>? = null,
 
     @field:SerializedName("count")
     val count: Int? = null,
 )
 
-data class DataCustomer(
+data class Customer(
 
     @field:SerializedName("id")
     val id: String,

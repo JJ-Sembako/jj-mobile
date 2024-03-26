@@ -45,7 +45,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.model.FilterOption
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetCustomer
 import com.dr.jjsembako.core.presentation.components.card.CustomerInfo
 import com.dr.jjsembako.core.presentation.components.screen.ErrorScreen
@@ -65,7 +65,7 @@ fun PelangganScreen(
     modifier: Modifier = Modifier
 ) {
     val pelangganViewModel: PelangganViewModel = hiltViewModel()
-    val customerPagingItems: LazyPagingItems<DataCustomer> =
+    val customerPagingItems: LazyPagingItems<Customer> =
         pelangganViewModel.customerState.collectAsLazyPagingItems()
 
     val focusManager = LocalFocusManager.current

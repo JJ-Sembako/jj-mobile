@@ -23,13 +23,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.presentation.components.card.CustomerInfo
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 
 @Composable
 fun SelectCustomer(
-    customer: DataCustomer?,
+    customer: Customer?,
     onSelectCustomer: () -> Unit,
     modifier: Modifier
 ) {
@@ -72,7 +72,7 @@ private fun SelectCustomerHeader(onSelectCustomer: () -> Unit, modifier: Modifie
 }
 
 @Composable
-private fun SelectCustomerContent(customer: DataCustomer?, modifier: Modifier) {
+private fun SelectCustomerContent(customer: Customer?, modifier: Modifier) {
     if (customer != null) {
         Spacer(modifier = modifier.height(16.dp))
         CustomerInfo(onNavigateToDetailCust = {}, customer = customer, modifier = modifier)
@@ -110,7 +110,7 @@ private fun SelectCustomer1Preview() {
 private fun SelectCustomer2Preview() {
     JJSembakoTheme {
         SelectCustomer(
-            customer = DataCustomer(
+            customer = Customer(
                 "abcd-123",
                 "Bambang",
                 "Toko Makmur",

@@ -52,7 +52,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
 import com.dr.jjsembako.core.presentation.components.bottom_sheet.BottomSheetCustomer
 import com.dr.jjsembako.core.presentation.components.card.CardEmpty
@@ -139,7 +139,7 @@ private fun PilihPelangganContent(
     val message = pilihPelangganViewModel.message.observeAsState().value
     val statusCode = pilihPelangganViewModel.statusCode.observeAsState().value
     val selectedCustomer by pilihPelangganViewModel.selectedCustomer.observeAsState()
-    val customerPagingItems: LazyPagingItems<DataCustomer> =
+    val customerPagingItems: LazyPagingItems<Customer> =
         pilihPelangganViewModel.customerState.collectAsLazyPagingItems()
 
     val focusManager = LocalFocusManager.current
@@ -338,7 +338,7 @@ private fun PilihPelangganContent(
 @Composable
 private fun InfoSelectedCustomer(
     pilihPelangganViewModel: PilihPelangganViewModel,
-    selectedCustomer: DataCustomer?,
+    selectedCustomer: Customer?,
     modifier: Modifier
 ) {
     Column(
@@ -352,7 +352,7 @@ private fun InfoSelectedCustomer(
             fontWeight = FontWeight.Bold
         )
         if (!selectedCustomer?.id.isNullOrEmpty()) {
-            val data = DataCustomer(
+            val data = Customer(
                 id = selectedCustomer!!.id,
                 name = selectedCustomer.name,
                 shopName = selectedCustomer.shopName,

@@ -18,14 +18,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
 fun CustomerInfo(
     onNavigateToDetailCust: (String) -> Unit,
-    customer: DataCustomer,
+    customer: Customer,
     modifier: Modifier
 ) {
     OutlinedCard(
@@ -68,7 +68,7 @@ private fun CustomerInfoPreview() {
     JJSembakoTheme {
         CustomerInfo(
             onNavigateToDetailCust = {},
-            DataCustomer(
+            Customer(
                 "abcd-123",
                 "Bambang",
                 "Toko Makmur",

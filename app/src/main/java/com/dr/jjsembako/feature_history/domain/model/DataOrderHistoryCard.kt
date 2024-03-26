@@ -1,6 +1,6 @@
 package com.dr.jjsembako.feature_history.domain.model
 
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.data.remote.response.order.Account
 
 data class DataOrderHistoryCard(
@@ -11,5 +11,5 @@ data class DataOrderHistoryCard(
     val totalPrice: Long,
     val createdAt: String,
     val account: Account,
-    val customer: DataCustomer
+    val customer: Customer
 )

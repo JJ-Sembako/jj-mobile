@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.presentation.components.card.CustomerInfo
 import com.dr.jjsembako.core.presentation.components.dialog.AlertDeleteDialog
 import com.dr.jjsembako.core.presentation.components.dialog.AlertErrorDialog
@@ -138,7 +138,7 @@ fun DetailPelangganScreen(
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailPelangganContent(
-    cust: DataCustomer,
+    cust: Customer,
     viewModel: DetailPelangganViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToEditCust: () -> Unit,

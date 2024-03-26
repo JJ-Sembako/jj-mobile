@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.isValidLinkMaps
 import com.dr.jjsembako.core.utils.isValidPhoneNumber
@@ -35,7 +35,7 @@ import com.dr.jjsembako.core.utils.isValidPhoneNumber
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CustomerButtonInfo(
-    cust: DataCustomer,
+    cust: Customer,
     openMaps: (String) -> Unit,
     call: (String) -> Unit,
     chatWA: (String) -> Unit,
@@ -136,7 +136,7 @@ fun CustomerButtonInfo(
 private fun CustomerButtonInfoScreenPreview() {
     JJSembakoTheme {
         CustomerButtonInfo(
-            cust = DataCustomer(
+            cust = Customer(
                 "abcd-123",
                 "Bambang",
                 "Toko Makmur",

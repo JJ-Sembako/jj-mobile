@@ -1,7 +1,7 @@
 package com.dr.jjsembako.feature_customer.domain.usecase
 
 import com.dr.jjsembako.core.common.Resource
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.feature_customer.domain.repository.ICustomerRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class HandleUpdateCustomerInteractor @Inject constructor(private val customerRep
         address: String,
         gmapsLink: String,
         phoneNumber: String
-    ): Flow<Resource<out DataCustomer?>> = customerRepository.handleUpdateCustomer(
+    ): Flow<Resource<out Customer?>> = customerRepository.handleUpdateCustomer(
         id,
         name,
         shopName,

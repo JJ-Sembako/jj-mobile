@@ -1,6 +1,6 @@
 package com.dr.jjsembako.core.data.remote.response.order
 
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.data.remote.response.product.DataProduct
 import com.google.gson.annotations.SerializedName
 
@@ -52,7 +52,7 @@ data class DataDetailOrder(
     val account: Account,
 
     @field:SerializedName("customer")
-    val customer: DataCustomer,
+    val customer: Customer,
 
     @field:SerializedName("orderToProducts")
     val orderToProducts: List<OrderToProductsItem>,

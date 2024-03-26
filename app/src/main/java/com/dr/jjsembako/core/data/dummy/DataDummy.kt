@@ -3,7 +3,7 @@ package com.dr.jjsembako.core.data.dummy
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.model.SelectSubstituteItem
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.data.remote.response.order.Account
 import com.dr.jjsembako.core.data.remote.response.order.CanceledItem
 import com.dr.jjsembako.core.data.remote.response.order.DataDetailOrder
@@ -25,7 +25,7 @@ val dataOrderDataItem = DataOrderHistoryCard(
         role = "sales",
         username = "dimassales"
     ),
-    customer = DataCustomer(
+    customer = Customer(
         id = "bd5da2d9-a0bd-4f0f-b730-c88ca915e9b6",
         name = "Narji Choi",
         shopName = "Abadi Rahadi",
@@ -175,7 +175,7 @@ val dataDetailOrder = DataDetailOrder(
         role = "sales",
         username = "dimassales"
     ),
-    customer = DataCustomer(
+    customer = Customer(
         id = "bd5da2d9-a0bd-4f0f-b730-c88ca915e9b6",
         name = "Narji Choi",
         shopName = "Abadi Rahadi",

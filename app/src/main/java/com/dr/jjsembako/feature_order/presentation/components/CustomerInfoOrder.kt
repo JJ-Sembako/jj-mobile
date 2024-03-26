@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.presentation.theme.CardSelectedDark
 import com.dr.jjsembako.core.presentation.theme.CardSelectedLight
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
@@ -34,8 +34,8 @@ import com.dr.jjsembako.feature_order.presentation.select_cust.PilihPelangganVie
 @Composable
 fun CustomerInfoOrder(
     pilihPelangganViewModel: PilihPelangganViewModel,
-    selectedCust: DataCustomer?,
-    customer: DataCustomer,
+    selectedCust: Customer?,
+    customer: Customer,
     modifier: Modifier
 ) {
     OutlinedCard(
@@ -117,7 +117,7 @@ private fun CustomerInfoOrderPreview() {
         CustomerInfoOrder(
             pilihPelangganViewModel = hiltViewModel(),
             selectedCust = null,
-            DataCustomer(
+            Customer(
                 "abcd-123",
                 "Bambang",
                 "Toko Makmur",

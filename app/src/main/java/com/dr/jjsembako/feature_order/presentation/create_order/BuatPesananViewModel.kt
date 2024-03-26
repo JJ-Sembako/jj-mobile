@@ -15,7 +15,7 @@ import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.OrderRequest
 import com.dr.jjsembako.core.data.model.PreferencesKeys
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.utils.DataMapper
 import com.dr.jjsembako.core.utils.DataMapper.mapListDataProductOrderStoreToListOrderProduct
 import com.dr.jjsembako.feature_order.data.SocketOrderHandler
@@ -69,8 +69,8 @@ class BuatPesananViewModel @Inject constructor(
     private val _message = MutableLiveData<String?>()
     val message: LiveData<String?> = _message
 
-    private val _selectedCustomer = MutableLiveData<DataCustomer?>()
-    val selectedCustomer: LiveData<DataCustomer?> get() = _selectedCustomer
+    private val _selectedCustomer = MutableLiveData<Customer?>()
+    val selectedCustomer: LiveData<Customer?> get() = _selectedCustomer
 
     private val _idCustomer = MutableStateFlow("")
     val idCustomer: StateFlow<String> = _idCustomer

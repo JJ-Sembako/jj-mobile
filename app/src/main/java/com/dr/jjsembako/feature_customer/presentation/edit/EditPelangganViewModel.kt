@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.feature_customer.domain.usecase.FetchDetailCustomerUseCase
 import com.dr.jjsembako.feature_customer.domain.usecase.HandleUpdateCustomerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,8 +31,8 @@ class EditPelangganViewModel @Inject constructor(
     private val _message = MutableLiveData<String?>()
     val message: LiveData<String?> = _message
 
-    private val _customerData = MutableLiveData<DataCustomer?>()
-    val customerData: DataCustomer? get() = _customerData.value
+    private val _customerData = MutableLiveData<Customer?>()
+    val customerData: Customer? get() = _customerData.value
 
     private var _id: String? = null
     fun setId(id: String) {

@@ -4,7 +4,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.model.OrderRequest
 import com.dr.jjsembako.core.data.remote.network.CustomerApiService
 import com.dr.jjsembako.core.data.remote.network.OrderApiService
-import com.dr.jjsembako.core.data.remote.response.customer.DataCustomer
+import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.data.remote.response.customer.GetFetchDetailCustomerResponse
 import com.dr.jjsembako.core.data.remote.response.order.DataAfterCreateOrder
 import com.dr.jjsembako.core.data.remote.response.order.PostHandleCreateOrderResponse
@@ -53,7 +53,7 @@ class OrderDataSource @Inject constructor(
             }
         }.flowOn(Dispatchers.IO)
 
-    suspend fun fetchDetailCustomer(id: String): Flow<Resource<out DataCustomer?>> = flow {
+    suspend fun fetchDetailCustomer(id: String): Flow<Resource<out Customer?>> = flow {
         try {
             val response = customerApiService.fetchDetailCustomer(id)
             emit(Resource.Success(response.data, response.message, response.statusCode))

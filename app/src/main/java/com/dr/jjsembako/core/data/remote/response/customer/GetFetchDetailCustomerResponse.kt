@@ -11,5 +11,5 @@ data class GetFetchDetailCustomerResponse(
 	val statusCode: Int,
 
 	@field:SerializedName("data")
-	val data: DataCustomer? = null
+	val data: Customer? = null
 )
