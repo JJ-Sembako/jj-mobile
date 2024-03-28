@@ -5,7 +5,7 @@ import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.model.SelectSubstituteItem
 import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.data.remote.response.order.Account
-import com.dr.jjsembako.core.data.remote.response.order.CanceledData
+import com.dr.jjsembako.core.data.remote.response.order.Canceled
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
 import com.dr.jjsembako.core.data.remote.response.order.ReturData
@@ -124,7 +124,7 @@ val dataRetur = listOf(
 )
 
 val dataCanceled = listOf(
-    CanceledData(
+    Canceled(
         id = "aeb8bbef-1b53-4b96-ad39-904aecca0852",
         amount = 1,
         status = 0,

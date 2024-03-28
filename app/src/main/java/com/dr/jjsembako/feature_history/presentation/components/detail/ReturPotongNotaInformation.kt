@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataCanceled
 import com.dr.jjsembako.core.data.dummy.dataRetur
-import com.dr.jjsembako.core.data.remote.response.order.CanceledData
+import com.dr.jjsembako.core.data.remote.response.order.Canceled
 import com.dr.jjsembako.core.data.remote.response.order.ReturData
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
@@ -45,7 +45,7 @@ import com.dr.jjsembako.feature_history.presentation.components.screen.ReturInfo
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReturPotongNotaInformation(
-    dataCanceled: List<CanceledData?>?,
+    dataCanceled: List<Canceled?>?,
     dataRetur: List<ReturData?>?,
     actualTotalPrice: Long,
     showDialogCanceled: MutableState<Boolean>,

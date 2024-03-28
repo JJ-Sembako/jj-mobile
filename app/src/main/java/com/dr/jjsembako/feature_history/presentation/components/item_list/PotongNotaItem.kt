@@ -43,14 +43,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataCanceled
-import com.dr.jjsembako.core.data.remote.response.order.CanceledData
+import com.dr.jjsembako.core.data.remote.response.order.Canceled
 import com.dr.jjsembako.core.presentation.components.utils.PotongNotaStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
 fun PotongNotaItem(
-    data: CanceledData,
+    data: Canceled,
     showDialogCanceled: MutableState<Boolean>,
     showDialogPreview: MutableState<Boolean>,
     previewProductName: MutableState<String>,
@@ -130,7 +130,7 @@ private fun StatusAndOption(
 
 @Composable
 private fun ProductImage(
-    data: CanceledData,
+    data: Canceled,
     showDialogPreview: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -174,7 +174,7 @@ private fun ProductImage(
 
 @Composable
 private fun PotongNotaInfo(
-    data: CanceledData,
+    data: Canceled,
     modifier: Modifier
 ) {
     Column(modifier = modifier.padding(start = 8.dp, end = 16.dp)) {
