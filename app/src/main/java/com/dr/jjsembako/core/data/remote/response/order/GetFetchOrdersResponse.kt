@@ -61,7 +61,7 @@ data class Order(
     val customer: Customer,
 
     @field:SerializedName("orderToProducts")
-    val orderToProducts: List<OrderToProductsItem>,
+    val orderToProducts: List<OrderedProduct>,
 
     @field:SerializedName("retur")
     val retur: Int,
@@ -82,7 +82,7 @@ data class Account(
     val username: String
 )
 
-data class OrderToProductsItem(
+data class OrderedProduct(
 
     @field:SerializedName("id")
     val id: String,

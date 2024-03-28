@@ -25,15 +25,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.dummy.dataOrderToProductsItem
-import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
+import com.dr.jjsembako.core.data.dummy.dataOrderedProducts
+import com.dr.jjsembako.core.data.remote.response.order.OrderedProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.feature_history.presentation.components.item_list.OrderedProductItem
 
 @Composable
 fun OrderedProductList(
-    data: List<OrderToProductsItem>,
+    data: List<OrderedProduct>,
     totalPrice: Long,
     showDialogDelete: MutableState<Boolean>,
     showDialogPreview: MutableState<Boolean>,
@@ -129,7 +129,7 @@ private fun OrderedProductListPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OrderedProductList(
-                data = dataOrderToProductsItem,
+                data = dataOrderedProducts,
                 totalPrice = 168_000L,
                 showDialogDelete = remember { mutableStateOf(true) },
                 showDialogPreview = remember { mutableStateOf(true) },

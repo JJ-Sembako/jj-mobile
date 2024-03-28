@@ -11,7 +11,7 @@ import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.model.SelectSubstituteItem
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.Order
-import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderedProduct
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
 import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
 
@@ -107,7 +107,7 @@ object DataMapper {
         )
     }
 
-    fun mapListOrderToProductsItemToListSelectPNRItem(data: List<OrderToProductsItem?>) : List<SelectPNRItem> {
+    fun mapListOrderToProductsItemToListSelectPNRItem(data: List<OrderedProduct?>) : List<SelectPNRItem> {
         return if (data.isEmpty()) {
             emptyList()
         } else {

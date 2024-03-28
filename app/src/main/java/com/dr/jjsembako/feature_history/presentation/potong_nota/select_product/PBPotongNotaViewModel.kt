@@ -11,7 +11,7 @@ import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
-import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderedProduct
 import com.dr.jjsembako.core.utils.DataMapper.mapListDataCategoryToListFilterOption
 import com.dr.jjsembako.core.utils.DataMapper.mapListOrderToProductsItemToListSelectPNRItem
 import com.dr.jjsembako.core.utils.DataMapper.mapSelectPNRItemToCanceledStore
@@ -306,7 +306,7 @@ class PBPotongNotaViewModel @Inject constructor(
         }
     }
 
-    private fun updateCategories(newProducts: List<OrderToProductsItem?>) {
+    private fun updateCategories(newProducts: List<OrderedProduct?>) {
         viewModelScope.launch {
             val newCategories = newProducts.mapNotNull { it?.product?.category }.distinct()
             val currentCategories = _dataRawCategories.value.orEmpty().toMutableSet()

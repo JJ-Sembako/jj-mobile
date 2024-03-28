@@ -41,14 +41,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.dummy.dataOrderToProductsItem
-import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
+import com.dr.jjsembako.core.data.dummy.dataOrderedProducts
+import com.dr.jjsembako.core.data.remote.response.order.OrderedProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
 fun OrderedProductItem(
-    data: OrderToProductsItem,
+    data: OrderedProduct,
     showDialogDelete: MutableState<Boolean>,
     showDialogPreview: MutableState<Boolean>,
     previewProductName: MutableState<String>,
@@ -121,7 +121,7 @@ private fun Option(
 
 @Composable
 private fun ProductImage(
-    data: OrderToProductsItem,
+    data: OrderedProduct,
     showDialogPreview: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -165,7 +165,7 @@ private fun ProductImage(
 
 @Composable
 private fun OrderedProductInfo(
-    data: OrderToProductsItem,
+    data: OrderedProduct,
     modifier: Modifier
 ) {
     Column(modifier = modifier.padding(start = 8.dp, end = 16.dp)) {
@@ -209,7 +209,7 @@ private fun OrderedProductItemPreview() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OrderedProductItem(
-                data = dataOrderToProductsItem[0],
+                data = dataOrderedProducts[0],
                 showDialogDelete = remember { mutableStateOf(true) },
                 showDialogPreview = remember { mutableStateOf(true) },
                 previewProductName = remember { mutableStateOf("") },

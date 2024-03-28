@@ -7,7 +7,7 @@ import com.dr.jjsembako.core.data.remote.response.customer.Customer
 import com.dr.jjsembako.core.data.remote.response.order.Account
 import com.dr.jjsembako.core.data.remote.response.order.Canceled
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
-import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderedProduct
 import com.dr.jjsembako.core.data.remote.response.order.Retur
 import com.dr.jjsembako.core.data.remote.response.product.Product
 import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
@@ -42,8 +42,8 @@ val dataOrderTimestamps = DataOrderTimestamps(
     finishedAt = "2024-02-04T23:16:57.000Z"
 )
 
-val dataOrderToProductsItem = listOf(
-    OrderToProductsItem(
+val dataOrderedProducts = listOf(
+    OrderedProduct(
         id = "9be23a7a-ef7a-4299-92af-29ff955d9cf2",
         amount = 3,
         actualAmount = 1,
@@ -64,7 +64,7 @@ val dataOrderToProductsItem = listOf(
             category = "Tepung"
         )
     ),
-    OrderToProductsItem(
+    OrderedProduct(
         id = "aeb8bbef-1b53-4b96-ad39-904aecca0852",
         amount = 3,
         actualAmount = 2,
@@ -184,7 +184,7 @@ val detailOrder = DetailOrder(
         phoneNumber = "085225213456"
     ),
     orderToProducts = listOf(
-        OrderToProductsItem(
+        OrderedProduct(
             id = "9be23a7a-ef7a-4299-92af-29ff955d9cf2",
             amount = 3,
             actualAmount = 1,
@@ -205,7 +205,7 @@ val detailOrder = DetailOrder(
                 category = "Tepung"
             )
         ),
-        OrderToProductsItem(
+        OrderedProduct(
             id = "aeb8bbef-1b53-4b96-ad39-904aecca0852",
             amount = 3,
             actualAmount = 2,

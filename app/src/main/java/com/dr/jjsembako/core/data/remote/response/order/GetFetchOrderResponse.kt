@@ -55,7 +55,7 @@ data class DetailOrder(
     val customer: Customer,
 
     @field:SerializedName("orderToProducts")
-    val orderToProducts: List<OrderToProductsItem>,
+    val orderToProducts: List<OrderedProduct>,
 
     @field:SerializedName("canceled")
     val canceled: List<Canceled?>? = null,

@@ -63,10 +63,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.dummy.dataOrderToProductsItem
+import com.dr.jjsembako.core.data.dummy.dataOrderedProducts
 import com.dr.jjsembako.core.data.dummy.dataProductOrder
 import com.dr.jjsembako.core.data.model.DataProductOrder
-import com.dr.jjsembako.core.data.remote.response.order.OrderToProductsItem
+import com.dr.jjsembako.core.data.remote.response.order.OrderedProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.core.utils.rememberCurrencyVisualTransformation
@@ -75,7 +75,7 @@ import com.dr.jjsembako.feature_history.presentation.edit_product_order.EditBara
 @Composable
 fun UpdateOrderCard(
     viewModel: EditBarangPesananViewModel,
-    data: OrderToProductsItem,
+    data: OrderedProduct,
     product: DataProductOrder,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
@@ -164,7 +164,7 @@ private fun ProductImage(
 
 @Composable
 private fun OrderedProductInfo(
-    data: OrderToProductsItem,
+    data: OrderedProduct,
     modifier: Modifier
 ) {
     Column(modifier = modifier.padding(start = 8.dp, end = 16.dp)) {
@@ -472,7 +472,7 @@ private fun UpdateOrderCardPreview() {
         val viewModel: EditBarangPesananViewModel = hiltViewModel()
         UpdateOrderCard(
             viewModel = viewModel,
-            data = dataOrderToProductsItem[0],
+            data = dataOrderedProducts[0],
             product = dataProductOrder,
             showDialog = remember { mutableStateOf(true) },
             previewProductName = remember { mutableStateOf("") },

@@ -44,5 +44,5 @@ data class DataAfterCreateOrder(
     val actualTotalPrice: Long,
 
     @field:SerializedName("orderToProducts")
-    val orderToProducts: List<OrderToProductsItem>
+    val orderToProducts: List<OrderedProduct>
 )
