@@ -3,7 +3,7 @@ package com.dr.jjsembako.feature_home.domain.repository
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.performance.Omzet
-import com.dr.jjsembako.core.data.remote.response.performance.SelledData
+import com.dr.jjsembako.core.data.remote.response.performance.SelledProduct
 import kotlinx.coroutines.flow.Flow
 
 interface IHomeRepository {
@@ -13,7 +13,7 @@ interface IHomeRepository {
     suspend fun fetchSelledProductMonthly(
         month: Int,
         year: Int
-    ): Flow<Resource<out List<SelledData?>?>>
+    ): Flow<Resource<out List<SelledProduct?>?>>
 
     suspend fun fetchOrders(
         limit: Int? = null,

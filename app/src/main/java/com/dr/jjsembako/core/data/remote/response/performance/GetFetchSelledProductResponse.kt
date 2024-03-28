@@ -11,10 +11,10 @@ data class GetFetchSelledProductResponse(
     val statusCode: Int,
 
     @field:SerializedName("data")
-    val data: List<SelledData?>? = null
+    val data: List<SelledProduct?>? = null
 )
 
-data class SelledData(
+data class SelledProduct(
 
     @field:SerializedName("name")
     val name: String,

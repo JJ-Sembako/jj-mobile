@@ -25,11 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.remote.response.performance.SelledData
+import com.dr.jjsembako.core.data.remote.response.performance.SelledProduct
 
 @Composable
 fun SelledProductCard(
-    data: SelledData,
+    data: SelledProduct,
     modifier: Modifier
 ) {
     OutlinedCard(
@@ -51,7 +51,7 @@ fun SelledProductCard(
 
 @Composable
 private fun ProductImage(
-    data: SelledData,
+    data: SelledProduct,
     modifier: Modifier
 ) {
     if (data.image.isEmpty() || data.image.contains("default")) {
@@ -82,7 +82,7 @@ private fun ProductImage(
 
 @Composable
 private fun SelledInfo(
-    data: SelledData,
+    data: SelledProduct,
     modifier: Modifier
 ) {
     Column {

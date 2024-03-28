@@ -8,7 +8,7 @@ import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetMonthlyResponse
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchSelledProductResponse
 import com.dr.jjsembako.core.data.remote.response.performance.Omzet
-import com.dr.jjsembako.core.data.remote.response.performance.SelledData
+import com.dr.jjsembako.core.data.remote.response.performance.SelledProduct
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +56,7 @@ class HomeDataSource @Inject constructor(
     suspend fun fetchSelledProductMonthly(
         month: Int,
         year: Int
-    ): Flow<Resource<out List<SelledData?>?>> = flow {
+    ): Flow<Resource<out List<SelledProduct?>?>> = flow {
         try {
             val response = performanceApiService.fetchSelledProductMonthly(month, year)
             emit(Resource.Success(response.data, response.message, response.statusCode))

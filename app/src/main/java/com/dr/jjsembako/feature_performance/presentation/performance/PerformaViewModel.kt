@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.performance.Omzet
-import com.dr.jjsembako.core.data.remote.response.performance.SelledData
+import com.dr.jjsembako.core.data.remote.response.performance.SelledProduct
 import com.dr.jjsembako.feature_performance.domain.usecase.FetchOmzetMonthlyUseCase
 import com.dr.jjsembako.feature_performance.domain.usecase.FetchOmzetUseCase
 import com.dr.jjsembako.feature_performance.domain.usecase.FetchSelledProductMonthlyUseCase
@@ -55,8 +55,8 @@ class PerformaViewModel @Inject constructor(
     private val _dataOmzetMonthly = MutableLiveData<Omzet?>()
     val dataOmzetMonthly: LiveData<Omzet?> get() = _dataOmzetMonthly
 
-    private val _dataSelledProductMonthly = MutableLiveData<List<SelledData?>?>()
-    val dataSelledProductMonthly: LiveData<List<SelledData?>?> get() = _dataSelledProductMonthly
+    private val _dataSelledProductMonthly = MutableLiveData<List<SelledProduct?>?>()
+    val dataSelledProductMonthly: LiveData<List<SelledProduct?>?> get() = _dataSelledProductMonthly
 
     private val _totalSelledProductMonthly = MutableLiveData(0)
     val totalSelledProductMonthly: LiveData<Int> get() = _totalSelledProductMonthly

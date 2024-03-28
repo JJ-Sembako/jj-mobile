@@ -5,7 +5,7 @@ import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetMonth
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetResponse
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchSelledProductResponse
 import com.dr.jjsembako.core.data.remote.response.performance.Omzet
-import com.dr.jjsembako.core.data.remote.response.performance.SelledData
+import com.dr.jjsembako.core.data.remote.response.performance.SelledProduct
 import com.dr.jjsembako.feature_performance.domain.repository.IPerformanceRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -121,7 +121,7 @@ class PerformanceRepository @Inject constructor(
     override suspend fun fetchSelledProductMonthly(
         month: Int,
         year: Int
-    ): Flow<Resource<out List<SelledData?>?>> = flow {
+    ): Flow<Resource<out List<SelledProduct?>?>> = flow {
         emit(Resource.Loading())
         try {
             val response = performaceDataSource.fetchSelledProductMonthly(month, year).first()

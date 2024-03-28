@@ -8,7 +8,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.performance.Omzet
-import com.dr.jjsembako.core.data.remote.response.performance.SelledData
+import com.dr.jjsembako.core.data.remote.response.performance.SelledProduct
 import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOmzetUseCase
 import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOrdersMonthlyUseCase
 import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOrdersUseCase
@@ -61,8 +61,8 @@ class HomeViewModel @Inject constructor(
     private val _dataOmzetMonthly = MutableLiveData<Omzet?>()
     val dataOmzetMonthly: LiveData<Omzet?> get() = _dataOmzetMonthly
 
-    private val _dataSelledProductMonthly = MutableLiveData<List<SelledData?>?>()
-    private val dataSelledProductMonthly: LiveData<List<SelledData?>?> get() = _dataSelledProductMonthly
+    private val _dataSelledProductMonthly = MutableLiveData<List<SelledProduct?>?>()
+    private val dataSelledProductMonthly: LiveData<List<SelledProduct?>?> get() = _dataSelledProductMonthly
 
     private val _totalSelledProductMonthly = MutableLiveData(0)
     val totalSelledProductMonthly: LiveData<Int> get() = _totalSelledProductMonthly

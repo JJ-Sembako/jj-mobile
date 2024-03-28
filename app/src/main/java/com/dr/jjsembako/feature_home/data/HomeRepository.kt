@@ -6,7 +6,7 @@ import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetMonthlyResponse
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchSelledProductResponse
 import com.dr.jjsembako.core.data.remote.response.performance.Omzet
-import com.dr.jjsembako.core.data.remote.response.performance.SelledData
+import com.dr.jjsembako.core.data.remote.response.performance.SelledProduct
 import com.dr.jjsembako.feature_home.domain.repository.IHomeRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -73,7 +73,7 @@ class HomeRepository @Inject constructor(
     override suspend fun fetchSelledProductMonthly(
         month: Int,
         year: Int
-    ): Flow<Resource<out List<SelledData?>?>> = flow {
+    ): Flow<Resource<out List<SelledProduct?>?>> = flow {
         emit(Resource.Loading())
         try {
             val response = homeDataSource.fetchSelledProductMonthly(month, year).first()
