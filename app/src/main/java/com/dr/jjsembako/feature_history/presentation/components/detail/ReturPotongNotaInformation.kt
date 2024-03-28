@@ -36,7 +36,7 @@ import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataCanceled
 import com.dr.jjsembako.core.data.dummy.dataRetur
 import com.dr.jjsembako.core.data.remote.response.order.Canceled
-import com.dr.jjsembako.core.data.remote.response.order.ReturData
+import com.dr.jjsembako.core.data.remote.response.order.Retur
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.feature_history.presentation.components.screen.PotongNotaInformationContent
@@ -46,7 +46,7 @@ import com.dr.jjsembako.feature_history.presentation.components.screen.ReturInfo
 @Composable
 fun ReturPotongNotaInformation(
     dataCanceled: List<Canceled?>?,
-    dataRetur: List<ReturData?>?,
+    dataRetur: List<Retur?>?,
     actualTotalPrice: Long,
     showDialogCanceled: MutableState<Boolean>,
     showDialogRetur: MutableState<Boolean>,

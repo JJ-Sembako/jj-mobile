@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataRetur
-import com.dr.jjsembako.core.data.remote.response.order.ReturData
+import com.dr.jjsembako.core.data.remote.response.order.Retur
 import com.dr.jjsembako.core.presentation.components.utils.ReturStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.presentation.theme.StatusDeliveredText
@@ -53,7 +53,7 @@ import com.dr.jjsembako.core.utils.formatRupiah
 
 @Composable
 fun ReturItem(
-    data: ReturData,
+    data: Retur,
     showDialogRetur: MutableState<Boolean>,
     showDialogPreview: MutableState<Boolean>,
     previewProductName: MutableState<String>,
@@ -161,7 +161,7 @@ private fun DividerInfo(modifier: Modifier) {
 
 @Composable
 private fun ProductOnReturnedItem(
-    data: ReturData,
+    data: Retur,
     showDialogPreview: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -182,7 +182,7 @@ private fun ProductOnReturnedItem(
 
 @Composable
 private fun ProductSubstituteItem(
-    data: ReturData,
+    data: Retur,
     showDialogPreview: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
