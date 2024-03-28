@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.remote.response.order.Order
-import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
+import com.dr.jjsembako.core.data.remote.response.performance.Omzet
 import com.dr.jjsembako.core.data.remote.response.performance.SelledData
 import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOmzetUseCase
 import com.dr.jjsembako.feature_home.domain.usecase.HomeFetchOrdersMonthlyUseCase
@@ -58,8 +58,8 @@ class HomeViewModel @Inject constructor(
     private val _totalOrders = MutableLiveData<Int?>()
     val totalOrders: LiveData<Int?> get() = _totalOrders
 
-    private val _dataOmzetMonthly = MutableLiveData<OmzetData?>()
-    val dataOmzetMonthly: LiveData<OmzetData?> get() = _dataOmzetMonthly
+    private val _dataOmzetMonthly = MutableLiveData<Omzet?>()
+    val dataOmzetMonthly: LiveData<Omzet?> get() = _dataOmzetMonthly
 
     private val _dataSelledProductMonthly = MutableLiveData<List<SelledData?>?>()
     private val dataSelledProductMonthly: LiveData<List<SelledData?>?> get() = _dataSelledProductMonthly

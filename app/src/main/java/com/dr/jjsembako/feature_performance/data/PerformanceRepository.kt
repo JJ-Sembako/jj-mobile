@@ -4,7 +4,7 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetMonthlyResponse
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetResponse
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchSelledProductResponse
-import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
+import com.dr.jjsembako.core.data.remote.response.performance.Omzet
 import com.dr.jjsembako.core.data.remote.response.performance.SelledData
 import com.dr.jjsembako.feature_performance.domain.repository.IPerformanceRepository
 import com.google.gson.Gson
@@ -23,7 +23,7 @@ class PerformanceRepository @Inject constructor(
     private val gson: Gson
 ) : IPerformanceRepository {
 
-    override suspend fun fetchOmzet(): Flow<Resource<out List<OmzetData?>?>> = flow {
+    override suspend fun fetchOmzet(): Flow<Resource<out List<Omzet?>?>> = flow {
         emit(Resource.Loading())
         try {
             val response = performaceDataSource.fetchOmzet().first()
@@ -72,7 +72,7 @@ class PerformanceRepository @Inject constructor(
     override suspend fun fetchOmzetMonthly(
         month: Int,
         year: Int
-    ): Flow<Resource<out OmzetData?>> = flow {
+    ): Flow<Resource<out Omzet?>> = flow {
         emit(Resource.Loading())
         try {
             val response = performaceDataSource.fetchOmzetMonthly(month, year).first()

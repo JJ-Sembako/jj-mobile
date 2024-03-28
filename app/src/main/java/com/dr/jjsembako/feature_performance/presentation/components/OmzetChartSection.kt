@@ -8,7 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
+import com.dr.jjsembako.core.data.remote.response.performance.Omzet
 import com.dr.jjsembako.core.utils.chart.rememberMarker
 import com.dr.jjsembako.core.utils.formatShortRupiah
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -20,7 +20,7 @@ import com.patrykandpatrick.vico.core.entry.entryOf
 
 @Composable
 fun OmzetChartSection(
-    omzet: List<OmzetData?>?,
+    omzet: List<Omzet?>?,
     time: List<String>,
     modifier: Modifier
 ) {

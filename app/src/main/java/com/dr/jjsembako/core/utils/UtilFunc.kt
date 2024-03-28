@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
+import com.dr.jjsembako.core.data.remote.response.performance.Omzet
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -261,7 +261,7 @@ fun getCurrentYearMonthInGmt7(): List<Int> {
     return listOf(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH))
 }
 
-fun labelPerformance(data: List<OmzetData?>?, month: List<String>): List<String> {
+fun labelPerformance(data: List<Omzet?>?, month: List<String>): List<String> {
     if (data.isNullOrEmpty()) return emptyList()
     else {
         return data.mapNotNull { omzetData ->

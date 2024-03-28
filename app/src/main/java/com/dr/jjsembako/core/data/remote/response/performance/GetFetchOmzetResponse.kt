@@ -11,10 +11,10 @@ data class GetFetchOmzetResponse(
 	val statusCode: Int,
 
 	@field:SerializedName("data")
-	val data: List<OmzetData?>? = null
+	val data: List<Omzet?>? = null
 )
 
-data class OmzetData(
+data class Omzet(
 
 	@field:SerializedName("year")
 	val year: Int,

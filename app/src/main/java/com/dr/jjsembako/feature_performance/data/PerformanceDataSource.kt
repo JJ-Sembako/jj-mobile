@@ -5,7 +5,7 @@ import com.dr.jjsembako.core.data.remote.network.PerformanceApiService
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetMonthlyResponse
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetResponse
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchSelledProductResponse
-import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
+import com.dr.jjsembako.core.data.remote.response.performance.Omzet
 import com.dr.jjsembako.core.data.remote.response.performance.SelledData
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
@@ -22,7 +22,7 @@ class PerformanceDataSource @Inject constructor(
     private val gson: Gson
 ) {
 
-    suspend fun fetchOmzet(): Flow<Resource<out List<OmzetData?>?>> = flow {
+    suspend fun fetchOmzet(): Flow<Resource<out List<Omzet?>?>> = flow {
         try {
             val response = performanceApiService.fetchOmzet()
             emit(Resource.Success(response.data, response.message, response.statusCode))
@@ -50,7 +50,7 @@ class PerformanceDataSource @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun fetchOmzetMonthly(month: Int, year: Int): Flow<Resource<out OmzetData?>> = flow {
+    suspend fun fetchOmzetMonthly(month: Int, year: Int): Flow<Resource<out Omzet?>> = flow {
         try {
             val response = performanceApiService.fetchOmzetMonthly(month, year)
             emit(Resource.Success(response.data, response.message, response.statusCode))

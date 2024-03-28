@@ -11,5 +11,5 @@ data class GetFetchOmzetMonthlyResponse(
 	val statusCode: Int,
 
 	@field:SerializedName("data")
-	val data: OmzetData? = null
+	val data: Omzet? = null
 )

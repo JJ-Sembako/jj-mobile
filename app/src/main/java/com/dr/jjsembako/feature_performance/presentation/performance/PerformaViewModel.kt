@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
+import com.dr.jjsembako.core.data.remote.response.performance.Omzet
 import com.dr.jjsembako.core.data.remote.response.performance.SelledData
 import com.dr.jjsembako.feature_performance.domain.usecase.FetchOmzetMonthlyUseCase
 import com.dr.jjsembako.feature_performance.domain.usecase.FetchOmzetUseCase
@@ -46,14 +46,14 @@ class PerformaViewModel @Inject constructor(
     private val _message = MutableLiveData<String?>()
     val message: LiveData<String?> = _message
 
-    private val _dataOmzet = MutableLiveData<List<OmzetData?>?>()
-    val dataOmzet: LiveData<List<OmzetData?>?> get() = _dataOmzet
+    private val _dataOmzet = MutableLiveData<List<Omzet?>?>()
+    val dataOmzet: LiveData<List<Omzet?>?> get() = _dataOmzet
 
-    private val _dataOmzetOld = MutableLiveData<List<OmzetData?>?>()
-    private val dataOmzetOld: LiveData<List<OmzetData?>?> get() = _dataOmzetOld
+    private val _dataOmzetOld = MutableLiveData<List<Omzet?>?>()
+    private val dataOmzetOld: LiveData<List<Omzet?>?> get() = _dataOmzetOld
 
-    private val _dataOmzetMonthly = MutableLiveData<OmzetData?>()
-    val dataOmzetMonthly: LiveData<OmzetData?> get() = _dataOmzetMonthly
+    private val _dataOmzetMonthly = MutableLiveData<Omzet?>()
+    val dataOmzetMonthly: LiveData<Omzet?> get() = _dataOmzetMonthly
 
     private val _dataSelledProductMonthly = MutableLiveData<List<SelledData?>?>()
     val dataSelledProductMonthly: LiveData<List<SelledData?>?> get() = _dataSelledProductMonthly

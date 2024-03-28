@@ -5,7 +5,7 @@ import com.dr.jjsembako.core.data.remote.response.order.GetFetchOrdersResponse
 import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchOmzetMonthlyResponse
 import com.dr.jjsembako.core.data.remote.response.performance.GetFetchSelledProductResponse
-import com.dr.jjsembako.core.data.remote.response.performance.OmzetData
+import com.dr.jjsembako.core.data.remote.response.performance.Omzet
 import com.dr.jjsembako.core.data.remote.response.performance.SelledData
 import com.dr.jjsembako.feature_home.domain.repository.IHomeRepository
 import com.google.gson.Gson
@@ -23,7 +23,7 @@ class HomeRepository @Inject constructor(
     private val homeDataSource: HomeDataSource,
     private val gson: Gson
 ) : IHomeRepository {
-    override suspend fun fetchOmzetMonthly(month: Int, year: Int): Flow<Resource<out OmzetData?>> =
+    override suspend fun fetchOmzetMonthly(month: Int, year: Int): Flow<Resource<out Omzet?>> =
         flow {
             emit(Resource.Loading())
             try {
