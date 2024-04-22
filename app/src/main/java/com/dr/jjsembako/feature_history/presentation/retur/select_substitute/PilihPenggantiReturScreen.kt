@@ -92,8 +92,8 @@ fun PilihPenggantiReturScreen(
                 },
                 actions = {
                     IconButton(onClick = {
-                        onNavigateBack()
                         viewModel.saveData()
+                        onNavigateBack()
                     }) {
                         Icon(
                             Icons.Default.Check,
