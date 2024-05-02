@@ -75,7 +75,7 @@ fun PilihBarangPotongNotaScreen(
     modifier: Modifier = Modifier
 ) {
     val tag = "PBPN-S"
-    val viewModel: PBPotongNotaViewModel = hiltViewModel()
+    val viewModel: PilihBarangPotongNotaViewModel = hiltViewModel()
     val stateFirst = viewModel.state.observeAsState().value
     val statusCode = viewModel.statusCode.observeAsState().value
     val message = viewModel.message.observeAsState().value
@@ -128,7 +128,7 @@ fun PilihBarangPotongNotaScreen(
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun PilihBarangPotongNotaContent(
-    viewModel: PBPotongNotaViewModel,
+    viewModel: PilihBarangPotongNotaViewModel,
     onNavigateBack: () -> Unit,
     modifier: Modifier
 ) {

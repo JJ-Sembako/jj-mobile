@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PBPotongNotaViewModel @Inject constructor(
+class PilihBarangPotongNotaViewModel @Inject constructor(
     private val canceledStore: DataStore<CanceledStore>,
     private val fetchOrderUseCase: FetchOrderUseCase
 ) : ViewModel() {

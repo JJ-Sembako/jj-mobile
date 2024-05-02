@@ -66,11 +66,11 @@ import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.remote.response.product.Product
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
-import com.dr.jjsembako.feature_history.presentation.potong_nota.select_product.PBPotongNotaViewModel
+import com.dr.jjsembako.feature_history.presentation.potong_nota.select_product.PilihBarangPotongNotaViewModel
 
 @Composable
 fun SelectOrderPNCard(
-    viewModel: PBPotongNotaViewModel,
+    viewModel: PilihBarangPotongNotaViewModel,
     data: SelectPNRItem,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
@@ -182,7 +182,7 @@ private fun OrderedProductInfo(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun OrderContent(
-    viewModel: PBPotongNotaViewModel,
+    viewModel: PilihBarangPotongNotaViewModel,
     data: SelectPNRItem,
     modifier: Modifier
 ) {
@@ -344,7 +344,7 @@ private const val QTY_MAX_VALUE = 1_000
 @Preview(showBackground = true)
 private fun SelectOrderPNCardPreview() {
     JJSembakoTheme {
-        val viewModel: PBPotongNotaViewModel = hiltViewModel()
+        val viewModel: PilihBarangPotongNotaViewModel = hiltViewModel()
         SelectOrderPNCard(
             viewModel = viewModel,
             data = dataSelectPNRItem,
