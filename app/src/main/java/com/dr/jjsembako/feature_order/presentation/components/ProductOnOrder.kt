@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.model.DataProductOrder
+import com.dr.jjsembako.core.data.model.OrderableProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.core.utils.rememberCurrencyVisualTransformation
@@ -67,7 +67,7 @@ import com.dr.jjsembako.feature_order.presentation.select_product.PilihBarangVie
 @Composable
 fun ProductOnOrder(
     pilihBarangViewModel: PilihBarangViewModel,
-    product: DataProductOrder,
+    product: OrderableProduct,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -97,7 +97,7 @@ fun ProductOnOrder(
 
 @Composable
 private fun ProductImage(
-    product: DataProductOrder,
+    product: OrderableProduct,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -141,7 +141,7 @@ private fun ProductImage(
 
 @Composable
 private fun ProductInfo(
-    product: DataProductOrder,
+    product: OrderableProduct,
     modifier: Modifier
 ) {
     Column {
@@ -182,7 +182,7 @@ private fun ProductInfo(
 @Composable
 private fun OrderContent(
     pilihBarangViewModel: PilihBarangViewModel,
-    product: DataProductOrder,
+    product: OrderableProduct,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -404,7 +404,7 @@ private fun ProductOnOrderPreview() {
         val pilihBarangViewModel: PilihBarangViewModel = hiltViewModel()
         ProductOnOrder(
             pilihBarangViewModel = pilihBarangViewModel,
-            product = DataProductOrder(
+            product = OrderableProduct(
                 id = "bc3bbd9e",
                 name = "Air Cahaya",
                 image = "",

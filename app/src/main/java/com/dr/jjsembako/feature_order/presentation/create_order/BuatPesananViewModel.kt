@@ -12,7 +12,7 @@ import com.dr.jjsembako.ProductOrderList
 import com.dr.jjsembako.ProductOrderStore
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
-import com.dr.jjsembako.core.data.model.DataProductOrder
+import com.dr.jjsembako.core.data.model.OrderableProduct
 import com.dr.jjsembako.core.data.model.OrderRequest
 import com.dr.jjsembako.core.data.model.PreferencesKeys
 import com.dr.jjsembako.core.data.remote.response.customer.Customer
@@ -81,8 +81,8 @@ class BuatPesananViewModel @Inject constructor(
     private val _orderList = MutableStateFlow(ProductOrderList.getDefaultInstance())
     private val orderList: StateFlow<ProductOrderList> = _orderList
 
-    private val _dataProducts = MutableLiveData<List<DataProductOrder?>>()
-    val dataProducts: LiveData<List<DataProductOrder?>> get() = _dataProducts
+    private val _dataProducts = MutableLiveData<List<OrderableProduct?>>()
+    val dataProducts: LiveData<List<OrderableProduct?>> get() = _dataProducts
 
     private val _dataOrderId = MutableLiveData<String?>()
     val dataOrderId: LiveData<String?> get() = _dataOrderId
@@ -240,7 +240,7 @@ class BuatPesananViewModel @Inject constructor(
         }
     }
 
-    private fun updateProductsWithCheck(updatedProducts: List<DataProductOrder>) {
+    private fun updateProductsWithCheck(updatedProducts: List<OrderableProduct>) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
 
@@ -299,7 +299,7 @@ class BuatPesananViewModel @Inject constructor(
         }
     }
 
-    fun updateOrderTotalPrice(product: DataProductOrder, total: String) {
+    fun updateOrderTotalPrice(product: OrderableProduct, total: String) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
@@ -327,7 +327,7 @@ class BuatPesananViewModel @Inject constructor(
         }
     }
 
-    fun updateOrderPrice(product: DataProductOrder, price: String) {
+    fun updateOrderPrice(product: OrderableProduct, price: String) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
@@ -355,7 +355,7 @@ class BuatPesananViewModel @Inject constructor(
         }
     }
 
-    fun updateOrderQty(product: DataProductOrder, qty: String) {
+    fun updateOrderQty(product: OrderableProduct, qty: String) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
@@ -383,7 +383,7 @@ class BuatPesananViewModel @Inject constructor(
         }
     }
 
-    fun minusOrderQty(product: DataProductOrder) {
+    fun minusOrderQty(product: OrderableProduct) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
@@ -409,7 +409,7 @@ class BuatPesananViewModel @Inject constructor(
         }
     }
 
-    fun plusOrderQty(product: DataProductOrder) {
+    fun plusOrderQty(product: OrderableProduct) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
@@ -434,7 +434,7 @@ class BuatPesananViewModel @Inject constructor(
         }
     }
 
-    fun enableOrder(product: DataProductOrder) {
+    fun enableOrder(product: OrderableProduct) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
@@ -459,7 +459,7 @@ class BuatPesananViewModel @Inject constructor(
         }
     }
 
-    fun disableOrder(product: DataProductOrder) {
+    fun disableOrder(product: OrderableProduct) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }

@@ -2,7 +2,7 @@ package com.dr.jjsembako.core.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class DataProductOrder(
+data class OrderableProduct(
 
     @field:SerializedName("id")
     val id: String,

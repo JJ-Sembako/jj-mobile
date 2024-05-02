@@ -64,8 +64,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
 import com.dr.jjsembako.core.data.dummy.dataOrderedProducts
-import com.dr.jjsembako.core.data.dummy.dataProductOrder
-import com.dr.jjsembako.core.data.model.DataProductOrder
+import com.dr.jjsembako.core.data.dummy.orderableProduct
+import com.dr.jjsembako.core.data.model.OrderableProduct
 import com.dr.jjsembako.core.data.remote.response.order.OrderedProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
@@ -76,7 +76,7 @@ import com.dr.jjsembako.feature_history.presentation.edit_product_order.EditBara
 fun UpdateOrderCard(
     viewModel: EditBarangPesananViewModel,
     data: OrderedProduct,
-    product: DataProductOrder,
+    product: OrderableProduct,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -120,7 +120,7 @@ fun UpdateOrderCard(
 
 @Composable
 private fun ProductImage(
-    product: DataProductOrder,
+    product: OrderableProduct,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -198,7 +198,7 @@ private fun OrderedProductInfo(
 
 @Composable
 private fun ProductInfo(
-    product: DataProductOrder,
+    product: OrderableProduct,
     modifier: Modifier
 ) {
     Column(
@@ -246,7 +246,7 @@ private fun ProductInfo(
 @Composable
 private fun OrderContent(
     viewModel: EditBarangPesananViewModel,
-    product: DataProductOrder,
+    product: OrderableProduct,
     changeAmount: MutableState<Int>,
     modifier: Modifier
 ) {
@@ -473,7 +473,7 @@ private fun UpdateOrderCardPreview() {
         UpdateOrderCard(
             viewModel = viewModel,
             data = dataOrderedProducts[0],
-            product = dataProductOrder,
+            product = orderableProduct,
             showDialog = remember { mutableStateOf(true) },
             previewProductName = remember { mutableStateOf("") },
             previewProductImage = remember { mutableStateOf("") },

@@ -4,7 +4,7 @@ import com.dr.jjsembako.CanceledStore
 import com.dr.jjsembako.ProductOrderStore
 import com.dr.jjsembako.ReturStore
 import com.dr.jjsembako.SubstituteStore
-import com.dr.jjsembako.core.data.model.DataProductOrder
+import com.dr.jjsembako.core.data.model.OrderableProduct
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.model.SelectPNRItem
@@ -33,7 +33,7 @@ object DataMapper {
         }
     }
 
-    fun mapListDataProductOrderToListProductOrderStore(data: List<DataProductOrder?>): List<ProductOrderStore> {
+    fun mapListDataProductOrderToListProductOrderStore(data: List<OrderableProduct?>): List<ProductOrderStore> {
         return if (data.isEmpty()) {
             emptyList()
         } else {

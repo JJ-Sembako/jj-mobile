@@ -1,6 +1,6 @@
 package com.dr.jjsembako.core.data.dummy
 
-import com.dr.jjsembako.core.data.model.DataProductOrder
+import com.dr.jjsembako.core.data.model.OrderableProduct
 import com.dr.jjsembako.core.data.model.SelectPNRItem
 import com.dr.jjsembako.core.data.model.SubstituteProduct
 import com.dr.jjsembako.core.data.remote.response.customer.Customer
@@ -146,7 +146,7 @@ val dataCanceled = listOf(
     )
 )
 
-val dataProductOrder = DataProductOrder(
+val orderableProduct = OrderableProduct(
     id = "bc3bbd9e",
     name = "Air Cahaya",
     image = "",
