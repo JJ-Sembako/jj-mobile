@@ -55,8 +55,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.dummy.dataSelectSubstituteItem
-import com.dr.jjsembako.core.data.model.SelectSubstituteItem
+import com.dr.jjsembako.core.data.dummy.dataSubstituteProduct
+import com.dr.jjsembako.core.data.model.SubstituteProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.core.utils.rememberCurrencyVisualTransformation
@@ -65,7 +65,7 @@ import com.dr.jjsembako.feature_history.presentation.retur.create.ReturViewModel
 @Composable
 fun SelectedSubsRCard(
     viewModel: ReturViewModel,
-    data: SelectSubstituteItem,
+    data: SubstituteProduct,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -91,7 +91,7 @@ fun SelectedSubsRCard(
 
 @Composable
 private fun ProductImage(
-    product: SelectSubstituteItem,
+    product: SubstituteProduct,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,
@@ -135,7 +135,7 @@ private fun ProductImage(
 
 @Composable
 private fun OrderedProductInfo(
-    product: SelectSubstituteItem,
+    product: SubstituteProduct,
     modifier: Modifier
 ) {
     Column {
@@ -176,7 +176,7 @@ private fun OrderedProductInfo(
 @Composable
 private fun OrderContent(
     viewModel: ReturViewModel,
-    product: SelectSubstituteItem,
+    product: SubstituteProduct,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -313,7 +313,7 @@ private fun SelectedSubsRCardPreview() {
         val viewModel: ReturViewModel = hiltViewModel()
         SelectedSubsRCard(
             viewModel = viewModel,
-            data = dataSelectSubstituteItem,
+            data = dataSubstituteProduct,
             showDialog = remember { mutableStateOf(true) },
             previewProductName = remember { mutableStateOf("") },
             previewProductImage = remember { mutableStateOf("") },

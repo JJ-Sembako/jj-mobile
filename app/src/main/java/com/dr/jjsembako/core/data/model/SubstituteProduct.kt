@@ -2,7 +2,7 @@ package com.dr.jjsembako.core.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class SelectSubstituteItem(
+data class SubstituteProduct(
     @field:SerializedName("id")
     val id: String,
 

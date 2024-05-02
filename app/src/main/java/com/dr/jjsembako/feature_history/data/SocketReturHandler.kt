@@ -3,7 +3,7 @@ package com.dr.jjsembako.feature_history.data
 import android.content.SharedPreferences
 import android.util.Log
 import com.dr.jjsembako.BuildConfig
-import com.dr.jjsembako.core.data.model.SelectSubstituteItem
+import com.dr.jjsembako.core.data.model.SubstituteProduct
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.socket.client.IO
@@ -25,9 +25,9 @@ class SocketReturHandler @Inject constructor(
     private lateinit var socket: Socket
 
     // Callbacks for events
-    var onProductsReceived: ((List<SelectSubstituteItem>) -> Unit)? = null
-    var onNewProductReceived: ((SelectSubstituteItem) -> Unit)? = null
-    var onUpdateProductReceived: ((List<SelectSubstituteItem>) -> Unit)? = null
+    var onProductsReceived: ((List<SubstituteProduct>) -> Unit)? = null
+    var onNewProductReceived: ((SubstituteProduct) -> Unit)? = null
+    var onUpdateProductReceived: ((List<SubstituteProduct>) -> Unit)? = null
     var onDeleteProductReceived: ((String) -> Unit)? = null
     var onErrorReceived: ((String) -> Unit)? = null
     var onErrorState: ((Boolean) -> Unit)? = null
@@ -76,9 +76,9 @@ class SocketReturHandler @Inject constructor(
         }
 
         socket.on("products") { args ->
-            val products = gson.fromJson<List<SelectSubstituteItem>>(
+            val products = gson.fromJson<List<SubstituteProduct>>(
                 args[0].toString(),
-                object : TypeToken<List<SelectSubstituteItem>>() {}.type
+                object : TypeToken<List<SubstituteProduct>>() {}.type
             )
             Log.d(TAG, "Get all data, total: ${products.size}")
             onProductsReceived?.invoke(products)
@@ -87,22 +87,22 @@ class SocketReturHandler @Inject constructor(
         }
 
         socket.on("new-product") { args ->
-            val product = gson.fromJson(args[0].toString(), SelectSubstituteItem::class.java)
+            val product = gson.fromJson(args[0].toString(), SubstituteProduct::class.java)
             Log.d(TAG, "Get new product with name: ${product.name}")
             onNewProductReceived?.invoke(product)
         }
 
         socket.on("update-product") { args ->
-            val products = gson.fromJson<List<SelectSubstituteItem>>(
+            val products = gson.fromJson<List<SubstituteProduct>>(
                 args[0].toString(),
-                object : TypeToken<List<SelectSubstituteItem>>() {}.type
+                object : TypeToken<List<SubstituteProduct>>() {}.type
             )
             Log.d(TAG, "Get updated product, total: ${products.size}")
             onUpdateProductReceived?.invoke(products)
         }
 
         socket.on("delete-product") { args ->
-            val product = gson.fromJson(args[0].toString(), SelectSubstituteItem::class.java)
+            val product = gson.fromJson(args[0].toString(), SubstituteProduct::class.java)
             val productId = product.id
             Log.d(TAG, "Delete product ${product.name} with id: $productId")
             onDeleteProductReceived?.invoke(productId)

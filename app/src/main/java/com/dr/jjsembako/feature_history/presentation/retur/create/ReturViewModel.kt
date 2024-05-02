@@ -10,7 +10,7 @@ import com.dr.jjsembako.SubstituteStore
 import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.core.data.model.SelectPNRItem
-import com.dr.jjsembako.core.data.model.SelectSubstituteItem
+import com.dr.jjsembako.core.data.model.SubstituteProduct
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.utils.DataMapper.mapListOrderToProductsItemToListSelectPNRItem
 import com.dr.jjsembako.core.utils.DataMapper.mapSelectPNRItemToReturStore
@@ -68,8 +68,8 @@ class ReturViewModel @Inject constructor(
     private val _productOrder = MutableLiveData<List<SelectPNRItem?>?>()
     private val productOrder: LiveData<List<SelectPNRItem?>?> get() = _productOrder
 
-    private val _dataProducts = MutableLiveData<List<SelectSubstituteItem?>>()
-    private val dataProducts: LiveData<List<SelectSubstituteItem?>> get() = _dataProducts
+    private val _dataProducts = MutableLiveData<List<SubstituteProduct?>>()
+    private val dataProducts: LiveData<List<SubstituteProduct?>> get() = _dataProducts
 
     private val _returData = MutableLiveData<ReturStore?>()
     private val returData: LiveData<ReturStore?> get() = _returData
@@ -80,8 +80,8 @@ class ReturViewModel @Inject constructor(
     private val _selectedDataR = MutableLiveData<SelectPNRItem?>()
     val selectedDataR: LiveData<SelectPNRItem?> get() = _selectedDataR
 
-    private val _selectedDataS = MutableLiveData<SelectSubstituteItem?>()
-    val selectedDataS: LiveData<SelectSubstituteItem?> get() = _selectedDataS
+    private val _selectedDataS = MutableLiveData<SubstituteProduct?>()
+    val selectedDataS: LiveData<SubstituteProduct?> get() = _selectedDataS
 
     private var _id: String? = null
 
@@ -324,7 +324,7 @@ class ReturViewModel @Inject constructor(
         }
     }
 
-    private fun updateProductsWithCheck(updatedProducts: List<SelectSubstituteItem>) {
+    private fun updateProductsWithCheck(updatedProducts: List<SubstituteProduct>) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
 
@@ -382,7 +382,7 @@ class ReturViewModel @Inject constructor(
         }
     }
 
-    fun updateOrderPrice(product: SelectSubstituteItem, price: String) {
+    fun updateOrderPrice(product: SubstituteProduct, price: String) {
         viewModelScope.launch {
             if (price.isNotEmpty()) {
                 val updateData = product.copy(
@@ -395,7 +395,7 @@ class ReturViewModel @Inject constructor(
         }
     }
 
-    fun enableOrder(product: SelectSubstituteItem) {
+    fun enableOrder(product: SubstituteProduct) {
         viewModelScope.launch {
             val updateData = product.copy(
                 isChosen = true,

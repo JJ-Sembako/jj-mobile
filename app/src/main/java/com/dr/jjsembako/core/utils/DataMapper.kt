@@ -8,7 +8,7 @@ import com.dr.jjsembako.core.data.model.DataProductOrder
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.model.SelectPNRItem
-import com.dr.jjsembako.core.data.model.SelectSubstituteItem
+import com.dr.jjsembako.core.data.model.SubstituteProduct
 import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
 import com.dr.jjsembako.core.data.remote.response.order.Order
 import com.dr.jjsembako.core.data.remote.response.order.OrderedProduct
@@ -150,7 +150,7 @@ object DataMapper {
         return returStoreBuilder.build()
     }
 
-    fun mapSelectSubstituteItemToSubstituteStore(data: SelectSubstituteItem): SubstituteStore {
+    fun mapSelectSubstituteItemToSubstituteStore(data: SubstituteProduct): SubstituteStore {
         val substituteStoreBuilder = SubstituteStore.newBuilder()
         substituteStoreBuilder
             .setId(data.id)

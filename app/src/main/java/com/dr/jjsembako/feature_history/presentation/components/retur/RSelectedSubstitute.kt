@@ -27,14 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dr.jjsembako.R
-import com.dr.jjsembako.core.data.model.SelectSubstituteItem
+import com.dr.jjsembako.core.data.model.SubstituteProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.feature_history.presentation.components.card.SelectedSubsRCard
 import com.dr.jjsembako.feature_history.presentation.retur.create.ReturViewModel
 
 @Composable
 fun RSelectedSubstitute(
-    data: SelectSubstituteItem? = null,
+    data: SubstituteProduct? = null,
     viewModel: ReturViewModel,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
@@ -88,7 +88,7 @@ private fun RSelectedSubstituteHeader(onSelectSubstitute: () -> Unit, modifier: 
 
 @Composable
 private fun RSelectedSubstituteContent(
-    data: SelectSubstituteItem? = null,
+    data: SubstituteProduct? = null,
     viewModel: ReturViewModel,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,

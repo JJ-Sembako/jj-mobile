@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dr.jjsembako.SubstituteStore
 import com.dr.jjsembako.core.data.model.FilterOption
-import com.dr.jjsembako.core.data.model.SelectSubstituteItem
+import com.dr.jjsembako.core.data.model.SubstituteProduct
 import com.dr.jjsembako.core.utils.DataMapper.mapListDataCategoryToListFilterOption
 import com.dr.jjsembako.core.utils.DataMapper.mapSelectSubstituteItemToSubstituteStore
 import com.dr.jjsembako.feature_history.data.SocketReturHandler
@@ -37,11 +37,11 @@ class PPReturViewModel @Inject constructor(
     private val _dataCategories = MutableLiveData<List<FilterOption?>>()
     val dataCategories: LiveData<List<FilterOption?>> get() = _dataCategories
 
-    private val _dataProducts = MutableLiveData<List<SelectSubstituteItem?>>()
-    val dataProducts: LiveData<List<SelectSubstituteItem?>> get() = _dataProducts
+    private val _dataProducts = MutableLiveData<List<SubstituteProduct?>>()
+    val dataProducts: LiveData<List<SubstituteProduct?>> get() = _dataProducts
 
-    private val _selectedData = MutableLiveData<SelectSubstituteItem?>()
-    val selectedData: LiveData<SelectSubstituteItem?> get() = _selectedData
+    private val _selectedData = MutableLiveData<SubstituteProduct?>()
+    val selectedData: LiveData<SubstituteProduct?> get() = _selectedData
 
     private val _substituteData = MutableLiveData<SubstituteStore?>()
     private val substituteData: LiveData<SubstituteStore?> get() = _substituteData
@@ -108,7 +108,7 @@ class PPReturViewModel @Inject constructor(
         }
     }
 
-    private fun updateProductsWithCheck(updatedProducts: List<SelectSubstituteItem>) {
+    private fun updateProductsWithCheck(updatedProducts: List<SubstituteProduct>) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
 
@@ -162,7 +162,7 @@ class PPReturViewModel @Inject constructor(
         }
     }
 
-    fun updateOrderPrice(product: SelectSubstituteItem, price: String) {
+    fun updateOrderPrice(product: SubstituteProduct, price: String) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
@@ -194,7 +194,7 @@ class PPReturViewModel @Inject constructor(
         }
     }
 
-    fun enableOrder(product: SelectSubstituteItem) {
+    fun enableOrder(product: SubstituteProduct) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
@@ -223,7 +223,7 @@ class PPReturViewModel @Inject constructor(
         }
     }
 
-    fun disableOrder(product: SelectSubstituteItem) {
+    fun disableOrder(product: SubstituteProduct) {
         viewModelScope.launch {
             val currentList = _dataProducts.value.orEmpty().toMutableList()
             val productIndex = currentList.indexOfFirst { it?.id == product.id }
@@ -248,7 +248,7 @@ class PPReturViewModel @Inject constructor(
         }
     }
 
-    private fun updateCategories(newProducts: List<SelectSubstituteItem?>) {
+    private fun updateCategories(newProducts: List<SubstituteProduct?>) {
         viewModelScope.launch {
             val newCategories = newProducts.mapNotNull { it?.category }.distinct()
             val currentCategories = _dataRawCategories.value.orEmpty().toMutableSet()
