@@ -75,7 +75,7 @@ fun PilihBarangReturScreen(
     modifier: Modifier = Modifier
 ) {
     val tag = "PB-Retur-S"
-    val viewModel: PBReturViewModel = hiltViewModel()
+    val viewModel: PilihBarangReturViewModel = hiltViewModel()
     val state = viewModel.state.observeAsState().value
     val statusCode = viewModel.statusCode.observeAsState().value
     val message = viewModel.message.observeAsState().value
@@ -128,7 +128,7 @@ fun PilihBarangReturScreen(
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun PilihBarangReturContent(
-    viewModel: PBReturViewModel,
+    viewModel: PilihBarangReturViewModel,
     onNavigateBack: () -> Unit,
     modifier: Modifier
 ) {
