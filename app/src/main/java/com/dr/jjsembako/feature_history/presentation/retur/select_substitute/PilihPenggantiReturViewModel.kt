@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PPReturViewModel @Inject constructor(
+class PilihPenggantiReturViewModel @Inject constructor(
     private val socketReturHandler: SocketReturHandler,
     private val substituteStore: DataStore<SubstituteStore>
 ) : ViewModel() {

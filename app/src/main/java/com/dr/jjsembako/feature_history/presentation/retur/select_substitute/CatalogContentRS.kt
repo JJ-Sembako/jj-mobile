@@ -41,7 +41,7 @@ import com.dr.jjsembako.feature_history.presentation.components.card.SelectSubsR
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CatalogContentRS(
-    viewModel: PPReturViewModel,
+    viewModel: PilihPenggantiReturViewModel,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
     previewProductImage: MutableState<String>,

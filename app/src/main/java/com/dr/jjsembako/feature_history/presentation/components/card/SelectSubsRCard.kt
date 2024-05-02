@@ -60,11 +60,11 @@ import com.dr.jjsembako.core.data.model.SubstituteProduct
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.formatRupiah
 import com.dr.jjsembako.core.utils.rememberCurrencyVisualTransformation
-import com.dr.jjsembako.feature_history.presentation.retur.select_substitute.PPReturViewModel
+import com.dr.jjsembako.feature_history.presentation.retur.select_substitute.PilihPenggantiReturViewModel
 
 @Composable
 fun SelectSubsRCard(
-    viewModel: PPReturViewModel,
+    viewModel: PilihPenggantiReturViewModel,
     data: SubstituteProduct,
     showDialog: MutableState<Boolean>,
     previewProductName: MutableState<String>,
@@ -176,7 +176,7 @@ private fun ProductInfo(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun OrderContent(
-    viewModel: PPReturViewModel,
+    viewModel: PilihPenggantiReturViewModel,
     product: SubstituteProduct,
     modifier: Modifier
 ) {
@@ -311,7 +311,7 @@ private const val MAX_VALUE = 1_000_000_000L
 @Preview(showBackground = true)
 private fun SelectSubsRCardPreview() {
     JJSembakoTheme {
-        val viewModel: PPReturViewModel = hiltViewModel()
+        val viewModel: PilihPenggantiReturViewModel = hiltViewModel()
         SelectSubsRCard(
             viewModel = viewModel,
             data = dataSubstituteProduct,

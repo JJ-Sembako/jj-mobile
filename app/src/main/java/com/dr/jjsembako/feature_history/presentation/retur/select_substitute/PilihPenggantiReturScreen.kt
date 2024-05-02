@@ -51,7 +51,7 @@ fun PilihPenggantiReturScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: PPReturViewModel = hiltViewModel()
+    val viewModel: PilihPenggantiReturViewModel = hiltViewModel()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
