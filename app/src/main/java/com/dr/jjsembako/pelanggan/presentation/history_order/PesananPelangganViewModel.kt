@@ -1,0 +1,45 @@
+package com.dr.jjsembako.pelanggan.presentation.history_order
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import com.dr.jjsembako.pesanan.domain.model.Order
+import com.dr.jjsembako.pelanggan.domain.usecase.FetchCustOrdersUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class PesananPelangganViewModel @Inject constructor(
+    private val fetchCustOrdersUseCase: FetchCustOrdersUseCase
+) : ViewModel() {
+
+    private val _orderState: MutableStateFlow<PagingData<Order>> =
+        MutableStateFlow(value = PagingData.empty())
+    val orderState: MutableStateFlow<PagingData<Order>> get() = _orderState
+
+    private val _id = MutableLiveData<String?>()
+    private val id: LiveData<String?> = _id
+    fun setId(id: String) {
+        _id.value = id
+        fetchOrders(null, null, null)
+    }
+
+    fun fetchOrders(
+        search: String?,
+        minDate: String?,
+        maxDate: String?
+    ) {
+        if (id.value != null) {
+            viewModelScope.launch {
+                fetchCustOrdersUseCase.fetchOrders(
+                    search = search, minDate = minDate, maxDate = maxDate,
+                    me = 0, customerId = id.value!!
+                ).collect { _orderState.value = it }
+            }
+        }
+    }
+}

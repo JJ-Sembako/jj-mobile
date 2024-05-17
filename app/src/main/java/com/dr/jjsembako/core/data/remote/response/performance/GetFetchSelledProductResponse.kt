@@ -1,5 +1,6 @@
 package com.dr.jjsembako.core.data.remote.response.performance
 
+import com.dr.jjsembako.performa.domain.model.SelledProduct
 import com.google.gson.annotations.SerializedName
 
 data class GetFetchSelledProductResponse(
@@ -12,19 +13,4 @@ data class GetFetchSelledProductResponse(
 
     @field:SerializedName("data")
     val data: List<SelledProduct?>? = null
-)
-
-data class SelledProduct(
-
-    @field:SerializedName("name")
-    val name: String,
-
-    @field:SerializedName("image")
-    val image: String = "",
-
-    @field:SerializedName("unit")
-    val unit: String,
-
-    @field:SerializedName("num_of_selled")
-    val numOfSelled: Int
 )

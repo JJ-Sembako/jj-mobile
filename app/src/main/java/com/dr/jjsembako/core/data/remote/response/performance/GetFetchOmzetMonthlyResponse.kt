@@ -1,5 +1,6 @@
 package com.dr.jjsembako.core.data.remote.response.performance
 
+import com.dr.jjsembako.performa.domain.model.Omzet
 import com.google.gson.annotations.SerializedName
 
 data class GetFetchOmzetMonthlyResponse(

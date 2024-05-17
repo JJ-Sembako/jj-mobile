@@ -4,16 +4,16 @@ import com.dr.jjsembako.CanceledStore
 import com.dr.jjsembako.ProductOrderStore
 import com.dr.jjsembako.ReturStore
 import com.dr.jjsembako.SubstituteStore
-import com.dr.jjsembako.core.data.model.OrderableProduct
+import com.dr.jjsembako.pesanan.domain.model.OrderableProduct
 import com.dr.jjsembako.core.data.model.FilterOption
 import com.dr.jjsembako.core.data.model.OrderProduct
 import com.dr.jjsembako.core.data.model.SelectPNRItem
-import com.dr.jjsembako.core.data.model.SubstituteProduct
-import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
-import com.dr.jjsembako.core.data.remote.response.order.Order
-import com.dr.jjsembako.core.data.remote.response.order.OrderedProduct
-import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
-import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
+import com.dr.jjsembako.pesanan.domain.model.SubstituteProduct
+import com.dr.jjsembako.pesanan.domain.model.DetailOrder
+import com.dr.jjsembako.pesanan.domain.model.Order
+import com.dr.jjsembako.pesanan.domain.model.OrderedProduct
+import com.dr.jjsembako.pesanan.domain.model.DataOrderHistoryCard
+import com.dr.jjsembako.pesanan.domain.model.DataOrderTimestamps
 
 object DataMapper {
     fun mapListDataCategoryToListFilterOption(data: List<String?>?): List<FilterOption?> {

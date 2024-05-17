@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import com.dr.jjsembako.core.data.remote.response.performance.Omzet
+import com.dr.jjsembako.performa.domain.model.Omzet
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat

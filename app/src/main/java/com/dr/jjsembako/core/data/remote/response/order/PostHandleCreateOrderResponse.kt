@@ -1,6 +1,8 @@
 package com.dr.jjsembako.core.data.remote.response.order
 
-import com.dr.jjsembako.core.data.remote.response.customer.Customer
+import com.dr.jjsembako.akun.domain.model.Account
+import com.dr.jjsembako.pelanggan.domain.model.Customer
+import com.dr.jjsembako.pesanan.domain.model.OrderedProduct
 import com.google.gson.annotations.SerializedName
 
 data class PostHandleCreateOrderResponse(

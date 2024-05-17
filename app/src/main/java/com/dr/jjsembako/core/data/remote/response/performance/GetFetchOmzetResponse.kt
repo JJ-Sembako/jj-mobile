@@ -1,5 +1,6 @@
 package com.dr.jjsembako.core.data.remote.response.performance
 
+import com.dr.jjsembako.performa.domain.model.Omzet
 import com.google.gson.annotations.SerializedName
 
 data class GetFetchOmzetResponse(
@@ -12,16 +13,4 @@ data class GetFetchOmzetResponse(
 
 	@field:SerializedName("data")
 	val data: List<Omzet?>? = null
-)
-
-data class Omzet(
-
-	@field:SerializedName("year")
-	val year: Int,
-
-	@field:SerializedName("month")
-	val month: Int,
-
-	@field:SerializedName("omzet")
-	val omzet: Long
 )

@@ -1,17 +1,17 @@
 package com.dr.jjsembako.core.data.dummy
 
-import com.dr.jjsembako.core.data.model.OrderableProduct
+import com.dr.jjsembako.pesanan.domain.model.OrderableProduct
 import com.dr.jjsembako.core.data.model.SelectPNRItem
-import com.dr.jjsembako.core.data.model.SubstituteProduct
-import com.dr.jjsembako.core.data.remote.response.customer.Customer
-import com.dr.jjsembako.core.data.remote.response.order.Account
-import com.dr.jjsembako.core.data.remote.response.order.Canceled
-import com.dr.jjsembako.core.data.remote.response.order.DetailOrder
-import com.dr.jjsembako.core.data.remote.response.order.OrderedProduct
-import com.dr.jjsembako.core.data.remote.response.order.Retur
-import com.dr.jjsembako.core.data.remote.response.product.Product
-import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
-import com.dr.jjsembako.feature_history.domain.model.DataOrderTimestamps
+import com.dr.jjsembako.pesanan.domain.model.SubstituteProduct
+import com.dr.jjsembako.pelanggan.domain.model.Customer
+import com.dr.jjsembako.akun.domain.model.Account
+import com.dr.jjsembako.pesanan.domain.model.Canceled
+import com.dr.jjsembako.pesanan.domain.model.DetailOrder
+import com.dr.jjsembako.pesanan.domain.model.OrderedProduct
+import com.dr.jjsembako.pesanan.domain.model.Retur
+import com.dr.jjsembako.inventaris.domain.model.Product
+import com.dr.jjsembako.pesanan.domain.model.DataOrderHistoryCard
+import com.dr.jjsembako.pesanan.domain.model.DataOrderTimestamps
 
 val dataOrderDataItem = DataOrderHistoryCard(
     id = "123",

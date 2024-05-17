@@ -1,6 +1,6 @@
 package com.dr.jjsembako.core.data.model
 
-import com.dr.jjsembako.core.data.remote.response.product.Product
+import com.dr.jjsembako.inventaris.domain.model.Product
 
 data class SelectPNRItem(
     val id: String,

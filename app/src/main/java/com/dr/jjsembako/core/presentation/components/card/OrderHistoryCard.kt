@@ -39,7 +39,7 @@ import com.dr.jjsembako.core.presentation.components.utils.PaymentStatus
 import com.dr.jjsembako.core.presentation.theme.JJSembakoTheme
 import com.dr.jjsembako.core.utils.convertTimestampToArray
 import com.dr.jjsembako.core.utils.formatRupiah
-import com.dr.jjsembako.feature_history.domain.model.DataOrderHistoryCard
+import com.dr.jjsembako.pesanan.domain.model.DataOrderHistoryCard
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
