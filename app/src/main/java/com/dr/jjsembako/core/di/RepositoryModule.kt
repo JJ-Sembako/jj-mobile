@@ -9,8 +9,8 @@ import com.dr.jjsembako.pesanan.data.HistoryRepository
 import com.dr.jjsembako.pesanan.domain.repository.ICanceledRepository
 import com.dr.jjsembako.pesanan.domain.repository.IHistoryRepository
 import com.dr.jjsembako.pesanan.domain.repository.IReturRepository
-import com.dr.jjsembako.core.home.data.HomeRepository
-import com.dr.jjsembako.core.home.domain.repository.IHomeRepository
+import com.dr.jjsembako.performa.data.HomeRepository
+import com.dr.jjsembako.performa.domain.repository.IHomeRepository
 import com.dr.jjsembako.pesanan.data.OrderRepository
 import com.dr.jjsembako.pesanan.domain.repository.IOrderRepository
 import com.dr.jjsembako.pesanan.domain.repository.ISelectCustRepository

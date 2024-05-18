@@ -8,9 +8,9 @@ import com.dr.jjsembako.core.common.Resource
 import com.dr.jjsembako.core.common.StateResponse
 import com.dr.jjsembako.performa.domain.model.Omzet
 import com.dr.jjsembako.performa.domain.model.SelledProduct
-import com.dr.jjsembako.performa.domain.usecase.FetchOmzetMonthlyUseCase
-import com.dr.jjsembako.performa.domain.usecase.FetchOmzetUseCase
-import com.dr.jjsembako.performa.domain.usecase.FetchSelledProductMonthlyUseCase
+import com.dr.jjsembako.performa.domain.usecase.performance.FetchOmzetMonthlyUseCase
+import com.dr.jjsembako.performa.domain.usecase.performance.FetchOmzetUseCase
+import com.dr.jjsembako.performa.domain.usecase.performance.FetchSelledProductMonthlyUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
